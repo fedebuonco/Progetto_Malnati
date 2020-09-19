@@ -1,0 +1,3 @@
+/home/fede/Documents/Progetto_Malnati/client/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/fede/Documents/Progetto_Malnati/client/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/fede/Documents/Progetto_Malnati/client/cmake-build-debug/CMakeFiles/client.dir
