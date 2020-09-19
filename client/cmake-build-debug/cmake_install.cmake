@@ -1,4 +1,4 @@
-# Install script for directory: /home/fede/Documents/Progetto_Malnati/client
+# Install script for directory: /home/marco/Scrivania/Progetto_Malnati/client
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/fede/Documents/Progetto_Malnati/client/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/marco/Scrivania/Progetto_Malnati/client/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
