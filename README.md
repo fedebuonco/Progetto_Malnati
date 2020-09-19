@@ -1,7 +1,9 @@
 # Progetto Malnati: Remote Backup
 
-Federico BuonCompagni
+Federico Buoncompagni
+
 Marco La Gala
+
 Federica Buccolini
 
 
