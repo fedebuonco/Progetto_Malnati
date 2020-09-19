@@ -1,5 +1,5 @@
 .idea/
 client/.idea/
 server/.idea/
-client/cmake-build-debug/
-server/cmake-build-debug/
+## client/cmake-build-debug/
+## server/cmake-build-debug/
