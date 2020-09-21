@@ -7,6 +7,7 @@
 /* 01 project includes */
 
 #include "connectToServer.h"
+#include "../includes/config/config.h"
 
 /* 02 externs */
 /* 03 defines */
@@ -16,6 +17,13 @@
 
 int main(int argc, char *argv[])
 {
+
+    if(! Config::get_Instance()->isConfig() ){
+
+        Config::get_Instance()->startConfig();
+    }
+
+        
     connectToServer connector;
 
 /* 07 variable declarations */

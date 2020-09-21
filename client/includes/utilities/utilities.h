@@ -5,6 +5,7 @@
 #ifndef CLIENT_UTILITIES_H
 #define CLIENT_UTILITIES_H
 
+constexpr bool DEBUG = true;
 
 class utilities {
 
