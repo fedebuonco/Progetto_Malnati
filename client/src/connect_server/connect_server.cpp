@@ -3,9 +3,9 @@
 //
 
 #include <iostream>
-#include "connectToServer.h"
+#include "connect_server.h"
 
-connectToServer::connectToServer() {
+ConnectServer::ConnectServer() {
  // stupid constructor just to see if it works
  std::cout << "ciao";
 }

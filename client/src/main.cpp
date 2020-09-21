@@ -6,8 +6,8 @@
 
 /* 01 project includes */
 
-#include "connectToServer.h"
-#include "../includes/config/config.h"
+#include "connect_server.h"
+#include "config.h"
 
 /* 02 externs */
 /* 03 defines */
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     }
 
         
-    connectToServer connector;
+    ConnectServer connector;
 
 /* 07 variable declarations */
 /* 08 check argv[0] to see how the program was invoked */

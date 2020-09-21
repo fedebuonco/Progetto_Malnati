@@ -3,17 +3,17 @@
 //
 
 #include "config.h"
-#include "../src/utilities/ut.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <iostream>
+#include <utilities.h>
 
 Config *Config::m_ConfigClass = nullptr;
 
 Config *Config::get_Instance() {
 
     if(!m_ConfigClass){
-        m_ConfigClass = new config;
+        m_ConfigClass = new Config;
     }
     return m_ConfigClass;
 }
@@ -26,7 +26,7 @@ bool Config::isConfig() {
     pt::ptree  root;
 
     //Read the file and put the content inside root
-    pt::read_json("../config/credential.json", root);
+    pt::read_json("../config_file/credential.json", root);
 
     auto username = root.get<std::string>("username");
     auto password = root.get<std::string>("password");
@@ -86,7 +86,7 @@ void Config::writeConfig(const std::string& username, const std::string& passwor
     root.put("password", password);
 
     //Read the file and put the content inside root
-    pt::write_json("../config/credential.json", root);
+    pt::write_json("../config_file/credential.json", root);
 
 }
 

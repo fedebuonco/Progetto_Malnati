@@ -7,9 +7,4 @@
 
 constexpr bool DEBUG = true;
 
-class utilities {
-
-};
-
-
 #endif //CLIENT_UTILITIES_H
