@@ -18,3 +18,4 @@ Se variabile è della classe prima_prova_
 - nome file: tutto piccolo ptima_prova
 
 https://google.github.io/styleguide/cppguide.html#Naming
+https://github.com/google/styleguide/blob/gh-pages/cppguide.html
