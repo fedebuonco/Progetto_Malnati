@@ -3,4 +3,4 @@ project(server)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS -pthread)
-add_executable(server src/main.cpp)
+add_executable(server src/main.cpp config/config.cpp config/config.h src/utilities/ut.cpp src/utilities/ut.h)
