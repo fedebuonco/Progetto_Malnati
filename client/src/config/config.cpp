@@ -1,12 +1,10 @@
-//
-// Created by marco on 21/09/20.
-//
-
 #include "config.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <iostream>
 #include <utilities.h>
+
+#define CREDENTIAL_PATH "../config_file/credential.json"
 
 Config *Config::m_ConfigClass = nullptr;
 
@@ -18,6 +16,10 @@ Config *Config::get_Instance() {
     return m_ConfigClass;
 }
 
+/**
+ * Check if the configuration file has username and password inside
+ * Return true if is valid while false if is NULL
+ * */
 bool Config::isConfig() {
 
     namespace pt = boost::property_tree;
@@ -25,21 +27,33 @@ bool Config::isConfig() {
     //This is the tree root; inside there is the username and password (if the app is config)
     pt::ptree  root;
 
-    //Read the file and put the content inside root
-    pt::read_json("../config_file/credential.json", root);
+    try {
+        //Read the file and put the content inside root
+        pt::read_json(CREDENTIAL_PATH, root);
 
-    auto username = root.get<std::string>("username");
-    auto password = root.get<std::string>("password");
+        auto username = root.get<std::string>("username");
+        auto password = root.get<std::string>("password");
 
-    if (DEBUG) std::cout << "Inside config there is username: " << username<< " and password: " << password << std::endl;
+        if (DEBUG) std::cout << "Inside config there is username: " << username<< " and password: " << password << std::endl;
 
-    if(username=="NULL" || password=="NULL"){
-        //This means that the user is not legged in
-        return false;
-    } else {
-        return true;
+        if(username=="NULL" || password=="NULL"){
+            //This means that the user is not legged in
+            return false;
+        } else {
+            return true;
+        }
+
+    } catch (const boost::property_tree::ptree_bad_path& e2){
+        std::cerr << "The configuration file has a wrong structure: it must have a 'Username' and 'Password' field" << std::endl;
+
+        std::exit(23);   //TO-DO: Check the error status
+
+    } catch (const boost::property_tree::json_parser_error& e1) {
+        std::cerr <<"The configuration file was not found" << std::endl;
+
+        std::exit(12);   //TO-DO: Check the error status
     }
-}
+  }
 
 /**
  * Asks the user to authenticate (username and password).
@@ -82,11 +96,16 @@ void Config::writeConfig(const std::string& username, const std::string& passwor
     //This is the tree root; inside there is the username and password (if the app is config)
     pt::ptree  root;
 
-    root.put("username", username);
-    root.put("password", password);
+    try {
+        root.put("username", username);
+        root.put("password", password);
 
-    //Read the file and put the content inside root
-    pt::write_json("../config_file/credential.json", root);
+        //Read the file and put the content inside root
+        pt::write_json(CREDENTIAL_PATH, root);
+    }
+    catch ( const boost::property_tree::json_parser_error& e1) {
+        std::cerr <<"The configuration file was not found" << std::endl;
 
+        std::exit(12);   //TO-DO: Check the error status
+    }
 }
-
