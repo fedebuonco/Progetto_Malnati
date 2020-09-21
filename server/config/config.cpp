@@ -2,13 +2,23 @@
 // Created by marco on 21/09/20.
 //
 
-#include "ConfigClass.h"
+#include "config.h"
 #include "../src/utilities/ut.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <iostream>
 
-bool ConfigClass::isConfig() {
+Config *Config::m_ConfigClass = nullptr;
+
+Config *Config::get_Instance() {
+
+    if(!m_ConfigClass){
+        m_ConfigClass = new config;
+    }
+    return m_ConfigClass;
+}
+
+bool Config::isConfig() {
 
     namespace pt = boost::property_tree;
 
@@ -33,10 +43,9 @@ bool ConfigClass::isConfig() {
 
 /**
  * Asks the user to authenticate (username and password).
- * Next asks the server if the credential is correct.
  * If is correct save the credential inside the JSON file.
  * */
-void ConfigClass::startConfig() {
+void Config::startConfig() {
 
     std::string username;
     std::string password;
@@ -58,12 +67,6 @@ void ConfigClass::startConfig() {
 
     if(DEBUG) std::cout << "You inserted " << username << " " << password << std::endl;
 
-
-    //Send to server username and password and check if is correct
-    //TO DO
-    //VEDERE SE FARLO QUI O FAR RIMANDARE INDIETRO ALLA FUNZIONE USERNAME AND PASSWORD
-
-
     //Write the username and password inside JSON file
     writeConfig(username, password);
 
@@ -72,7 +75,7 @@ void ConfigClass::startConfig() {
 /**
  * Write the username and password inside JSON file
  **/
-void ConfigClass::writeConfig(const std::string& username, const std::string& password) {
+void Config::writeConfig(const std::string& username, const std::string& password) {
 
     namespace pt = boost::property_tree;
 
@@ -86,3 +89,4 @@ void ConfigClass::writeConfig(const std::string& username, const std::string& pa
     pt::write_json("../config/credential.json", root);
 
 }
+

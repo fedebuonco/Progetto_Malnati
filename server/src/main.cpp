@@ -1,15 +1,14 @@
 #include <iostream>
-#include "../config/ConfigClass.h"
+#include "../config/config.h"
 #include "utilities/ut.h"
 
 int main() {
 
     //Check if the app is configured correctly
-    if ( !ConfigClass::isConfig() ){
+    if ( !config::get_Instance()->isConfig() ){
         if (DEBUG) std::cout << "No configuration found; user is not logged in" << std::endl;
 
-
-        ConfigClass::startConfig();
+        config::get_Instance()->startConfig();
     }
 
 

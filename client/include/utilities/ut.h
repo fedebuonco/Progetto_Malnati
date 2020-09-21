@@ -1,0 +1,1 @@
+constexpr bool DEBUG = true;
