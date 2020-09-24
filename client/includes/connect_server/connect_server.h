@@ -5,11 +5,13 @@
 #ifndef CLIENT_CONNECT_SERVER_H
 #define CLIENT_CONNECT_SERVER_H
 
-
+/// ConnectServer - establish a connection and auth
 class ConnectServer {
 public:
     ConnectServer();
 };
+
+
 
 
 
