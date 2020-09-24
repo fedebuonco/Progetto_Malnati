@@ -41,8 +41,9 @@ ConnectServer::ConnectServer(const std::string& raw_ip_add,unsigned short port_n
 
 ConnectServer::~ConnectServer() {
     // Exit from the connection and
-    //TODO tell the server that we are exiting
-    //TODO see shutdown exceptions and manage
+    // TODO tell the server that we are exiting
+    // TODO see shutdown exceptions and manage
+    std::cout << "Connection and Socket closing down... " <<std::endl ;
     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
     sock_.close();
 }
