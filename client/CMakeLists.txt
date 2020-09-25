@@ -42,7 +42,7 @@ if (WIN32)
 
         add_executable(client src/main.cpp src/transfer/transfer.cpp includes/transfer/transfer.h src/connect_server/connect_server.cpp
                 includes/connect_server/connect_server.h src/utilities/utilities.cpp includes/utilities/utilities.h src/watcher/watcher.cpp
-                includes/watcher/watcher.h src/config/config.cpp includes/config/config.h)
+                includes/watcher/watcher.h src/config/config.cpp includes/config/config.h src/config/authentication.cpp includes/config/authentication.h)
 
     endif()
 endif (WIN32)

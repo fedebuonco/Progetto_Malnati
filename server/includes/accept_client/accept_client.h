@@ -7,5 +7,6 @@
 class AcceptClient{
 public:
     AcceptClient();
+    void ReadCredential();
 
 };

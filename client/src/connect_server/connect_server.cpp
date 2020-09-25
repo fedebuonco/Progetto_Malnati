@@ -3,9 +3,11 @@
 //
 
 #include <iostream>
+#include <string>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/asio.hpp>
+#include <authentication.h>
 #include "connect_server.h"
 
 
@@ -35,7 +37,7 @@ ConnectServer::ConnectServer(const std::string& raw_ip_add,unsigned short port_n
         }
     }
 
-    std::cout << "Connesso" << std::endl;
+    std::cout << "Server connesso\n" << std::endl;
 
 }
 
@@ -46,4 +48,40 @@ ConnectServer::~ConnectServer() {
     std::cout << "Connection and Socket closing down... " <<std::endl ;
     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
     sock_.close();
+}
+
+bool ConnectServer::Authenticate() {
+
+    Credential credential_ = Authentication::get_Instance()->ReadCredential();
+
+    std::string buf = credential_.username_ + " " + credential_.password_ + "\n";
+
+
+
+    int dim = buf.size();
+
+
+    //boost::asio::write(sock_, boost::asio::buffer( std::to_string(dim) ));
+
+    boost::asio::write(sock_, boost::asio::buffer(buf));
+
+    std::cout << "Ho mandato " << buf << "di dim " << dim << std::endl;
+
+
+
+    const unsigned char MESSAGE_SIZE = 1;
+
+    char buf2[MESSAGE_SIZE];
+
+    boost::asio::read(sock_, boost::asio::buffer(buf2, MESSAGE_SIZE));
+
+    std::string read_ = std::string(buf2, MESSAGE_SIZE);
+
+    std::cout << "Ho letto  " << read_ << std::endl;
+
+    if(read_=="1"){
+
+        return true;
+    } else
+    return false;
 }

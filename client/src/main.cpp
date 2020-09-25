@@ -9,6 +9,7 @@
 #include "connect_server.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <authentication.h>
 #include "config.h"
 
 /* 02 externs */
@@ -20,31 +21,26 @@
 int main(int argc, char *argv[])
 {
 
+    Connection connection_ =  Config::get_Instance()->ReadConnection();
+
+    //TODO valutare se mettere try catch
+    ConnectServer connector(connection_.raw_ip_address, connection_.port_num);
 
     if(! Config::get_Instance()->isConfig() ){
         Config::get_Instance()->startConfig();
     }
 
-    // Retrive Server Info
-    namespace pt = boost::property_tree;
+    //TODO Lanciare detro isConfig e startConfig delle eccezioni di una classe
+    //da fare e poi catcharle nel main per terminare il programma.
+    //Es. No indirizzo ip per connessione server
 
-    //This is the tree root; inside there is the username and password (if the app is config)
-    pt::ptree  root;
+    while( !connector.Authenticate() ){
 
-    // TODO gestire errori nella lettura del json
-    //Read the file and put the content inside root
-    pt::read_json("../config_file/connection.json", root);
+        Config::get_Instance()->startConfig();
 
-    auto raw_ip_address = root.get<std::string>("ip");
-    auto port_num = root.get<unsigned short>("port");
-
-    // RAII, Constructor create connection and destructor exits from it.
-    try {
-        ConnectServer connector(raw_ip_address, port_num);
-    } catch(...){
-        std::cout << "ciao" <<std::endl;
     }
 
+    std::cout << "AUTENTICATOOOO" << std::endl;
 
 /* 07 variable declarations */
 /* 08 check argv[0] to see how the program was invoked */

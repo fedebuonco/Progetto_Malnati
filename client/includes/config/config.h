@@ -7,6 +7,11 @@
 
 #include <string>
 
+struct Connection{
+    std::string raw_ip_address;
+    unsigned short port_num;
+};
+
 class Config {
     Config()= default;
 
@@ -19,6 +24,8 @@ public:
     Config& operator=(const Config&)=delete;
 
     static Config* get_Instance();
+
+    Connection ReadConnection();
 
     bool isConfig();
     void startConfig();

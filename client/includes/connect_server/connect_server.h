@@ -17,6 +17,9 @@ private:
 
 public:
     ConnectServer(const std::string& raw_ip_add,unsigned short port);
+
+    bool Authenticate();
+
    ~ConnectServer();
 };
 
