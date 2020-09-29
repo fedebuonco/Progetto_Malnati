@@ -50,34 +50,49 @@ void SyncTCPSocket::ConnectServer() {
 
     std::cout << "Server connesso\n" << std::endl;
 }
+
+/// Will send username and password. After that it will shutdown the send part of the socket thus providing the server a way to
+/// tell that the connection is over
 bool SyncTCPSocket::Authenticate() {
 
     Credential credential_ = Authentication::get_Instance()->ReadCredential();
 
-    std::string buf = credential_.username_ + " " + credential_.password_ + "\n";
+    std::string auth_buf = credential_.username_ + " " + credential_.password_ + "\n";
 
-    int dim = buf.size();
-
+    //int dim = buf.size();
     //boost::asio::write(sock_, boost::asio::buffer( std::to_string(dim) ));
 
-    boost::asio::write(sock_, boost::asio::buffer(buf));
+    boost::asio::write(sock_, boost::asio::buffer(auth_buf));
 
-    std::cout << "Ho mandato " << buf << "di dim " << dim << std::endl;
+    std::cout << "DEBUG: Sent  " << auth_buf << std::endl;
+    //TODO we can do this only if we decide that syncTCPSocket is just for authentication (could be right could be wrong)
+    sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
 
-    const unsigned char MESSAGE_SIZE = 1;
+    //Now we use an extensible buffer for the uknwow size response
+    boost::asio::streambuf response_buf;
 
-    char buf2[MESSAGE_SIZE];
+    //Now let's wait the response using the same technique in the server ( we will shut down the sending part on the server)
+    //prompting an eof error
+    boost::system::error_code ec;
+    boost::asio::read(sock_, response_buf, ec);
+    if (ec == boost::asio::error::eof) {
+        //We handle the response parsing a string and then printing it.
+        std::istream is(&response_buf);
+        std::string response_str;
+        is >> response_str;
+        std::cout << "Ho letto  " << response_str << std::endl;
 
-    boost::asio::read(sock_, boost::asio::buffer(buf2, MESSAGE_SIZE));
+        if(response_str=="1"){
+            return true;
+        } else
+            return false;
 
-    std::string read_ = std::string(buf2, MESSAGE_SIZE);
+    } else {
+        //TODO handle qualcosa??
+    }
 
-    std::cout << "Ho letto  " << read_ << std::endl;
 
-    if(read_=="1"){
 
-        return true;
-    } else
-    return false;
+
 }
 
