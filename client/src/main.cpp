@@ -6,7 +6,7 @@
 
 /* 01 project includes */
 
-#include "connect_server.h"
+#include "sync_tcp_socket.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <authentication.h>
@@ -20,11 +20,13 @@
 
 int main(int argc, char *argv[])
 {
-
     Connection connection_ =  Config::get_Instance()->ReadConnection();
 
     //TODO valutare se mettere try catch
-    ConnectServer connector(connection_.raw_ip_address, connection_.port_num);
+    //socket creation
+    SyncTCPSocket client_sync(connection_.raw_ip_address, connection_.port_num);
+    //socket connecting, will be used for authentication
+    client_sync.ConnectServer();
 
     if(! Config::get_Instance()->isConfig() ){
         Config::get_Instance()->startConfig();
@@ -34,7 +36,7 @@ int main(int argc, char *argv[])
     //da fare e poi catcharle nel main per terminare il programma.
     //Es. No indirizzo ip per connessione server
 
-    while( !connector.Authenticate() ){
+    while( !client_sync.Authenticate() ){
 
         Config::get_Instance()->startConfig();
 

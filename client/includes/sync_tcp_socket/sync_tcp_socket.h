@@ -2,12 +2,12 @@
 // Created by fede on 9/21/20.
 //
 
-#ifndef CLIENT_CONNECT_SERVER_H
-#define CLIENT_CONNECT_SERVER_H
+#ifndef CLIENT_SYNC_TCP_SOCKET_H
+#define CLIENT_SYNC_TCP_SOCKET_H
 #include <boost/asio.hpp>
 
-/// ConnectServer - establish a connection and auth
-class ConnectServer {
+/// SyncTCPSocket - establish a connection and auth
+class SyncTCPSocket {
 private:
     // ordine di queste 3 istruzioni deve essere cosi.
     //TODO scoprire come mai?
@@ -16,15 +16,17 @@ private:
     boost::asio::ip::tcp::socket sock_;
 
 public:
-    ConnectServer(const std::string& raw_ip_add,unsigned short port);
+    SyncTCPSocket(const std::string& raw_ip_add, unsigned short port);
 
     bool Authenticate();
 
-   ~ConnectServer();
+   ~SyncTCPSocket();
+
+    void ConnectServer();
 };
 
 
 
 
 
-#endif //CLIENT_CONNECT_SERVER_H
+#endif //CLIENT_SYNC_TCP_SOCKET_H

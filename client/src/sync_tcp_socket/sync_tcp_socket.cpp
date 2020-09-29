@@ -8,21 +8,32 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/asio.hpp>
 #include <authentication.h>
-#include "connect_server.h"
+#include "sync_tcp_socket.h"
 
 
-ConnectServer::ConnectServer(const std::string& raw_ip_add,unsigned short port_n) :
+SyncTCPSocket::SyncTCPSocket(const std::string& raw_ip_add, unsigned short port_n) :
                                            sock_(ios_) ,
                                            ep_(boost::asio::ip::address::from_string(raw_ip_add), port_n) {
+
+    sock_.open(ep_.protocol());
+}
+SyncTCPSocket::~SyncTCPSocket() {
+    // Exit from the connection and
+    // TODO tell the server that we are exiting
+    // TODO see shutdown exceptions and manage
+    std::cout << "Connection and Socket closing down... " <<std::endl ;
+    sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+    sock_.close();
+}
+void SyncTCPSocket::ConnectServer() {
     int retry_connection = 5;
     while (retry_connection) {
         try {
-            std::cout << "Establishing connection to server " << raw_ip_add <<std::endl ;
-            sock_.open(ep_.protocol());
+            std::cout << "Establishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
             sock_.connect(ep_);
             break; // Usciamo dal while perchè connessione avvenuta con successo
         }
-            catch (boost::system::system_error &e) {
+        catch (boost::system::system_error &e) {
             retry_connection--;
             if(retry_connection == 0){
                 //TODO vedere std::exit e cose varie
@@ -38,36 +49,20 @@ ConnectServer::ConnectServer(const std::string& raw_ip_add,unsigned short port_n
     }
 
     std::cout << "Server connesso\n" << std::endl;
-
 }
-
-ConnectServer::~ConnectServer() {
-    // Exit from the connection and
-    // TODO tell the server that we are exiting
-    // TODO see shutdown exceptions and manage
-    std::cout << "Connection and Socket closing down... " <<std::endl ;
-    sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-    sock_.close();
-}
-
-bool ConnectServer::Authenticate() {
+bool SyncTCPSocket::Authenticate() {
 
     Credential credential_ = Authentication::get_Instance()->ReadCredential();
 
     std::string buf = credential_.username_ + " " + credential_.password_ + "\n";
 
-
-
     int dim = buf.size();
-
 
     //boost::asio::write(sock_, boost::asio::buffer( std::to_string(dim) ));
 
     boost::asio::write(sock_, boost::asio::buffer(buf));
 
     std::cout << "Ho mandato " << buf << "di dim " << dim << std::endl;
-
-
 
     const unsigned char MESSAGE_SIZE = 1;
 
@@ -85,3 +80,4 @@ bool ConnectServer::Authenticate() {
     } else
     return false;
 }
+
