@@ -7,10 +7,10 @@
 /* 01 project includes */
 
 #include "sync_tcp_socket.h"
+#include "config.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include <authentication.h>
-#include "config.h"
+
 
 /* 02 externs */
 /* 03 defines */
@@ -20,26 +20,26 @@
 
 int main(int argc, char *argv[])
 {
-    Connection connection_ =  Config::get_Instance()->ReadConnection();
+    RawEndpoint connection_ =  Config::get_Instance()->ReadConnection();
 
     //TODO valutare se mettere try catch
-    //socket creation
+    //sync socket for auth creation
     SyncTCPSocket client_sync(connection_.raw_ip_address, connection_.port_num);
     //socket connecting, will be used for authentication
-    client_sync.ConnectServer();
+    client_sync.ConnectServer(5);
 
     if(! Config::get_Instance()->isConfig() ){
         Config::get_Instance()->startConfig();
     }
 
     //TODO Lanciare detro isConfig e startConfig delle eccezioni di una classe
-    //da fare e poi catcharle nel main per terminare il programma.
-    //Es. No indirizzo ip per connessione server
+    // da fare e poi catcharle nel main per terminare il programma.
+    // Es. No indirizzo ip per connessione server
 
+    //Auth loop, while the password is wrong asks for a new identity. Will exit as soon as
+    //data inserted is verified correctly.
     while( !client_sync.Authenticate() ){
-
         Config::get_Instance()->startConfig();
-
     }
 
     std::cout << "AUTENTICATOOOO" << std::endl;

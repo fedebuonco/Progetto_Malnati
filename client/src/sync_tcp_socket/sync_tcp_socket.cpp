@@ -10,34 +10,42 @@
 #include <authentication.h>
 #include "sync_tcp_socket.h"
 
-
+/// Initialize socket, endpoint and parse the raw ip. After that opens the socket using the specified protocol, TCP.
+/// \param raw_ip_add Parsed raw ip
+/// \param port port connecting to
 SyncTCPSocket::SyncTCPSocket(const std::string& raw_ip_add, unsigned short port_n) :
                                            sock_(ios_) ,
                                            ep_(boost::asio::ip::address::from_string(raw_ip_add), port_n) {
 
     sock_.open(ep_.protocol());
 }
+
+
+/// Shutdown both part(sending & reciving) and closes the socket giving back the resource to the system.
 SyncTCPSocket::~SyncTCPSocket() {
     // Exit from the connection and
     // TODO tell the server that we are exiting
     // TODO see shutdown exceptions and manage
-    std::cout << "Connection and Socket closing down... " <<std::endl ;
+    std::cout << "RawEndpoint and Socket closing down... " <<std::endl ;
     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
     sock_.close();
 }
-void SyncTCPSocket::ConnectServer() {
-    int retry_connection = 5;
-    while (retry_connection) {
+
+
+/// Connect the socket to the server. Tries the connection for a specified number of times
+/// \param n_tries Number of re tries done.
+void SyncTCPSocket::ConnectServer(int n_tries) {
+    while (n_tries) {
         try {
             std::cout << "Establishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
             sock_.connect(ep_);
             break; // Usciamo dal while perchè connessione avvenuta con successo
         }
         catch (boost::system::system_error &e) {
-            retry_connection--;
-            if(retry_connection == 0){
+            n_tries--;
+            if(n_tries == 0){
                 //TODO vedere std::exit e cose varie
-                std::cerr << "Connection Problem - Server not responding or wrong IP address/Port (" << e.code().value() << ")" <<std::endl ;
+                std::cerr << "RawEndpoint Problem - Server not responding or wrong IP address/Port (" << e.code().value() << ")" <<std::endl ;
                 std::exit(1002);
             }
         }
@@ -51,27 +59,26 @@ void SyncTCPSocket::ConnectServer() {
     std::cout << "Server connesso\n" << std::endl;
 }
 
+
 /// Will send username and password. After that it will shutdown the send part of the socket thus providing the server a way to
-/// tell that the connection is over
+/// tell that the connection is over. After the authenticate the socket is basically useless and needs to be shutdown completly.
+/// \return True if Auth went ok and user has successfully logged in, False if not.
 bool SyncTCPSocket::Authenticate() {
 
     Credential credential_ = Authentication::get_Instance()->ReadCredential();
 
     std::string auth_buf = credential_.username_ + " " + credential_.password_ + "\n";
 
-    //int dim = buf.size();
-    //boost::asio::write(sock_, boost::asio::buffer( std::to_string(dim) ));
-
     boost::asio::write(sock_, boost::asio::buffer(auth_buf));
 
     std::cout << "DEBUG: Sent  " << auth_buf << std::endl;
-    //TODO we can do this only if we decide that syncTCPSocket is just for authentication (could be right could be wrong)
     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
 
-    //Now we use an extensible buffer for the uknwow size response
+    //Now we use an extensible buffer for the uknouwn size response
     boost::asio::streambuf response_buf;
 
-    //Now let's wait the response using the same technique in the server ( we will shut down the sending part on the server)
+    //Now let's wait the response using the same technique in the server
+    //(we will shut down the sending part on the server)
     //prompting an eof error
     boost::system::error_code ec;
     boost::asio::read(sock_, response_buf, ec);

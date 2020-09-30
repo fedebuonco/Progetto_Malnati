@@ -16,13 +16,14 @@ private:
     boost::asio::ip::tcp::socket sock_;
 
 public:
+
     SyncTCPSocket(const std::string& raw_ip_add, unsigned short port);
+
+    ~SyncTCPSocket();
 
     bool Authenticate();
 
-   ~SyncTCPSocket();
-
-    void ConnectServer();
+    void ConnectServer(int n_tries);
 };
 
 

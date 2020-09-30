@@ -9,6 +9,8 @@
 
 Config *Config::m_ConfigClass = nullptr;
 
+/// Assures that only one instance is present.
+/// \return the instance of config class
 Config *Config::get_Instance() {
 
     if(!m_ConfigClass){
@@ -21,6 +23,7 @@ Config *Config::get_Instance() {
  * Check if the configuration file has username and password inside
  * Return true if is valid while false if is NULL
  * */
+
 bool Config::isConfig() {
 
         //Take the use credential and save it
@@ -39,7 +42,7 @@ void Config::startConfig() {
     std::string username;
     std::string password;
 
-    std::cout << "It turns out that you are not legged id.\nPlease provide a username and password." << std::endl;
+    std::cout << "It turns out that you are not logged id.\nPlease provide a username and password." << std::endl;
 
     do {
         std::cin.clear(); //Clear cin if there was some error during the previous loop
@@ -85,7 +88,7 @@ void Config::writeConfig(const std::string& username, const std::string& passwor
     }
 }
 
-Connection Config::ReadConnection() {
+RawEndpoint Config::ReadConnection() {
 
     namespace pt = boost::property_tree;
 
@@ -102,12 +105,12 @@ Connection Config::ReadConnection() {
 
         //TODO pensare a quando è valido o no ip e port
         if( raw_ip_address=="NULL" || port_num==0){
-            std::cerr << "Connection file error" << std::endl;
+            std::cerr << "RawEndpoint file error" << std::endl;
             //TODO Throw error and catch sotto
             //throw std::exception();
         }
 
-        return Connection{raw_ip_address, port_num};
+        return RawEndpoint{raw_ip_address, port_num};
 
     }
     catch (const boost::property_tree::ptree_bad_path& e2){
