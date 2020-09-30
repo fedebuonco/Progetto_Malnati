@@ -23,7 +23,6 @@ Config *Config::get_Instance() {
  * Check if the configuration file has username and password inside
  * Return true if is valid while false if is NULL
  * */
-
 bool Config::isConfig() {
 
         //Take the use credential and save it
@@ -88,17 +87,18 @@ void Config::writeConfig(const std::string& username, const std::string& passwor
     }
 }
 
-RawEndpoint Config::ReadConnection() {
+
+/// Reads the raw endpoint from the json file.
+/// \return A RawEndpoint used later to set up all the sockets.
+RawEndpoint Config::ReadRawEndpoint() {
 
     namespace pt = boost::property_tree;
-
     pt::ptree  root;
 
     try {
         // TODO gestire errori nella lettura del json
         //Read the file and put the content inside root
         pt::read_json("../config_file/connection.json", root);
-
 
         auto raw_ip_address = root.get<std::string>("ip");
         auto port_num = root.get<unsigned short>("port");
@@ -111,7 +111,6 @@ RawEndpoint Config::ReadConnection() {
         }
 
         return RawEndpoint{raw_ip_address, port_num};
-
     }
     catch (const boost::property_tree::ptree_bad_path& e2){
         std::cerr << "The configuration file has a wrong structure: it must have a 'Username' and 'Password' field" << std::endl;

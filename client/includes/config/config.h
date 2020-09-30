@@ -27,7 +27,7 @@ public:
 
     static Config* get_Instance();
 
-    RawEndpoint ReadConnection();
+    RawEndpoint ReadRawEndpoint();
 
     bool isConfig();
     void startConfig();
