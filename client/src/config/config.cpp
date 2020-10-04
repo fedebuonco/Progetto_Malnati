@@ -9,6 +9,8 @@
 
 Config *Config::m_ConfigClass = nullptr;
 
+/// Assures that only one instance is present.
+/// \return the instance of config class
 Config *Config::get_Instance() {
 
     if(!m_ConfigClass){
@@ -39,7 +41,7 @@ void Config::startConfig() {
     std::string username;
     std::string password;
 
-    std::cout << "It turns out that you are not legged id.\nPlease provide a username and password." << std::endl;
+    std::cout << "It turns out that you are not logged id.\nPlease provide a username and password." << std::endl;
 
     do {
         std::cin.clear(); //Clear cin if there was some error during the previous loop
@@ -85,10 +87,12 @@ void Config::writeConfig(const std::string& username, const std::string& passwor
     }
 }
 
-Connection Config::ReadConnection() {
+
+/// Reads the raw endpoint from the json file.
+/// \return A RawEndpoint used later to set up all the sockets.
+RawEndpoint Config::ReadRawEndpoint() {
 
     namespace pt = boost::property_tree;
-
     pt::ptree  root;
 
     try {
@@ -96,19 +100,17 @@ Connection Config::ReadConnection() {
         //Read the file and put the content inside root
         pt::read_json("../config_file/connection.json", root);
 
-
         auto raw_ip_address = root.get<std::string>("ip");
         auto port_num = root.get<unsigned short>("port");
 
         //TODO pensare a quando è valido o no ip e port
         if( raw_ip_address=="NULL" || port_num==0){
-            std::cerr << "Connection file error" << std::endl;
+            std::cerr << "RawEndpoint file error" << std::endl;
             //TODO Throw error and catch sotto
             //throw std::exception();
         }
 
-        return Connection{raw_ip_address, port_num};
-
+        return RawEndpoint{raw_ip_address, port_num};
     }
     catch (const boost::property_tree::ptree_bad_path& e2){
         std::cerr << "The configuration file has a wrong structure: it must have a 'Username' and 'Password' field" << std::endl;

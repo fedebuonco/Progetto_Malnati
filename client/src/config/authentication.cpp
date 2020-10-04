@@ -28,7 +28,6 @@ Authentication *Authentication::get_Instance() {
 
 Credential Authentication::ReadCredential() {
 
-
     namespace pt = boost::property_tree;
 
     //This is the tree root; inside there is the username and password (if the app is config)
@@ -49,13 +48,13 @@ Credential Authentication::ReadCredential() {
     catch (const boost::property_tree::ptree_bad_path& e2){
         std::cerr << "The configuration file has a wrong structure: it must have a 'Username' and 'Password' field" << std::endl;
 
-        std::exit(23);   //TO-DO: Check the error status
+        std::exit(23);   //TODO: Check the error status
 
     }
     catch (const boost::property_tree::json_parser_error& e1) {
         std::cerr <<"The configuration file was not found" << std::endl;
 
-        std::exit(12);   //TO-DO: Check the error status
+        std::exit(12);   //TODO: Check the error status
     }
 
 }

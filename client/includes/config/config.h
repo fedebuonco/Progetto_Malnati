@@ -7,25 +7,27 @@
 
 #include <string>
 
-struct Connection{
+/// Encapsulates a raw ip and a port.
+struct RawEndpoint{
     std::string raw_ip_address;
     unsigned short port_num;
 };
 
+///
 class Config {
     Config()= default;
-
     static Config* m_ConfigClass;
-
     void writeConfig(const std::string& username, const std::string& password);
 
 public:
+    //Singleton, eliminate copy and assignment
     Config(const Config&)= delete;
     Config& operator=(const Config&)=delete;
 
+
     static Config* get_Instance();
 
-    Connection ReadConnection();
+    RawEndpoint ReadRawEndpoint();
 
     bool isConfig();
     void startConfig();

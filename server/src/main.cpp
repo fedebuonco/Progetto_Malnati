@@ -32,24 +32,21 @@ int main(){
         std::cout << "Mess" << bufSize << std::endl;
 */
 
-        boost::asio::streambuf buf2;
-        boost::asio::read_until(sock, buf2, '\n');
+        boost::asio::streambuf request_buf;
+
+        boost::system::error_code ec;
+
+        //Recive the req
+        boost::asio::read(sock, request_buf, ec);
+        if (ec != boost::asio::error::eof){
+            //qua se non ho ricevuto la chiusura del client
+            std::cout<<"DEBUG: NON ho ricevuto il segnale di chiusura del client";
+            throw boost::system::system_error(ec);
+        }
 
         std::string message;
-
-        std::istream input_stream(&buf2);
+        std::istream input_stream(&request_buf);
         std::getline(input_stream, message);
-
-
-        /*int num = 9;
-
-        unsigned char MESSAGE_SIZE = num;
-
-        char buf[MESSAGE_SIZE];
-
-        boost::asio::read(sock, boost::asio::buffer(buf, MESSAGE_SIZE));
-
-        std::string read2_ = std::string(buf, MESSAGE_SIZE);*/
 
         std::cout << "Ho letto  " << message << std::endl;
 
@@ -60,8 +57,8 @@ int main(){
         }
 
         boost::asio::write(sock, boost::asio::buffer(uguale));
-        std::cout << "Size: " << uguale.size();
-
+        // Send the eof error shutting down the server.
+        sock.shutdown(boost::asio::socket_base::shutdown_send);
        //TODO fare ciclo qui si chiude il server
          }
     catch (boost::system::system_error &e) {
