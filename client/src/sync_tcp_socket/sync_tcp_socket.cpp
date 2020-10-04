@@ -27,6 +27,7 @@ SyncTCPSocket::~SyncTCPSocket() {
     // TODO tell the server that we are exiting
     // TODO see shutdown exceptions and manage
     std::cout << "RawEndpoint and Socket closing down... " <<std::endl ;
+    //TODO fix error in linux where wew have a exception when we shutodwn a scoket like this
     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
     sock_.close();
 }
@@ -46,6 +47,7 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
             n_tries--;
             if(n_tries == 0){
                 //TODO vedere std::exit e cose varie
+                //
                 std::cerr << "RawEndpoint Problem - Server not responding or wrong IP address/Port (" << e.code().value() << ")" <<std::endl ;
                 std::exit(1002);
             }
