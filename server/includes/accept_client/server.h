@@ -10,6 +10,7 @@
 #include <atomic>
 #include <boost/asio.hpp>
 
+
 class Server {
 private:
     std::unique_ptr<std::thread> thread_;
