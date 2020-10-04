@@ -3,11 +3,14 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <iostream>
 #include <utilities.h>
+#include <authentication.h>
 
 #define CREDENTIAL_PATH "../config_file/credential.json"
 
 Config *Config::m_ConfigClass = nullptr;
 
+/// Assures that only one instance is present.
+/// \return the instance of config class
 Config *Config::get_Instance() {
 
     if(!m_ConfigClass){
@@ -22,49 +25,23 @@ Config *Config::get_Instance() {
  * */
 bool Config::isConfig() {
 
-    namespace pt = boost::property_tree;
+        //Take the use credential and save it
+        Credential credential_ = Authentication::get_Instance()->ReadCredential();
 
-    //This is the tree root; inside there is the username and password (if the app is config)
-    pt::ptree  root;
+        //Check if there aren't valid credential
+        return Authentication::get_Instance()->IsValidCredential(credential_);
 
-    try {
-        //Read the file and put the content inside root
-        pt::read_json(CREDENTIAL_PATH, root);
-
-        auto username = root.get<std::string>("username");
-        auto password = root.get<std::string>("password");
-
-        if (DEBUG) std::cout << "Inside config there is username: " << username<< " and password: " << password << std::endl;
-
-        if(username=="NULL" || password=="NULL"){
-            //This means that the user is not legged in
-            return false;
-        } else {
-            return true;
-        }
-
-    } catch (const boost::property_tree::ptree_bad_path& e2){
-        std::cerr << "The configuration file has a wrong structure: it must have a 'Username' and 'Password' field" << std::endl;
-
-        std::exit(23);   //TO-DO: Check the error status
-
-    } catch (const boost::property_tree::json_parser_error& e1) {
-        std::cerr <<"The configuration file was not found" << std::endl;
-
-        std::exit(12);   //TO-DO: Check the error status
-    }
-  }
+}
 
 /**
- * Asks the user to authenticate (username and password).
- * If is correct save the credential inside the JSON file.
+ * Asks the user to authenticate (username and password) and save the credential inside the JSON file.
  * */
 void Config::startConfig() {
 
     std::string username;
     std::string password;
 
-    std::cout << "It turns out that you are not legged id.\nPlease provide a username and password." << std::endl;
+    std::cout << "It turns out that you are not logged id.\nPlease provide a username and password." << std::endl;
 
     do {
         std::cin.clear(); //Clear cin if there was some error during the previous loop
@@ -109,3 +86,46 @@ void Config::writeConfig(const std::string& username, const std::string& passwor
         std::exit(12);   //TO-DO: Check the error status
     }
 }
+
+
+/// Reads the raw endpoint from the json file.
+/// \return A RawEndpoint used later to set up all the sockets.
+RawEndpoint Config::ReadRawEndpoint() {
+
+    namespace pt = boost::property_tree;
+    pt::ptree  root;
+
+    try {
+        // TODO gestire errori nella lettura del json
+        //Read the file and put the content inside root
+        pt::read_json("../config_file/connection.json", root);
+
+        auto raw_ip_address = root.get<std::string>("ip");
+        auto port_num = root.get<unsigned short>("port");
+
+        //TODO pensare a quando è valido o no ip e port
+        if( raw_ip_address=="NULL" || port_num==0){
+            std::cerr << "RawEndpoint file error" << std::endl;
+            //TODO Throw error and catch sotto
+            //throw std::exception();
+        }
+
+        return RawEndpoint{raw_ip_address, port_num};
+    }
+    catch (const boost::property_tree::ptree_bad_path& e2){
+        std::cerr << "The configuration file has a wrong structure: it must have a 'Username' and 'Password' field" << std::endl;
+
+        std::exit(23);   //TO-DO: Check the error status
+
+    }
+    catch (const boost::property_tree::json_parser_error& e1) {
+        std::cerr <<"The configuration file was not found" << std::endl;
+
+        std::exit(12);   //TO-DO: Check the error status
+    }
+
+
+}
+
+
+

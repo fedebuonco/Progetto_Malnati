@@ -20,7 +20,7 @@ if (UNIX)
     add_executable(server src/main.cpp
             src/accept_client/accept_client.cpp includes/accept_client/accept_client.h
             src/transfer/transfer.cpp includes/transfer/transfer.h
-            src/watcher/watcher.cpp includes/watcher/watcher.h  )
+            src/watcher/watcher.cpp includes/watcher/watcher.h src/accept_client/service.cpp includes/accept_client/service.h)
 endif (UNIX)
 
 #-------WIN---------------------
@@ -48,7 +48,7 @@ if (WIN32)
         add_executable(server src/main.cpp
                 src/accept_client/accept_client.cpp includes/accept_client/accept_client.h
                 src/transfer/transfer.cpp includes/transfer/transfer.h
-                src/watcher/watcher.cpp includes/watcher/watcher.h  )
+                src/watcher/watcher.cpp includes/watcher/watcher.h src/accept_client/service.cpp includes/accept_client/service.h)
 
     endif()
 endif (WIN32)
