@@ -7,7 +7,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/asio.hpp>
-#include <authentication.h>
+#include "authentication.h"
 #include "sync_tcp_socket.h"
 
 /// Initialize socket, endpoint and parse the raw ip. After that opens the socket using the specified protocol, TCP.
@@ -37,6 +37,7 @@ SyncTCPSocket::~SyncTCPSocket() {
 void SyncTCPSocket::ConnectServer(int n_tries) {
     while (n_tries) {
         try {
+            //TODO Add a delay good for linux and windows otherwise useless
             std::cout << "Establishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
             sock_.connect(ep_);
             break; // Usciamo dal while perchè connessione avvenuta con successo

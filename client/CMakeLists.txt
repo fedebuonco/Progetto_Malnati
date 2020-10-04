@@ -15,7 +15,7 @@ if (UNIX)
     set(CMAKE_CXX_FLAGS -pthread)
     add_executable(client src/main.cpp src/transfer/transfer.cpp includes/transfer/transfer.h src/sync_tcp_socket/sync_tcp_socket.cpp
             includes/sync_tcp_socket/sync_tcp_socket.h src/utilities/utilities.cpp includes/utilities/utilities.h src/watcher/watcher.cpp
-            includes/watcher/watcher.h src/config/config.cpp includes/config/config.h)
+            includes/watcher/watcher.h src/config/config.cpp includes/config/config.h src/config/authentication.cpp includes/config/authentication.h)
 endif (UNIX)
 
 #-------WIN---------------------
