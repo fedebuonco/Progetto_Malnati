@@ -1,8 +1,10 @@
 #include <iostream>
 #include <boost/asio.hpp>
+#include <server.h>
 
 int main(){
 
+/* old main
     const int BACKLOG_SIZE = 10;
 
     unsigned short port_num = 3333;
@@ -24,13 +26,13 @@ int main(){
 
 
 
-/*
+//
         char bufSize[1];
 
         boost::asio::read(sock, boost::asio::buffer(bufSize, 1));
 
         std::cout << "Mess" << bufSize << std::endl;
-*/
+//
 
         boost::asio::streambuf request_buf;
 
@@ -66,10 +68,20 @@ int main(){
             std::cerr << "Errore genertico server " << std::endl;
             return e.code().value();
     }
+*/
 
+    unsigned short port_num = 3333;
 
+    try{
+        Server srv;
+        srv.Start(port_num);
 
+        std::this_thread::sleep_for(std::chrono::seconds(60));
 
+        srv.Stop();
+    }catch(...){
+        //TODO catch
+    }
     return 0;
 }
 
