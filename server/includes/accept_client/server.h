@@ -10,7 +10,7 @@
 #include <atomic>
 #include <boost/asio.hpp>
 
-
+/// Creates a server that listen on a specific port.
 class Server {
 private:
     std::unique_ptr<std::thread> thread_;

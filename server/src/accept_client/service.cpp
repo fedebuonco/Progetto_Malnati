@@ -11,8 +11,9 @@ void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock) {
     th.detach();
 }
 
+/// Real handling starts here. Should distinguish auth requests and tree requests
 void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
-    //TODO handle the request based on the type if auth do something if tree do another thing.
+    // TODO handle the request based on the type if auth do something if tree do another thing.
     // for now assumes that always a auth request
 
     // Auth request read
@@ -44,4 +45,6 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
     // Send the eof error shutting down the server.
     sock->shutdown(boost::asio::socket_base::shutdown_send);
     //TODO fare ciclo qui si chiude il server
+    //TODO controllare come ridare al sistema il socket. Lo aveva istanziato accept_client ora che è stato utilizzato
+    // lo potrebbe deallocare qua. Bisogna vedere se sock shutdown è un deallocatore
 }
