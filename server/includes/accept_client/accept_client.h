@@ -12,7 +12,7 @@
 
 #define BACKLOG_SIZE 10
 
-/// Rapresents an high level acceptor. Accepts and instantiate a Service.
+/// Represents an high level acceptor. Accepts and instantiate a Service.
 /// When constructed it instantiates an acceptor socket and starts listening on it.
 ///
 class AcceptClient{

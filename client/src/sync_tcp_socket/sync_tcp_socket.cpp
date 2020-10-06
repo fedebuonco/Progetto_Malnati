@@ -80,7 +80,7 @@ bool SyncTCPSocket::Authenticate() {
     //Now we use an extensible buffer for the uknouwn size response
     boost::asio::streambuf response_buf;
 
-    //Now let's wait the response using the same technique in the server
+    //Now let's wait the response using theAcceptClient same technique in the server
     //(we will shut down the sending part on the server)
     //prompting an eof error
     boost::system::error_code ec;

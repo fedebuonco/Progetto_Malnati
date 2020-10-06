@@ -44,6 +44,11 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
     boost::asio::write(*sock, boost::asio::buffer(uguale));
     // Send the eof error shutting down the server.
     sock->shutdown(boost::asio::socket_base::shutdown_send);
+
+    //Now the service class was instantiated in the heap so someone should deallocate it.
+    //As the service class has finished it's work we are gonna do it here
+    delete this;
+
     //TODO fare ciclo qui si chiude il server
     //TODO controllare come ridare al sistema il socket. Lo aveva istanziato accept_client ora che è stato utilizzato
     // lo potrebbe deallocare qua. Bisogna vedere se sock shutdown è un deallocatore
