@@ -14,15 +14,10 @@ private:
     boost::asio::io_service ios_;
     boost::asio::ip::tcp::endpoint ep_;
     boost::asio::ip::tcp::socket sock_;
-
 public:
-
     SyncTCPSocket(const std::string& raw_ip_add, unsigned short port);
-
     ~SyncTCPSocket();
-
     bool Authenticate();
-
     void ConnectServer(int n_tries);
 };
 

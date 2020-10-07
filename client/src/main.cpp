@@ -1,16 +1,11 @@
 /* main.cpp - Backup-Client, the client used in our app in order to start the synchronization*/
-
 /* 00 system includes */
-
 #include <iostream>
-
 /* 01 project includes */
-
 #include "sync_tcp_socket.h"
 #include "config.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-
 
 /* 02 externs */
 /* 03 defines */

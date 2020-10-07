@@ -7,6 +7,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/asio.hpp>
+#include <control_message.h>
 #include "authentication.h"
 #include "sync_tcp_socket.h"
 
@@ -72,9 +73,13 @@ bool SyncTCPSocket::Authenticate() {
 
     std::string auth_buf = credential_.username_ + " " + credential_.password_ + "\n";
 
-    boost::asio::write(sock_, boost::asio::buffer(auth_buf));
+    //Creation Of the JSON string
+    ControlMessage message_obj{1,credential_.username_,credential_.password_,""};
+    std::string message_json = message_obj.ToJSON();
 
-    std::cout << "DEBUG: Sent  " << auth_buf << std::endl;
+    boost::asio::write(sock_, boost::asio::buffer(message_json));
+
+    std::cout << "DEBUG: Sent \n " << message_json << std::endl;
     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
 
     //Now we use an extensible buffer for the uknouwn size response

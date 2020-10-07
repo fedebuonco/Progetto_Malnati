@@ -2,6 +2,8 @@
 // Created by fede on 10/4/20.
 //
 
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 #include "service.h"
 
 /// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and detach it
@@ -14,9 +16,6 @@ void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock) {
 /// Real handling starts here. Should distinguish auth requests and tree requests
 void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
     // TODO handle the request based on the type if auth do something if tree do another thing.
-    // for now assumes that always a auth request
-
-    // Auth request read
 
     boost::asio::streambuf request_buf;
     boost::system::error_code ec;
@@ -29,21 +28,34 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
         throw boost::system::system_error(ec);
     }
 
-    std::string message;
-    std::istream input_stream(&request_buf);
-    std::getline(input_stream, message);
+    //Read the request_buf using an iterator and store it in a string
+    std::string request_json( (std::istreambuf_iterator<char>(&request_buf)), std::istreambuf_iterator<char>() );
+    //DEBUG
+    std::cout << "Ho letto  " << request_json << std::endl;
 
-    std::cout << "Ho letto  " << message << std::endl;
+    // Now we have the request, let's parse it
+    std::stringstream ss;
+    ss << request_json;
+    boost::property_tree::ptree request_ptree;
+    boost::property_tree::read_json(ss, request_ptree);
 
-    std::string uguale="0";
-
-    if(message=="MARCO MARCO"){
-        uguale="1";
+    //Now we parsed the request
+    int type;
+    type = request_ptree.get<int>("Type");
+    std::string success;
+    if (type == 1){
+        //AUTH
+        success = "1";
+        boost::asio::write(*sock, boost::asio::buffer(success));
+        // Send the eof error shutting down the server.
+        sock->shutdown(boost::asio::socket_base::shutdown_send);
+    } else {
+        // NON AUTH
+        success = "0";
+        boost::asio::write(*sock, boost::asio::buffer(success));
+        // Send the eof error shutting down the server.
+        sock->shutdown(boost::asio::socket_base::shutdown_send);
     }
-
-    boost::asio::write(*sock, boost::asio::buffer(uguale));
-    // Send the eof error shutting down the server.
-    sock->shutdown(boost::asio::socket_base::shutdown_send);
 
     //Now the service class was instantiated in the heap so someone should deallocate it.
     //As the service class has finished it's work we are gonna do it here

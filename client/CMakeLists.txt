@@ -13,9 +13,10 @@ include_directories(includes/config)
 #--------UNIX-------------------
 if (UNIX)
     set(CMAKE_CXX_FLAGS -pthread)
-    add_executable(client src/main.cpp src/transfer/transfer.cpp includes/transfer/transfer.h src/sync_tcp_socket/sync_tcp_socket.cpp
+    add_executable(client src/main.cpp src/sync_tcp_socket/sync_tcp_socket.cpp
             includes/sync_tcp_socket/sync_tcp_socket.h src/utilities/utilities.cpp includes/utilities/utilities.h src/watcher/watcher.cpp
-            includes/watcher/watcher.h src/config/config.cpp includes/config/config.h src/config/authentication.cpp includes/config/authentication.h)
+            includes/watcher/watcher.h src/config/config.cpp includes/config/config.h src/config/authentication.cpp includes/config/authentication.h
+            src/transfer/control_message.cpp includes/transfer/control_message.h)
 endif (UNIX)
 
 #-------WIN---------------------
@@ -40,9 +41,10 @@ if (WIN32)
         include_directories(${Boost_INCLUDE_DIR})
         link_directories(${Boost_LIBRARY_DIR})
 
-        add_executable(client src/main.cpp src/transfer/transfer.cpp includes/transfer/transfer.h src/sync_tcp_socket/sync_tcp_socket.cpp
+        add_executable(client src/main.cpp src/sync_tcp_socket/sync_tcp_socket.cpp
                 includes/sync_tcp_socket/sync_tcp_socket.h src/utilities/utilities.cpp includes/utilities/utilities.h src/watcher/watcher.cpp
-                includes/watcher/watcher.h src/config/config.cpp includes/config/config.h src/config/authentication.cpp includes/config/authentication.h)
+                includes/watcher/watcher.h src/config/config.cpp includes/config/config.h src/config/authentication.cpp includes/config/authentication.h
+                src/transfer/control_message.cpp includes/transfer/control_message.h)
 
     endif()
 endif (WIN32)
