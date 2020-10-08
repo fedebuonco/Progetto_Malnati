@@ -23,9 +23,9 @@ https://github.com/google/styleguide/blob/gh-pages/cppguide.html
 
 
 
-##MILESTONE
+## MILESTONE
 
-#Marco
+# Marco
 
 Server:
 - DB con username e hash degli utente
@@ -38,9 +38,9 @@ Client:
 - se risponde il server che è corretto salvo username, password e hash dentro credential
 - quindi da ora in poi ogni messaggio viene mandato con username e hash
 
-#Federico
+# Federico
 
 
 
-#Federica
+# Federica
 
