@@ -38,6 +38,9 @@ Client:
 - se risponde il server che è corretto salvo username, password e hash dentro credential
 - quindi da ora in poi ogni messaggio viene mandato con username e hash
 
+- selezionare cartella da cui partire
+- vedere come gestire eccezioni
+
 # Federico
 
 
