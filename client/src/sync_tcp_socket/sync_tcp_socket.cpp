@@ -73,13 +73,14 @@ bool SyncTCPSocket::Authenticate() {
 
     std::string auth_buf = credential_.username_ + " " + credential_.password_ + "\n";
 
-    //Creation Of the JSON string
+    //Creation of the Auth ControlMessage
     ControlMessage message_obj{1,credential_.username_,credential_.password_,""};
-    std::string message_json = message_obj.ToJSON();
+    //And sending it formatted in JSON language
+    boost::asio::write(sock_, boost::asio::buffer(message_obj.ToJSON()));
 
-    boost::asio::write(sock_, boost::asio::buffer(message_json));
+    // std::cout << "DEBUG: Sent \n " << message_json << std::endl;
 
-    std::cout << "DEBUG: Sent \n " << message_json << std::endl;
+    // we sent the Auth message, we will shutdown in order to tell the server that we sent all
     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
 
     //Now we use an extensible buffer for the uknouwn size response
