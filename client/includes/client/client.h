@@ -19,6 +19,8 @@ public:
 
     bool Auth();
 
+    void RequestTree();
+
 private:
     void Run(unsigned short port_num);
 };

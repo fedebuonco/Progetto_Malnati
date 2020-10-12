@@ -29,7 +29,10 @@ SyncTCPSocket::~SyncTCPSocket() {
     // TODO see shutdown exceptions and manage
     std::cout << "RawEndpoint and Socket closing down... " <<std::endl ;
     //TODO fix error in linux where wew have a exception when we shutodwn a scoket like this
-    sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+    boost::system::error_code ec;
+    //TODO qua magicamente va ignorato l'errore GRAVISSIMO
+    sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+    // Here we should read from the socket, catch the error and closing the socket
     sock_.close();
 }
 

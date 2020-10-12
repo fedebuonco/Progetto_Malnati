@@ -21,8 +21,11 @@ int main(int argc, char *argv[])
     // Creating the client and auth
     Client client{raw_endpoint};
     client.Auth();
-
-
     //From here on, we are authenticated.
     std::cout << "Auth Successfully" << std::endl;
+    // Now we will ask for tree computing
+    // TODO make this requesttree return the type we want/like/need
+    std::cout << "Asking for Tree" << std::endl;
+    client.RequestTree();
+
 }

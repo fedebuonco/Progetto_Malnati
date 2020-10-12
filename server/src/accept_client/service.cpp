@@ -20,6 +20,8 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
     boost::asio::streambuf request_buf;
     boost::system::error_code ec;
 
+    // let's read and then close the
+
     boost::asio::read(*sock, request_buf, ec);
     // This checks if the client has finished writing
     if (ec != boost::asio::error::eof){
@@ -48,13 +50,14 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
         success = "1";
         boost::asio::write(*sock, boost::asio::buffer(success));
         // Send the eof error shutting down the server.
-        sock->shutdown(boost::asio::socket_base::shutdown_send);
+        //TODO qua magicamente va ignorato l'errore GRAVISSIMO
+        sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
     } else {
         // NON AUTH
         success = "0";
         boost::asio::write(*sock, boost::asio::buffer(success));
         // Send the eof error shutting down the server.
-        sock->shutdown(boost::asio::socket_base::shutdown_send);
+        sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
     }
 
     //Now the service class was instantiated in the heap so someone should deallocate it.

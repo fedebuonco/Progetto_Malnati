@@ -3,7 +3,10 @@
 //
 
 #include <sync_tcp_socket.h>
+#include <control_message.h>
+#include <authentication.h>
 #include "../../includes/client/client.h"
+#include <boost/asio.hpp>
 /// Construct a Client.
 /// \param re Endpoint to connect to.
 Client::Client(RawEndpoint re) {
@@ -19,9 +22,9 @@ bool Client::Auth() {
     //TODO valutare se mettere try catch
 
     //SyncTCPSocket for auth using raw endpoint provided at construction.
-    SyncTCPSocket client_sync(server_re_.raw_ip_address, server_re_.port_num);
+    SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
     //socket will retry 5 times to connect
-    client_sync.ConnectServer(5);
+    tcpSocket.ConnectServer(5);
 
     if(! Config::get_Instance()->isConfig() ){
         Config::get_Instance()->startConfig();
@@ -32,11 +35,30 @@ bool Client::Auth() {
 
     //Auth loop, while the password is wrong asks for a new identity. Will exit as soon as
     //data inserted is verified correctly.
-    while( !client_sync.Authenticate() ){
+    while( !tcpSocket.Authenticate() ){
         Config::get_Instance()->startConfig();
     }
 
     return true;
+
+}
+
+/// Request current tree of the cloud dir stored in the server. Handles the result by starting the diff
+/// computation.
+void Client::RequestTree() {
+    //SyncTCPSocket for request
+    Credential credential = Authentication::get_Instance()->ReadCredential();
+    SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
+    //socket will retry 5 times to connect
+    tcpSocket.ConnectServer(5);
+
+    //Here we create the ControlMessage for TreeRequest ( Type = 2 )
+    ControlMessage message_obj{2,credential.username_,credential.password_,""};
+    //And sending it formatted in JSON language
+    boost::asio::write(tcpSocket.sock_, boost::asio::buffer(message_obj.ToJSON()));
+
+    //TODO here handle the RequestTree Answer
+    // we will call the diff
 
 }
 
