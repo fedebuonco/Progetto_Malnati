@@ -4,6 +4,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <control_message.h>
 #include "service.h"
 
 /// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and detach it
@@ -15,13 +16,12 @@ void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
 /// Real handling starts here. Should distinguish auth requests and tree requests
 void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
-    // TODO handle the request based on the type if auth do something if tree do another thing.
+
+    //Here we read the request -> parse it in a ptree -> use the ptree to build the ControlMessage and then we
+    //Switch case in order to correctly handle it.
 
     boost::asio::streambuf request_buf;
     boost::system::error_code ec;
-
-    // let's read and then close the
-
     boost::asio::read(*sock, request_buf, ec);
     // This checks if the client has finished writing
     if (ec != boost::asio::error::eof){
@@ -31,33 +31,38 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
     }
 
     //Read the request_buf using an iterator and store it in a string
+    //TODO might be an easier method to do this
     std::string request_json( (std::istreambuf_iterator<char>(&request_buf)), std::istreambuf_iterator<char>() );
     //DEBUG
     std::cout << "Ho letto  " << request_json << std::endl;
 
-    // Now we have the request, let's parse it
+    // Now we have the request in a json formatted string, let's parse it in a request_ptree
     std::stringstream ss;
     ss << request_json;
     boost::property_tree::ptree request_ptree;
     boost::property_tree::read_json(ss, request_ptree);
 
-    //Now we parsed the request
-    int type;
-    type = request_ptree.get<int>("Type");
-    std::string success;
-    if (type == 1){
-        //AUTH
-        success = "1";
-        boost::asio::write(*sock, boost::asio::buffer(success));
-        // Send the eof error shutting down the server.
-        //TODO qua magicamente va ignorato l'errore GRAVISSIMO
-        sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
-    } else {
-        // NON AUTH
-        success = "0";
-        boost::asio::write(*sock, boost::asio::buffer(success));
-        // Send the eof error shutting down the server.
-        sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
+    //Now we parsed the request and we use the ptree object in  order to create the corresponding ControlMessage
+    ControlMessage request_message{request_ptree};
+
+    // Here based on the type of the message we switch accordingly.
+    switch (request_message.type_) {
+        case 1:{             //AUTH REQUEST
+            //TODO real checkIdentity and control message
+            // TODO change control message constructor for now in the client we will only check that is 51 not if auth = true/false
+            ControlMessage check_result{51,"","",""};
+            boost::asio::write(*sock, boost::asio::buffer(check_result.ToJSON()));
+            // Send the eof error shutting down the server.
+            //TODO qua magicamente va ignorato l'errore GRAVISSIMO
+            sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
+            break;
+        }
+        case 2:{            //TREE REQUEST
+            //TODO starts computing tree and sends it back
+            std::cout<< "TREE COMPUTATION REQUESTED"<< std::endl;
+            break;
+        }
+
     }
 
     //Now the service class was instantiated in the heap so someone should deallocate it.

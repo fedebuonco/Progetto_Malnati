@@ -71,22 +71,17 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
 /// tell that the connection is over. After the authenticate the socket is basically useless and needs to be shutdown completly.
 /// \return True if Auth went ok and user has successfully logged in, False if not.
 bool SyncTCPSocket::Authenticate() {
-
     Credential credential_ = Authentication::get_Instance()->ReadCredential();
-
-    std::string auth_buf = credential_.username_ + " " + credential_.password_ + "\n";
-
-    //Creation of the Auth ControlMessage
+    //Creation of the Auth ControlMessage type = 1
+    //TODO global define so that we can write ControlMessage message_obj{AUTH_CLIENT,credential_.username_,credential_.password_,""};
     ControlMessage message_obj{1,credential_.username_,credential_.password_,""};
+
     //And sending it formatted in JSON language
     boost::asio::write(sock_, boost::asio::buffer(message_obj.ToJSON()));
-
-    // std::cout << "DEBUG: Sent \n " << message_json << std::endl;
-
     // we sent the Auth message, we will shutdown in order to tell the server that we sent all
     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
 
-    //Now we use an extensible buffer for the uknouwn size response
+    //Now we use an extensible buffer for the unknown size response
     boost::asio::streambuf response_buf;
 
     //Now let's wait the response using theAcceptClient same technique in the server
@@ -94,22 +89,33 @@ bool SyncTCPSocket::Authenticate() {
     //prompting an eof error
     boost::system::error_code ec;
     boost::asio::read(sock_, response_buf, ec);
-    if (ec == boost::asio::error::eof) {
-        //We handle the response parsing a string and then printing it.
-        std::istream is(&response_buf);
-        std::string response_str;
-        is >> response_str;
-        std::cout << "Ho letto  " << response_str << std::endl;
-
-        if(response_str=="1"){
-            return true;
-        } else
-            return false;
-
-    } else {
-        //TODO handle qualcosa??
+    if (ec != boost::asio::error::eof) {
     }
+    //We handle the response parsing a string and then printing it.
+    //Read the response_buf using an iterator and store it in a string
+    //TODO might be an easier method to do this
+    std::string response_json( (std::istreambuf_iterator<char>(&response_buf)), std::istreambuf_iterator<char>() );
+    //DEBUG
+    std::cout << "Control Auth message has arrived" << response_json << std::endl;
 
+    // Now we have the request in a json formatted string, let's parse it in a request_ptree
+    std::stringstream ss;
+    ss << response_json;
+    boost::property_tree::ptree response_ptree;
+    boost::property_tree::read_json(ss, response_ptree);
+
+    //Now we parsed the request and we use the ptree object in  order to create the corresponding ControlMessage
+    ControlMessage response_message{response_ptree};
+    if(response_message.type_ == 51){// it means we are actually dealing with a auth response (what we were expecting)
+
+        //TODO return true false accordingly to the body of the control message received
+        // for now we just check it is an auth response
+        // later on we will check the result
+        // auth = true /false
+        std::cout << "Auth Successfully" << std::endl;
+        return true;
+    } else
+        return false;
 
 
 

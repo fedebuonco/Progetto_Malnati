@@ -1,9 +1,9 @@
 //
-// Created by fede on 10/7/20.
+// Created by fede on 10/14/20.
 //
 
-#include <iostream>
 #include "control_message.h"
+#include <iostream>
 
 /// Constructor for the control message. Type + username and password or Type + tree are mandatory, we cant send a mess
 /// without type.
@@ -28,6 +28,7 @@ ControlMessage::ControlMessage(boost::property_tree::ptree pt){
     this->username_ = pt.get<std::string>("Username");
     this->password_ = pt.get<std::string>("Password");
 };
+
 
 
 /// This will convert the object into a suitable JSON string (One that follows our protocol).
