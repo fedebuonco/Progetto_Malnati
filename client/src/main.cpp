@@ -2,17 +2,9 @@
 /* 00 system includes */
 #include <iostream>
 /* 01 project includes */
-#include "sync_tcp_socket.h"
 #include "config.h"
 #include "../includes/client/client.h"
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-
-/* 02 externs */
-/* 03 defines */
-/* 04 typedefs */
-/* 05 globals (but don't)*/
-/* 06 ancillary function prototypes if any */
 
 int main(int argc, char *argv[])
 {
@@ -23,7 +15,7 @@ int main(int argc, char *argv[])
     client.Auth();
     //From here on, we are authenticated.
     // Now we will ask for tree computing
-    // TODO make this requesttree return the type we want/like/need
+    // TODO make this requests return the type we want/like/need
     std::cout << "Asking for Tree" << std::endl;
     client.RequestTree();
 

@@ -21,7 +21,6 @@ SyncTCPSocket::SyncTCPSocket(const std::string& raw_ip_add, unsigned short port_
     sock_.open(ep_.protocol());
 }
 
-
 /// Shutdown both part(sending & reciving) and closes the socket giving back the resource to the system.
 SyncTCPSocket::~SyncTCPSocket() {
     // Exit from the connection and
@@ -35,7 +34,6 @@ SyncTCPSocket::~SyncTCPSocket() {
     // Here we should read from the socket, catch the error and closing the socket
     sock_.close();
 }
-
 
 /// Connect the socket to the server. Tries the connection for a specified number of times
 /// \param n_tries Number of re tries done.
@@ -65,7 +63,6 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
 
     std::cout << "Server connesso\n" << std::endl;
 }
-
 
 /// Will send username and password. After that it will shutdown the send part of the socket thus providing the server a way to
 /// tell that the connection is over. After the authenticate the socket is basically useless and needs to be shutdown completly.
@@ -107,7 +104,6 @@ bool SyncTCPSocket::Authenticate() {
     //Now we parsed the request and we use the ptree object in  order to create the corresponding ControlMessage
     ControlMessage response_message{response_ptree};
     if(response_message.type_ == 51){// it means we are actually dealing with a auth response (what we were expecting)
-
         //TODO return true false accordingly to the body of the control message received
         // for now we just check it is an auth response
         // later on we will check the result
@@ -116,8 +112,5 @@ bool SyncTCPSocket::Authenticate() {
         return true;
     } else
         return false;
-
-
-
 }
 

@@ -7,6 +7,7 @@
 #include <authentication.h>
 #include "../../includes/client/client.h"
 #include <boost/asio.hpp>
+
 /// Construct a Client.
 /// \param re Endpoint to connect to.
 Client::Client(RawEndpoint re) {
