@@ -36,21 +36,15 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
     //DEBUG
     std::cout << "Ho letto  " << request_json << std::endl;
 
-    // Now we have the request in a json formatted string, let's parse it in a request_ptree
-    std::stringstream ss;
-    ss << request_json;
-    boost::property_tree::ptree request_ptree;
-    boost::property_tree::read_json(ss, request_ptree);
-
     //Now we parsed the request and we use the ptree object in  order to create the corresponding ControlMessage
-    ControlMessage request_message{request_ptree};
+    ControlMessage request_message{request_json};
 
     // Here based on the type of the message we switch accordingly.
     switch (request_message.type_) {
         case 1:{             //AUTH REQUEST
             //TODO real checkIdentity and control message
             // TODO change control message constructor for now in the client we will only check that is 51 not if auth = true/false
-            ControlMessage check_result{51,"","",""};
+            ControlMessage check_result{51};
             boost::asio::write(*sock, boost::asio::buffer(check_result.ToJSON()));
             // Send the eof error shutting down the server.
             //TODO qua magicamente va ignorato l'errore GRAVISSIMO

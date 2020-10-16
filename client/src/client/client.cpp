@@ -55,7 +55,12 @@ void Client::RequestTree() {
 
     //Here we create the ControlMessage for TreeRequest ( Type = 2 )
     //TODO this will be key not the actual username and pass
-    ControlMessage message_obj{2,credential.username_,credential.password_,""};
+    ControlMessage message_obj{2};
+    //Adding User and Password
+    //TODO Change this after we decide to add keys
+    message_obj.AddElement("Username",credential.username_);
+    message_obj.AddElement("Password:",credential.password_);
+
     //And sending it formatted in JSON language
     boost::asio::write(tcpSocket.sock_, boost::asio::buffer(message_obj.ToJSON()));
 

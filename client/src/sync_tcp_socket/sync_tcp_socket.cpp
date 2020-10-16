@@ -70,11 +70,15 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
 bool SyncTCPSocket::Authenticate() {
     Credential credential_ = Authentication::get_Instance()->ReadCredential();
     //Creation of the Auth ControlMessage type = 1
-    //TODO global define so that we can write ControlMessage message_obj{AUTH_CLIENT,credential_.username_,credential_.password_,""};
-    ControlMessage message_obj{1,credential_.username_,credential_.password_,""};
+    ControlMessage auth_message{1};
+
+    //Adding User and Password
+    //TODO Change this after we decide to add keys
+    auth_message.AddElement("Username",credential_.username_);
+    auth_message.AddElement("Password:",credential_.password_);
 
     //And sending it formatted in JSON language
-    boost::asio::write(sock_, boost::asio::buffer(message_obj.ToJSON()));
+    boost::asio::write(sock_, boost::asio::buffer(auth_message.ToJSON()));
     // we sent the Auth message, we will shutdown in order to tell the server that we sent all
     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
 
@@ -95,14 +99,9 @@ bool SyncTCPSocket::Authenticate() {
     //DEBUG
     std::cout << "Control Auth message has arrived" << response_json << std::endl;
 
-    // Now we have the request in a json formatted string, let's parse it in a request_ptree
-    std::stringstream ss;
-    ss << response_json;
-    boost::property_tree::ptree response_ptree;
-    boost::property_tree::read_json(ss, response_ptree);
 
-    //Now we parsed the request and we use the ptree object in  order to create the corresponding ControlMessage
-    ControlMessage response_message{response_ptree};
+    //Now we parsed the request and we use the string in order to create the corresponding ControlMessage
+    ControlMessage response_message{response_json};
     if(response_message.type_ == 51){// it means we are actually dealing with a auth response (what we were expecting)
         //TODO return true false accordingly to the body of the control message received
         // for now we just check it is an auth response

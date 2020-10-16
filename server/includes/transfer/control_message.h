@@ -12,19 +12,18 @@
 ///Encapsulates a control message. A control message is either an auth or a tree message. It has various attributes and
 /// a "to_json" method that will generate a result that will be sent to the server
 class ControlMessage {
-
-
-    //TODO for now we send password and username in clear, we could use a encripted key later on
-    std::string username_;
-    std::string password_;
-    std::string tree_;
+private:
     std::unique_ptr<boost::property_tree::ptree> json_mess_;
-public:
-    ControlMessage(int tp, std::string user, std::string pwd, std::string tr);
-    ControlMessage(boost::property_tree::ptree pt);
-    std::string ToJSON();
 
+public:
     int type_;
+
+    ControlMessage(int tp);
+    ControlMessage(std::string json_code);
+    std::string ToJSON();
+    void AddElement(std::string element, std::string value);
+    std::string GetElement(std::string element);
 };
+
 
 #endif //SERVER_CONTROL_MESSAGE_H
