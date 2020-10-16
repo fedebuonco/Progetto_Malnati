@@ -9,14 +9,16 @@
 int main(int argc, char *argv[])
 {
     RawEndpoint raw_endpoint = Config::get_Instance()->ReadRawEndpoint();
-
     // Creating the client and auth
     Client client{raw_endpoint};
     client.Auth();
-    //From here on, we are authenticated.
-    // Now we will ask for tree computing
-    // TODO make this requests return the type we want/like/need
-    std::cout << "Asking for Tree" << std::endl;
-    client.RequestTree();
 
+    // From here on, we are authenticated.
+    // Here we do the first tree diff and then start the monitor where we
+    // do the procedure again if we find a change in the
+    // choosen directory
+
+    //First Diff
+    std::cout << "Asking for Tree for the first time" << std::endl;
+    client.RequestTree();
 }

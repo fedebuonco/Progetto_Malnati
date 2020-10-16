@@ -11,10 +11,8 @@
 /// Construct a Client.
 /// \param re Endpoint to connect to.
 Client::Client(RawEndpoint re) {
-
     this->server_re_ = re;
     //TODO Istanziare una table dei socket attivi? BOh
-
 }
 
 /// Authenticates the client by creating a syncTCPSocket and calling it's auth method.

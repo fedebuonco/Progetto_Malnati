@@ -5,8 +5,7 @@
 #include <iostream>
 #include "control_message.h"
 
-/// Constructor for the control message. Type + username and password or Type + tree are mandatory, we cant send a mess
-/// without type.
+/// Constructor for the control message. Type is mandatory, then we can add other info by using AddElement()
 /// \param tp Type of the message (1 for auth, 2 for tree, etc)
 ControlMessage::ControlMessage(int tp) {
     json_mess_.reset(new boost::property_tree::ptree);
@@ -14,17 +13,17 @@ ControlMessage::ControlMessage(int tp) {
     this->json_mess_->put("Type" , tp);
 }
 
-/// Constructor for the control message. Build from the json string passed
+/// Constructor for the control message. Build from the json string passed and also stores the type for
+/// faster access
 /// \param  Contains the parsed json
 ControlMessage::ControlMessage(std::string json_code){
-    json_mess_.reset(new boost::property_tree::ptree);
-    //ptree parse
-    //we have the request in a json formatted string, let's parse it in a request_ptree
 
+    json_mess_.reset(new boost::property_tree::ptree);
+    //we have the request in a json formatted string, let's parse it in a request_ptree
     std::stringstream ss;
     ss << json_code;
     boost::property_tree::read_json(ss, *this->json_mess_);
-    // let's do the type parse
+    // let's do the type store
     int t =  json_mess_->get<int>("Type");
     this->type_ = t;
 };
