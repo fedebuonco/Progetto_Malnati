@@ -24,6 +24,7 @@ void AcceptClient::SpawnSession() {
     acceptor_.accept(*sock.get());
     //TODO what is the following syntax for? Creates a new session and also calls immediately a method?
     (new Service)->ReadRequest(sock);
+
 }
 
 

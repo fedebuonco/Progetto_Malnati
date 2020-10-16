@@ -59,17 +59,15 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
         }
         case 2:{            //TREE REQUEST
             //TODO starts computing tree and sends it back
-            std::cout<< "TREE COMPUTATION REQUESTED"<< std::endl;
+            std::cout<< " Here we call treeCompute()"<< std::endl;
             break;
         }
 
     }
 
-    //Now the service class was instantiated in the heap so someone should deallocate it.
-    //As the service class has finished it's work we are gonna do it here
+    // Now the service class was instantiated in the heap &
+    // As the service class has finished it's work we are gonna delete it here
+    // "delete this" is known to be bad code, but if we follow some security
+    // advices we can use it.
     delete this;
-
-    //TODO fare ciclo qui si chiude il server
-    //TODO controllare come ridare al sistema il socket. Lo aveva istanziato accept_client ora che è stato utilizzato
-    // lo potrebbe deallocare qua. Bisogna vedere se sock shutdown è un deallocatore
 }
