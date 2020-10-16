@@ -19,8 +19,9 @@ if (UNIX)
     set(CMAKE_CXX_FLAGS -pthread)
     add_executable(server src/main.cpp
             src/accept_client/accept_client.cpp includes/accept_client/accept_client.h
-            src/transfer/transfer.cpp includes/transfer/transfer.h
-            src/watcher/watcher.cpp includes/watcher/watcher.h src/accept_client/service.cpp includes/accept_client/service.h src/accept_client/server.cpp includes/accept_client/server.h)
+            src/watcher/watcher.cpp includes/watcher/watcher.h src/accept_client/service.cpp
+            includes/accept_client/service.h src/accept_client/server.cpp includes/accept_client/server.h src/transfer/control_message.cpp
+            includes/transfer/control_message.h)
 endif (UNIX)
 
 #-------WIN---------------------
@@ -47,8 +48,9 @@ if (WIN32)
 
         add_executable(server src/main.cpp
                 src/accept_client/accept_client.cpp includes/accept_client/accept_client.h
-                src/transfer/transfer.cpp includes/transfer/transfer.h
-                src/watcher/watcher.cpp includes/watcher/watcher.h src/accept_client/service.cpp includes/accept_client/service.h src/accept_client/server.cpp includes/accept_client/server.h)
+                src/watcher/watcher.cpp includes/watcher/watcher.h src/accept_client/service.cpp includes/accept_client/service.h
+                src/accept_client/server.cpp
+                includes/accept_client/server.h src/transfer/control_message.cpp includes/transfer/control_message.h)
 
     endif()
 endif (WIN32)

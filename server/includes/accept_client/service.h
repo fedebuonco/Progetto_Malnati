@@ -26,6 +26,9 @@ public:
     void ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock);
 
 private:
+    // The Destructor is made private, as the only way to delete a service
+    // is by suicide (delete this) after the client is handled
+    ~Service(){};
     void HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock);
 };
 
