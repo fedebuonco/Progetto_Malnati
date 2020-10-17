@@ -124,8 +124,52 @@ RawEndpoint Config::ReadRawEndpoint() {
         std::exit(12);   //TO-DO: Check the error status
     }
 
+}
+
+//TODO Mettere un po' di controlli in modo tale che la porta e l'ip siano corretti
+void Config::WriteRawEndpoint(const std::string &ip, const std::string& port) {
+
+        namespace pt = boost::property_tree;
+
+        //This is the tree root; inside there is the username and password (if the app is config)
+        pt::ptree  root;
+
+        try {
+            root.put("ip", ip);
+            root.put("port", port);
+
+            //Read the file and put the content inside root
+            pt::write_json("../config_file/connection.json", root);
+        }
+        catch ( const boost::property_tree::json_parser_error& e1) {
+            std::cerr <<"The configuration file was not found" << std::endl;
+
+            std::exit(12);   //TO-DO: Check the error status
+        }
+}
+
+void Config::WriteFolderPath(const std::string &path) {
+
+    namespace pt = boost::property_tree;
+
+    //This is the tree root; inside there is the username and password (if the app is config)
+    pt::ptree  root;
+
+    try {
+        root.put("path", path);
+
+        //Read the file and put the content inside root
+        pt::write_json("../config_file/folder.json", root);
+    }
+    catch ( const boost::property_tree::json_parser_error& e1) {
+        std::cerr <<"The configuration file was not found" << std::endl;
+
+        std::exit(12);   //TO-DO: Check the error status
+    }
+
 
 }
+
 
 
 

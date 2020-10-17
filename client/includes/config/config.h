@@ -17,17 +17,20 @@ struct RawEndpoint{
 class Config {
     Config()= default;
     static Config* m_ConfigClass;
-    void writeConfig(const std::string& username, const std::string& password);
 
 public:
     //Singleton, eliminate copy and assignment
     Config(const Config&)= delete;
     Config& operator=(const Config&)=delete;
 
+    void writeConfig(const std::string& username, const std::string& password);
 
     static Config* get_Instance();
 
     RawEndpoint ReadRawEndpoint();
+    void WriteRawEndpoint(const std::string& ip, const std::string& port);
+
+    void WriteFolderPath(const std::string& path);
 
     bool isConfig();
     void startConfig();
