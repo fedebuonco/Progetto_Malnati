@@ -7,6 +7,8 @@
 #include <authentication.h>
 #include "../../includes/client/client.h"
 #include <boost/asio.hpp>
+#include <filesystem>
+#include <iostream>
 
 /// Construct a Client.
 /// \param re Endpoint to connect to.
@@ -66,4 +68,21 @@ void Client::RequestTree() {
     // we will call the diff
 
 }
+
+
+/// This generate a json directory tree following the tree command protocol available on linux
+std::string Client::GenerateJSONTree(const std::filesystem::path& path) {
+
+    std::string JSONresult;
+
+    for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
+        itEntry != std::filesystem::recursive_directory_iterator();
+        ++itEntry ) {
+        const auto filenameStr = itEntry->path().string();
+        JSONresult.append(filenameStr + '\n');
+    }
+
+    return JSONresult;
+}
+
 

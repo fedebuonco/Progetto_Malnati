@@ -19,6 +19,12 @@ int main(int argc, char *argv[])
     // choosen directory
 
     //First Diff
+    // We need to generate our folder structure
+    std::cout << "Generating my Folder tree" << std::endl;
+    std::string client_json_tree;
+    client_json_tree = client.GenerateJSONTree(std::filesystem::current_path());
+    std::cout << client_json_tree << std::endl;
+    //then we asl for the server's
     std::cout << "Asking for Tree for the first time" << std::endl;
     client.RequestTree();
 }

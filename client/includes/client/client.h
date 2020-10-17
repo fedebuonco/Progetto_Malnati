@@ -7,6 +7,7 @@
 
 
 #include <config.h>
+#include <filesystem>
 
 class Client {
 private:
@@ -20,9 +21,12 @@ public:
     bool Auth();
 
     void RequestTree();
+    std::string GenerateJSONTree(const std::filesystem::path& path);
 
 private:
     void Run(unsigned short port_num);
+
+
 };
 
 
