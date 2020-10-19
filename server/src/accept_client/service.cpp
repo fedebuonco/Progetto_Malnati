@@ -5,7 +5,23 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <control_message.h>
+#include <filesystem>
 #include "service.h"
+
+/// This generate directory tree following the tree command protocol available on linux
+std::string GenerateTree(const std::filesystem::path& path) {
+
+    std::string result;
+
+    for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
+        itEntry != std::filesystem::recursive_directory_iterator();
+        ++itEntry ) {
+        const auto filenameStr = itEntry->path().string();
+        result.append(filenameStr + '\n');
+    }
+
+    return result;
+}
 
 /// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and detach it
 /// \param sock TCP socket conneted to the client
@@ -41,19 +57,27 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
     // Here based on the type of the message we switch accordingly.
     switch (request_message.type_) {
-        case 1:{             //AUTH REQUEST
-            //TODO real checkIdentity and control message
+        case 1:{//AUTH REQUEST
+            // TODO real checkIdentity and control message
             // TODO change control message constructor for now in the client we will only check that is 51 not if auth = true/false
             ControlMessage check_result{51};
             boost::asio::write(*sock, boost::asio::buffer(check_result.ToJSON()));
             // Send the eof error shutting down the server.
-            //TODO qua magicamente va ignorato l'errore GRAVISSIMO
+            // TODO qua magicamente va ignorato l'errore GRAVISSIMO
             sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
             break;
         }
-        case 2:{            //TREE REQUEST
-            //TODO starts computing tree and sends it back
-            std::cout<< " Here we call treeCompute()"<< std::endl;
+        case 2:{//TREE REQUEST
+            // TODO change accordingly to username of the client
+            std::string tree = GenerateTree(std::filesystem::current_path());
+            ControlMessage tree_result{52};
+            // We add the tree
+            tree_result.AddElement("Tree", tree);
+            // & send it
+            boost::asio::write(*sock, boost::asio::buffer(tree_result.ToJSON()));
+            // Send the eof error shutting down the server.
+            // TODO qua magicamente va ignorato l'errore GRAVISSIMO
+            sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
             break;
         }
 
@@ -65,3 +89,4 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
     // advices we can use it.
     delete this;
 }
+

@@ -21,10 +21,18 @@ int main(int argc, char *argv[])
     //First Diff
     // We need to generate our folder structure
     std::cout << "Generating my Folder tree" << std::endl;
-    std::string client_json_tree;
-    client_json_tree = client.GenerateJSONTree(std::filesystem::current_path());
-    std::cout << client_json_tree << std::endl;
-    //then we asl for the server's
+
+    std::string client_tree;
+    std::string server_tree;
+
+    client_tree = client.GenerateTree(std::filesystem::current_path());
+
+    //then we ask for the server's
     std::cout << "Asking for Tree for the first time" << std::endl;
-    client.RequestTree();
+    server_tree = client.RequestTree();
+    //std::cout << server_tree << std::endl;
+
+    //And we can compute the Diff
+    std::string diff = client.GenerateDiff(client_tree,server_tree);
+    std::cout << diff << std::endl;
 }
