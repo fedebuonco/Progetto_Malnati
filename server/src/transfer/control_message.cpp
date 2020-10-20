@@ -13,19 +13,20 @@ ControlMessage::ControlMessage(int tp) {
     this->json_mess_->put("Type" , tp);
 }
 
-/// Constructor for the control message. Build from the json string passed and also stores the type for
-/// faster access
+/// Constructor for the control message. Build from the json string passed
+/// and also stores the type (integer of the message) for faster access.
 /// \param  Contains the parsed json
 ControlMessage::ControlMessage(std::string json_code){
 
     json_mess_.reset(new boost::property_tree::ptree);
-    //we have the request in a json formatted string, let's parse it in a request_ptree
+    //We have the request in a json formatted string, let's parse it in a request_ptree
     std::stringstream ss;
     ss << json_code;
     boost::property_tree::read_json(ss, *this->json_mess_);
-    // let's do the type store
+    // And also store the type. For faster access
     int t =  json_mess_->get<int>("Type");
     this->type_ = t;
+
 };
 
 /// Adds the parameter and the value to the ptree of the ControlMessage
