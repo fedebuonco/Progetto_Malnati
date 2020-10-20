@@ -26,7 +26,7 @@ SyncTCPSocket::~SyncTCPSocket() {
     // Exit from the connection and
     // TODO tell the server that we are exiting
     // TODO see shutdown exceptions and manage
-    std::cout << "RawEndpoint and Socket closing down... " <<std::endl ;
+    // std::cout << "RawEndpoint and Socket closing down... " <<std::endl ;
     //TODO fix error in linux where wew have a exception when we shutodwn a scoket like this
     boost::system::error_code ec;
     //TODO qua magicamente va ignorato l'errore GRAVISSIMO
@@ -61,7 +61,7 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
         }
     }
 
-    std::cout << "Server connesso\n" << std::endl;
+    // std::cout << "Server connesso\n" << std::endl;
 }
 
 /// Will send username and password. After that it will shutdown the send part of the socket thus providing the server a way to
@@ -96,9 +96,6 @@ bool SyncTCPSocket::Authenticate() {
     //Read the response_buf using an iterator and store it in a string
     //TODO might be an easier method to do this
     std::string response_json( (std::istreambuf_iterator<char>(&response_buf)), std::istreambuf_iterator<char>() );
-    //DEBUG
-    std::cout << "Control Auth message has arrived" << response_json << std::endl;
-
 
     //Now we parsed the request and we use the string in order to create the corresponding ControlMessage
     ControlMessage response_message{response_json};

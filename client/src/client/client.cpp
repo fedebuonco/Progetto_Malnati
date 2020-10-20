@@ -82,26 +82,16 @@ std::string Client::RequestTree() {
 
     //Now we parsed the request and we use the json in order to create the corresponding ControlMessage
     ControlMessage response_message{response_json};
-    std::cout << "Tree recived successfully" << std::endl;
+    //std::cout << "Tree recived successfully" << std::endl;
     //We get the tree
     std::string result = response_message.GetElement("Tree");
     return result;
 }
 
-
-/// This generate a directory tree following the tree command protocol available on linux
-std::string Client::GenerateTree(const std::filesystem::path& path) {
-
-    std::string result;
-    for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
-        itEntry != std::filesystem::recursive_directory_iterator();
-        ++itEntry ) {
-        const auto filenameStr = itEntry->path().string();
-        result.append(filenameStr + '\n');
-    }
-    return result;
-}
-
+/// Generete the diff between two string containing the tree of the client and the server (one file/dir for each line).
+/// \param c_tree String of files/dir (one for each line) contained in the client folder
+/// \param s_tree String of files/dir (one for each line) contained in the server folder
+/// \return a string containing the diff in the format decided beforehand.
 std::string Client::GenerateDiff(std::string c_tree, std::string s_tree) {
 
     //Here we take the two string containng the paths and we create a set of path for each
@@ -150,4 +140,17 @@ std::string Client::GenerateDiff(std::string c_tree, std::string s_tree) {
     return diff_str;
 }
 
+/// This generate a directory tree following the tree command protocol available on linux
+/// \param path Tree will be generated of this path
+/// \return String of files/dir (one for each line) contained in the folder
+std::string Client::GenerateTree(const std::filesystem::path& path) {
 
+    std::string result;
+    for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
+        itEntry != std::filesystem::recursive_directory_iterator();
+        ++itEntry ) {
+        const auto filenameStr = itEntry->path().string();
+        result.append(filenameStr + '\n');
+    }
+    return result;
+}
