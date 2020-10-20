@@ -10,7 +10,7 @@ int main(){
         Server srv;
         srv.Start(port_num);
 
-        std::this_thread::sleep_for(std::chrono::seconds(60));
+        std::this_thread::sleep_for(std::chrono::seconds(600));
 
         srv.Stop();
     }catch(...){

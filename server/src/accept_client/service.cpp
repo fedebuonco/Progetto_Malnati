@@ -69,7 +69,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
         }
         case 2:{//TREE REQUEST
             // TODO change accordingly to username of the client
-            std::string tree = GenerateTree(std::filesystem::current_path());
+            std::string tree = GenerateTree(std::filesystem::path("Prova"));
             ControlMessage tree_result{52};
             // We add the tree
             tree_result.AddElement("Tree", tree);

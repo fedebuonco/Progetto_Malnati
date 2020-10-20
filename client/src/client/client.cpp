@@ -9,6 +9,7 @@
 #include <boost/asio.hpp>
 #include <filesystem>
 #include <iostream>
+#include <set>
 
 /// Construct a Client.
 /// \param re Endpoint to connect to.
@@ -88,22 +89,65 @@ std::string Client::RequestTree() {
 }
 
 
-/// This generate a json directory tree following the tree command protocol available on linux
+/// This generate a directory tree following the tree command protocol available on linux
 std::string Client::GenerateTree(const std::filesystem::path& path) {
 
-    std::string JSONresult;
+    std::string result;
     for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
         itEntry != std::filesystem::recursive_directory_iterator();
         ++itEntry ) {
         const auto filenameStr = itEntry->path().string();
-        JSONresult.append(filenameStr + '\n');
+        result.append(filenameStr + '\n');
     }
-    return JSONresult;
+    return result;
 }
 
 std::string Client::GenerateDiff(std::string c_tree, std::string s_tree) {
 
-    return std::string();
+    //Here we take the two string containng the paths and we create a set of path for each
+    std::set<std::string> set_client;
+    std::set<std::string> set_server;
+    std::vector<std::string> diff;
+
+    // set_client
+    std::istringstream ss_c(c_tree);
+    std::string line_c;
+    while (getline(ss_c, line_c)) {
+        set_client.insert(line_c);
+    }
+
+    //set_server
+    std::istringstream ss_s(s_tree);
+    std::string line_s;
+    while (getline(ss_s, line_s)) {
+        set_server.insert(line_s);
+    }
+
+    //Now i have the two sets I can compute set_difference(set_client,set_server)  client - server
+    set_difference(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(diff, diff.end()));
+    std::string diff_str;
+
+    for(const auto& value: diff) {
+        diff_str.append("+ " + value+"\n");
+    }
+
+    //let's clear the vector diff and reuse it
+    diff.clear();
+    //Now i can make server-client
+    set_difference(set_server.begin(), set_server.end(), set_client.begin(), set_client.end(), inserter(diff, diff.end()));
+    for(const auto& value: diff) {
+        diff_str.append("- " + value+"\n");
+    }
+
+    //let's clear the vector diff and reuse it
+    diff.clear();
+    //Now we print the common files
+    set_intersection(set_server.begin(), set_server.end(), set_client.begin(), set_client.end(), inserter(diff, diff.end()));
+    for(const auto& value: diff) {
+        diff_str.append("= " + value+"\n");
+    }
+
+    return diff_str;
 }
 
 

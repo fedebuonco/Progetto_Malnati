@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     std::string client_tree;
     std::string server_tree;
 
-    client_tree = client.GenerateTree(std::filesystem::current_path());
+    client_tree = client.GenerateTree(std::filesystem::path("Prova"));
 
     //then we ask for the server's
     std::cout << "Asking for Tree for the first time" << std::endl;
