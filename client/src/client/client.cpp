@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <iostream>
 #include <set>
+#include <tree_h.h>
 
 /// Construct a Client.
 /// \param re Endpoint to connect to.
@@ -47,7 +48,7 @@ bool Client::Auth() {
 
 /// Request current tree of the cloud dir stored in the server. Handles the result by starting the diff
 /// computation.
-std::string Client::RequestTree() {
+TreeH Client::RequestTree() {
     //SyncTCPSocket for request
     Credential credential = Authentication::get_Instance()->ReadCredential();
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
@@ -84,7 +85,12 @@ std::string Client::RequestTree() {
     ControlMessage response_message{response_json};
     //std::cout << "Tree recived successfully" << std::endl;
     //We get the tree
-    std::string result = response_message.GetElement("Tree");
+    std::string tree = response_message.GetElement("Tree");
+
+    //TODO Uncomment this as soon as the server will send the hashes
+    //std::string hash = response_message.GetElement("Hash");
+    //TreeH result{tree,hash};
+    TreeH result{tree,""};
     return result;
 }
 

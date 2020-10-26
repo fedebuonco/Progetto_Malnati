@@ -8,6 +8,7 @@
 
 #include <config.h>
 #include <filesystem>
+#include <tree_h.h>
 
 class Client {
 private:
@@ -18,7 +19,7 @@ public:
     Client(RawEndpoint re);
     void Stop();
     bool Auth();
-    std::string RequestTree();
+    TreeH RequestTree();
     std::string GenerateTree(const std::filesystem::path& path);
     std::string GenerateDiff(std::string basicString, std::string basicString1);
 private:

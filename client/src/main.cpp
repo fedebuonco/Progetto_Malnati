@@ -5,6 +5,7 @@
 #include "config.h"
 #include "../includes/client/client.h"
 #include <boost/property_tree/ptree.hpp>
+#include <tree_h.h>
 
 int main(int argc, char *argv[])
 {
@@ -19,15 +20,14 @@ int main(int argc, char *argv[])
     // we loop detecting a change in the dir.
 
     std::string client_tree;
-    std::string server_tree;
 
-    //Generate Client tree
+    //Generate Client tree string
     client_tree = client.GenerateTree(std::filesystem::path("Prova"));
 
-    // Then we ask for the Server's
-    server_tree = client.RequestTree();
+    // Then we ask for the Server's TreeH ( Tree string and Hashes )
+    TreeH server_th = client.RequestTree();
 
     //And we can compute the Diff
-    std::string diff = client.GenerateDiff(client_tree,server_tree);
+    std::string diff = client.GenerateDiff(client_tree,server_th.tree_);
     std::cout << diff << std::endl;
 }
