@@ -6,6 +6,7 @@
 #include "../includes/client/client.h"
 #include <boost/property_tree/ptree.hpp>
 #include <tree_h.h>
+#include <patch.h>
 
 int main(int argc, char *argv[])
 {
@@ -27,7 +28,16 @@ int main(int argc, char *argv[])
     // Then we ask for the Server's TreeH ( Tree string and Hashes )
     TreeH server_th = client.RequestTree();
 
-    //And we can compute the Diff
-    std::string diff = client.GenerateDiff(client_tree,server_th.tree_);
-    std::cout << diff << std::endl;
+    //And we can compute the Diff and store it in a Patch
+    Patch update = client.GeneratePatch(client_tree, server_th.tree_);
+
+    for (auto file : update.added_){
+        std::cout << file << std::endl;
+    }
+    for (auto file : update.removed_){
+        std::cout << file << std::endl;
+    }
+    for (auto file : update.common_){
+        std::cout << file << std::endl;
+    }
 }

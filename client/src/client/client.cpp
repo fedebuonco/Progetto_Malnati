@@ -11,6 +11,7 @@
 #include <iostream>
 #include <set>
 #include <tree_h.h>
+#include <patch.h>
 
 /// Construct a Client.
 /// \param re Endpoint to connect to.
@@ -95,10 +96,10 @@ TreeH Client::RequestTree() {
 }
 
 /// Generete the diff between two string containing the tree of the client and the server (one file/dir for each line).
-/// \param c_tree String of files/dir (one for each line) contained in the client folder
-/// \param s_tree String of files/dir (one for each line) contained in the server folder
+/// \param basicString String of files/dir (one for each line) contained in the client folder
+/// \param basicString1 String of files/dir (one for each line) contained in the server folder
 /// \return a string containing the diff in the format decided beforehand.
-std::string Client::GenerateDiff(std::string c_tree, std::string s_tree) {
+Patch Client::GeneratePatch(std::string basicString, std::string basicString1) {
 
     //Here we take the two string containng the paths and we create a set of path for each
     std::set<std::string> set_client;
@@ -106,14 +107,14 @@ std::string Client::GenerateDiff(std::string c_tree, std::string s_tree) {
     std::vector<std::string> diff;
 
     // set_client
-    std::istringstream ss_c(c_tree);
+    std::istringstream ss_c(basicString);
     std::string line_c;
     while (getline(ss_c, line_c)) {
         set_client.insert(line_c);
     }
 
     //set_server
-    std::istringstream ss_s(s_tree);
+    std::istringstream ss_s(basicString1);
     std::string line_s;
     while (getline(ss_s, line_s)) {
         set_server.insert(line_s);
@@ -123,27 +124,32 @@ std::string Client::GenerateDiff(std::string c_tree, std::string s_tree) {
     set_difference(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(diff, diff.end()));
     std::string diff_str;
 
+    std::vector<std::string> added;
     for(const auto& value: diff) {
-        diff_str.append("+ " + value+"\n");
+        added.push_back(value);
     }
 
     //let's clear the vector diff and reuse it
     diff.clear();
     //Now i can make server-client
+    std::vector<std::string> removed;
     set_difference(set_server.begin(), set_server.end(), set_client.begin(), set_client.end(), inserter(diff, diff.end()));
     for(const auto& value: diff) {
-        diff_str.append("- " + value+"\n");
+        removed.push_back(value);
     }
 
     //let's clear the vector diff and reuse it
     diff.clear();
     //Now we print the common files
+    std::vector<std::string> common;
     set_intersection(set_server.begin(), set_server.end(), set_client.begin(), set_client.end(), inserter(diff, diff.end()));
     for(const auto& value: diff) {
-        diff_str.append("= " + value+"\n");
+        common.push_back(value);
     }
 
-    return diff_str;
+    //We can now create the patch object
+    Patch result{added,removed,common};
+    return result;
 }
 
 /// This generate a directory tree following the tree command protocol available on linux
