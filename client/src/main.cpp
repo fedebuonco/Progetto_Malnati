@@ -31,13 +31,11 @@ int main(int argc, char *argv[])
     //And we can compute the Diff and store it in a Patch
     Patch update = client.GeneratePatch(client_tree, server_th.tree_);
 
-    for (auto file : update.added_){
-        std::cout << file << std::endl;
-    }
-    for (auto file : update.removed_){
-        std::cout << file << std::endl;
-    }
-    for (auto file : update.common_){
-        std::cout << file << std::endl;
-    }
+    //debug
+    //update.PrettyPrint();
+
+    // client.SendRemoval(update);
+    // client.ProcessCommon(update,map hash);
+    // client.SendPatch(patch);
+    
 }

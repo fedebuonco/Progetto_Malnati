@@ -16,6 +16,8 @@ public:
     std::vector<std::string> added_;
     std::vector<std::string> removed_;
     std::vector<std::string> common_;
+
+    void PrettyPrint();
 };
 
 
