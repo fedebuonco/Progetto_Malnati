@@ -10,8 +10,10 @@
 /// Encapsulates a raw ip and a port.
 struct RawEndpoint{
     std::string raw_ip_address;
-    unsigned short port_num;
+    unsigned long port_num;
 };
+
+
 
 ///
 class Config {
@@ -23,13 +25,25 @@ public:
     Config(const Config&)= delete;
     Config& operator=(const Config&)=delete;
 
-    void writeConfig(const std::string& username, const std::string& password);
-
     static Config* get_Instance();
+
+    void WriteProperty(const std::string& key, const std::string& value);
+    std::string ReadProperty(const std::string& key);
+
+    int SetConfig(int argc, char *argv[]);
+    int SetConfig2(int argc, char *argv[]);
+
+    void PrintConfiguration();
+
+
+
+    std::string readUsername();
+    void writeConfig(const std::string& username, const std::string& password);
 
     RawEndpoint ReadRawEndpoint();
     void WriteRawEndpoint(const std::string& ip, const std::string& port);
 
+    std::string ReadFolderPath();
     void WriteFolderPath(const std::string& path);
 
     bool isConfig();
