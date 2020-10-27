@@ -32,10 +32,14 @@ int main(int argc, char *argv[])
     Patch update = client.GeneratePatch(client_tree, server_th.tree_);
 
     //debug
-    //update.PrettyPrint();
+    update.PrettyPrint();
 
-    // client.SendRemoval(update);
+    // client.ProcessRemoved(update);
     // client.ProcessCommon(update,map hash);
-    // client.SendPatch(patch);
+     client.ProcessNew(update);
+
+
+    // Here the main has everything it needs in order to asyncronously send the patch
+    //client.SendPatch(patch);
     
 }

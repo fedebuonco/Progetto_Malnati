@@ -12,6 +12,7 @@
 #include <set>
 #include <tree_h.h>
 #include <patch.h>
+#include <chrono>
 
 /// Construct a Client.
 /// \param re Endpoint to connect to.
@@ -165,4 +166,28 @@ std::string Client::GenerateTree(const std::filesystem::path& path) {
         result.append(filenameStr + '\n');
     }
     return result;
+}
+
+
+void Client::SendPatch(Patch update){
+    // Here send the files asyncronulsy
+}
+
+/// We create a map "Filename - last modified time"
+/// \param patch
+void Client::ProcessNew(Patch patch) {
+
+    for (auto file_path : patch.added_ ){
+        //TODO THIS works only on linux find a windows solution _stat could be used
+        struct stat result;
+        if(stat(file_path.c_str(), &result)==0){
+            auto mod_time = result.st_mtime;
+            std::pair<std::string, unsigned long int> element = std::make_pair (file_path,mod_time);
+            patch.added_map_.insert(element);
+        }
+
+
+
+
+    }
 }

@@ -71,7 +71,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
             //Let's start building the Response Control Message
             ControlMessage tree_result{52};
-            // We compute & add the tree
+            // We compute & add the tree32
             // TODO change the dir accordingly to username of the client
             std::string tree = GenerateTree(std::filesystem::path("Prova"));
             tree_result.AddElement("Tree", tree);
