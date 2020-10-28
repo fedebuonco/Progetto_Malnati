@@ -10,7 +10,7 @@
 #include <filesystem>
 #include <iostream>
 #include <set>
-#include <tree_h.h>
+#include <tree_t.h>
 #include <patch.h>
 #include <chrono>
 
@@ -48,9 +48,9 @@ bool Client::Auth() {
 
 }
 
-/// Request current tree of the cloud dir stored in the server. Handles the result by starting the diff
+/// Request current tree and times of the cloud dir stored in the server. Handles the result by starting the diff
 /// computation.
-TreeH Client::RequestTree() {
+TreeT Client::RequestTree() {
     //SyncTCPSocket for request
     Credential credential = Authentication::get_Instance()->ReadCredential();
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
@@ -89,10 +89,10 @@ TreeH Client::RequestTree() {
     //We get the tree
     std::string tree = response_message.GetElement("Tree");
 
-    //TODO Uncomment this as soon as the server will send the hashes
-    //std::string hash = response_message.GetElement("Hash");
-    //TreeH result{tree,hash};
-    TreeH result{tree,""};
+    //TODO Uncomment this as soon as the server will send the times
+    //std::string time = response_message.GetElement("Time");
+    //TreeT result{tree,time};
+    TreeT result{tree, ""};
     return result;
 }
 
@@ -187,7 +187,17 @@ void Client::ProcessNew(Patch patch) {
         }
 
 
+    }
+}
 
-
+/// This function generates a string and fill the to_be_deleted_ member of the patch
+/// containing all the files/dir that should be removed on the server side.
+/// It is a string because it will be easier to serialize it via json. Will be sent in the SendPatch alogn with the other
+/// changes
+/// \param patch Patch containing the filenames of the " to be removed" files
+void Client::ProcessRemoved(Patch patch) {
+    for (auto file_path : patch.removed_ ){
+        patch.to_be_deleted_.append(file_path);
+        // debug
     }
 }

@@ -8,7 +8,7 @@
 
 #include <config.h>
 #include <filesystem>
-#include <tree_h.h>
+#include <tree_t.h>
 #include <patch.h>
 
 class Client {
@@ -20,7 +20,7 @@ public:
     Client(RawEndpoint re);
     void Stop();
     bool Auth();
-    TreeH RequestTree();
+    TreeT RequestTree();
     std::string GenerateTree(const std::filesystem::path& path);
     Patch GeneratePatch(std::string basicString, std::string basicString1);
     void SendPatch(Patch update);
@@ -28,6 +28,8 @@ public:
     void AddTime(Patch patch);
 
     void ProcessNew(Patch patch);
+
+    void ProcessRemoved(Patch patch);
 
 private:
     void Run(unsigned short port_num);

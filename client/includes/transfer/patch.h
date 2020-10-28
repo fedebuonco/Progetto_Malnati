@@ -18,6 +18,7 @@ public:
     std::vector<std::string> added_;
     std::map<std::string, unsigned long int> added_map_;
     std::vector<std::string> removed_;
+    std::string to_be_deleted_;
     std::vector<std::string> common_;
 
     void PrettyPrint();

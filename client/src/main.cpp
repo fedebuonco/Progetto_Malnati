@@ -5,7 +5,7 @@
 #include "config.h"
 #include "../includes/client/client.h"
 #include <boost/property_tree/ptree.hpp>
-#include <tree_h.h>
+#include <tree_t.h>
 #include <patch.h>
 
 int main(int argc, char *argv[])
@@ -25,8 +25,8 @@ int main(int argc, char *argv[])
     //Generate Client tree string
     client_tree = client.GenerateTree(std::filesystem::path("Prova"));
 
-    // Then we ask for the Server's TreeH ( Tree string and Hashes )
-    TreeH server_th = client.RequestTree();
+    // Then we ask for the Server's TreeT ( Tree string and times )
+    TreeT server_th = client.RequestTree();
 
     //And we can compute the Diff and store it in a Patch
     Patch update = client.GeneratePatch(client_tree, server_th.tree_);
@@ -34,10 +34,12 @@ int main(int argc, char *argv[])
     //debug
     update.PrettyPrint();
 
-    // client.ProcessRemoved(update);
-    // client.ProcessCommon(update,map hash);
+    // Now we process the patch, preparing all the needed data structures
+     client.ProcessRemoved(update);
+    // client.ProcessCommon(update,times);
      client.ProcessNew(update);
 
+    std::cout << update.to_be_deleted_ << std::endl;
 
     // Here the main has everything it needs in order to asyncronously send the patch
     //client.SendPatch(patch);
