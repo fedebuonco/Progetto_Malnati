@@ -22,17 +22,13 @@ public:
     bool Auth();
     TreeT RequestTree();
     std::string GenerateTree(const std::filesystem::path& path);
-    Patch GeneratePatch(std::string basicString, std::string basicString1);
-    void SendPatch(Patch update);
-
-    void AddTime(Patch patch);
-
-    void ProcessNew(Patch patch);
-
-    void ProcessRemoved(Patch patch);
-
+    Patch GeneratePatch(const std::string& client_t,const std::string& server_t);
+    void ProcessNew(Patch& patch);
+    void ProcessRemoved(Patch& patch);
+    void SendPatch(Patch &update);
 private:
     void Run(unsigned short port_num);
+
 
 };
 

@@ -9,7 +9,7 @@
 /// Hashes
 /// \param tree Directory tree if the server
 /// \param time timw of the files present in the server following the same order of the tree
-TreeT::TreeT(std::string tree, std::string time) {
+TreeT::TreeT(const std::string& tree, const std::string& time) {
     tree_ = tree;
     //Now we fill the map using the two string we got
     std::istringstream stream_tree{tree};

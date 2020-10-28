@@ -39,8 +39,6 @@ int main(int argc, char *argv[])
     // client.ProcessCommon(update,times);
      client.ProcessNew(update);
 
-    std::cout << update.to_be_deleted_ << std::endl;
-
     // Here the main has everything it needs in order to asyncronously send the patch
     //client.SendPatch(patch);
     

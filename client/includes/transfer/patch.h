@@ -14,7 +14,6 @@
 class Patch {
 public:
     Patch(std::vector<std::string> vector, std::vector<std::string> vector1, std::vector<std::string> vector2);
-
     std::vector<std::string> added_;
     std::map<std::string, unsigned long int> added_map_;
     std::vector<std::string> removed_;

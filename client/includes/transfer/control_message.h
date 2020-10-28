@@ -19,10 +19,10 @@ public:
     int type_;
 
     ControlMessage(int tp);
-    ControlMessage(std::string json_code);
+    ControlMessage(const std::string& json_code);
     std::string ToJSON();
-    void AddElement(std::string element, std::string value);
-    std::string GetElement(std::string element);
+    void AddElement(const std::string& element,const std::string& value);
+    std::string GetElement(const std::string& element);
 };
 
 

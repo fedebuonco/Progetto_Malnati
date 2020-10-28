@@ -97,25 +97,24 @@ TreeT Client::RequestTree() {
 }
 
 /// Generete the diff between two string containing the tree of the client and the server (one file/dir for each line).
-/// \param basicString String of files/dir (one for each line) contained in the client folder
-/// \param basicString1 String of files/dir (one for each line) contained in the server folder
+/// \param client_t String of files/dir (one for each line) contained in the client folder
+/// \param server_t String of files/dir (one for each line) contained in the server folder
 /// \return a string containing the diff in the format decided beforehand.
-Patch Client::GeneratePatch(std::string basicString, std::string basicString1) {
-
+Patch Client::GeneratePatch(const std::string& client_t,const std::string& server_t) {
     //Here we take the two string containng the paths and we create a set of path for each
     std::set<std::string> set_client;
     std::set<std::string> set_server;
     std::vector<std::string> diff;
 
     // set_client
-    std::istringstream ss_c(basicString);
+    std::istringstream ss_c(client_t);
     std::string line_c;
     while (getline(ss_c, line_c)) {
         set_client.insert(line_c);
     }
 
     //set_server
-    std::istringstream ss_s(basicString1);
+    std::istringstream ss_s(server_t);
     std::string line_s;
     while (getline(ss_s, line_s)) {
         set_server.insert(line_s);
@@ -168,15 +167,9 @@ std::string Client::GenerateTree(const std::filesystem::path& path) {
     return result;
 }
 
-
-void Client::SendPatch(Patch update){
-    // Here send the files asyncronulsy
-}
-
 /// We create a map "Filename - last modified time"
 /// \param patch
-void Client::ProcessNew(Patch patch) {
-
+void Client::ProcessNew(Patch& patch) {
     for (auto file_path : patch.added_ ){
         //TODO THIS works only on linux find a windows solution _stat could be used
         struct stat result;
@@ -185,8 +178,6 @@ void Client::ProcessNew(Patch patch) {
             std::pair<std::string, unsigned long int> element = std::make_pair (file_path,mod_time);
             patch.added_map_.insert(element);
         }
-
-
     }
 }
 
@@ -195,9 +186,16 @@ void Client::ProcessNew(Patch patch) {
 /// It is a string because it will be easier to serialize it via json. Will be sent in the SendPatch alogn with the other
 /// changes
 /// \param patch Patch containing the filenames of the " to be removed" files
-void Client::ProcessRemoved(Patch patch) {
+void Client::ProcessRemoved(Patch& patch) {
     for (auto file_path : patch.removed_ ){
         patch.to_be_deleted_.append(file_path);
         // debug
     }
+}
+
+///
+/// \param update
+void Client::SendPatch(Patch& update){
+    //TODO
+    // Here send the files asyncronulsy
 }
