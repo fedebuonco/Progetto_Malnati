@@ -18,6 +18,7 @@ Patch::Patch(std::vector<std::string> add, std::vector<std::string> rem, std::ve
 
 /// Pretty Prints the changes contained in the patch
 void Patch::PrettyPrint(){
+    std::cout << ":::::::: Changes ::::::::" << std::endl;
     for (auto file : added_){
         std::cout <<"+ "<<file << std::endl;
     }
@@ -27,5 +28,13 @@ void Patch::PrettyPrint(){
     for (auto file : common_){
         std::cout <<"= " << file << std::endl;
     }
+
+    std::cout << ":::::::: Deleted Files ::::::::" << std::endl;
+    std::cout << to_be_deleted_ << std::endl;
+    std::cout << ":::::::: New Files - Last Modified Time ::::::::" << std::endl;
+    for (auto file : added_map_){
+        std::cout << file.first + " - " << file.second << std::endl;
+    }
+
 
 }

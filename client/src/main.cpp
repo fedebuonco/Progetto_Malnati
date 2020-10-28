@@ -31,13 +31,13 @@ int main(int argc, char *argv[])
     //And we can compute the Diff and store it in a Patch
     Patch update = client.GeneratePatch(client_tree, server_th.tree_);
 
-    //debug
-    update.PrettyPrint();
-
     // Now we process the patch, preparing all the needed data structures
      client.ProcessRemoved(update);
     // client.ProcessCommon(update,times);
      client.ProcessNew(update);
+
+    //debug
+    update.PrettyPrint();
 
     // Here the main has everything it needs in order to asyncronously send the patch
     //client.SendPatch(patch);
