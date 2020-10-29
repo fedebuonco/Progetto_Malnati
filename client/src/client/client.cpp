@@ -2,6 +2,17 @@
 // Created by fede on 10/12/20.
 //
 
+//CROSS platform get last modified time
+#include <sys/types.h>
+#include <sys/stat.h>
+#ifndef WIN32
+#include <unistd.h>
+#endif
+
+#ifdef WIN32
+#define stat _stat
+#endif
+
 #include <sync_tcp_socket.h>
 #include <control_message.h>
 #include <authentication.h>
@@ -172,12 +183,19 @@ std::string Client::GenerateTree(const std::filesystem::path& path) {
 void Client::ProcessNew(Patch& patch) {
     for (auto file_path : patch.added_ ){
         //TODO THIS works only on linux find a windows solution _stat could be used
+
+
         struct stat result;
         if(stat(file_path.c_str(), &result)==0){
             auto mod_time = result.st_mtime;
             std::pair<std::string, unsigned long int> element = std::make_pair (file_path,mod_time);
             patch.added_map_.insert(element);
+
         }
+
+
+
+
     }
 }
 
