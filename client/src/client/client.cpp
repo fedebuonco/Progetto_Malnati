@@ -3,15 +3,14 @@
 //
 
 //CROSS platform get last modified time
-#include <sys/types.h>
-#include <sys/stat.h>
-#ifndef WIN32
-#include <unistd.h>
-#endif
-
-#ifdef WIN32
-#define stat _stat
-#endif
+//#include <sys/types.h>
+//#include <sys/stat.h>
+//#ifndef _WIN32
+//#include <unistd.h>
+//#endif
+//#ifdef _WIN32
+//#define stat _stat
+//#endif
 
 #include <sync_tcp_socket.h>
 #include <control_message.h>
@@ -206,7 +205,7 @@ void Client::ProcessNew(Patch& patch) {
 /// \param patch Patch containing the filenames of the " to be removed" files
 void Client::ProcessRemoved(Patch& patch) {
     for (auto file_path : patch.removed_ ){
-        patch.to_be_deleted_.append(file_path);
+        patch.to_be_deleted_.append(file_path + "\n");
         // debug
     }
 }
