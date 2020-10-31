@@ -210,9 +210,31 @@ void Client::ProcessRemoved(Patch& patch) {
     }
 }
 
-///
-/// \param update
+/// Here we firstly send a ControlMessage that will tell what to delete in the server. After that we will start sending
+/// the newer files.
+/// \param update processed patch
 void Client::SendPatch(Patch& update){
-    //TODO
-    // Here send the files asyncronulsy
+    //Sending delete ControlMessage
+    //Creation of the Auth ControlMessage type = 3
+    Credential credential_ = Authentication::get_Instance()->ReadCredential();
+    SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
+    ControlMessage delete_message{3};
+    //Adding User and Password
+    //TODO Change this after we decide to add keys
+    delete_message.AddElement("Username",credential_.username_);
+    delete_message.AddElement("Password:",credential_.password_);
+    //We add the delete string
+    delete_message.AddElement("To_be_deleted",update.to_be_deleted_);
+    //And sending it formatted in JSON language
+    boost::asio::write(tcpSocket.sock_, boost::asio::buffer(delete_message.ToJSON()));
+    // we sent the Auth message, we will shutdown in order to tell the server that we sent all
+    tcpSocket.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+
+    // Now we can focus on new and common
+    //TODO Here send the files asyncronulsy
+
+    /*
+     *
+     */
+
 }
