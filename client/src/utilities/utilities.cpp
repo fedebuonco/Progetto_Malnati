@@ -5,4 +5,3 @@
 #include "utilities.h"
 
 
-bool DEBUG=false;

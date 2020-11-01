@@ -7,6 +7,11 @@
 
 #include <string>
 
+//Any source file that includes this will be able to use "DEBUG"
+//The value is define inside utilities.cpp
+//TODO CAPIRE MEGLIO https://stackoverflow.com/questions/10422034/when-to-use-extern-in-c/10422050#10422050
+extern bool DEBUG;
+
 /// Encapsulates a raw ip and a port.
 struct RawEndpoint{
     std::string raw_ip_address;

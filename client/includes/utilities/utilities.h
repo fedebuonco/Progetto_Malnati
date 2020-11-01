@@ -7,11 +7,6 @@
 #include <string>
 #include <iostream>
 
-//Any source file that includes this will be able to use "DEBUG"
-//The value is define inside utilities.cpp
-//TODO CAPIRE MEGLIO https://stackoverflow.com/questions/10422034/when-to-use-extern-in-c/10422050#10422050
-extern bool DEBUG;
-
 constexpr unsigned int str2int(const char* str, int h = 0)
 {
     return !str[h] ? 5381 : (str2int(str, h+1) * 33) ^ str[h];

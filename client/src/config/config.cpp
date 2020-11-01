@@ -7,6 +7,8 @@
 
 #define CREDENTIAL_PATH "../config_file/credential.json"
 
+bool DEBUG=false;
+
 Config *Config::m_ConfigClass = nullptr;
 
 /// Assures that only one instance is present.
