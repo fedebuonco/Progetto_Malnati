@@ -1,7 +1,6 @@
 //
 // Created by fede on 10/7/20.
 //
-
 #include <iostream>
 #include "control_message.h"
 
