@@ -16,7 +16,7 @@ if (UNIX)
     add_executable(client src/main.cpp src/sync_tcp_socket/sync_tcp_socket.cpp
             includes/sync_tcp_socket/sync_tcp_socket.h src/utilities/utilities.cpp includes/utilities/utilities.h src/watcher/watcher.cpp
             includes/watcher/watcher.h src/config/config.cpp includes/config/config.h src/config/authentication.cpp includes/config/authentication.h
-            src/transfer/control_message.cpp includes/transfer/control_message.h src/client/client.cpp includes/client/client.h)
+            src/transfer/control_message.cpp includes/transfer/control_message.h src/client/client.cpp includes/client/client.h src/transfer/tree_t.cpp includes/transfer/tree_t.h src/transfer/patch.cpp includes/transfer/patch.h)
 endif (UNIX)
 
 #-------WIN---------------------
@@ -44,7 +44,7 @@ if (WIN32)
         add_executable(client src/main.cpp src/sync_tcp_socket/sync_tcp_socket.cpp
                 includes/sync_tcp_socket/sync_tcp_socket.h src/utilities/utilities.cpp includes/utilities/utilities.h src/watcher/watcher.cpp
                 includes/watcher/watcher.h src/config/config.cpp includes/config/config.h src/config/authentication.cpp includes/config/authentication.h
-                src/transfer/control_message.cpp includes/transfer/control_message.h src/client/client.cpp includes/client/client.h)
+                src/transfer/control_message.cpp includes/transfer/control_message.h src/client/client.cpp includes/client/client.h src/transfer/tree_t.cpp includes/transfer/tree_t.h src/transfer/patch.cpp includes/transfer/patch.h)
 
     endif()
 endif (WIN32)

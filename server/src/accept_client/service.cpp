@@ -67,12 +67,21 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
             break;
         }
-        case 2:{//TREE REQUEST
-            // TODO change accordingly to username of the client
-            std::string tree = GenerateTree(std::filesystem::path("Prova"));
+        case 2:{//TREE & TIME Request
+
+            //Let's start building the Response Control Message
             ControlMessage tree_result{52};
-            // We add the tree
+            // We compute & add the tree
+            // TODO change the dir accordingly to username of the client
+            std::string tree = GenerateTree(std::filesystem::path("Prova"));
             tree_result.AddElement("Tree", tree);
+            // And for the tree we retrive its stored last time modification
+
+            //TODO Implement DB and retrieve time according to this functions
+
+            // std::string times = RetrieveTreeTime(user,tree);
+            // tree_result.AddElement("Time", times);
+
             // & send it
             boost::asio::write(*sock, boost::asio::buffer(tree_result.ToJSON()));
             // Send the eof error shutting down the server.

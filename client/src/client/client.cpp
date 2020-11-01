@@ -2,6 +2,16 @@
 // Created by fede on 10/12/20.
 //
 
+//CROSS platform get last modified time
+//#include <sys/types.h>
+//#include <sys/stat.h>
+//#ifndef _WIN32
+//#include <unistd.h>
+//#endif
+//#ifdef _WIN32
+//#define stat _stat
+//#endif
+
 #include <sync_tcp_socket.h>
 #include <control_message.h>
 #include <authentication.h>
@@ -10,6 +20,9 @@
 #include <filesystem>
 #include <iostream>
 #include <set>
+#include <tree_t.h>
+#include <patch.h>
+#include <chrono>
 
 /// Construct a Client.
 /// \param re Endpoint to connect to.
@@ -45,9 +58,9 @@ bool Client::Auth() {
 
 }
 
-/// Request current tree of the cloud dir stored in the server. Handles the result by starting the diff
+/// Request current tree and times of the cloud dir stored in the server. Handles the result by starting the diff
 /// computation.
-std::string Client::RequestTree() {
+TreeT Client::RequestTree() {
     //SyncTCPSocket for request
     Credential credential = Authentication::get_Instance()->ReadCredential();
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
@@ -84,30 +97,34 @@ std::string Client::RequestTree() {
     ControlMessage response_message{response_json};
     //std::cout << "Tree recived successfully" << std::endl;
     //We get the tree
-    std::string result = response_message.GetElement("Tree");
+    std::string tree = response_message.GetElement("Tree");
+
+    //TODO Uncomment this as soon as the server will send the times
+    //std::string time = response_message.GetElement("Time");
+    //TreeT result{tree,time};
+    TreeT result{tree, ""};
     return result;
 }
 
 /// Generete the diff between two string containing the tree of the client and the server (one file/dir for each line).
-/// \param c_tree String of files/dir (one for each line) contained in the client folder
-/// \param s_tree String of files/dir (one for each line) contained in the server folder
+/// \param client_t String of files/dir (one for each line) contained in the client folder
+/// \param server_t String of files/dir (one for each line) contained in the server folder
 /// \return a string containing the diff in the format decided beforehand.
-std::string Client::GenerateDiff(std::string c_tree, std::string s_tree) {
-
+Patch Client::GeneratePatch(const std::string& client_t,const std::string& server_t) {
     //Here we take the two string containng the paths and we create a set of path for each
     std::set<std::string> set_client;
     std::set<std::string> set_server;
     std::vector<std::string> diff;
 
     // set_client
-    std::istringstream ss_c(c_tree);
+    std::istringstream ss_c(client_t);
     std::string line_c;
     while (getline(ss_c, line_c)) {
         set_client.insert(line_c);
     }
 
     //set_server
-    std::istringstream ss_s(s_tree);
+    std::istringstream ss_s(server_t);
     std::string line_s;
     while (getline(ss_s, line_s)) {
         set_server.insert(line_s);
@@ -117,27 +134,32 @@ std::string Client::GenerateDiff(std::string c_tree, std::string s_tree) {
     set_difference(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(diff, diff.end()));
     std::string diff_str;
 
+    std::vector<std::string> added;
     for(const auto& value: diff) {
-        diff_str.append("+ " + value+"\n");
+        added.push_back(value);
     }
 
     //let's clear the vector diff and reuse it
     diff.clear();
     //Now i can make server-client
+    std::vector<std::string> removed;
     set_difference(set_server.begin(), set_server.end(), set_client.begin(), set_client.end(), inserter(diff, diff.end()));
     for(const auto& value: diff) {
-        diff_str.append("- " + value+"\n");
+        removed.push_back(value);
     }
 
     //let's clear the vector diff and reuse it
     diff.clear();
     //Now we print the common files
+    std::vector<std::string> common;
     set_intersection(set_server.begin(), set_server.end(), set_client.begin(), set_client.end(), inserter(diff, diff.end()));
     for(const auto& value: diff) {
-        diff_str.append("= " + value+"\n");
+        common.push_back(value);
     }
 
-    return diff_str;
+    //We can now create the patch object
+    Patch result{added,removed,common};
+    return result;
 }
 
 /// This generate a directory tree following the tree command protocol available on linux
@@ -153,4 +175,66 @@ std::string Client::GenerateTree(const std::filesystem::path& path) {
         result.append(filenameStr + '\n');
     }
     return result;
+}
+
+/// We create a map "Filename - last modified time"
+/// \param patch
+void Client::ProcessNew(Patch& patch) {
+    for (auto file_path : patch.added_ ){
+        //TODO THIS works only on linux find a windows solution _stat could be used
+
+
+        struct stat result;
+        if(stat(file_path.c_str(), &result)==0){
+            auto mod_time = result.st_mtime;
+            std::pair<std::string, unsigned long int> element = std::make_pair (file_path,mod_time);
+            patch.added_map_.insert(element);
+
+        }
+
+
+
+
+    }
+}
+
+/// This function generates a string and fill the to_be_deleted_ member of the patch
+/// containing all the files/dir that should be removed on the server side.
+/// It is a string because it will be easier to serialize it via json. Will be sent in the SendPatch alogn with the other
+/// changes
+/// \param patch Patch containing the filenames of the " to be removed" files
+void Client::ProcessRemoved(Patch& patch) {
+    for (auto file_path : patch.removed_ ){
+        patch.to_be_deleted_.append(file_path + "\n");
+        // debug
+    }
+}
+
+/// Here we firstly send a ControlMessage that will tell what to delete in the server. After that we will start sending
+/// the newer files.
+/// \param update processed patch
+void Client::SendPatch(Patch& update){
+    //Sending delete ControlMessage
+    //Creation of the Auth ControlMessage type = 3
+    Credential credential_ = Authentication::get_Instance()->ReadCredential();
+    SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
+    ControlMessage delete_message{3};
+    //Adding User and Password
+    //TODO Change this after we decide to add keys
+    delete_message.AddElement("Username",credential_.username_);
+    delete_message.AddElement("Password:",credential_.password_);
+    //We add the delete string
+    delete_message.AddElement("To_be_deleted",update.to_be_deleted_);
+    //And sending it formatted in JSON language
+    boost::asio::write(tcpSocket.sock_, boost::asio::buffer(delete_message.ToJSON()));
+    // we sent the Auth message, we will shutdown in order to tell the server that we sent all
+    tcpSocket.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+
+    // Now we can focus on new and common
+    //TODO Here send the files asyncronulsy
+
+    /*
+     *
+     */
+
 }

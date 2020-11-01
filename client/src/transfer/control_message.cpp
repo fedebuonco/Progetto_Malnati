@@ -15,7 +15,7 @@ ControlMessage::ControlMessage(int tp) {
 /// Constructor for the control message. Build from the json string passed and also stores the type for
 /// faster access
 /// \param  Contains the parsed json
-ControlMessage::ControlMessage(std::string json_code){
+ControlMessage::ControlMessage(const std::string& json_code){
 
     json_mess_.reset(new boost::property_tree::ptree);
     //we have the request in a json formatted string, let's parse it in a request_ptree
@@ -30,14 +30,14 @@ ControlMessage::ControlMessage(std::string json_code){
 /// Adds the parameter and the value to the ptree of the ControlMessage
 /// \param element Name of the propriety
 /// \param value  Value of the propriety
-void ControlMessage::AddElement(std::string element, std::string value){
+void ControlMessage::AddElement(const std::string& element,const std::string& value){
     this->json_mess_->put(element , value);
 }
 
 /// Get an element from the message
 /// \param element Name of the propriety
 /// \return value of the propriety
-std::string ControlMessage::GetElement(std::string element) {
+std::string ControlMessage::GetElement(const std::string& element) {
     std::string result = json_mess_->get<std::string>(element);
     return result;
 }

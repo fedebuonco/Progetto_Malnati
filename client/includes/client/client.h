@@ -8,6 +8,8 @@
 
 #include <config.h>
 #include <filesystem>
+#include <tree_t.h>
+#include <patch.h>
 
 class Client {
 private:
@@ -18,11 +20,16 @@ public:
     Client(RawEndpoint re);
     void Stop();
     bool Auth();
-    std::string RequestTree();
+    TreeT RequestTree();
     std::string GenerateTree(const std::filesystem::path& path);
-    std::string GenerateDiff(std::string basicString, std::string basicString1);
+    Patch GeneratePatch(const std::string& client_t,const std::string& server_t);
+    void ProcessNew(Patch& patch);
+    void ProcessRemoved(Patch& patch);
+    void SendPatch(Patch &update);
 private:
     void Run(unsigned short port_num);
+
+
 };
 
 
