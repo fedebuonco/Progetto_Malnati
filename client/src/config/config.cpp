@@ -209,7 +209,9 @@ int Config::SetConfig(int argc, char *argv[]) {
             case str2int("-h"):
             case str2int("--help"):
                 show_usage(argv[0]);
-                return 0;
+                //TODO Verificare se è corretto
+                std::exit(0);
+               
 
             case str2int("-d"):
             case str2int("--debug"): {
