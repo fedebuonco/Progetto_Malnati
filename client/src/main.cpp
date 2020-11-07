@@ -60,8 +60,8 @@ int main(int argc, char *argv[]) {
     // client.ProcessCommon(update,times);
      client.ProcessNew(update);
 
-    //debug
-    update.PrettyPrint();
+    if (DEBUG)
+        update.PrettyPrint();
 
     // Here the main has everything it needs in order to asyncronously send the patch
     //client.SendPatch(patch);

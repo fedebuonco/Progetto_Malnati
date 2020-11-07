@@ -8,6 +8,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/asio.hpp>
 #include <control_message.h>
+#include <config.h>
 #include "authentication.h"
 #include "sync_tcp_socket.h"
 
@@ -41,7 +42,8 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
     while (n_tries) {
         try {
             //TODO Add a delay good for linux and windows otherwise useless
-            std::cout << "Establishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
+            if (DEBUG)
+                std::cout << "Establishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
             sock_.connect(ep_);
             break; // Usciamo dal while perchè connessione avvenuta con successo
         }
@@ -104,7 +106,8 @@ bool SyncTCPSocket::Authenticate() {
         // for now we just check it is an auth response
         // later on we will check the result
         // auth = true /false
-        std::cout << "Auth Successfully" << std::endl;
+        std::cout << "User " << Config::get_Instance()->ReadProperty("username") <<
+                    " successfully authenticated." << std::endl;
         return true;
     } else
         return false;
