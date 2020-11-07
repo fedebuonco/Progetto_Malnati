@@ -22,32 +22,21 @@ int main(int argc, char *argv[]) {
     //User starts the program with <options>
     if (argc > 1) {
         int value = Config::get_Instance()->SetConfig(argc, argv);
-
         //TODO Per me è meglio usare eccezione
         if(value==1){
             return 1;
         }
-
     }
 
     Config::get_Instance()->PrintConfiguration();
 
-
     /**
      * VALIDATION AND STARTUP PHASE
      */
-
-
     RawEndpoint raw_endpoint = Config::get_Instance()->ReadRawEndpoint();
 
-
-
-
     //TODO Vedere le funzioni sotto e togliere i file divisi
-    // Creating the client and auth
-
     // Creating the Client and Auth
-
     Client client{raw_endpoint};
     client.Auth();
 
@@ -55,10 +44,10 @@ int main(int argc, char *argv[]) {
     // Here we and start the monitor where
     // we loop detecting a change in the dir.
 
-    std::string client_tree;
-
     //Generate Client tree string
-    client_tree = client.GenerateTree(std::filesystem::path("Prova"));
+    std::string client_tree;
+    std::filesystem::path monitored_folder = Config::get_Instance()->ReadProperty("path");
+    client_tree = client.GenerateTree(monitored_folder);
 
     // Then we ask for the Server's TreeT ( Tree string and times )
     TreeT server_th = client.RequestTree();
