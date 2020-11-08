@@ -32,7 +32,7 @@ void Patch::PrettyPrint(){
     std::cout << ":::::::: Deleted Files ::::::::" << std::endl;
     std::cout << to_be_deleted_ << std::endl;
     std::cout << ":::::::: New Files - Last Modified Time ::::::::" << std::endl;
-    for (auto file : added_map_){
+    for (auto file : to_be_added_map_){
         std::cout << file.first + " - " << file.second << std::endl;
     }
 

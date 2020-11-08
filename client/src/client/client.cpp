@@ -187,11 +187,42 @@ void Client::ProcessNew(Patch& patch) {
         if(stat(file_path.c_str(), &result)==0){
             auto mod_time = result.st_mtime;
             std::pair<std::string, unsigned long int> element = std::make_pair (file_path,mod_time);
-            patch.added_map_.insert(element);
+            patch.to_be_added_map_.insert(element);
 
         }
 
 
+
+
+    }
+}
+
+/// This function compare the files that are present both in server and client. It compares them
+/// based on their last modified time.
+/// \param patch
+void Client::ProcessCommon(Patch& patch, TreeT server_treet){
+    for (auto file_path : patch.common_ ){
+
+        std::map<std::string, unsigned long int> client_common_map;
+
+        //TODO THIS works only on linux find a windows solution _stat could be used
+
+        //We generate the client_common_map
+        struct stat result;
+        if(stat(file_path.c_str(), &result)==0){
+            auto mod_time = result.st_mtime;
+            std::pair<std::string, unsigned long int> element = std::make_pair (file_path,mod_time);
+            client_common_map.insert(element);
+        }
+
+        // Now we compare them with the map already present in the patch, that was sent by the server
+        for (auto const& pair : client_common_map) {
+
+            if(server_treet.time_[pair.first] != pair.second){
+
+            }
+
+        }
 
 
     }

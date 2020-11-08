@@ -30,6 +30,7 @@ private:
     void Run(unsigned short port_num);
 
 
+    void ProcessCommon(Patch &patch, TreeT server_treet);
 };
 
 
