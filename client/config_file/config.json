@@ -1,7 +1,7 @@
 {
     "ip": "127.0.0.1",
     "port": "3333",
-    "username": "fede",
-    "password": "fede",
+    "username": "marco",
+    "hash_password": "passhash",
     "path": ".\/Prova"
 }

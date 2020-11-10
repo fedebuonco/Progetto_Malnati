@@ -1,7 +1,3 @@
-//
-// Created by fede on 10/12/20.
-//
-
 //CROSS platform get last modified time
 //#include <sys/types.h>
 //#include <sys/stat.h>
@@ -16,7 +12,6 @@
 #include <control_message.h>
 #include <authentication.h>
 #include "../../includes/client/client.h"
-#include <boost/asio.hpp>
 #include <filesystem>
 #include <iostream>
 #include <set>
@@ -33,27 +28,15 @@ Client::Client(RawEndpoint re) {
 /// Authenticates the client by creating a syncTCPSocket and calling it's auth method.
 /// \return
 bool Client::Auth() {
-    //TODO valutare se mettere try catch
+    //TODO qualche eccezione da fare il catch?
 
     //SyncTCPSocket for auth using raw endpoint provided at construction.
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
     //socket will retry 5 times to connect
     tcpSocket.ConnectServer(5);
 
-    if(! Config::get_Instance()->isConfig() ){
-        Config::get_Instance()->startConfig();
-    }
-    //TODO Lanciare detro isConfig e startConfig delle eccezioni di una classe
-    // da fare e poi catcharle nel main per terminare il programma.
-    // Es. No indirizzo ip per connessione server
-
-    //Auth loop, while the password is wrong asks for a new identity. Will exit as soon as
-    //data inserted is verified correctly.
-    while( !tcpSocket.Authenticate() ){
-        Config::get_Instance()->startConfig();
-    }
-
-    return true;
+    //Try to authenticate and return true / false
+    return tcpSocket.Authenticate();
 
 }
 
@@ -62,17 +45,18 @@ bool Client::Auth() {
 TreeT Client::RequestTree() {
     //SyncTCPSocket for request
     Credential credential = Authentication::get_Instance()->ReadCredential();
+
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
     //socket will retry 5 times to connect
     tcpSocket.ConnectServer(5);
 
     //Here we create the ControlMessage for TreeRequest ( Type = 2 )
-    //TODO this will be key not the actual username and pass
+
     ControlMessage message_obj{2};
-    //Adding User and Password
-    //TODO Change this after we decide to add keys
-    message_obj.AddElement("Username",credential.username_);
-    message_obj.AddElement("Password:",credential.password_);
+    //Adding Username and Hash Password
+    message_obj.AddElement("Username", credential.username_);
+    message_obj.AddElement("HashPassword:", credential.hash_password_);
+
     //And sending it formatted in JSON language
     boost::asio::write(tcpSocket.sock_, boost::asio::buffer(message_obj.ToJSON()));
     // we sent the tree req message, we will shutdown in order to tell the server that we sent all
@@ -82,19 +66,23 @@ TreeT Client::RequestTree() {
     boost::asio::streambuf response_buf;
     boost::system::error_code ec;
     boost::asio::read(tcpSocket.sock_, response_buf, ec);
+
     // This checks if the client has finished writing
     if (ec != boost::asio::error::eof){
+        //TODO Alcune volte strane si blocca
         //qua se non ho ricevuto la chiusura del client
-        std::cout<<"DEBUG: NON ho ricevuto il segnale di chiusura del client";
+        if(DEBUG) std::cerr<<"DEBUG: NON ho ricevuto il segnale di chiusura del client";
         throw boost::system::system_error(ec);
     }
+
     //Read the response_buf using an iterator and store it in a string
     //TODO might be an easier method to do this
     std::string response_json((std::istreambuf_iterator<char>(&response_buf)), std::istreambuf_iterator<char>() );
 
     //Now we parsed the request and we use the json in order to create the corresponding ControlMessage
     ControlMessage response_message{response_json};
-    //std::cout << "Tree recived successfully" << std::endl;
+    if(DEBUG) std::cout << "Tree received successfully" << std::endl;
+
     //We get the tree
     std::string tree = response_message.GetElement("Tree");
 
@@ -190,10 +178,6 @@ void Client::ProcessNew(Patch& patch) {
             patch.added_map_.insert(element);
 
         }
-
-
-
-
     }
 }
 
@@ -221,7 +205,7 @@ void Client::SendPatch(Patch& update){
     //Adding User and Password
     //TODO Change this after we decide to add keys
     delete_message.AddElement("Username",credential_.username_);
-    delete_message.AddElement("Password:",credential_.password_);
+    delete_message.AddElement("Password:",credential_.hash_password_ );
     //We add the delete string
     delete_message.AddElement("To_be_deleted",update.to_be_deleted_);
     //And sending it formatted in JSON language
@@ -231,9 +215,5 @@ void Client::SendPatch(Patch& update){
 
     // Now we can focus on new and common
     //TODO Here send the files asyncronulsy
-
-    /*
-     *
-     */
 
 }

@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
 
     /**
      * CONFIGURATION PHASE
+     * Program reads and writes inside config the option with which the program was run
      */
 
     //User starts the program with <options>
@@ -31,17 +32,41 @@ int main(int argc, char *argv[]) {
     Config::get_Instance()->PrintConfiguration();
 
     /**
-     * VALIDATION AND STARTUP PHASE
+     * VALIDATION PHASE
+     * Program checks the validity of the config options
      */
+    //TODO Ho notato che le stampe non sono in ordine. Non penso sia un problema
+    //Check if the backup folder inside config.JSON exists
+    if( !std::filesystem::exists(Config::get_Instance()->ReadProperty("path")) ){
+        std::cerr << "Backup Folder doesn't exist. Check if you write it correctly and run the program again." << std::endl;
+        return 1;
+    }
+
     RawEndpoint raw_endpoint = Config::get_Instance()->ReadRawEndpoint();
 
-    //TODO Vedere le funzioni sotto e togliere i file divisi
+    /**
+     * CONNECT TO ENDPOINT AND AUTHENTICATION PHASE
+     */
+
     // Creating the Client and Auth
     Client client{raw_endpoint};
-    client.Auth();
+
+    //Return true or false
+    bool authentication_status = client.Auth();
+
+    //Check if the user is authenticated or not
+    if(!authentication_status){
+        std::cerr << "Username and/or password are not correct" << std::endl;
+        return 1;
+    }
 
     // From here on, we are authenticated.
-    // Here we and start the monitor where
+
+    /**
+     *  Monitor PHASE
+     *  Here we and start the monitor where
+     */
+
     // we loop detecting a change in the dir.
 
     //Generate Client tree string

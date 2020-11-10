@@ -5,7 +5,7 @@
 
 struct Credential{
     std::string username_;
-    std::string password_;
+    std::string hash_password_;
 };
 
 
@@ -23,8 +23,6 @@ public:
     static Authentication* get_Instance();
 
     Credential ReadCredential();
-    bool IsValidCredential(const Credential& credential);
-
 
 };
 

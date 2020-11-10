@@ -3,9 +3,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <iostream>
 #include <utilities.h>
-#include <authentication.h>
-
-#define CREDENTIAL_PATH "../config_file/credential.json"
+#include <filesystem>
 
 bool DEBUG=false;
 
@@ -19,50 +17,6 @@ Config *Config::get_Instance() {
         m_ConfigClass = new Config;
     }
     return m_ConfigClass;
-}
-
-/**
- * Check if the configuration file has username and password inside
- * Return true if is valid while false if is NULL
- * */
-bool Config::isConfig() {
-
-        //Take the use credential and save it
-        Credential credential_ = Authentication::get_Instance()->ReadCredential();
-
-        //Check if there aren't valid credential
-        return Authentication::get_Instance()->IsValidCredential(credential_);
-
-}
-
-/** TODO DA CANCELLARE
- * Asks the user to authenticate (username and password) and save the credential inside the JSON file.
- * */
-void Config::startConfig() {
-
-    std::string username;
-    std::string password;
-
-    std::cout << "It turns out that you are not logged id.\nPlease provide a username and password." << std::endl;
-
-    do {
-        std::cin.clear(); //Clear cin if there was some error during the previous loop
-
-        std::cout << "Username: ";
-        std::cin >> username;
-
-        std::cout << "Password: ";
-        std::cin >> password;
-
-    }while ( !std::cin.good() );
-    //PER ORA CHIEDE ALL'INFINITO SE NON PRENDE BENE I DATI, VALUTARE SE FARE CHE DOPO TOT PROVE IL PROGRAMMA TERMINA CON UN ERRORE
-    //VEDERE SU INTERNET SE TROVIAMO CASI IN CUI IL CIN DA ERRORE COSI DA TESTARLO
-
-    if(DEBUG) std::cout << "You inserted " << username << " " << password << std::endl;
-
-    //Write the username and password inside JSON file
-    writeConfig(username, password);
-
 }
 
 /**
@@ -113,15 +67,15 @@ std::string Config::ReadProperty(const std::string &key) {
         return value;
     }
     catch (const boost::property_tree::ptree_bad_path& e2){
-        std::cerr << "The " << key << " was not found" << std::endl;
+        std::cerr << "The \"" << key << "\" was not found inside config.json" << std::endl;
 
-        std::exit(23);   //TO-DO: Check the error status
+        std::exit(23);   //TODO: Check the error status
 
     }
     catch (const boost::property_tree::json_parser_error& e1) {
-        std::cerr <<"The configuration file was not found" << std::endl;
+        std::cerr <<"The configuration file was not found. Check if there is config.json" << std::endl;
 
-        std::exit(12);   //TO-DO: Check the error status
+        std::exit(12);   //TODO: Check the error status
     }
 }
 
@@ -156,8 +110,11 @@ int Config::SetConfig(int argc, char *argv[]) {
                     std::string username = argv[++i];
                     std::string password = argv[++i];
 
+                    //TODO HASH PASSWORD HERE
+                    std::string hash_password = password+"hash";
+
                     Config::get_Instance()->WriteProperty("username", username);
-                    Config::get_Instance()->WriteProperty("password", password);
+                    Config::get_Instance()->WriteProperty("hash_password", hash_password);
 
                 } else {
                     std::cerr
@@ -173,9 +130,13 @@ int Config::SetConfig(int argc, char *argv[]) {
 
                 if (i + 1 < argc && static_cast<std::string>(argv[i + 1]).rfind('-', 0) == std::string::npos){
 
-                    std::string path = argv[++i];
+                    //I take the path with the OS standard (Windows .\ while Linux ./)
+                    std::filesystem::path path = std::filesystem::path( argv[++i] );
 
-                    Config::get_Instance()->WriteProperty("path", path);
+                    //Convert the path into the POSIX standard (./)
+                    std::string path_string = path.generic_string();
+
+                    Config::get_Instance()->WriteProperty("path", path_string);
 
                 } else {
                     std::cerr
@@ -250,37 +211,13 @@ void Config::PrintConfiguration() {
 
     std::cout   << "\n\nProgram started with:\n"
                 << "\t Username: \t" << Config::get_Instance()->ReadProperty("username")<< "\n"
-                << "\t Folder: \t" << Config::get_Instance()->ReadProperty("path") << "\n"
+                << "\t Backup folder: " << Config::get_Instance()->ReadProperty("path") << "\n"
                 << "\t Ip and port: \t" << Config::get_Instance()->ReadProperty("ip") << " " << Config::get_Instance()->ReadProperty("port") <<"\n"
                 << "\t Debug: \t" << std::boolalpha << DEBUG << "\n"
                 << std::endl;
 
 }
 
-
-/**
- * Write the username and password inside JSON file
- **/
-void Config::writeConfig(const std::string& username, const std::string& password) {
-
-    namespace pt = boost::property_tree;
-
-    //This is the tree root; inside there is the username and password (if the app is config)
-    pt::ptree  root;
-
-    try {
-        root.put("username", username);
-        root.put("password", password);
-
-        //Read the file and put the content inside root
-        pt::write_json(CREDENTIAL_PATH, root);
-    }
-    catch ( const boost::property_tree::json_parser_error& e1) {
-        std::cerr <<"The configuration file was not found" << std::endl;
-
-        std::exit(12);   //TO-DO: Check the error status
-    }
-}
 
 
 /// Reads the raw endpoint from the json file.
@@ -293,111 +230,9 @@ RawEndpoint Config::ReadRawEndpoint() {
     auto port = std::stoul( Config::get_Instance()->ReadProperty("port"));
 
     return RawEndpoint{ip, port};
-
-
 }
 
-//TODO Mettere un po' di controlli in modo tale che la porta e l'ip siano corretti
-void Config::WriteRawEndpoint(const std::string &ip, const std::string& port) {
 
-        namespace pt = boost::property_tree;
-
-        //This is the tree root; inside there is the username and password (if the app is config)
-        pt::ptree  root;
-
-        try {
-            root.put("ip", ip);
-            root.put("port", port);
-
-            //Read the file and put the content inside root
-            pt::write_json("../config_file/connection.json", root);
-        }
-        catch ( const boost::property_tree::json_parser_error& e1) {
-            std::cerr <<"The configuration file was not found" << std::endl;
-
-            std::exit(12);   //TO-DO: Check the error status
-        }
-}
-
-void Config::WriteFolderPath(const std::string &path) {
-
-    namespace pt = boost::property_tree;
-
-    //This is the tree root; inside there is the username and password (if the app is config)
-    pt::ptree  root;
-
-    try {
-        root.put("path", path);
-
-        //Read the file and put the content inside root
-        pt::write_json("../config_file/folder.json", root);
-    }
-    catch ( const boost::property_tree::json_parser_error& e1) {
-        std::cerr <<"The configuration file was not found" << std::endl;
-
-        std::exit(12);   //TO-DO: Check the error status
-    }
-
-
-}
-
-/// Reads the raw endpoint from the json file.
-/// \return A RawEndpoint used later to set up all the sockets.
-std::string Config::ReadFolderPath() {
-
-    namespace pt = boost::property_tree;
-    pt::ptree  root;
-
-    try {
-        // TODO gestire errori nella lettura del json
-        //Read the file and put the content inside root
-        pt::read_json("../config_file/folder.json", root);
-
-        auto path = root.get<std::string>("path");
-
-
-        return path;
-    }
-    catch (const boost::property_tree::ptree_bad_path& e2){
-        std::cerr << "The configuration file has a wrong structure: it must have a 'Username' and 'Password' field" << std::endl;
-
-        std::exit(23);   //TO-DO: Check the error status
-
-    }
-    catch (const boost::property_tree::json_parser_error& e1) {
-        std::cerr <<"The configuration file was not found" << std::endl;
-
-        std::exit(12);   //TO-DO: Check the error status
-    }
-
-}
-
-std::string Config::readUsername() {
-    namespace pt = boost::property_tree;
-    pt::ptree  root;
-
-    try {
-        // TODO gestire errori nella lettura del json
-        //Read the file and put the content inside root
-        pt::read_json("../config_file/credential.json", root);
-
-        auto username = root.get<std::string>("username");
-
-
-        return username;
-    }
-    catch (const boost::property_tree::ptree_bad_path& e2){
-        std::cerr << "The configuration file has a wrong structure: it must have a 'Username' and 'Password' field" << std::endl;
-
-        std::exit(23);   //TO-DO: Check the error status
-
-    }
-    catch (const boost::property_tree::json_parser_error& e1) {
-        std::cerr <<"The configuration file was not found" << std::endl;
-
-        std::exit(12);   //TO-DO: Check the error status
-    }
-}
 
 
 
