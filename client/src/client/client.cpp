@@ -170,7 +170,7 @@ std::string Client::GenerateTree(const std::filesystem::path& path) {
     for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
         itEntry != std::filesystem::recursive_directory_iterator();
         ++itEntry ) {
-        const auto filenameStr = itEntry->path().string();
+        const auto filenameStr = itEntry->path().generic_string();
         result.append(filenameStr + '\n');
     }
     return result;

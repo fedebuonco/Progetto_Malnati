@@ -16,7 +16,7 @@ std::string GenerateTree(const std::filesystem::path& path) {
     for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
         itEntry != std::filesystem::recursive_directory_iterator();
         ++itEntry ) {
-        const auto filenameStr = itEntry->path().string();
+        const auto filenameStr = itEntry->path().generic_string();
         result.append(filenameStr + '\n');
     }
 
@@ -73,7 +73,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             ControlMessage tree_result{52};
             // We compute & add the tree
             // TODO change the dir accordingly to username of the client
-            std::string tree = GenerateTree(std::filesystem::path("Prova"));
+            std::string tree = GenerateTree(std::filesystem::path("./Prova"));
             tree_result.AddElement("Tree", tree);
             // And for the tree we retrive its stored last time modification
 
