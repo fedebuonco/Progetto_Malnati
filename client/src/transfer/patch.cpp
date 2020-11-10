@@ -1,7 +1,3 @@
-//
-// Created by fede on 10/26/20.
-//
-
 #include <iostream>
 #include "patch.h"
 

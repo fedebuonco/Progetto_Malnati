@@ -70,14 +70,15 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
 /// tell that the connection is over. After the authenticate the socket is basically useless and needs to be shutdown completly.
 /// \return True if Auth went ok and user has successfully logged in, False if not.
 bool SyncTCPSocket::Authenticate() {
-    Credential credential_ = Authentication::get_Instance()->ReadCredential();
+
+    Credential credential = Authentication::get_Instance()->ReadCredential();
+
     //Creation of the Auth ControlMessage type = 1
     ControlMessage auth_message{1};
 
     //Adding User and Password
-    //TODO Change this after we decide to add keys
-    auth_message.AddElement("Username",credential_.username_);
-    auth_message.AddElement("Password:",credential_.password_);
+    auth_message.AddElement("Username", credential.username_);
+    auth_message.AddElement("HashPassword:", credential.hash_password_);
 
     //And sending it formatted in JSON language
     boost::asio::write(sock_, boost::asio::buffer(auth_message.ToJSON()));
@@ -93,6 +94,7 @@ bool SyncTCPSocket::Authenticate() {
     boost::system::error_code ec;
     boost::asio::read(sock_, response_buf, ec);
     if (ec != boost::asio::error::eof) {
+        //TODO controlla errori
     }
     //We handle the response parsing a string and then printing it.
     //Read the response_buf using an iterator and store it in a string

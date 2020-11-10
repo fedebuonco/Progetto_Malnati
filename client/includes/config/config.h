@@ -2,8 +2,7 @@
 // Created by marco on 21/09/20.
 //
 
-#ifndef SERVER_CONFIG_H
-#define SERVER_CONFIG_H
+#pragma once
 
 #include <string>
 
@@ -36,24 +35,10 @@ public:
     std::string ReadProperty(const std::string& key);
 
     int SetConfig(int argc, char *argv[]);
-    int SetConfig2(int argc, char *argv[]);
 
     void PrintConfiguration();
 
-
-
-    std::string readUsername();
-    void writeConfig(const std::string& username, const std::string& password);
-
     RawEndpoint ReadRawEndpoint();
-    void WriteRawEndpoint(const std::string& ip, const std::string& port);
 
-    std::string ReadFolderPath();
-    void WriteFolderPath(const std::string& path);
-
-    bool isConfig();
-    void startConfig();
 };
 
-
-#endif //SERVER_CONFIG_H
