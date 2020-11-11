@@ -1,5 +1,6 @@
 #include <sstream>
 #include "tree_t.h"
+#include <stdlib.h>     /* strtoul */
 
 /// Starting from the ordered string sent by the server, it computes A mapping between the files present in te server and their
 /// Hashes
@@ -13,6 +14,6 @@ TreeT::TreeT(const std::string& tree, const std::string& time) {
     std::string filename;
     std::string file_time;
     while ((std::getline(stream_tree, filename)) && (std::getline(stream_time, file_time))) {
-        time_.insert(std::pair<std::string ,std::string>(filename, file_time) );
+        time_.insert(std::pair<std::string ,unsigned long>(filename, std::stoul (file_time,nullptr,0)));
     }
 }

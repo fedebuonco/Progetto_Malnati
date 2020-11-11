@@ -12,7 +12,7 @@
 class TreeT {
 public:
     std::string tree_;
-    std::map<std::string,std::string> time_;
+    std::map<std::string,unsigned long > time_;
     TreeT(const std::string& tree, const std::string& time);
 };
 

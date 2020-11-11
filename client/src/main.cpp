@@ -10,9 +10,6 @@
 #include <tree_t.h>
 #include <patch.h>
 
-
-
-
 int main(int argc, char *argv[]) {
 
     /**
@@ -82,7 +79,7 @@ int main(int argc, char *argv[]) {
 
     // Now we process the patch, preparing all the needed data structures
      client.ProcessRemoved(update);
-    // client.ProcessCommon(update,times);
+     client.ProcessCommon(update,server_th);
      client.ProcessNew(update);
 
     if (DEBUG)

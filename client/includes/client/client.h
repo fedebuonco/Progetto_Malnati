@@ -26,6 +26,9 @@ public:
     void ProcessNew(Patch& patch);
     void ProcessRemoved(Patch& patch);
     void SendPatch(Patch &update);
+
+    void ProcessCommon(Patch &patch, TreeT server_treet);
+
 private:
     void Run(unsigned short port_num);
 
