@@ -156,10 +156,18 @@ std::string Client::GenerateTree(const std::filesystem::path& path) {
 
     std::string result;
     for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
-        itEntry != std::filesystem::recursive_directory_iterator();
-        ++itEntry ) {
-        const auto filenameStr = itEntry->path().generic_string();
-        result.append(filenameStr + '\n');
+             itEntry != std::filesystem::recursive_directory_iterator();
+             ++itEntry )
+    {
+
+        const auto filepath = itEntry->path();
+        std::filesystem::path clean_filepath = filepath.lexically_relative(path);
+        std::string file_str = clean_filepath.generic_string();
+        if (std::filesystem::is_directory(filepath)) {
+            result.append(file_str + "/" + '\n');
+        } else {
+            result.append(file_str+ '\n');
+        }
     }
     return result;
 }
