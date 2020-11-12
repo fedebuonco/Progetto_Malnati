@@ -154,12 +154,13 @@ Patch Client::GeneratePatch(const std::string& client_t,const std::string& serve
 /// \return String of files/dir (one for each line) contained in the folder
 std::string Client::GenerateTree(const std::filesystem::path& path) {
 
+
     std::vector<std::string> vector_result;
     std::string result;
 
     for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
-             itEntry != std::filesystem::recursive_directory_iterator();
-             ++itEntry )
+        itEntry != std::filesystem::recursive_directory_iterator();
+        ++itEntry )
     {
         const auto filepath = itEntry->path();
         std::filesystem::path clean_filepath = filepath.lexically_relative(path);
