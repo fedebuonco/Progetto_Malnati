@@ -70,7 +70,7 @@ TEST_CASE("Computing Diffs") {
     SECTION( "Generating diff on same folder " ) {
         auto folder1 = fede.GenerateTree(RELATIVE_DPATH);
         auto folder2 = fede.GenerateTree(RELATIVE_DPATH);
-        auto patch = fede.GeneratePatch(folder1, folder2);
+        auto patch = fede.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
         REQUIRE( patch.common_.size() != 0);
         REQUIRE( patch.added_.size() == 0);
         REQUIRE( patch.removed_.size() == 0);
@@ -79,7 +79,7 @@ TEST_CASE("Computing Diffs") {
     SECTION( "Generating diff where folder2 is empty" ) {
         auto folder1 = fede.GenerateTree(RELATIVE_DPATH);
         auto folder2 = fede.GenerateTree(PATH_EMPTY_FOLDER);
-        auto patch = fede.GeneratePatch(folder1, folder2);
+        auto patch = fede.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
         REQUIRE( patch.common_.size() == 0);
         REQUIRE( patch.added_.size() != 0);
         REQUIRE( patch.removed_.size() == 0);
@@ -88,7 +88,7 @@ TEST_CASE("Computing Diffs") {
     SECTION( "Generating diff where folder1 is empty" ) {
         auto folder1 = fede.GenerateTree(PATH_EMPTY_FOLDER);
         auto folder2 = fede.GenerateTree(RELATIVE_DPATH);
-        auto patch = fede.GeneratePatch(folder1, folder2);
+        auto patch = fede.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
         REQUIRE( patch.common_.size() == 0);
         REQUIRE( patch.added_.size() == 0);
         REQUIRE( patch.removed_.size() != 0);
@@ -105,7 +105,7 @@ TEST_CASE("Process Computations") {
     SECTION( "Process removed" ) {
         auto folder1 = fede.GenerateTree(PATH_EMPTY_FOLDER);
         auto folder2 = fede.GenerateTree(RELATIVE_DPATH);
-        auto patch = fede.GeneratePatch(folder1, folder2);
+        auto patch = fede.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
         REQUIRE( patch.removed_.size() != 0);
         fede.ProcessRemoved(patch);
         REQUIRE( patch.to_be_deleted_ == "ce\n"
@@ -114,6 +114,15 @@ TEST_CASE("Process Computations") {
                          "marco/\n"
                          "marco/c.txt\n"
                          "provaaa.txt\n");
+    }
+
+    SECTION( "Process New" ) {
+        auto folder1 = fede.GenerateTree(RELATIVE_DPATH);
+        auto folder2 = fede.GenerateTree(PATH_EMPTY_FOLDER);
+        auto patch = fede.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
+        REQUIRE( patch.added_.size() != 0);
+        fede.ProcessNew(patch);
+        REQUIRE( patch.to_be_added_map_.size() == patch.added_.size());
     }
 
 }
