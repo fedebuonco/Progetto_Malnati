@@ -97,7 +97,7 @@ TreeT Client::RequestTree() {
 /// \param client_t String of files/dir (one for each line) contained in the client folder
 /// \param server_t String of files/dir (one for each line) contained in the server folder
 /// \return a string containing the diff in the format decided beforehand.
-Patch Client::GeneratePatch(const std::string& client_t,const std::string& server_t) {
+Patch Client::GeneratePatch(std::filesystem::path mon_folder, const std::string& client_t,const std::string& server_t) {
     //Here we take the two string containng the paths and we create a set of path for each
     std::set<std::string> set_client;
     std::set<std::string> set_server;
@@ -145,7 +145,7 @@ Patch Client::GeneratePatch(const std::string& client_t,const std::string& serve
     }
 
     //We can now create the patch object
-    Patch result{added,removed,common};
+    Patch result{mon_folder, added,removed,common};
     return result;
 }
 
@@ -188,9 +188,13 @@ void Client::ProcessNew(Patch& patch) {
     for (auto file_path : patch.added_ ){
         //TODO THIS works only on linux find a windows solution _stat could be used
 
+        //Here we have the file_path but it is formatted not for stat,
+        //we must pass it to stat so we need to append it to the monitored folder
+        std::filesystem::path complete_path = patch.monitored_folder_;
+        complete_path /= file_path;
 
         struct stat result;
-        if(stat(file_path.c_str(), &result)==0){
+        if(stat(complete_path.c_str(), &result)==0){
             auto mod_time = result.st_mtime;
             std::pair<std::string, unsigned long int> element = std::make_pair (file_path,mod_time);
             patch.to_be_added_map_.insert(element);
@@ -207,11 +211,15 @@ void Client::ProcessCommon(Patch& patch, TreeT server_treet){
     std::map<std::string, unsigned long> client_common_map;
 
     for (auto file_path : patch.common_ ) {
-        //TODO THIS works only on linux find a windows solution _stat could be used
+
+        //Here we have the file_path but it is formatted not for stat,
+        //we must pass it to stat so we need to append it to the monitored folder
+        std::filesystem::path complete_path = patch.monitored_folder_;
+        complete_path /= file_path;
 
         //We generate the client_common_map
         struct stat result;
-        if (stat(file_path.c_str(), &result) == 0) {
+        if (stat(complete_path.c_str(), &result) == 0) {
             auto mod_time = result.st_mtime;
             std::pair<std::string, unsigned long> element = std::make_pair(file_path, mod_time);
             client_common_map.insert(element);
@@ -229,6 +237,8 @@ void Client::ProcessCommon(Patch& patch, TreeT server_treet){
                 std::cout << "#### Found Conflict - " << pair.first << " is newer in the client" << std::endl;
                 //TODO here we should deicede what to do with them
             }
+
+
         }
     }
 

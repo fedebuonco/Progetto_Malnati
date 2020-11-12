@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
     TreeT server_th = client.RequestTree();
 
     //And we can compute the Diff and store it in a Patch
-    Patch update = client.GeneratePatch(client_tree, server_th.tree_);
+    Patch update = client.GeneratePatch(monitored_folder, client_tree, server_th.tree_);
 
     // Now we process the patch, preparing all the needed data structures
      client.ProcessRemoved(update);

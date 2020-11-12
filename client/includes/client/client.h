@@ -22,7 +22,7 @@ public:
     bool Auth();
     TreeT RequestTree();
     std::string GenerateTree(const std::filesystem::path& path);
-    Patch GeneratePatch(const std::string& client_t,const std::string& server_t);
+    Patch GeneratePatch(std::filesystem::path mon_folder, const std::string& client_t, const std::string& server_t);
     void ProcessNew(Patch& patch);
     void ProcessRemoved(Patch& patch);
     void SendPatch(Patch &update);
