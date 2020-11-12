@@ -5,34 +5,116 @@
 //Unit Test
 
 
+//DEFINES _______________________________________
+#define RELATIVE_PATH "Prova"
+#define RELATIVE_DPATH "./Prova"
+#define ABSOLUTE_PATH  "/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/Prova"
+#define PATH_EMPTY_FOLDER "./empty"
 
 // Tree Generation _______________________________________________
-TEST_CASE("Tree gen ./Prova") {
-    RawEndpoint re;
-    Client fede(re);
-    REQUIRE( fede.GenerateTree("./Prova") ==  "provaaa.txt\n"
-                                              "dede/\n"
-                                              "dede/c.txt\n"
-                                              "marco/\n"
-                                              "marco/c.txt\n");
-}
+TEST_CASE("Tree Generations"){
 
-TEST_CASE("Tree gen Prova") {
-    RawEndpoint re;
-    Client fede(re);
-    REQUIRE( fede.GenerateTree("Prova") ==  "provaaa.txt\n"
-                                              "dede/\n"
-                                              "dede/c.txt\n"
-                                              "marco/\n"
-                                              "marco/c.txt\n");
-}
+    SECTION("Tree gen ./Prova") {
+        RawEndpoint re;
+        Client fede(re);
+        CHECK(fede.GenerateTree(RELATIVE_DPATH) == "ce\n"
+                                                   "dede/\n"
+                                                   "dede/c.txt\n"
+                                                   "marco/\n"
+                                                   "marco/c.txt\n"
+                                                   "provaaa.txt\n");
+    }
 
-TEST_CASE("Tree gen Prova- absolute path") {
+    SECTION("Tree gen Prova") {
+        RawEndpoint re;
+        Client fede(re);
+        CHECK(fede.GenerateTree(RELATIVE_PATH) == "ce\n"
+                                                  "dede/\n"
+                                                  "dede/c.txt\n"
+                                                  "marco/\n"
+                                                  "marco/c.txt\n"
+                                                  "provaaa.txt\n");
+    }
+
+    SECTION("Tree gen Prova- absolute path") {
+        RawEndpoint re;
+        Client fede(re);
+        CHECK(fede.GenerateTree(ABSOLUTE_PATH) == "ce\n"
+                                                  "dede/\n"
+                                                  "dede/c.txt\n"
+                                                  "marco/\n"
+                                                  "marco/c.txt\n"
+                                                  "provaaa.txt\n");
+    }
+
+    SECTION("Tree gen No valid path") {
+        RawEndpoint re;
+        Client fede(re);
+        CHECK_THROWS(fede.GenerateTree("./INVALIDPATH"));
+    }
+
+    SECTION("Tree gen empty folder") {
+        RawEndpoint re;
+        Client fede(re);
+        CHECK(fede.GenerateTree(PATH_EMPTY_FOLDER) == "");
+    }
+
+}
+// END - Tree Generation __________________________________________
+
+// Patch Generation _______________________________________________
+TEST_CASE("Computing Diffs") {
     RawEndpoint re;
     Client fede(re);
-    REQUIRE( fede.GenerateTree("/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/Prova") ==  "provaaa.txt\n"
-                                            "dede/\n"
-                                            "dede/c.txt\n"
-                                            "marco/\n"
-                                            "marco/c.txt\n");
+
+    SECTION( "Generating diff on same folder " ) {
+        auto folder1 = fede.GenerateTree(RELATIVE_DPATH);
+        auto folder2 = fede.GenerateTree(RELATIVE_DPATH);
+        auto patch = fede.GeneratePatch(folder1, folder2);
+        REQUIRE( patch.common_.size() != 0);
+        REQUIRE( patch.added_.size() == 0);
+        REQUIRE( patch.removed_.size() == 0);
+    }
+
+    SECTION( "Generating diff where folder2 is empty" ) {
+        auto folder1 = fede.GenerateTree(RELATIVE_DPATH);
+        auto folder2 = fede.GenerateTree(PATH_EMPTY_FOLDER);
+        auto patch = fede.GeneratePatch(folder1, folder2);
+        REQUIRE( patch.common_.size() == 0);
+        REQUIRE( patch.added_.size() != 0);
+        REQUIRE( patch.removed_.size() == 0);
+    }
+
+    SECTION( "Generating diff where folder1 is empty" ) {
+        auto folder1 = fede.GenerateTree(PATH_EMPTY_FOLDER);
+        auto folder2 = fede.GenerateTree(RELATIVE_DPATH);
+        auto patch = fede.GeneratePatch(folder1, folder2);
+        REQUIRE( patch.common_.size() == 0);
+        REQUIRE( patch.added_.size() == 0);
+        REQUIRE( patch.removed_.size() != 0);
+    }
+
 }
+// END - Patch Generation _________________________________________
+
+// Process Computations ___________________________________________
+TEST_CASE("Process Computations") {
+    RawEndpoint re;
+    Client fede(re);
+
+    SECTION( "Process removed" ) {
+        auto folder1 = fede.GenerateTree(PATH_EMPTY_FOLDER);
+        auto folder2 = fede.GenerateTree(RELATIVE_DPATH);
+        auto patch = fede.GeneratePatch(folder1, folder2);
+        REQUIRE( patch.removed_.size() != 0);
+        fede.ProcessRemoved(patch);
+        REQUIRE( patch.to_be_deleted_ == "ce\n"
+                         "dede/\n"
+                         "dede/c.txt\n"
+                         "marco/\n"
+                         "marco/c.txt\n"
+                         "provaaa.txt\n");
+    }
+
+}
+// END - Process Computations _____________________________________
