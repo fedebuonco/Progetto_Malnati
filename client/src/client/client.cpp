@@ -192,9 +192,11 @@ void Client::ProcessNew(Patch& patch) {
         //we must pass it to stat so we need to append it to the monitored folder
         std::filesystem::path complete_path = patch.monitored_folder_;
         complete_path /= file_path;
-
+        if(DEBUG){
+            std::cout << "Process New - " << complete_path.generic_string() << std::endl;
+        }
         struct stat result;
-        if(stat(complete_path.c_str(), &result)==0){
+        if(stat(complete_path.generic_string().c_str(), &result)==0){
             auto mod_time = result.st_mtime;
             std::pair<std::string, unsigned long int> element = std::make_pair (file_path,mod_time);
             patch.to_be_added_map_.insert(element);
@@ -219,7 +221,7 @@ void Client::ProcessCommon(Patch& patch, TreeT server_treet){
 
         //We generate the client_common_map
         struct stat result;
-        if (stat(complete_path.c_str(), &result) == 0) {
+        if (stat(complete_path.generic_string().c_str(), &result) == 0) {
             auto mod_time = result.st_mtime;
             std::pair<std::string, unsigned long> element = std::make_pair(file_path, mod_time);
             client_common_map.insert(element);
