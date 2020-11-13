@@ -10,6 +10,7 @@
 #define RELATIVE_DPATH "./Prova"
 #define ABSOLUTE_PATH  "/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/Prova"
 #define PATH_EMPTY_FOLDER "./empty"
+#define RELATIVE_PATH_2 "Prova2"
 
 // Tree Generation _______________________________________________
 TEST_CASE("Tree Generations"){
@@ -102,11 +103,13 @@ TEST_CASE("Process Computations") {
     RawEndpoint re;
     Client fede(re);
 
-    SECTION( "Process removed" ) {
+    SECTION( "Process removed with empty folder in client" ) {
         auto folder1 = fede.GenerateTree(PATH_EMPTY_FOLDER);
         auto folder2 = fede.GenerateTree(RELATIVE_DPATH);
         auto patch = fede.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
         REQUIRE( patch.removed_.size() != 0);
+        REQUIRE( patch.added_.size() == 0);
+        REQUIRE( patch.common_.size() == 0);
         fede.ProcessRemoved(patch);
         REQUIRE( patch.to_be_deleted_ == "ce\n"
                          "dede/\n"
@@ -116,14 +119,23 @@ TEST_CASE("Process Computations") {
                          "provaaa.txt\n");
     }
 
-    SECTION( "Process New" ) {
+    SECTION( "Process New with empty folder in server " ) {
         auto folder1 = fede.GenerateTree(RELATIVE_DPATH);
         auto folder2 = fede.GenerateTree(PATH_EMPTY_FOLDER);
         auto patch = fede.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
+        REQUIRE( patch.removed_.size() == 0);
         REQUIRE( patch.added_.size() != 0);
+        REQUIRE( patch.common_.size() == 0);
         fede.ProcessNew(patch);
-        REQUIRE( patch.to_be_added_map_.size() == patch.added_.size());
+        REQUIRE( patch.to_be_sent_map_.size() == patch.added_.size());
     }
+
 
 }
 // END - Process Computations _____________________________________
+
+// Other ___________________________________________
+TEST_CASE("Other") {
+//TODO Test prettyprint
+}
+// END - Other _____________________________________

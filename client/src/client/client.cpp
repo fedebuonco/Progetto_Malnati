@@ -199,7 +199,7 @@ void Client::ProcessNew(Patch& patch) {
         if(stat(complete_path.generic_string().c_str(), &result)==0){
             auto mod_time = result.st_mtime;
             std::pair<std::string, unsigned long int> element = std::make_pair (file_path,mod_time);
-            patch.to_be_added_map_.insert(element);
+            patch.to_be_sent_map_.insert(element);
 
         }
     }
@@ -237,17 +237,15 @@ void Client::ProcessCommon(Patch& patch, TreeT server_treet){
             //Here we enter if in the client the file is newer.
             if(DEBUG) {
                 std::cout << "#### Found Conflict - " << pair.first << " is newer in the client" << std::endl;
-                //TODO here we should deicede what to do with them
+                //Thus, we add them to the to_be_sent_map, will be used in the sendPatch.
+                patch.to_be_sent_map_.insert(pair);
             }
-
-
         }
     }
 
 
 
 }
-
 
 /// This function generates a string and fill the to_be_deleted_ member of the patch
 /// containing all the files/dir that should be removed on the server side.

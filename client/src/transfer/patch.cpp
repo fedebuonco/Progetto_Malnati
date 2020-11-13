@@ -15,7 +15,28 @@ Patch::Patch(std::filesystem::path mon_folder, std::vector<std::string> add, std
 }
 
 /// Pretty Prints the changes contained in the patch
-void Patch::PrettyPrint(){
+std::string Patch::PrettyPrint(){
+
+    std::string pretty;
+    pretty.append(":::::::: Changes ::::::::\n");
+    for (auto file : added_){
+        pretty.append("+ " + file +"\n");
+    }
+    for (auto file : removed_){
+        pretty.append("- " + file +"\n");
+    }
+    for (auto file : common_){
+        pretty.append("= " + file +"\n");
+    }
+    pretty.append( ":::::::: Deleted Files ::::::::\n");
+    pretty.append(to_be_deleted_);
+    pretty.append(":::::::: Files that will be Sent - Last Modified Time ::::::::\n" );
+    for (auto file : to_be_sent_map_){
+        std::cout << file.first + " - " << file.second << std::endl;
+        pretty.append(file.first + " - ");
+        pretty.append(std::to_string(file.second) + "\n");
+    }
+
     std::cout << ":::::::: Changes ::::::::" << std::endl;
     for (auto file : added_){
         std::cout <<"+ "<<file << std::endl;
@@ -29,10 +50,11 @@ void Patch::PrettyPrint(){
 
     std::cout << ":::::::: Deleted Files ::::::::" << std::endl;
     std::cout << to_be_deleted_ << std::endl;
-    std::cout << ":::::::: New Files - Last Modified Time ::::::::" << std::endl;
-    for (auto file : to_be_added_map_){
+    std::cout << ":::::::: Files that will be Sent - Last Modified Time ::::::::" << std::endl;
+    for (auto file : to_be_sent_map_){
         std::cout << file.first + " - " << file.second << std::endl;
     }
 
 
+    return pretty;
 }
