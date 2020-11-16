@@ -5,6 +5,13 @@
 #include <utilities.h>
 #include <filesystem>
 
+
+#include <sha.h>
+#include <filters.h>
+#include <hex.h>
+#include "cryptlib.h"
+
+
 bool DEBUG=false;
 
 Config *Config::m_ConfigClass = nullptr;
@@ -110,11 +117,17 @@ int Config::SetConfig(int argc, char *argv[]) {
                     std::string username = argv[++i];
                     std::string password = argv[++i];
 
-                    //TODO HASH PASSWORD HERE
-                    std::string hash_password = password+"hash";
+                    CryptoPP::SHA256 hash;
+                    std::string digest;
+
+                    CryptoPP::StringSource s(password, true, new CryptoPP::HashFilter(
+                            hash, new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
+
+                    if(DEBUG) std::cout << "\nUser send the password: " << password << " and hash: " << digest << std::endl;
+
 
                     Config::get_Instance()->WriteProperty("username", username);
-                    Config::get_Instance()->WriteProperty("hash_password", hash_password);
+                    Config::get_Instance()->WriteProperty("hash_password", digest);
 
                 } else {
                     std::cerr

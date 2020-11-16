@@ -8,11 +8,12 @@
 #include "../includes/client/client.h"
 #include <boost/property_tree/ptree.hpp>
 #include <tree_t.h>
-#include <patch.h>
+
+
 
 int main(int argc, char *argv[]) {
 
-    /**
+     /**
      * CONFIGURATION PHASE
      * Program reads and writes inside config the option with which the program was run
      */

@@ -40,6 +40,7 @@ void ControlMessage::AddElement(std::string element, std::string value){
 /// \param element Name of the propriety
 /// \return value of the propriety
 std::string ControlMessage::GetElement(std::string element) {
+    //TODO se elemento non c'è crasha tutto
     std::string result = json_mess_->get<std::string>(element);
     return result;
 }
