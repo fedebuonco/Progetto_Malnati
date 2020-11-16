@@ -32,7 +32,6 @@ std::string Patch::PrettyPrint(){
     pretty.append(to_be_deleted_);
     pretty.append(":::::::: Files that will be Sent - Last Modified Time ::::::::\n" );
     for (auto file : to_be_sent_map_){
-        std::cout << file.first + " - " << file.second << std::endl;
         pretty.append(file.first + " - ");
         pretty.append(std::to_string(file.second) + "\n");
     }
@@ -54,6 +53,10 @@ std::string Patch::PrettyPrint(){
     for (auto file : to_be_sent_map_){
         std::cout << file.first + " - " << file.second << std::endl;
     }
+    std::cout << ":::::::: Recap : new files (" << added_.size() << ")   ::::::::" << std::endl;
+    std::cout << ":::::::: Recap : removed files (" << removed_.size() << ")   ::::::::" << std::endl;
+    std::cout << ":::::::: Recap : common files (" << common_.size() << ")   ::::::::" << std::endl;
+    std::cout << ":::::::: Recap : Files that will be sent (" << to_be_sent_map_.size() << ")   ::::::::" << std::endl;
 
 
     return pretty;

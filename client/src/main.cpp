@@ -79,8 +79,9 @@ int main(int argc, char *argv[]) {
 
     // Now we process the patch, preparing all the needed data structures
      client.ProcessRemoved(update);
-     client.ProcessCommon(update,server_th);
      client.ProcessNew(update);
+     client.ProcessCommon(update,server_th);
+
 
     if (DEBUG)
         update.PrettyPrint();
