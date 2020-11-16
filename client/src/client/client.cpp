@@ -55,7 +55,7 @@ TreeT Client::RequestTree() {
     ControlMessage message_obj{2};
     //Adding Username and Hash Password
     message_obj.AddElement("Username", credential.username_);
-    message_obj.AddElement("HashPassword:", credential.hash_password_);
+    message_obj.AddElement("HashPassword", credential.hash_password_);
 
     //And sending it formatted in JSON language
     boost::asio::write(tcpSocket.sock_, boost::asio::buffer(message_obj.ToJSON()));
