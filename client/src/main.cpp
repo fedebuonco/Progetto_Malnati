@@ -11,36 +11,9 @@
 
 
 
-#include "cryptlib.h"
-using CryptoPP::Exception;
-#include "hex.h"
-using CryptoPP::HexEncoder;
-using CryptoPP::HexDecoder;
-#include "filters.h"
-using CryptoPP::StringSink;
-using CryptoPP::StringSource;
-using CryptoPP::StreamTransformationFilter;
-#include "aes.h"
-using CryptoPP::AES;
-#include "ccm.h"
-using CryptoPP::CBC_Mode;
-#include "osrng.h"
-using CryptoPP::AutoSeededRandomPool;
-#include "sha.h"
-
-
 int main(int argc, char *argv[]) {
 
-    CryptoPP::SHA256 hash;
-    std::string message = "abcdefghijklmnopqrstuvwxyz";
-    std::string digest;
-
-    StringSource s(message, true, new CryptoPP::HashFilter(hash, new HexEncoder(new StringSink(digest))));
-
-    std::cout << digest << std::endl;
-
-
-    /**
+     /**
      * CONFIGURATION PHASE
      * Program reads and writes inside config the option with which the program was run
      */

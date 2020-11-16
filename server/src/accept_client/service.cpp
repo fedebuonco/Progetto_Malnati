@@ -60,7 +60,15 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
         case 1:{//AUTH REQUEST
             // TODO real checkIdentity and control message
             // TODO change control message constructor for now in the client we will only check that is 51 not if auth = true/false
+            std::string hashpass = request_message.GetElement("HashPassword");
+
             ControlMessage check_result{51};
+            if(hashpass=="5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8"){
+                check_result.AddElement("auth", "true");
+            } else {
+                check_result.AddElement("auth", "false");
+            }
+
             boost::asio::write(*sock, boost::asio::buffer(check_result.ToJSON()));
             // Send the eof error shutting down the server.
             // TODO qua magicamente va ignorato l'errore GRAVISSIMO

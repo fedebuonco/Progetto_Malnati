@@ -41,14 +41,19 @@ SyncTCPSocket::~SyncTCPSocket() {
 void SyncTCPSocket::ConnectServer(int n_tries) {
     while (n_tries) {
         try {
-            //TODO Add a delay good for linux and windows otherwise useless
-            if (DEBUG)
-                std::cout << "Establishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
+
+            if (DEBUG)  std::cout << "\nEstablishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
+
             sock_.connect(ep_);
             break; // Usciamo dal while perchè connessione avvenuta con successo
         }
         catch (boost::system::system_error &e) {
             n_tries--;
+
+            //TODO CONTROLLARE BENE Add a delay good for linux and windows otherwise useless
+            std::this_thread::sleep_for (std::chrono::seconds (1));
+            //std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::nanoseconds(1) );
+
             if(n_tries == 0){
                 //TODO vedere std::exit e cose varie
                 //
@@ -78,7 +83,7 @@ bool SyncTCPSocket::Authenticate() {
 
     //Adding User and Password
     auth_message.AddElement("Username", credential.username_);
-    auth_message.AddElement("HashPassword:", credential.hash_password_);
+    auth_message.AddElement("HashPassword", credential.hash_password_);
 
     //And sending it formatted in JSON language
     boost::asio::write(sock_, boost::asio::buffer(auth_message.ToJSON()));
@@ -104,14 +109,21 @@ bool SyncTCPSocket::Authenticate() {
     //Now we parsed the request and we use the string in order to create the corresponding ControlMessage
     ControlMessage response_message{response_json};
     if(response_message.type_ == 51){// it means we are actually dealing with a auth response (what we were expecting)
-        //TODO return true false accordingly to the body of the control message received
-        // for now we just check it is an auth response
+        //TODO return true false accordingly to the body of the control message received for now we just check it is an auth response
         // later on we will check the result
         // auth = true /false
-        std::cout << "User " << Config::get_Instance()->ReadProperty("username") <<
-                    " successfully authenticated." << std::endl;
-        return true;
-    } else
-        return false;
+        std::string auth_response = response_message.GetElement("auth");
+
+        if(auth_response=="true") {
+
+            if(DEBUG) std::cout << "\n\nUser " << Config::get_Instance()->ReadProperty("username") << " successfully authenticated."
+                      << std::endl;
+            return true;
+        }
+
+    }
+
+    //If we don't go to return true, there is a problem so return false
+    return false;
 }
 
