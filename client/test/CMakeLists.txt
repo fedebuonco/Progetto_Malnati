@@ -59,6 +59,16 @@ if (WIN32)
         include_directories(${Boost_INCLUDE_DIR})
         link_directories(${Boost_LIBRARY_DIR})
 
+        include_directories(../libs/cryptopp/include)
+        unset(CRYPTOPP CACHE)
+
+        find_library(CRYPTOPP cryptlib HINTS ../libs/cryptopp REQUIRED)
+        if(NOT CRYPTOPP)
+            message(FATAL_ERROR "Cryptopp Not found")
+        endif()
+
+        message(STATUS ${CRYPTOPP})
+
         add_executable(test
                 catch.hpp
                 main_test.cpp
@@ -81,6 +91,8 @@ if (WIN32)
                 ../includes/transfer/patch.h
                 ../src/transfer/patch.cpp
                 )
+
+        target_link_libraries(test ${CRYPTOPP})
     endif()
 endif (WIN32)
 
