@@ -2,4 +2,10 @@
 client/.idea/
 server/.idea/
 client/cmake-build-debug/
+client/test/cmake-build-debug/CMakeFiles
+client/test/cmake-build-debug/CMakeCache.txt
+client/test/cmake-build-debug/cmake_install.cmake
+client/test/cmake-build-debug/Makefile
+client/test/cmake-build-debug/test
+client/test/cmake-build-debug/test.cbp
 server/cmake-build-debug/

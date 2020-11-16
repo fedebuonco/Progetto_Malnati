@@ -55,7 +55,7 @@ TreeT Client::RequestTree() {
     ControlMessage message_obj{2};
     //Adding Username and Hash Password
     message_obj.AddElement("Username", credential.username_);
-    message_obj.AddElement("HashPassword:", credential.hash_password_);
+    message_obj.AddElement("HashPassword", credential.hash_password_);
 
     //And sending it formatted in JSON language
     boost::asio::write(tcpSocket.sock_, boost::asio::buffer(message_obj.ToJSON()));
@@ -97,7 +97,7 @@ TreeT Client::RequestTree() {
 /// \param client_t String of files/dir (one for each line) contained in the client folder
 /// \param server_t String of files/dir (one for each line) contained in the server folder
 /// \return a string containing the diff in the format decided beforehand.
-Patch Client::GeneratePatch(const std::string& client_t,const std::string& server_t) {
+Patch Client::GeneratePatch(std::filesystem::path mon_folder, const std::string& client_t,const std::string& server_t) {
     //Here we take the two string containng the paths and we create a set of path for each
     std::set<std::string> set_client;
     std::set<std::string> set_server;
@@ -145,7 +145,7 @@ Patch Client::GeneratePatch(const std::string& client_t,const std::string& serve
     }
 
     //We can now create the patch object
-    Patch result{added,removed,common};
+    Patch result{mon_folder, added,removed,common};
     return result;
 }
 
@@ -154,13 +154,31 @@ Patch Client::GeneratePatch(const std::string& client_t,const std::string& serve
 /// \return String of files/dir (one for each line) contained in the folder
 std::string Client::GenerateTree(const std::filesystem::path& path) {
 
+
+    std::vector<std::string> vector_result;
     std::string result;
+
     for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
         itEntry != std::filesystem::recursive_directory_iterator();
-        ++itEntry ) {
-        const auto filenameStr = itEntry->path().generic_string();
-        result.append(filenameStr + '\n');
+        ++itEntry )
+    {
+        const auto filepath = itEntry->path();
+        std::filesystem::path clean_filepath = filepath.lexically_relative(path);
+        std::string file_str = clean_filepath.generic_string();
+        if (std::filesystem::is_directory(filepath)) {
+            vector_result.push_back(file_str + "/" + '\n');
+        } else {
+            vector_result.push_back(file_str+ '\n');
+        }
     }
+
+    //Here we sort the tree in alphabetic order to permit cross platform diff
+    std::sort(vector_result.begin(), vector_result.end());
+    for(auto clean_path : vector_result )
+    {
+        result.append(clean_path);
+    }
+
     return result;
 }
 
@@ -170,12 +188,18 @@ void Client::ProcessNew(Patch& patch) {
     for (auto file_path : patch.added_ ){
         //TODO THIS works only on linux find a windows solution _stat could be used
 
-
+        //Here we have the file_path but it is formatted not for stat,
+        //we must pass it to stat so we need to append it to the monitored folder
+        std::filesystem::path complete_path = patch.monitored_folder_;
+        complete_path /= file_path;
+        if(DEBUG){
+            std::cout << "Process New - " << complete_path.generic_string() << std::endl;
+        }
         struct stat result;
-        if(stat(file_path.c_str(), &result)==0){
+        if(stat(complete_path.generic_string().c_str(), &result)==0){
             auto mod_time = result.st_mtime;
             std::pair<std::string, unsigned long int> element = std::make_pair (file_path,mod_time);
-            patch.to_be_added_map_.insert(element);
+            patch.to_be_sent_map_.insert(element);
 
         }
     }
@@ -189,11 +213,15 @@ void Client::ProcessCommon(Patch& patch, TreeT server_treet){
     std::map<std::string, unsigned long> client_common_map;
 
     for (auto file_path : patch.common_ ) {
-        //TODO THIS works only on linux find a windows solution _stat could be used
+
+        //Here we have the file_path but it is formatted not for stat,
+        //we must pass it to stat so we need to append it to the monitored folder
+        std::filesystem::path complete_path = patch.monitored_folder_;
+        complete_path /= file_path;
 
         //We generate the client_common_map
         struct stat result;
-        if (stat(file_path.c_str(), &result) == 0) {
+        if (stat(complete_path.generic_string().c_str(), &result) == 0) {
             auto mod_time = result.st_mtime;
             std::pair<std::string, unsigned long> element = std::make_pair(file_path, mod_time);
             client_common_map.insert(element);
@@ -209,7 +237,8 @@ void Client::ProcessCommon(Patch& patch, TreeT server_treet){
             //Here we enter if in the client the file is newer.
             if(DEBUG) {
                 std::cout << "#### Found Conflict - " << pair.first << " is newer in the client" << std::endl;
-                //TODO here we should deicede what to do with them
+                //Thus, we add them to the to_be_sent_map, will be used in the sendPatch.
+                patch.to_be_sent_map_.insert(pair);
             }
         }
     }
@@ -217,7 +246,6 @@ void Client::ProcessCommon(Patch& patch, TreeT server_treet){
 
 
 }
-
 
 /// This function generates a string and fill the to_be_deleted_ member of the patch
 /// containing all the files/dir that should be removed on the server side.

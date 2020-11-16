@@ -13,14 +13,16 @@
 
 class Patch {
 public:
-    Patch(std::vector<std::string> vector, std::vector<std::string> vector1, std::vector<std::string> vector2);
+    Patch(const std::filesystem::path mon_folder, std::vector<std::string> vector, std::vector<std::string> vector1, std::vector<std::string> vector2);
     std::vector<std::string> added_;
-    std::map<std::string, unsigned long int> to_be_added_map_;
+    std::map<std::string, unsigned long int> to_be_sent_map_;
     std::vector<std::string> removed_;
     std::string to_be_deleted_;
     std::vector<std::string> common_;
 
-    void PrettyPrint();
+    std::string PrettyPrint();
+
+    std::filesystem::path monitored_folder_;
 };
 
 

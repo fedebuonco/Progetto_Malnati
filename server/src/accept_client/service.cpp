@@ -11,13 +11,28 @@
 /// This generate directory tree following the tree command protocol available on linux
 std::string GenerateTree(const std::filesystem::path& path) {
 
+    std::vector<std::string> vector_result;
     std::string result;
 
     for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
         itEntry != std::filesystem::recursive_directory_iterator();
-        ++itEntry ) {
-        const auto filenameStr = itEntry->path().generic_string();
-        result.append(filenameStr + '\n');
+        ++itEntry )
+    {
+        const auto filepath = itEntry->path();
+        std::filesystem::path clean_filepath = filepath.lexically_relative(path);
+        std::string file_str = clean_filepath.generic_string();
+        if (std::filesystem::is_directory(filepath)) {
+            vector_result.push_back(file_str + "/" + '\n');
+        } else {
+            vector_result.push_back(file_str+ '\n');
+        }
+    }
+
+    //Here we sort the tree in alphabetic order to permit cross platform diff
+    std::sort(vector_result.begin(), vector_result.end());
+    for(auto clean_path : vector_result )
+    {
+        result.append(clean_path);
     }
 
     return result;
@@ -81,7 +96,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             ControlMessage tree_result{52};
             // We compute & add the tree
             // TODO change the dir accordingly to username of the client
-            std::string tree = GenerateTree(std::filesystem::path("./Prova"));
+            std::string tree = GenerateTree(std::filesystem::path("Prova"));
             tree_result.AddElement("Tree", tree);
             // And for the tree we retrive its stored last time modification
 
