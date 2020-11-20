@@ -9,7 +9,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <tree_t.h>
 
-
+#include "sqlite3.h"
 
 int main(int argc, char *argv[]) {
 
@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    std::cout << sqlite3_libversion() << std::endl;
     Config::get_Instance()->PrintConfiguration();
 
     /**
