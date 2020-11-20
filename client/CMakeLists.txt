@@ -104,7 +104,7 @@ if (WIN32)
                 src/sqlite/sqlite3.c
                 includes/sqlite/sqlite3.h)
 
-        target_link_libraries(client ${CRYPTOPP})
+        target_link_libraries(client SQLiteCpp ${CRYPTOPP})
 
     endif()
 endif (WIN32)
