@@ -75,7 +75,7 @@ if (WIN32)
                 src/sqlite/sqlite3.c
                 includes/sqlite/sqlite3.h)
 
-        target_link_libraries(client SQLiteCpp)
+        target_link_libraries(server SQLiteCpp)
 
     endif()
 endif (WIN32)
