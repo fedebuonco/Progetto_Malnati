@@ -9,12 +9,9 @@ include_directories(includes/transfer)
 include_directories(includes/utilities)
 include_directories(includes/watcher)
 include_directories(includes/config)
-include_directories(includes/sqlite)
 
-# We include the SQLiteCpp as a lib ( thanks god it has it's own already made CMakelist.txt)
-# Thus we can use it by adding it with the add_subdirectory()
-add_subdirectory(libs/SQLiteCpp)
-include_directories(libs/SQLiteCpp/include)
+
+
 
 
 #--------UNIX-------------------
@@ -43,9 +40,8 @@ if (UNIX)
                 includes/transfer/tree_t.h
                 src/transfer/patch.cpp
                 includes/transfer/patch.h
-                src/sqlite/sqlite3.c
-                includes/sqlite/sqlite3.h)
-    target_link_libraries(client SQLiteCpp dl cryptopp)
+                )
+    target_link_libraries(client cryptopp)
 endif (UNIX)
 
 #-------WIN---------------------
@@ -100,11 +96,9 @@ if (WIN32)
                 src/transfer/tree_t.cpp
                 includes/transfer/tree_t.h
                 src/transfer/patch.cpp
-                includes/transfer/patch.h
-                src/sqlite/sqlite3.c
-                includes/sqlite/sqlite3.h)
+                includes/transfer/patch.h)
 
-        target_link_libraries(client SQLiteCpp ${CRYPTOPP})
+        target_link_libraries(client ${CRYPTOPP})
 
     endif()
 endif (WIN32)

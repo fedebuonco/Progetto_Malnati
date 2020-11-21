@@ -8,9 +8,7 @@
 #include "../includes/client/client.h"
 #include <boost/property_tree/ptree.hpp>
 #include <tree_t.h>
-#include <SQLiteCpp/Database.h>
 
-#include "sqlite3.h"
 
 int main(int argc, char *argv[]) {
 
@@ -27,10 +25,6 @@ int main(int argc, char *argv[]) {
             return 1;
         }
     }
-
-    std::cout << sqlite3_libversion() << std::endl;
-    // Open a database file
-    SQLite::Database db("example.db");
 
     Config::get_Instance()->PrintConfiguration();
 

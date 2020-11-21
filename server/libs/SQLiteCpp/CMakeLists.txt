@@ -5,7 +5,7 @@
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
 cmake_minimum_required(VERSION 3.1) # for "CMAKE_CXX_STANDARD" version
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake") # custom CMake modules like FindSQLiteCpp
+list(APPEND CMAKE_MODULE_PATH "cmake") # custom CMake modules like FindSQLiteCpp
 project(SQLiteCpp VERSION 3.1.1)
 
 # SQLiteC++ 3.x requires C++11 features
@@ -305,7 +305,7 @@ install(TARGETS SQLiteCpp
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     COMPONENT libraries)
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT headers FILES_MATCHING REGEX ".*\\.(hpp|h)$")
+install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT headers FILES_MATCHING REGEX ".*\\.(hpp|h)$")
 install(EXPORT ${PROJECT_NAME}Targets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 include(CMakePackageConfigHelpers)
@@ -345,7 +345,7 @@ if (SQLITECPP_RUN_CPPCHECK)
         # add a cppcheck target to the "all" target
         add_custom_target(SQLiteCpp_cppcheck
          ALL
-         COMMAND ${CPPCHECK_EXECUTABLE} -j 8 cppcheck --enable=style --quiet ${CPPCHECK_ARG_TEMPLATE} ${PROJECT_SOURCE_DIR}/src
+         COMMAND ${CPPCHECK_EXECUTABLE} -j 8 cppcheck --enable=style --quiet ${CPPCHECK_ARG_TEMPLATE} ../../../client/src
         )
         execute_process(COMMAND "${CPPCHECK_EXECUTABLE}" --version OUTPUT_VARIABLE CPPCHECK_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
         message(STATUS "Found Cppcheck: ${CPPCHECK_EXECUTABLE} ${CPPCHECK_VERSION}")
@@ -364,7 +364,7 @@ if (SQLITECPP_RUN_DOXYGEN)
         add_custom_target(SQLiteCpp_doxygen
          ALL
          COMMAND doxygen Doxyfile > ${DEV_NULL}
-         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+         WORKING_DIRECTORY ../../../client
         )
     endif (DOXYGEN_FOUND)
 else (SQLITECPP_RUN_DOXYGEN)
@@ -377,7 +377,7 @@ if (SQLITECPP_BUILD_EXAMPLES)
     add_executable(SQLiteCpp_example1 ${SQLITECPP_EXAMPLES})
     target_link_libraries(SQLiteCpp_example1 SQLiteCpp)
     target_include_directories(SQLiteCpp_example1 PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        include
         $<$<BOOL:${SQLITECPP_INTERNAL_SQLITE}>:${CMAKE_CURRENT_SOURCE_DIR}/sqlite3>)
     if (MSYS OR MINGW)
         target_link_libraries(SQLiteCpp_example1 ssp)
@@ -392,7 +392,7 @@ if (SQLITECPP_BUILD_TESTS)
     add_executable(SQLiteCpp_tests ${SQLITECPP_TESTS})
     target_link_libraries(SQLiteCpp_tests SQLiteCpp)
     target_include_directories(SQLiteCpp_tests PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        include
         $<$<BOOL:${SQLITECPP_INTERNAL_SQLITE}>:${CMAKE_CURRENT_SOURCE_DIR}/sqlite3>)
 
     find_package(GTest)

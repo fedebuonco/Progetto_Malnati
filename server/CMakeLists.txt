@@ -1,15 +1,19 @@
 cmake_minimum_required(VERSION 3.17)
 project(server)
 
-SET( CMAKE_C_FLAGS "-Wall -q" )     #Mi permette di avere delle stampe di debug
+SET( CMAKE_C_FLAGS "-Wall" )     #Mi permette di avere delle stampe di debug
 set(CMAKE_CXX_STANDARD 17)
 
 include_directories(includes/accept_client)
 include_directories(includes/transfer)
 include_directories(includes/utilities)
 include_directories(includes/watcher)
+include_directories(includes/sqlite)
 
-
+# We include the SQLiteCpp as a lib ( thanks god it has it's own already made CMakelist.txt)
+# Thus we can use it by adding it with the add_subdirectory()
+add_subdirectory(libs/SQLiteCpp)
+include_directories(libs/SQLiteCpp/include)
 
 
 #--------------------------------------------------------------------
@@ -17,11 +21,21 @@ include_directories(includes/watcher)
 #--------UNIX-------------------
 if (UNIX)
     set(CMAKE_CXX_FLAGS -pthread)
-    add_executable(server src/main.cpp
-            src/accept_client/accept_client.cpp includes/accept_client/accept_client.h
-            src/watcher/watcher.cpp includes/watcher/watcher.h src/accept_client/service.cpp
-            includes/accept_client/service.h src/accept_client/server.cpp includes/accept_client/server.h src/transfer/control_message.cpp
-            includes/transfer/control_message.h)
+    add_executable(server
+            src/main.cpp
+            src/accept_client/accept_client.cpp
+            includes/accept_client/accept_client.h
+            src/watcher/watcher.cpp
+            includes/watcher/watcher.h
+            src/accept_client/service.cpp
+            includes/accept_client/service.h
+            src/accept_client/server.cpp
+            includes/accept_client/server.h
+            src/transfer/control_message.cpp
+            includes/transfer/control_message.h
+            src/sqlite/sqlite3.c
+            includes/sqlite/sqlite3.h)
+    target_link_libraries(server SQLiteCpp dl)
 endif (UNIX)
 
 #-------WIN---------------------
@@ -46,11 +60,22 @@ if (WIN32)
         include_directories(${Boost_INCLUDE_DIR})
         link_directories(${Boost_LIBRARY_DIR})
 
-        add_executable(server src/main.cpp
-                src/accept_client/accept_client.cpp includes/accept_client/accept_client.h
-                src/watcher/watcher.cpp includes/watcher/watcher.h src/accept_client/service.cpp includes/accept_client/service.h
+        add_executable(server
+                src/main.cpp
+                src/accept_client/accept_client.cpp
+                includes/accept_client/accept_client.h
+                src/watcher/watcher.cpp
+                includes/watcher/watcher.h
+                src/accept_client/service.cpp
+                includes/accept_client/service.h
                 src/accept_client/server.cpp
-                includes/accept_client/server.h src/transfer/control_message.cpp includes/transfer/control_message.h)
+                includes/accept_client/server.h
+                src/transfer/control_message.cpp
+                includes/transfer/control_message.h
+                src/sqlite/sqlite3.c
+                includes/sqlite/sqlite3.h)
+
+        target_link_libraries(client SQLiteCpp)
 
     endif()
 endif (WIN32)
