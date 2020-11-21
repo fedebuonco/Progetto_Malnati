@@ -13,6 +13,7 @@ include_directories(../includes/client)
 
 if (UNIX)
     set(CMAKE_CXX_FLAGS -pthread)
+    include_directories(/usr/local/include/cryptopp)
     add_executable(test
             catch.hpp
             main_test.cpp
@@ -35,6 +36,7 @@ if (UNIX)
             ../includes/transfer/patch.h
             ../src/transfer/patch.cpp
             )
+    target_link_libraries(test cryptopp)
 endif (UNIX)
 
 
