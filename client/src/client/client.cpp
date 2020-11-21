@@ -186,7 +186,6 @@ std::string Client::GenerateTree(const std::filesystem::path& path) {
 /// \param patch
 void Client::ProcessNew(Patch& patch) {
     for (auto file_path : patch.added_ ){
-        //TODO THIS works only on linux find a windows solution _stat could be used
 
         //Here we have the file_path but it is formatted not for stat,
         //we must pass it to stat so we need to append it to the monitored folder
@@ -269,7 +268,6 @@ void Client::SendPatch(Patch& update){
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
     ControlMessage delete_message{3};
     //Adding User and Password
-    //TODO Change this after we decide to add keys
     delete_message.AddElement("Username",credential_.username_);
     delete_message.AddElement("Password:",credential_.hash_password_ );
     //We add the delete string

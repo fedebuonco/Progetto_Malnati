@@ -24,11 +24,6 @@ SyncTCPSocket::SyncTCPSocket(const std::string& raw_ip_add, unsigned short port_
 
 /// Shutdown both part(sending & reciving) and closes the socket giving back the resource to the system.
 SyncTCPSocket::~SyncTCPSocket() {
-    // Exit from the connection and
-    // TODO tell the server that we are exiting
-    // TODO see shutdown exceptions and manage
-    // std::cout << "RawEndpoint and Socket closing down... " <<std::endl ;
-    //TODO fix error in linux where wew have a exception when we shutodwn a scoket like this
     boost::system::error_code ec;
     //TODO qua magicamente va ignorato l'errore GRAVISSIMO
     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);

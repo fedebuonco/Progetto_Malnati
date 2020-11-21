@@ -1,7 +1,3 @@
-//
-// Created by fede on 10/4/20.
-//
-
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <control_message.h>
@@ -110,6 +106,11 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             // Send the eof error shutting down the server.
             // TODO qua magicamente va ignorato l'errore GRAVISSIMO
             sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
+            break;
+        }
+        case 3:{//DELETE REQUEST
+            //TODO Implement DB and retrive the dir accordingly to username of the client
+            // Here we delete the files that are in the mess.
             break;
         }
 
