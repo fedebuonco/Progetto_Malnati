@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.0)
 project(client)
 set(CMAKE_CXX_STANDARD 17)
 SET( CMAKE_C_FLAGS "-Wall" )     #Mi permette di avere delle stampe di debug
