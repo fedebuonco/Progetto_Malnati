@@ -21,7 +21,8 @@ if (UNIX)
     set(CMAKE_CXX_FLAGS -pthread )
 
     #include_directories(usr/local/lib)
-    include_directories(usr/local/include/cryptopp)
+    include_directories(libs/cryptopp/include)
+    #include_directories(usr/local/include/cryptopp)
 
     add_executable(client
                 src/main.cpp
