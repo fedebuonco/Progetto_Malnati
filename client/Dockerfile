@@ -20,6 +20,6 @@ WORKDIR /app
 RUN mkdir /cmake-build-debug && cd cmake-build-debug && mkdir Prova
 RUN cp ./client ./cmake-build-debug
 WORKDIR /app/cmake-build-debug
-CMD ["./client"]
+CMD ["./client","-s","172.28.0.1","3333"]
 #CMD ["tree","/usr/local/lib"]
 #CMD ["tree","./"]
