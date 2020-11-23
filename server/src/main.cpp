@@ -9,7 +9,7 @@ int main(){
     unsigned short port_num = 3333;
     std::cout << sqlite3_libversion() << std::endl;
     // Open a database file
-    SQLite::Database db("example.db");
+    //SQLite::Database db("example.db");
 
 
 

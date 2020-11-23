@@ -16,9 +16,10 @@ RUN git clone https://github.com/weidai11/cryptopp.git \
 RUN LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 RUN export LD_LIBRARY_PATH && ldconfig
 # copy and building of our app
+RUN ls
 COPY . /app
 RUN cmake /app
 # We set the working directory because we use some relative path in the configs
 WORKDIR /app/cmake-build-debug/
-CMD ["./client"]
-#CMD ["tree","/usr/local/lib"]
+CMD ["./server"]
+#CMD ["tree","./"]

@@ -19,7 +19,8 @@ if (UNIX)
     set(CMAKE_CXX_FLAGS -pthread )
 
     #include_directories(usr/local/lib)
-    include_directories(/usr/local/include/cryptopp)
+    include_directories(usr/local/include/cryptopp)
+
     add_executable(client
                 src/main.cpp
                 src/sync_tcp_socket/sync_tcp_socket.cpp
@@ -41,7 +42,7 @@ if (UNIX)
                 src/transfer/patch.cpp
                 includes/transfer/patch.h
                 )
-    target_link_libraries(client cryptopp)
+    target_link_libraries(client dl cryptopp )
 endif (UNIX)
 
 #-------WIN---------------------
