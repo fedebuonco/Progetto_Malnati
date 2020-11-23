@@ -1,7 +1,7 @@
 #ifndef PFW_NATIVE_INTERFACE_H
 #define PFW_NATIVE_INTERFACE_H
 
-#if defined(__WINDOWS__)
+#if defined(_WIN32)
 #include "pfw/win32/Controller.h"
 using NativeImplementation = pfw::Controller;
 #elif defined(__APPLE__)

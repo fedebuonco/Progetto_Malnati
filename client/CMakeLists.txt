@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.16)
 project(client)
 set(CMAKE_CXX_STANDARD 17)
 SET( CMAKE_C_FLAGS "-Wall" )     #Mi permette di avere delle stampe di debug
@@ -71,7 +71,6 @@ if (WIN32)
 
         include_directories(libs/cryptopp/include)
         unset(CRYPTOPP CACHE)
-
         find_library(CRYPTOPP cryptlib HINTS libs/cryptopp REQUIRED)
         if(NOT CRYPTOPP)
             message(FATAL_ERROR "Cryptopp Not found")
@@ -101,7 +100,7 @@ if (WIN32)
                 src/transfer/patch.cpp
                 includes/transfer/patch.h)
 
-        target_link_libraries(client ${CRYPTOPP} PanoptesFW)
+        target_link_libraries(client PanoptesFW ${CRYPTOPP})
 
     endif()
 endif (WIN32)

@@ -5,10 +5,10 @@
 #include <utilities.h>
 #include <filesystem>
 
-#include "cryptopp/cryptlib.h"
-#include <cryptopp/sha.h>
-#include <cryptopp/filters.h>
-#include <cryptopp/hex.h>
+#include "cryptlib.h"
+#include <sha.h>
+#include <filters.h>
+#include <hex.h>
 
 
 
