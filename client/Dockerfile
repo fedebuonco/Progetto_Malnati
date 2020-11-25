@@ -1,7 +1,7 @@
 # I don't know why but with ubuntu 20.04 (the LTS) we get some errors ( I still have to try 18.04)
 FROM ubuntu:20.10
 #In order to not be distrubed setting locales or time zones
-ARG DEBIAN_FRONTEND=noninteractive
+#ARG DEBIAN_FRONTEND=noninteractive
 ARG LD_LIBRARY_PATH=/usr/local/lib
 # Installin essentials
 RUN apt-get update && apt-get install -y build-essential cmake git autoconf libtool libboost-dev pkg-config tree
@@ -20,6 +20,6 @@ WORKDIR /app
 RUN mkdir /cmake-build-debug && cd cmake-build-debug && mkdir Prova
 RUN cp ./client ./cmake-build-debug
 WORKDIR /app/cmake-build-debug
-CMD ["./client","-s","172.28.0.1","3333"]
+CMD ["./client","-d","-s","172.28.0.1","3333"]
 #CMD ["tree","/usr/local/lib"]
 #CMD ["tree","./"]

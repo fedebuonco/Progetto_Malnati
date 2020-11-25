@@ -4,12 +4,12 @@
 #include <string>
 /* 01 project includes */
 #include "config.h"
-#include <utilities.h>
 #include "../includes/client/client.h"
 #include <boost/property_tree/ptree.hpp>
 #include <tree_t.h>
 #include <watcher.h>
 
+//This is the callback the watcher wil call.
 int SyncClient(Client client);
 
 int main(int argc, char *argv[]) {
@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
      * Program reads and writes inside config the option with which the program was run
      */
 
-    //User starts the program with <options>
+     //User starts the program with <options>
     if (argc > 1) {
         int value = Config::get_Instance()->SetConfig(argc, argv);
         //TODO Per me è meglio usare eccezione
@@ -27,57 +27,51 @@ int main(int argc, char *argv[]) {
             return 1;
         }
     }
-
     Config::get_Instance()->PrintConfiguration();
 
     /**
      * VALIDATION PHASE
      * Program checks the validity of the config options
      */
+
     //TODO Ho notato che le stampe non sono in ordine. Non penso sia un problema
     //Check if the backup folder inside config.JSON exists
     if( !std::filesystem::exists(Config::get_Instance()->ReadProperty("path")) ){
         std::cerr << "Backup Folder doesn't exist. Check if you write it correctly and run the program again." << std::endl;
         return 1;
     }
-
     RawEndpoint raw_endpoint = Config::get_Instance()->ReadRawEndpoint();
 
     /**
-     * CONNECT TO ENDPOINT AND AUTHENTICATION PHASE
+     * Connect to server and Auth PHASE
      */
 
     // Creating the Client and Auth
     Client client{raw_endpoint};
-
     //Return true or false
     bool authentication_status = client.Auth();
-
     //Check if the user is authenticated or not
     if(!authentication_status){
         std::cerr << "Username and/or password are not correct" << std::endl;
         return 1;
     }
 
-    // From here on, we are authenticated.
-
     /**
      *  Monitor PHASE
      *  Here we and start the monitor and assign the monitor the main callback = clientSync
-     *  Before doing it, we call it once.
+     *  Before doing it, we call it once (the first time we trigger it manually).
      */
 
     SyncClient(client);
-
+    // We crate the watcher, pass the callback and then start the monitor.
     Watcher watch(client);
     watch.SetUpdateCallback(SyncClient);
     watch.Start(std::filesystem::path(Config::get_Instance()->ReadProperty("path")));
-
+    //Wait for user input (this will be changed)
+    //TODO Change this leaving the client in the background.
     std::cin.ignore();
-
     // Here the main has everything it needs in order to asyncronously send the patch
     //client.SendPatch(patch);
-    
 }
 
 int SyncClient(Client client){

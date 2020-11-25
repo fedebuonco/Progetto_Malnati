@@ -11,8 +11,6 @@ int main(){
     // Open a database file
     //SQLite::Database db("example.db");
 
-
-
     try{
         Server srv;
         srv.Start(port_num);

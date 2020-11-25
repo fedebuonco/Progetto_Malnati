@@ -10,7 +10,6 @@ include_directories(../includes/watcher)
 include_directories(../includes/config)
 include_directories(../includes/client)
 
-
 if (UNIX)
     set(CMAKE_CXX_FLAGS -pthread)
     include_directories(/usr/local/include/cryptopp)
