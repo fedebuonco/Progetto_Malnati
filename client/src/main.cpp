@@ -8,7 +8,7 @@
 #include "../includes/client/client.h"
 #include <boost/property_tree/ptree.hpp>
 #include <tree_t.h>
-
+#include <watcher.h>
 
 int main(int argc, char *argv[]) {
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
      *  Here we and start the monitor where
      */
 
-    // we loop detecting a change in the dir.
+    auto watch = Watcher(std::filesystem::path(Config::get_Instance()->ReadProperty("path")));
 
     //Generate Client tree string
     std::string client_tree;
@@ -85,6 +85,8 @@ int main(int argc, char *argv[]) {
 
     if (DEBUG)
         update.PrettyPrint();
+
+    std::cin.ignore();
 
     // Here the main has everything it needs in order to asyncronously send the patch
     //client.SendPatch(patch);
