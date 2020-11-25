@@ -10,7 +10,7 @@
 #include <tree_t.h>
 #include <watcher.h>
 
-int sync(Client client);
+int SyncClient(Client client);
 
 int main(int argc, char *argv[]) {
 
@@ -63,13 +63,15 @@ int main(int argc, char *argv[]) {
 
     /**
      *  Monitor PHASE
-     *  Here we and start the monitor and assign the monitor the main callback = sync()
+     *  Here we and start the monitor and assign the monitor the main callback = clientSync
+     *  Before doing it, we call it once.
      */
 
-    Watcher watch = Watcher();
+    SyncClient(client);
+
+    Watcher watch(client);
+    watch.SetUpdateCallback(SyncClient);
     watch.Start(std::filesystem::path(Config::get_Instance()->ReadProperty("path")));
-
-
 
     std::cin.ignore();
 
@@ -78,7 +80,7 @@ int main(int argc, char *argv[]) {
     
 }
 
-int sync(Client client){
+int SyncClient(Client client){
 
     //Generate Client tree string
     std::string client_tree;
