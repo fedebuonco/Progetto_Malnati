@@ -9,6 +9,7 @@ include_directories(includes/transfer)
 include_directories(includes/utilities)
 include_directories(includes/watcher)
 include_directories(includes/config)
+include_directories(includes/client)
 
 # We include the panoptes as a lib ( thanks god it has it's own already made CMakelist.txt)
 # Thus we can use it by adding it with the add_subdirectory()

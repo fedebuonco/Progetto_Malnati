@@ -14,13 +14,7 @@
 
 class Watcher{
     public:
-        Watcher(std::filesystem::path path)
-        {
-            _watcher = std::make_unique<pfw::FileSystemWatcher>(
-                    path, std::chrono::milliseconds(1),
-                    std::bind(&Watcher::listenerFunction, this,
-                              std::placeholders::_1));
-        }
+
         void listenerFunction(std::vector<pfw::EventPtr> events)
         {
             for (const auto &event : events) {
@@ -28,6 +22,12 @@ class Watcher{
                 std::cout << event->relativePath << " with the type: " << typeBits
                           << std::endl;
             }
+        }
+        void Start(std::filesystem::path path){
+            _watcher = std::make_unique<pfw::FileSystemWatcher>(
+                    path, std::chrono::milliseconds(1),
+                    std::bind(&Watcher::listenerFunction, this,
+                              std::placeholders::_1));
         }
 
     private:

@@ -10,6 +10,8 @@
 #include <tree_t.h>
 #include <watcher.h>
 
+int sync(Client client);
+
 int main(int argc, char *argv[]) {
 
      /**
@@ -61,10 +63,22 @@ int main(int argc, char *argv[]) {
 
     /**
      *  Monitor PHASE
-     *  Here we and start the monitor where
+     *  Here we and start the monitor and assign the monitor the main callback = sync()
      */
 
-    auto watch = Watcher(std::filesystem::path(Config::get_Instance()->ReadProperty("path")));
+    Watcher watch = Watcher();
+    watch.Start(std::filesystem::path(Config::get_Instance()->ReadProperty("path")));
+
+
+
+    std::cin.ignore();
+
+    // Here the main has everything it needs in order to asyncronously send the patch
+    //client.SendPatch(patch);
+    
+}
+
+int sync(Client client){
 
     //Generate Client tree string
     std::string client_tree;
@@ -78,17 +92,13 @@ int main(int argc, char *argv[]) {
     Patch update = client.GeneratePatch(monitored_folder, client_tree, server_th.tree_);
 
     // Now we process the patch, preparing all the needed data structures
-     client.ProcessRemoved(update);
-     client.ProcessNew(update);
-     client.ProcessCommon(update,server_th);
+    client.ProcessRemoved(update);
+    client.ProcessNew(update);
+    client.ProcessCommon(update,server_th);
 
 
     if (DEBUG)
         update.PrettyPrint();
 
-    std::cin.ignore();
-
-    // Here the main has everything it needs in order to asyncronously send the patch
-    //client.SendPatch(patch);
-    
+    return 0;
 }
