@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Panoptes"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\libs\;CMake Files\libs\panoptes\;CMake Files\libs\panoptes\src\;CMake Files\libs\panoptes\console\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PanoptesFW">
+				<Option output="/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/src/libPanoptesFW.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-D__LINUX__"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/sync_tcp_socket"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/transfer"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/utilities"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/watcher"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/config"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/client"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/src/Makefile&quot;  VERBOSE=1 PanoptesFW"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PanoptesFW/fast">
+				<Option output="/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/src/libPanoptesFW.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-D__LINUX__"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/sync_tcp_socket"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/transfer"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/utilities"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/watcher"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/config"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/client"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/src/Makefile&quot;  VERBOSE=1 PanoptesFW/fast"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PanoptesConsole">
+				<Option output="/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/console/PanoptesConsole" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir=""/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-D__LINUX__"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/sync_tcp_socket"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/transfer"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/utilities"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/watcher"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/config"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/client"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/console"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/console/Makefile&quot;  VERBOSE=1 PanoptesConsole"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/console/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/console/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/console/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PanoptesConsole/fast">
+				<Option output="/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/console/PanoptesConsole" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir=""/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-D__LINUX__"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/sync_tcp_socket"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/transfer"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/utilities"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/watcher"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/config"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/../includes/client"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/console"/>
+					<Add directory="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/console/Makefile&quot;  VERBOSE=1 PanoptesConsole/fast"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/console/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/console/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/fede/Documents/Progetto_Malnati/client/test/cmake-build-debug/libs/panoptes/console/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/console/main.cpp">
+			<Option target="PanoptesConsole"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include/pfw/Event.h">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include/pfw/FileSystemWatcher.h">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include/pfw/Filter.h">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include/pfw/Listener.h">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include/pfw/NativeInterface.h">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include/pfw/SingleshotSemaphore.h">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include/pfw/linux/Collector.h">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include/pfw/linux/InotifyEventLoop.h">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include/pfw/linux/InotifyNode.h">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include/pfw/linux/InotifyService.h">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/include/pfw/linux/InotifyTree.h">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/src/FileSystemWatcher.cpp">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/src/Filter.cpp">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/src/NativeInterface.cpp">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/src/linux/Collector.cpp">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/src/linux/InotifyEventLoop.cpp">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/src/linux/InotifyNode.cpp">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/src/linux/InotifyService.cpp">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/src/linux/InotifyTree.cpp">
+			<Option target="PanoptesFW"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\libs\panoptes\"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\libs\panoptes\src\"/>
+		</Unit>
+		<Unit filename="/home/fede/Documents/Progetto_Malnati/client/test/libs/panoptes/console/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\libs\panoptes\console\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

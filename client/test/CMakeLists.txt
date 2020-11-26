@@ -10,6 +10,11 @@ include_directories(../includes/watcher)
 include_directories(../includes/config)
 include_directories(../includes/client)
 
+# We include the panoptes as a lib ( thanks god it has it's own already made CMakelist.txt)
+# Thus we can use it by adding it with the add_subdirectory()
+add_subdirectory(libs/panoptes)
+include_directories(libs/panoptes/include)
+
 if (UNIX)
     set(CMAKE_CXX_FLAGS -pthread)
     include_directories(/usr/local/include/cryptopp)
@@ -35,7 +40,7 @@ if (UNIX)
             ../includes/transfer/patch.h
             ../src/transfer/patch.cpp
             )
-    target_link_libraries(test cryptopp)
+    target_link_libraries(test cryptopp PanoptesFW)
 endif (UNIX)
 
 
@@ -93,7 +98,7 @@ if (WIN32)
                 ../src/transfer/patch.cpp
                 )
 
-        target_link_libraries(test ${CRYPTOPP})
+        target_link_libraries(test ${CRYPTOPP} PanoptesFW)
     endif()
 endif (WIN32)
 

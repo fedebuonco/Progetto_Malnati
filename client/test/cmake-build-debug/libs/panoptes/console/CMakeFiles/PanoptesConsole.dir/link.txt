@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/PanoptesConsole.dir/main.cpp.o  -o PanoptesConsole  ../src/libPanoptesFW.a -pthread 
