@@ -11,5 +11,5 @@ client/test/cmake-build-debug/test.cbp
 server/cmake-build-debug/
 
 server/backupROOT/*
-!*server/backupROOT/usersTREE
+!*server/backupROOT/usersTREE/**/.gitkeep
 !*server/backupROOT/authDB.db
