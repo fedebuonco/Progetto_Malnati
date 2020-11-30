@@ -6,6 +6,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <control_message.h>
 #include <filesystem>
+#include <authentication.h>
 #include "service.h"
 
 /// This generate directory tree following the tree command protocol available on linux
@@ -76,9 +77,13 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             // TODO real checkIdentity and control message
             // TODO change control message constructor for now in the client we will only check that is 51 not if auth = true/false
             std::string hashpass = request_message.GetElement("HashPassword");
+            std::string username = request_message.GetElement("Username");
 
             ControlMessage check_result{51};
-            if(hashpass=="5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8"){
+
+            Authentication authentication;
+
+            if(authentication.auth(username, hashpass) ){
                 check_result.AddElement("auth", "true");
             } else {
                 check_result.AddElement("auth", "false");
