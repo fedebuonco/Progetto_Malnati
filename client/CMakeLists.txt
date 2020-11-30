@@ -3,6 +3,7 @@ project(client)
 set(CMAKE_CXX_STANDARD 17)
 SET( CMAKE_C_FLAGS "-Wall" )     #Mi permette di avere delle stampe di debug
 
+#Added for sourcetrail purposes
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Various include files for our code
