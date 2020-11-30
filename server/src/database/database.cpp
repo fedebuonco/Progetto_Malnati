@@ -5,6 +5,7 @@
 #include <string>
 #include <SQLiteCpp/Database.h>
 #include <iostream>
+#include <fstream>
 
 bool Database::auth(std::string username, std::string attemp_hash_password) {
 
@@ -67,6 +68,29 @@ std::string Database::getUserPath(std::string username) {
             return folder;
 
         }
+
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "exception: " << e.what() << std::endl;
+        //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
+    }
+
+}
+
+void Database::createTable(std::string foldername) {
+
+    try {
+        // Open a database file in create/write mode
+        SQLite::Database    db("../backupROOT/usersTREE/"+foldername+".db", SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
+        std::cout << "SQLite database file '" << db.getFilename().c_str() << "' opened successfully\n";
+
+        // Create a new table with an explicit "id" column aliasing the underlying rowid
+        db.exec("DROP TABLE IF EXISTS UserTree");
+        db.exec("CREATE TABLE UserTree (id INTEGER PRIMARY KEY, path TEXT, time TEXT)");
+
+        // first row
+        //int nb = db.exec("INSERT INTO UserTree VALUES (NULL, \"PROVA\", \"1155\")");
 
     }
     catch (std::exception& e)

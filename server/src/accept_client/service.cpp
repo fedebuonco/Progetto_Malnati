@@ -108,25 +108,28 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
             std::cout << "User folder: " << user_folder_name << std::endl;
 
-            //TODO - Find if folder exist   ; if not create the folder
+
             std::filesystem::directory_entry user_directory_path{ "../backupROOT/"+user_folder_name};
+
+
 
             //Check if this user has a folder inside backupROOT
             if (!user_directory_path.exists()) {
-               //User doesn't have a folder
+               //User doesn't have a folder, so we create a new one and we add a user db
 
                //TODO Check error during creation of directory
                std::filesystem::create_directories(user_directory_path);
                std::cout << "User doesn't have the folder. I create a new folder name: " << user_folder_name << std::endl;
 
 
-               //Create DB file for the user
-               // std::filesystem::directory_entry user_database_path{ "../backupROOT/"+user_folder_name+"/"+user_folder_name+".db"};
-               // std::filesystem::create_file(user_database_path);
-               std::ofstream file;
-               file.open("../backupROOT/"+user_folder_name+"/"+user_folder_name+".db"); //path
+               //Create DB file for the user TREE
+               db.createTable(user_folder_name);
             }
-
+            /*TODO Se si verifica un eccezione tra la creazione dello userfolder e il createTable (db utente) RIPROVA
+            vediamo la directory ma non vediamo il DB. Questo potrebbe creare problemi, consiglio di fare nella catch una politica
+             che cancella sia la cartella principale (tanto in questo punto è vuota) ed il db. Ricordo comunque che nel caso in cui
+             il db esiste quando entriamo sulla createTable droppo comunque la tabella e la ricreo.
+            */
 
             //TODO - IL PROGRAMMA TERMINA MALE SE METTI CARTELLA CHE NON TROVA
             std::string tree = GenerateTree(user_directory_path);

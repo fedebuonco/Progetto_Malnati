@@ -10,6 +10,8 @@ public:
 
     std::string getUserPath(std::string username);
 
+    void createTable(std::string foldername);
+
 };
 
 
