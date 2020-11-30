@@ -34,7 +34,7 @@ if (UNIX)
             src/transfer/control_message.cpp
             includes/transfer/control_message.h
             src/sqlite/sqlite3.c
-            includes/sqlite/sqlite3.h src/accept_client/authentication.cpp includes/accept_client/authentication.h)
+            includes/sqlite/sqlite3.h src/database/database.cpp includes/database/database.h)
     target_link_libraries(server SQLiteCpp dl)
 endif (UNIX)
 
@@ -73,7 +73,7 @@ if (WIN32)
                 src/transfer/control_message.cpp
                 includes/transfer/control_message.h
                 src/sqlite/sqlite3.c
-                includes/sqlite/sqlite3.h src/accept_client/authentication.cpp includes/accept_client/authentication.h)
+                includes/sqlite/sqlite3.h src/database/database.cpp includes/database/database.h)
 
         target_link_libraries(server SQLiteCpp)
 

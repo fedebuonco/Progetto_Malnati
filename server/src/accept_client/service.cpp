@@ -6,11 +6,12 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <control_message.h>
 #include <filesystem>
-#include <authentication.h>
+#include "../../includes/database/database.h"
 #include "service.h"
 
 /// This generate directory tree following the tree command protocol available on linux
-std::string GenerateTree(const std::filesystem::path& path) {
+std::string
+GenerateTree(const std::filesystem::path& path) {
 
     std::vector<std::string> vector_result;
     std::string result;
@@ -81,7 +82,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
             ControlMessage check_result{51};
 
-            Authentication authentication;
+            Database authentication;
 
             if(authentication.auth(username, hashpass) ){
                 check_result.AddElement("auth", "true");
@@ -100,12 +101,41 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             //Let's start building the Response Control Message
             ControlMessage tree_result{52};
             // We compute & add the tree
-            // TODO change the dir accordingly to username of the client
-            std::string tree = GenerateTree(std::filesystem::path("Prova"));
+            std::string username = request_message.GetElement("Username");
+
+            Database db;
+            std::string user_folder_name = db.getUserPath(username);
+
+            std::cout << "User folder: " << user_folder_name << std::endl;
+
+            //TODO - Find if folder exist   ; if not create the folder
+            std::filesystem::directory_entry user_directory_path{ "../backupROOT/"+user_folder_name};
+
+            //Check if this user has a folder inside backupROOT
+            if (!user_directory_path.exists()) {
+               //User doesn't have a folder
+
+               //TODO Check error during creation of directory
+               std::filesystem::create_directories(user_directory_path);
+               std::cout << "User doesn't have the folder. I create a new folder name: " << user_folder_name << std::endl;
+
+
+               //Create DB file for the user
+               // std::filesystem::directory_entry user_database_path{ "../backupROOT/"+user_folder_name+"/"+user_folder_name+".db"};
+               // std::filesystem::create_file(user_database_path);
+               std::ofstream file;
+               file.open("../backupROOT/"+user_folder_name+"/"+user_folder_name+".db"); //path
+            }
+
+
+            //TODO - IL PROGRAMMA TERMINA MALE SE METTI CARTELLA CHE NON TROVA
+            std::string tree = GenerateTree(user_directory_path);
             tree_result.AddElement("Tree", tree);
             // And for the tree we retrive its stored last time modification
 
             //TODO Implement DB and retrieve time according to this functions
+
+
 
             // std::string times = RetrieveTreeTime(user,tree);
             // tree_result.AddElement("Time", times);
