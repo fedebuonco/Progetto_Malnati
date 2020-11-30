@@ -108,9 +108,16 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
             std::cout << "User folder: " << user_folder_name << std::endl;
 
+            std::filesystem::directory_entry users_tree{ "../backupFiles/usersTREE"};
+            if (!users_tree.exists()) {
+                //User doesn't have a folder, so we create a new one and we add a user db
 
-            std::filesystem::directory_entry user_directory_path{ "../backupROOT/"+user_folder_name};
+                //TODO Check error during creation of directory
+                std::filesystem::create_directories("../backupFiles/usersTREE");
+            }
 
+
+            std::filesystem::directory_entry user_directory_path{ "../backupFiles/backupROOT/"+user_folder_name};
 
 
             //Check if this user has a folder inside backupROOT

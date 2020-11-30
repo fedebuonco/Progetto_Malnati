@@ -1,6 +1,4 @@
 
-
-
 #include "../../includes/database/database.h"
 #include <string>
 #include <SQLiteCpp/Database.h>
@@ -11,7 +9,7 @@ bool Database::auth(std::string username, std::string attemp_hash_password) {
 
     try {
         // Open a database file
-        SQLite::Database    db("../backupROOT/authDB.db");
+        SQLite::Database    db("../backupFiles/authDB.db");
 
         // Compile a SQL query, containing one parameter (index 1)
         SQLite::Statement   query(db, "SELECT * FROM user WHERE username = ?");
@@ -51,7 +49,7 @@ std::string Database::getUserPath(std::string username) {
 
     try {
         // Open a database file
-        SQLite::Database    db("../backupROOT/authDB.db");
+        SQLite::Database    db("../backupFiles/authDB.db");
 
         // Compile a SQL query, containing one parameter (index 1)
         SQLite::Statement   query(db, "SELECT folderName FROM user WHERE username = ?");
@@ -82,7 +80,7 @@ void Database::createTable(std::string foldername) {
 
     try {
         // Open a database file in create/write mode
-        SQLite::Database    db("../backupROOT/usersTREE/"+foldername+".db", SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
+        SQLite::Database    db("../backupFiles/usersTREE/"+foldername+".db", SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
         std::cout << "SQLite database file '" << db.getFilename().c_str() << "' opened successfully\n";
 
         // Create a new table with an explicit "id" column aliasing the underlying rowid

@@ -11,7 +11,8 @@ client/test/cmake-build-debug/test.cbp
 server/cmake-build-debug/
 
 
-server/backupROOT/*
-!server/backupROOT/usersTREE/.empty
-!server/backupROOT/authDB.db
+server/backupFiles/backupROOT/*
+server/backupFiles/usersTREE/*
 
+
+client/config_file/config.json

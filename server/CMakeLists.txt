@@ -76,8 +76,9 @@ if (WIN32)
                 includes/transfer/control_message.h
                 src/sqlite/sqlite3.c
                 includes/sqlite/sqlite3.h
+                includes/database/database.h
                 src/database/database.cpp
-                includes/database/database.h)
+                )
 
         target_link_libraries(server SQLiteCpp)
 
