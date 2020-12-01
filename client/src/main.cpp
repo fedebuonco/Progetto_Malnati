@@ -46,55 +46,13 @@ int main(int argc, char *argv[]) {
      * Connect to server and Auth PHASE
      */
 
-    // Creating the Client and Auth
-    Client client{raw_endpoint};
-    //Return true or false
-    bool authentication_status = client.Auth();
-    //Check if the user is authenticated or not
-    if(!authentication_status){
-        std::cerr << "Username and/or password are not correct" << std::endl;
-        return 1;
-    }
+    // Creating the Client
+    std::filesystem::path path = std::filesystem::path(Config::get_Instance()->ReadProperty("path"));
+    Client client{raw_endpoint, path};
 
-    /**
-     *  Monitor PHASE
-     *  Here we and start the monitor and assign the monitor the main callback = clientSync
-     *  Before doing it, we call it once (the first time we trigger it manually).
-     */
-
-    SyncClient(client);
-    // We crate the watcher, pass the callback and then start the monitor.
-    Watcher watch(client);
-    watch.SetUpdateCallback(SyncClient);
-    watch.Start(std::filesystem::path(Config::get_Instance()->ReadProperty("path")));
-    //Wait for user input (this will be changed)
     //TODO Change this leaving the client in the background.
     std::cin.ignore();
     // Here the main has everything it needs in order to asyncronously send the patch
     //client.SendPatch(patch);
 }
 
-int SyncClient(Client client){
-
-    //Generate Client tree string
-    std::string client_tree;
-    std::filesystem::path monitored_folder = Config::get_Instance()->ReadProperty("path");
-    client_tree = client.GenerateTree(monitored_folder);
-
-    // Then we ask for the Server's TreeT ( Tree string and times )
-    TreeT server_th = client.RequestTree();
-
-    //And we can compute the Diff and store it in a Patch
-    Patch update = client.GeneratePatch(monitored_folder, client_tree, server_th.tree_);
-
-    // Now we process the patch, preparing all the needed data structures
-    client.ProcessRemoved(update);
-    client.ProcessNew(update);
-    client.ProcessCommon(update,server_th);
-
-
-    if (DEBUG)
-        update.PrettyPrint();
-
-    return 0;
-}

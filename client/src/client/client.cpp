@@ -11,7 +11,7 @@
 #include <sync_tcp_socket.h>
 #include <control_message.h>
 #include <authentication.h>
-#include "../../includes/client/client.h"
+#include "client.h"
 #include <filesystem>
 #include <iostream>
 #include <set>
@@ -19,11 +19,43 @@
 #include <patch.h>
 #include <chrono>
 
-/// Construct a Client.
+/// Construct a Client and puts it in a state ready to track any changes in the folder.
 /// \param re Endpoint to connect to.
-Client::Client(RawEndpoint re) {
+/// \param folder_watched folder path that we want to keep monitored.
+Client::Client(RawEndpoint re, std::filesystem::path folder_watched) {
     this->server_re_ = re;
+    this->folder_watched_ = folder_watched;
+    if(!Auth()){
+        std::cerr << "Username and/or password are not correct" << std::endl;
+        std::exit(12);
+    }
+    StartWatching();
 }
+
+///We set the callback and ask to the watcher to start tracking any changes on the watched folder.
+void Client::StartWatching(){
+
+    watcher_.SetUpdateCallback(std::bind(&Client::Syncro, this));
+    watcher_.Start(folder_watched_);
+
+}
+
+/// Starts the whole syncronization process will be called as soon as the watcher finds a change.
+void Client::Syncro(){
+    //Generate Client tree string
+    std::string client_tree;
+    client_tree = GenerateTree(this->folder_watched_);
+    // Then we ask for the Server's TreeT ( Tree string and times )
+    TreeT server_th = RequestTree();
+    //And we can compute the Diff and store it in a Patch
+    Patch update = GeneratePatch(this->folder_watched_, client_tree, server_th.tree_);
+    // Now we process the patch, preparing all the needed data structures
+    ProcessRemoved(update);
+    ProcessNew(update);
+    ProcessCommon(update,server_th);
+    if (DEBUG)
+        update.PrettyPrint();
+    }
 
 /// Authenticates the client by creating a syncTCPSocket and calling it's auth method.
 /// \return

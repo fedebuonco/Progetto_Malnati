@@ -1,10 +1,7 @@
 
 #include "watcher.h"
 
-Watcher::Watcher(Client &client) : client_to_update(client) {
-}
-
-void Watcher::SetUpdateCallback(const std::function<int(Client)> &updateCallback) {
+void Watcher::SetUpdateCallback(const std::function<void()> &updateCallback) {
     update_callback = updateCallback;
 }
 
@@ -16,7 +13,7 @@ void Watcher::listenerFunction(std::vector<pfw::EventPtr> events)
                   << std::endl;
     }
 
-    update_callback(client_to_update);
+    update_callback();
 
 }
 
