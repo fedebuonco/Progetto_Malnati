@@ -4,7 +4,6 @@
 #include <client.h>
 #include <filesystem>
 #include <iostream>
-#include <set>
 #include <tree_t.h>
 #include <patch.h>
 
@@ -33,18 +32,16 @@ void Client::StartWatching(){
 /// The processed patch is then used to fuel the SendPatch()
 void Client::Syncro(){
     //Generate Client tree string
-    std::string client_tree;
-    client_tree = GenerateTree(this->folder_watched_);
-    // Then we ask for the Server's TreeT ( Tree string and times )
-    TreeT server_th = RequestTree();
-    //And we can compute the Diff and store it in a Patch
-    Patch update = GeneratePatch(this->folder_watched_, client_tree, server_th.tree_);
-    // Now we process the patch, preparing all the needed data structures
-    ProcessRemoved(update);
-    ProcessNew(update);
-    ProcessCommon(update,server_th);
+    // std::string client_tree;
+    // client_tree = GenerateTree(this->folder_watched_);
+    TreeT client_treet(this->folder_watched_);
+    // Then we ask for the Server's TreeT
+    TreeT server_treet = RequestTree();
+    Patch update(client_treet, server_treet);
     if (DEBUG)
         update.PrettyPrint();
+    //SendPatch(update);
+
     }
 
 /// Authenticates the client by creating a syncTCPSocket and calling it's auth method. It is used to check correctness
@@ -101,171 +98,6 @@ TreeT Client::RequestTree() {
     return result;
 }
 
-/// Generete the diff between two string containing the tree of the client and the server (one file/dir for each line).
-/// \param client_t String of files/dir (one for each line) contained in the client folder
-/// \param server_t String of files/dir (one for each line) contained in the server folder
-/// \return a string containing the diff in the format decided beforehand.
-Patch Client::GeneratePatch(std::filesystem::path mon_folder, const std::string& client_t,const std::string& server_t) {
-    //Here we take the two string containng the paths and we create a set of path for each
-    std::set<std::string> set_client;
-    std::set<std::string> set_server;
-    std::vector<std::string> diff;
-
-    // set_client
-    std::istringstream ss_c(client_t);
-    std::string line_c;
-    while (getline(ss_c, line_c)) {
-        set_client.insert(line_c);
-    }
-
-    //set_server
-    std::istringstream ss_s(server_t);
-    std::string line_s;
-    while (getline(ss_s, line_s)) {
-        set_server.insert(line_s);
-    }
-
-    //Now i have the two sets I can compute set_difference(set_client,set_server)  client - server
-    set_difference(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(diff, diff.end()));
-    std::string diff_str;
-
-    std::vector<std::string> added;
-    for(const auto& value: diff) {
-        added.push_back(value);
-    }
-
-    //let's clear the vector diff and reuse it
-    diff.clear();
-    //Now i can make server-client
-    std::vector<std::string> removed;
-    set_difference(set_server.begin(), set_server.end(), set_client.begin(), set_client.end(), inserter(diff, diff.end()));
-    for(const auto& value: diff) {
-        removed.push_back(value);
-    }
-
-    //let's clear the vector diff and reuse it
-    diff.clear();
-    //Now we print the common files
-    std::vector<std::string> common;
-    set_intersection(set_server.begin(), set_server.end(), set_client.begin(), set_client.end(), inserter(diff, diff.end()));
-    for(const auto& value: diff) {
-        common.push_back(value);
-    }
-
-    //We can now create the patch object
-    Patch result{mon_folder, added,removed,common};
-    return result;
-}
-
-/// This generate a directory tree following the tree command protocol available on linux
-/// \param path Tree will be generated of this path
-/// \return String of files/dir (one for each line) contained in the folder
-std::string Client::GenerateTree(const std::filesystem::path& path) {
-
-
-    std::vector<std::string> vector_result;
-    std::string result;
-
-    for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
-        itEntry != std::filesystem::recursive_directory_iterator();
-        ++itEntry )
-    {
-        const auto filepath = itEntry->path();
-        std::filesystem::path clean_filepath = filepath.lexically_relative(path);
-        std::string file_str = clean_filepath.generic_string();
-        if (std::filesystem::is_directory(filepath)) {
-            vector_result.push_back(file_str + "/" + '\n');
-        } else {
-            vector_result.push_back(file_str+ '\n');
-        }
-    }
-
-    //Here we sort the tree in alphabetic order to permit cross platform diff
-    std::sort(vector_result.begin(), vector_result.end());
-    for(auto clean_path : vector_result )
-    {
-        result.append(clean_path);
-    }
-
-    return result;
-}
-
-/// We create a map "Filename - last modified time"
-/// \param patch
-void Client::ProcessNew(Patch& patch) {
-    for (auto file_path : patch.added_ ){
-
-        //Here we have the file_path but it is formatted not for stat,
-        //we must pass it to stat so we need to append it to the monitored folder
-        std::filesystem::path complete_path = patch.monitored_folder_;
-        complete_path /= file_path;
-        if(DEBUG){
-            std::cout << "Process New - " << complete_path.generic_string() << std::endl;
-        }
-        struct stat result;
-        if(stat(complete_path.generic_string().c_str(), &result)==0){
-            auto mod_time = result.st_mtime;
-            std::pair<std::string, unsigned long int> element = std::make_pair (file_path,mod_time);
-            patch.to_be_sent_map_.insert(element);
-
-        }
-    }
-}
-
-/// This function compare the files that are present both in server and client. It compares them
-/// based on their last modified time.
-/// \param patch
-void Client::ProcessCommon(Patch& patch, TreeT server_treet){
-
-    std::map<std::string, unsigned long> client_common_map;
-
-    for (auto file_path : patch.common_ ) {
-
-        //Here we have the file_path but it is formatted not for stat,
-        //we must pass it to stat so we need to append it to the monitored folder
-        std::filesystem::path complete_path = patch.monitored_folder_;
-        complete_path /= file_path;
-
-        //We generate the client_common_map
-        struct stat result;
-        if (stat(complete_path.generic_string().c_str(), &result) == 0) {
-            auto mod_time = result.st_mtime;
-            std::pair<std::string, unsigned long> element = std::make_pair(file_path, mod_time);
-            client_common_map.insert(element);
-        }
-    }
-
-    if(DEBUG)
-        std::cout << ":::::::: Conflicts ::::::::" <<std::endl;
-
-    // Now we compare them with the map already present in the patch, that was sent by the server
-    for (auto const& pair : client_common_map) {
-        if(server_treet.time_[pair.first] < pair.second ){
-            //Here we enter if in the client the file is newer.
-            if(DEBUG) {
-                std::cout << "#### Found Conflict - " << pair.first << " is newer in the client" << std::endl;
-                //Thus, we add them to the to_be_sent_map, will be used in the sendPatch.
-                patch.to_be_sent_map_.insert(pair);
-            }
-        }
-    }
-
-
-
-}
-
-/// This function generates a string and fill the to_be_deleted_ member of the patch
-/// containing all the files/dir that should be removed on the server side.
-/// It is a string because it will be easier to serialize it via json. Will be sent in the SendPatch alogn with the other
-/// changes
-/// \param patch Patch containing the filenames of the " to be removed" files
-void Client::ProcessRemoved(Patch& patch) {
-    for (auto file_path : patch.removed_ ){
-        patch.to_be_deleted_.append(file_path + "\n");
-        // debug
-    }
-}
-
 /// Here we firstly send a ControlMessage that will tell what to delete in the server. After that we will start sending
 /// the newer files.
 /// \param update processed patch
@@ -279,7 +111,7 @@ void Client::SendPatch(Patch& update){
     delete_message.AddElement("Username",credential_.username_);
     delete_message.AddElement("Password:",credential_.hash_password_ );
     //We add the delete string
-    delete_message.AddElement("To_be_deleted",update.to_be_deleted_);
+    //delete_message.AddElement("To_be_deleted",update.to_be_deleted_);
     //And sending it formatted in JSON language
     boost::asio::write(tcpSocket.sock_, boost::asio::buffer(delete_message.ToJSON()));
     // we sent the Auth message, we will shutdown in order to tell the server that we sent all
