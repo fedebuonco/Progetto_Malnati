@@ -21,17 +21,20 @@ private:
     bool Auth();
     void StartWatching();
     void Syncro();
-
-
-public:
-    Client(RawEndpoint re, std::filesystem::path folder_watched);
     TreeT RequestTree();
     std::string GenerateTree(const std::filesystem::path& path);
-    Patch GeneratePatch(std::filesystem::path mon_folder, const std::string& client_t, const std::string& server_t);
+    Patch GeneratePatch(std::filesystem::path mon_folder,
+                        const std::string& client_t,
+                        const std::string& server_t);
     void ProcessNew(Patch& patch);
     void ProcessRemoved(Patch& patch);
     void SendPatch(Patch &update);
     void ProcessCommon(Patch &patch, TreeT server_treet);
+
+
+public:
+    Client(RawEndpoint re, std::filesystem::path folder_watched);
+
 
 
 

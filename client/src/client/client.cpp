@@ -1,23 +1,12 @@
-//CROSS platform get last modified time
-//#include <sys/types.h>
-//#include <sys/stat.h>
-//#ifndef _WIN32
-//#include <unistd.h>
-//#endif
-//#ifdef _WIN32
-//#define stat _stat
-//#endif
-
 #include <sync_tcp_socket.h>
 #include <control_message.h>
 #include <authentication.h>
-#include "client.h"
+#include <client.h>
 #include <filesystem>
 #include <iostream>
 #include <set>
 #include <tree_t.h>
 #include <patch.h>
-#include <chrono>
 
 /// Construct a Client and puts it in a state ready to track any changes in the folder.
 /// \param re Endpoint to connect to.
@@ -32,15 +21,16 @@ Client::Client(RawEndpoint re, std::filesystem::path folder_watched) {
     StartWatching();
 }
 
-///We set the callback and ask to the watcher to start tracking any changes on the watched folder.
+/// We set the callback and ask to the watcher to start tracking any changes on the watched folder.
+/// We bind to the callback this, to that when called from the watcher, "this" is defined.
+/// https://stackoverflow.com/questions/14189440/c-callback-using-class-member/14189561
 void Client::StartWatching(){
-
     watcher_.SetUpdateCallback(std::bind(&Client::Syncro, this));
     watcher_.Start(folder_watched_);
-
 }
 
-/// Starts the whole syncronization process will be called as soon as the watcher finds a change.
+/// This is the main function, create a Tree and asks for the server Tree, with those it cretes a patch and process it
+/// The processed patch is then used to fuel the SendPatch()
 void Client::Syncro(){
     //Generate Client tree string
     std::string client_tree;
@@ -57,19 +47,17 @@ void Client::Syncro(){
         update.PrettyPrint();
     }
 
-/// Authenticates the client by creating a syncTCPSocket and calling it's auth method.
-/// \return
+/// Authenticates the client by creating a syncTCPSocket and calling it's auth method. It is used to check correctness
+/// of the current configs.
+/// \return bool true if valid false otherwise
 bool Client::Auth() {
     //TODO qualche eccezione da fare il catch?
-
     //SyncTCPSocket for auth using raw endpoint provided at construction.
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
     //socket will retry 5 times to connect
     tcpSocket.ConnectServer(5);
-
     //Try to authenticate and return true / false
     return tcpSocket.Authenticate();
-
 }
 
 /// Request current tree and times of the cloud dir stored in the server. Handles the result by starting the diff
@@ -77,47 +65,35 @@ bool Client::Auth() {
 TreeT Client::RequestTree() {
     //SyncTCPSocket for request
     Credential credential = Authentication::get_Instance()->ReadCredential();
-
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
     //socket will retry 5 times to connect
     tcpSocket.ConnectServer(5);
-
     //Here we create the ControlMessage for TreeRequest ( Type = 2 )
-
     ControlMessage message_obj{2};
     //Adding Username and Hash Password
     message_obj.AddElement("Username", credential.username_);
     message_obj.AddElement("HashPassword", credential.hash_password_);
-
     //And sending it formatted in JSON language
     boost::asio::write(tcpSocket.sock_, boost::asio::buffer(message_obj.ToJSON()));
     // we sent the tree req message, we will shutdown in order to tell the server that we sent all
     tcpSocket.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
-
     //Here is the server tree
     boost::asio::streambuf response_buf;
     boost::system::error_code ec;
     boost::asio::read(tcpSocket.sock_, response_buf, ec);
-
     // This checks if the client has finished writing
     if (ec != boost::asio::error::eof){
-        //TODO Alcune volte strane si blocca
-        //qua se non ho ricevuto la chiusura del client
+        //TODO Sometimes we get here. When the server shuts down
         if(DEBUG) std::cerr<<"DEBUG: NON ho ricevuto il segnale di chiusura del client";
         throw boost::system::system_error(ec);
     }
-
-    //Read the response_buf using an iterator and store it in a string
-    //TODO might be an easier method to do this
+    //Read the response_buf using an iterator and store it in a string In order to store it in a ControlMessage
+    // TODO might be an easier method to do this
     std::string response_json((std::istreambuf_iterator<char>(&response_buf)), std::istreambuf_iterator<char>() );
-
-    //Now we parsed the request and we use the json in order to create the corresponding ControlMessage
     ControlMessage response_message{response_json};
     if(DEBUG) std::cout << "Tree received successfully" << std::endl;
-
     //We get the tree
     std::string tree = response_message.GetElement("Tree");
-
     //TODO Uncomment this as soon as the server will send the times
     //std::string time = response_message.GetElement("Time");
     //TreeT result{tree,time};
