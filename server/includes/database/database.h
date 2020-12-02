@@ -12,6 +12,8 @@ public:
 
     void createTable(std::string foldername);
 
+    std::string getTimefromPath(std::string foldername, std::string path);
+
 };
 
 

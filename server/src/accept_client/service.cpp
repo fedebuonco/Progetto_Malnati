@@ -132,8 +132,8 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                //Create DB file for the user TREE
                db.createTable(user_folder_name);
             }
-            /*TODO Se si verifica un eccezione tra la creazione dello userfolder e il createTable (db utente) RIPROVA
-            vediamo la directory ma non vediamo il DB. Questo potrebbe creare problemi, consiglio di fare nella catch una politica
+            /*TODO Se si verifica un eccezione tra la creazione dello userfolder e il createTable (db utente)
+            vediamo la directory ma non vediamo il DB. Azione da fare è RIPROVA. Questo potrebbe creare problemi, consiglio di fare nella catch una politica
              che cancella sia la cartella principale (tanto in questo punto è vuota) ed il db. Ricordo comunque che nel caso in cui
              il db esiste quando entriamo sulla createTable droppo comunque la tabella e la ricreo.
             */
@@ -141,10 +141,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             //TODO - IL PROGRAMMA TERMINA MALE SE METTI CARTELLA CHE NON TROVA
             std::string tree = GenerateTree(user_directory_path);
             tree_result.AddElement("Tree", tree);
-            // And for the tree we retrive its stored last time modification
-
-            //TODO Implement DB and retrieve time according to this functions
-
+            // And for the tree we retrieve its stored last time modification
 
 
             // std::string times = RetrieveTreeTime(user,tree);

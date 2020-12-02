@@ -98,3 +98,38 @@ void Database::createTable(std::string foldername) {
     }
 
 }
+
+std::string Database::getTimefromPath(std::string foldername, std::string path) {
+
+
+    try {
+        // Open a database file
+        SQLite::Database    db("../backupFiles/usersTREE/"+foldername+".db");
+
+        // Compile a SQL query, containing one parameter (index 1)
+        SQLite::Statement   query(db, "SELECT time FROM UserTree WHERE path= ?");
+
+        // Bind the integer value 6 to the first parameter of the SQL query
+        query.bind(1, path);
+
+        // Loop to execute the query step by step, to get rows of result
+        while (query.executeStep())
+        {
+            // Demonstrate how to get some typed column value
+            std::string   time     = query.getColumn(0);
+            return time;
+        }
+        //Se non trova nulla ritorna 0
+        return std::string(0);
+
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "exception: " << e.what() << std::endl;
+        //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
+    }
+
+
+
+    return std::string();
+}
