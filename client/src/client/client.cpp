@@ -92,9 +92,8 @@ TreeT Client::RequestTree() {
     //We get the tree
     std::string tree = response_message.GetElement("Tree");
     //TODO Uncomment this as soon as the server will send the times
-    //std::string time = response_message.GetElement("Time");
-    //TreeT result{tree,time};
-    TreeT result{tree, ""};
+    std::string time = response_message.GetElement("Time");
+    TreeT result{tree,time};
     return result;
 }
 

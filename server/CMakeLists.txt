@@ -33,6 +33,8 @@ if (UNIX)
             includes/accept_client/server.h
             src/transfer/control_message.cpp
             includes/transfer/control_message.h
+            src/transfer/tree_t.cpp
+            includes/transfer/tree_t.h
             src/sqlite/sqlite3.c
             includes/sqlite/sqlite3.h)
     target_link_libraries(server SQLiteCpp dl)

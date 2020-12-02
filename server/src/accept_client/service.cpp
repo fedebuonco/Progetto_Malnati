@@ -2,6 +2,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <control_message.h>
 #include <filesystem>
+#include <tree_t.h>
 #include "service.h"
 
 /// This generate directory tree following the tree command protocol available on linux
@@ -87,22 +88,14 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             break;
         }
         case 2:{//TREE & TIME Request
-
             //Let's start building the Response Control Message
-            ControlMessage tree_result{52};
-            // We compute & add the tree
+            ControlMessage treet_result{52};
             // TODO change the dir accordingly to username of the client
-            std::string tree = GenerateTree(std::filesystem::path("Prova"));
-            tree_result.AddElement("Tree", tree);
-            // And for the tree we retrive its stored last time modification
-
-            //TODO Implement DB and retrieve time according to this functions
-
-            // std::string times = RetrieveTreeTime(user,tree);
-            // tree_result.AddElement("Time", times);
-
-            // & send it
-            boost::asio::write(*sock, boost::asio::buffer(tree_result.ToJSON()));
+            TreeT server_treet (std::filesystem::path("Prova"));
+            treet_result.AddElement("Tree", server_treet.genTree());
+            treet_result.AddElement("Time", server_treet.genTimes());
+            //TODO Implement DB and retrieve time according to this function
+            boost::asio::write(*sock, boost::asio::buffer(treet_result.ToJSON()));
             // Send the eof error shutting down the server.
             // TODO qua magicamente va ignorato l'errore GRAVISSIMO
             sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
