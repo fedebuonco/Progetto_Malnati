@@ -5,11 +5,11 @@
 #include <utilities.h>
 #include <filesystem>
 
-
+#include "cryptlib.h"
 #include <sha.h>
 #include <filters.h>
 #include <hex.h>
-#include "cryptlib.h"
+
 
 
 bool DEBUG=false;

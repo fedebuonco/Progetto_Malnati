@@ -10,19 +10,20 @@
 #include <string>
 #include <chrono>
 #include <map>
+#include "tree_t.h"
 
 class Patch {
 public:
-    Patch(const std::filesystem::path mon_folder, std::vector<std::string> vector, std::vector<std::string> vector1, std::vector<std::string> vector2);
-    std::vector<std::string> added_;
-    std::map<std::string, unsigned long int> to_be_sent_map_;
-    std::vector<std::string> removed_;
-    std::string to_be_deleted_;
-    std::vector<std::string> common_;
 
+    std::vector<std::string> added_;
+    std::vector<std::string> removed_;
+    std::vector<std::string> common_;
+    std::vector<std::pair<std::string, unsigned  long>> to_be_sent_vector;
+    std::vector<std::pair<std::string, unsigned  long>> to_be_elim_vector;
+
+    Patch(TreeT client_treet, TreeT server_treet);
     std::string PrettyPrint();
 
-    std::filesystem::path monitored_folder_;
 };
 
 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.16)
 project(server)
 
 SET( CMAKE_C_FLAGS "-Wall" )     #Mi permette di avere delle stampe di debug
@@ -33,6 +33,8 @@ if (UNIX)
             includes/accept_client/server.h
             src/transfer/control_message.cpp
             includes/transfer/control_message.h
+            src/transfer/tree_t.cpp
+            includes/transfer/tree_t.h
             src/sqlite/sqlite3.c
             includes/sqlite/sqlite3.h
             src/database/database.cpp

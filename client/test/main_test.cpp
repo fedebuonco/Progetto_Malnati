@@ -14,11 +14,11 @@
 
 // Tree Generation _______________________________________________
 TEST_CASE("Tree Generations"){
+    RawEndpoint re;
+    Client client(re);
 
     SECTION("Tree gen ./Prova") {
-        RawEndpoint re;
-        Client fede(re);
-        CHECK(fede.GenerateTree(RELATIVE_DPATH) == "ce\n"
+        CHECK(client.GenerateTree(RELATIVE_DPATH) == "ce\n"
                                                    "dede/\n"
                                                    "dede/c.txt\n"
                                                    "marco/\n"
@@ -27,9 +27,7 @@ TEST_CASE("Tree Generations"){
     }
 
     SECTION("Tree gen Prova") {
-        RawEndpoint re;
-        Client fede(re);
-        CHECK(fede.GenerateTree(RELATIVE_PATH) == "ce\n"
+        CHECK(client.GenerateTree(RELATIVE_PATH) == "ce\n"
                                                   "dede/\n"
                                                   "dede/c.txt\n"
                                                   "marco/\n"
@@ -38,9 +36,7 @@ TEST_CASE("Tree Generations"){
     }
 
     SECTION("Tree gen Prova- absolute path") {
-        RawEndpoint re;
-        Client fede(re);
-        CHECK(fede.GenerateTree(ABSOLUTE_PATH) == "ce\n"
+        CHECK(client.GenerateTree(ABSOLUTE_PATH) == "ce\n"
                                                   "dede/\n"
                                                   "dede/c.txt\n"
                                                   "marco/\n"
@@ -49,15 +45,11 @@ TEST_CASE("Tree Generations"){
     }
 
     SECTION("Tree gen No valid path") {
-        RawEndpoint re;
-        Client fede(re);
-        CHECK_THROWS(fede.GenerateTree("./INVALIDPATH"));
+        CHECK_THROWS(client.GenerateTree("./INVALIDPATH"));
     }
 
     SECTION("Tree gen empty folder") {
-        RawEndpoint re;
-        Client fede(re);
-        CHECK(fede.GenerateTree(PATH_EMPTY_FOLDER) == "");
+        CHECK(client.GenerateTree(PATH_EMPTY_FOLDER) == "");
     }
 
 }
@@ -66,30 +58,30 @@ TEST_CASE("Tree Generations"){
 // Patch Generation _______________________________________________
 TEST_CASE("Computing Diffs") {
     RawEndpoint re;
-    Client fede(re);
+    Client client(re);
 
     SECTION( "Generating diff on same folder " ) {
-        auto folder1 = fede.GenerateTree(RELATIVE_DPATH);
-        auto folder2 = fede.GenerateTree(RELATIVE_DPATH);
-        auto patch = fede.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
+        auto folder1 = client.GenerateTree(RELATIVE_DPATH);
+        auto folder2 = client.GenerateTree(RELATIVE_DPATH);
+        auto patch = client.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
         REQUIRE( patch.common_.size() != 0);
         REQUIRE( patch.added_.size() == 0);
         REQUIRE( patch.removed_.size() == 0);
     }
 
     SECTION( "Generating diff where folder2 is empty" ) {
-        auto folder1 = fede.GenerateTree(RELATIVE_DPATH);
-        auto folder2 = fede.GenerateTree(PATH_EMPTY_FOLDER);
-        auto patch = fede.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
+        auto folder1 = client.GenerateTree(RELATIVE_DPATH);
+        auto folder2 = client.GenerateTree(PATH_EMPTY_FOLDER);
+        auto patch = client.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
         REQUIRE( patch.common_.size() == 0);
         REQUIRE( patch.added_.size() != 0);
         REQUIRE( patch.removed_.size() == 0);
     }
 
     SECTION( "Generating diff where folder1 is empty" ) {
-        auto folder1 = fede.GenerateTree(PATH_EMPTY_FOLDER);
-        auto folder2 = fede.GenerateTree(RELATIVE_DPATH);
-        auto patch = fede.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
+        auto folder1 = client.GenerateTree(PATH_EMPTY_FOLDER);
+        auto folder2 = client.GenerateTree(RELATIVE_DPATH);
+        auto patch = client.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
         REQUIRE( patch.common_.size() == 0);
         REQUIRE( patch.added_.size() == 0);
         REQUIRE( patch.removed_.size() != 0);
@@ -101,16 +93,16 @@ TEST_CASE("Computing Diffs") {
 // Process Computations ___________________________________________
 TEST_CASE("Process Computations") {
     RawEndpoint re;
-    Client fede(re);
+    Client client(re);
 
     SECTION( "Process removed with empty folder in client" ) {
-        auto folder1 = fede.GenerateTree(PATH_EMPTY_FOLDER);
-        auto folder2 = fede.GenerateTree(RELATIVE_DPATH);
-        auto patch = fede.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
+        auto folder1 = client.GenerateTree(PATH_EMPTY_FOLDER);
+        auto folder2 = client.GenerateTree(RELATIVE_DPATH);
+        auto patch = client.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
         REQUIRE( patch.removed_.size() != 0);
         REQUIRE( patch.added_.size() == 0);
         REQUIRE( patch.common_.size() == 0);
-        fede.ProcessRemoved(patch);
+        client.ProcessRemoved(patch);
         REQUIRE( patch.to_be_deleted_ == "ce\n"
                          "dede/\n"
                          "dede/c.txt\n"
@@ -120,13 +112,13 @@ TEST_CASE("Process Computations") {
     }
 
     SECTION( "Process New with empty folder in server " ) {
-        auto folder1 = fede.GenerateTree(RELATIVE_DPATH);
-        auto folder2 = fede.GenerateTree(PATH_EMPTY_FOLDER);
-        auto patch = fede.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
+        auto folder1 = client.GenerateTree(RELATIVE_DPATH);
+        auto folder2 = client.GenerateTree(PATH_EMPTY_FOLDER);
+        auto patch = client.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
         REQUIRE( patch.removed_.size() == 0);
         REQUIRE( patch.added_.size() != 0);
         REQUIRE( patch.common_.size() == 0);
-        fede.ProcessNew(patch);
+        client.ProcessNew(patch);
         REQUIRE( patch.to_be_sent_map_.size() == patch.added_.size());
     }
 
@@ -135,7 +127,68 @@ TEST_CASE("Process Computations") {
 // END - Process Computations _____________________________________
 
 // Other ___________________________________________
-TEST_CASE("Other") {
-//TODO Test prettyprint
+TEST_CASE("prettyPrint") {
+    RawEndpoint re;
+    Client client(re);
+
+    SECTION( "Prettyprint when client is empty" ) {
+        auto folder1 = client.GenerateTree(PATH_EMPTY_FOLDER);
+        auto folder2 = client.GenerateTree(RELATIVE_DPATH);
+        auto patch = client.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
+        REQUIRE( patch.removed_.size() != 0);
+        REQUIRE( patch.added_.size() == 0);
+        REQUIRE( patch.common_.size() == 0);
+        TreeT server_th{folder2, ""};
+        client.ProcessRemoved(patch);
+        client.ProcessNew(patch);
+        client.ProcessCommon(patch,server_th);
+        REQUIRE( patch.PrettyPrint() == ":::::::: Changes ::::::::\n"
+                                        "- ce\n"
+                                        "- dede/\n"
+                                        "- dede/c.txt\n"
+                                        "- marco/\n"
+                                        "- marco/c.txt\n"
+                                        "- provaaa.txt\n"
+                                        ":::::::: Deleted Files ::::::::\n"
+                                        "ce\n"
+                                        "dede/\n"
+                                        "dede/c.txt\n"
+                                        "marco/\n"
+                                        "marco/c.txt\n"
+                                        "provaaa.txt\n"
+                                        ":::::::: Files that will be Sent - Last Modified Time ::::::::\n");
+
+    }
+
+    SECTION( "Prettyprint when server is empty" ) {
+        auto folder1 = client.GenerateTree(RELATIVE_DPATH);
+        auto folder2 = client.GenerateTree(PATH_EMPTY_FOLDER);
+        auto patch = client.GeneratePatch(RELATIVE_DPATH, folder1, folder2);
+        REQUIRE( patch.removed_.size() == 0);
+        REQUIRE( patch.added_.size() != 0);
+        REQUIRE( patch.common_.size() == 0);
+        TreeT server_th{folder2, ""};
+        client.ProcessRemoved(patch);
+        client.ProcessNew(patch);
+        client.ProcessCommon(patch,server_th);
+        REQUIRE( patch.PrettyPrint() == ":::::::: Changes ::::::::\n"
+                                        "+ ce\n"
+                                        "+ dede/\n"
+                                        "+ dede/c.txt\n"
+                                        "+ marco/\n"
+                                        "+ marco/c.txt\n"
+                                        "+ provaaa.txt\n"
+                                        ":::::::: Deleted Files ::::::::\n"
+                                        ":::::::: Files that will be Sent - Last Modified Time ::::::::\n"
+                                        "ce - 1605546130\n"
+                                        "dede/ - 1605546130\n"
+                                        "dede/c.txt - 1605546130\n"
+                                        "marco/ - 1605546130\n"
+                                        "marco/c.txt - 1605546130\n"
+                                        "provaaa.txt - 1605546130\n"
+                                        );
+
+    }
+
 }
 // END - Other _____________________________________

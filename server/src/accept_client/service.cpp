@@ -1,11 +1,8 @@
-//
-// Created by fede on 10/4/20.
-//
-
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <control_message.h>
 #include <filesystem>
+#include <tree_t.h>
 #include "../../includes/database/database.h"
 #include "service.h"
 
@@ -97,9 +94,9 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             break;
         }
         case 2:{//TREE & TIME Request
-
             //Let's start building the Response Control Message
-            ControlMessage tree_result{52};
+
+            ControlMessage treet_result{52};
             // We compute & add the tree
             std::string username = request_message.GetElement("Username");
 
@@ -139,19 +136,20 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             */
 
             //TODO - IL PROGRAMMA TERMINA MALE SE METTI CARTELLA CHE NON TROVA
-            std::string tree = GenerateTree(user_directory_path);
-            tree_result.AddElement("Tree", tree);
-            // And for the tree we retrieve its stored last time modification
-
-
-            // std::string times = RetrieveTreeTime(user,tree);
-            // tree_result.AddElement("Time", times);
-
-            // & send it
-            boost::asio::write(*sock, boost::asio::buffer(tree_result.ToJSON()));
+            // TODO change the dir accordingly to username of the client
+            TreeT server_treet (user_directory_path);
+            treet_result.AddElement("Tree", server_treet.genTree());
+            treet_result.AddElement("Time", server_treet.genTimes());
+            //TODO Implement DB and retrieve time according to this function
+            boost::asio::write(*sock, boost::asio::buffer(treet_result.ToJSON()));
             // Send the eof error shutting down the server.
             // TODO qua magicamente va ignorato l'errore GRAVISSIMO
             sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
+            break;
+        }
+        case 3:{//DELETE REQUEST
+            //TODO Implement DB and retrive the dir accordingly to username of the client
+            // Here we delete the files that are in the mess.
             break;
         }
 
