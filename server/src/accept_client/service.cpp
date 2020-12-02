@@ -3,10 +3,12 @@
 #include <control_message.h>
 #include <filesystem>
 #include <tree_t.h>
+#include "../../includes/database/database.h"
 #include "service.h"
 
 /// This generate directory tree following the tree command protocol available on linux
-std::string GenerateTree(const std::filesystem::path& path) {
+std::string
+GenerateTree(const std::filesystem::path& path) {
 
     std::vector<std::string> vector_result;
     std::string result;
@@ -73,9 +75,13 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             // TODO real checkIdentity and control message
             // TODO change control message constructor for now in the client we will only check that is 51 not if auth = true/false
             std::string hashpass = request_message.GetElement("HashPassword");
+            std::string username = request_message.GetElement("Username");
 
             ControlMessage check_result{51};
-            if(hashpass=="5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8"){
+
+            Database authentication;
+
+            if(authentication.auth(username, hashpass) ){
                 check_result.AddElement("auth", "true");
             } else {
                 check_result.AddElement("auth", "false");
@@ -89,9 +95,49 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
         }
         case 2:{//TREE & TIME Request
             //Let's start building the Response Control Message
+
             ControlMessage treet_result{52};
+            // We compute & add the tree
+            std::string username = request_message.GetElement("Username");
+
+            Database db;
+            std::string user_folder_name = db.getUserPath(username);
+
+            std::cout << "User folder: " << user_folder_name << std::endl;
+
+            std::filesystem::directory_entry users_tree{ "../backupFiles/usersTREE"};
+            if (!users_tree.exists()) {
+                //User doesn't have a folder, so we create a new one and we add a user db
+
+                //TODO Check error during creation of directory
+                std::filesystem::create_directories("../backupFiles/usersTREE");
+            }
+
+
+            std::filesystem::directory_entry user_directory_path{ "../backupFiles/backupROOT/"+user_folder_name};
+
+
+            //Check if this user has a folder inside backupROOT
+            if (!user_directory_path.exists()) {
+               //User doesn't have a folder, so we create a new one and we add a user db
+
+               //TODO Check error during creation of directory
+               std::filesystem::create_directories(user_directory_path);
+               std::cout << "User doesn't have the folder. I create a new folder name: " << user_folder_name << std::endl;
+
+
+               //Create DB file for the user TREE
+               db.createTable(user_folder_name);
+            }
+            /*TODO Se si verifica un eccezione tra la creazione dello userfolder e il createTable (db utente)
+            vediamo la directory ma non vediamo il DB. Azione da fare è RIPROVA. Questo potrebbe creare problemi, consiglio di fare nella catch una politica
+             che cancella sia la cartella principale (tanto in questo punto è vuota) ed il db. Ricordo comunque che nel caso in cui
+             il db esiste quando entriamo sulla createTable droppo comunque la tabella e la ricreo.
+            */
+
+            //TODO - IL PROGRAMMA TERMINA MALE SE METTI CARTELLA CHE NON TROVA
             // TODO change the dir accordingly to username of the client
-            TreeT server_treet (std::filesystem::path("Prova"));
+            TreeT server_treet (user_directory_path);
             treet_result.AddElement("Tree", server_treet.genTree());
             treet_result.AddElement("Time", server_treet.genTimes());
             //TODO Implement DB and retrieve time according to this function

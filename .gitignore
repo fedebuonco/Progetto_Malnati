@@ -9,3 +9,10 @@ client/test/cmake-build-debug/Makefile
 client/test/cmake-build-debug/test
 client/test/cmake-build-debug/test.cbp
 server/cmake-build-debug/
+
+
+server/backupFiles/backupROOT/*
+server/backupFiles/usersTREE/*
+
+
+client/config_file/config.json
