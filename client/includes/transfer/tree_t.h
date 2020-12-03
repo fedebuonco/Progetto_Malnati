@@ -8,12 +8,15 @@
 
 #include <string>
 #include <map>
+#include <filesystem>
 
 class TreeT {
 public:
     std::string tree_;
-    std::map<std::string,unsigned long > time_;
+    std::map<std::string,unsigned long > map_tree_time_;
+    TreeT(const std::filesystem::path& path);
     TreeT(const std::string& tree, const std::string& time);
+
 };
 
 

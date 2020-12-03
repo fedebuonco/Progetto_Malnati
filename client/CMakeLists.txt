@@ -1,7 +1,10 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.16)
 project(client)
 set(CMAKE_CXX_STANDARD 17)
 SET( CMAKE_C_FLAGS "-Wall" )     #Mi permette di avere delle stampe di debug
+
+#Added for sourcetrail purposes
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Various include files for our code
 include_directories(includes/sync_tcp_socket)
@@ -9,9 +12,12 @@ include_directories(includes/transfer)
 include_directories(includes/utilities)
 include_directories(includes/watcher)
 include_directories(includes/config)
+include_directories(includes/client)
 
-
-
+# We include the panoptes as a lib ( thanks god it has it's own already made CMakelist.txt)
+# Thus we can use it by adding it with the add_subdirectory()
+add_subdirectory(libs/panoptes)
+include_directories(libs/panoptes/include)
 
 
 #--------UNIX-------------------
@@ -19,7 +25,9 @@ if (UNIX)
     set(CMAKE_CXX_FLAGS -pthread )
 
     #include_directories(usr/local/lib)
-    include_directories(/usr/local/include/cryptopp)
+    include_directories(libs/cryptopp/include)
+    #include_directories(usr/local/include/cryptopp)
+
     add_executable(client
                 src/main.cpp
                 src/sync_tcp_socket/sync_tcp_socket.cpp
@@ -41,7 +49,7 @@ if (UNIX)
                 src/transfer/patch.cpp
                 includes/transfer/patch.h
                 )
-    target_link_libraries(client cryptopp)
+    target_link_libraries(client dl cryptopp PanoptesFW)
 endif (UNIX)
 
 #-------WIN---------------------
@@ -68,7 +76,6 @@ if (WIN32)
 
         include_directories(libs/cryptopp/include)
         unset(CRYPTOPP CACHE)
-
         find_library(CRYPTOPP cryptlib HINTS libs/cryptopp REQUIRED)
         if(NOT CRYPTOPP)
             message(FATAL_ERROR "Cryptopp Not found")
@@ -98,7 +105,7 @@ if (WIN32)
                 src/transfer/patch.cpp
                 includes/transfer/patch.h)
 
-        target_link_libraries(client ${CRYPTOPP})
+        target_link_libraries(client PanoptesFW ${CRYPTOPP})
 
     endif()
 endif (WIN32)

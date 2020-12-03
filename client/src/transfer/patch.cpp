@@ -1,17 +1,44 @@
 #include <iostream>
 #include <filesystem>
+#include <algorithm>
+#include <config.h>
+#include <set>
 #include "patch.h"
 
-/// This is the constructor for the Patch, before it get sent we have to process it. The 3 vectors are needed
-/// in order generate the additional data struct taht will be serialized and sent.
-/// \param add Contains the filenames of elements that are in the client and not in the server, will be sent
-/// \param rem Contains the filneames of element that are in the server but not in the client, will be deleted
-/// \param common Contains the filenames of element that are both in server and client, will be checked.
-Patch::Patch(std::filesystem::path mon_folder, std::vector<std::string> add, std::vector<std::string> rem, std::vector<std::string> common) {
-    added_ = add;
-    removed_ = rem;
-    common_ = common;
-    monitored_folder_ = mon_folder;
+/// We populate the to_be_sent_vector an the to be elimnated
+/// \param client_treet
+/// \param server_treet
+Patch::Patch(TreeT client_treet, TreeT server_treet){
+
+    //TODO Generate also added_, common_, and removed_
+
+    std::set<std::string> set_client;
+    for(auto item : client_treet.map_tree_time_) {
+        set_client.insert(item.first);
+    }
+
+    std::set<std::string> set_server;
+    for(auto item : server_treet.map_tree_time_) {
+        set_server.insert(item.first);
+    }
+
+    //Now i have the two sets I can compute set_difference(set_client,set_server)  client - server
+    set_difference(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(added_, added_.end()));
+    //Now i have the two sets I can compute set_difference(,set_server, set_client)  server - client
+    set_difference(set_server.begin(), set_server.end(), set_client.begin(), set_client.end(), inserter(removed_, removed_.end()));
+    //Now we can find the common files
+    set_intersection(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(common_, common_.end()));
+
+    //here we gen the to be sent
+    std::set_difference(begin(client_treet.map_tree_time_), end(client_treet.map_tree_time_),
+                        begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
+                        std::back_inserter(to_be_sent_vector));
+
+
+    //here we gen the to be elim
+    std::set_difference(begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
+                        begin(client_treet.map_tree_time_), end(client_treet.map_tree_time_),
+                        std::back_inserter(to_be_elim_vector));
 }
 
 /// Pretty Prints the changes contained in the patch
@@ -28,10 +55,13 @@ std::string Patch::PrettyPrint(){
     for (auto file : common_){
         pretty.append("= " + file +"\n");
     }
-    pretty.append( ":::::::: Deleted Files ::::::::\n");
-    pretty.append(to_be_deleted_);
-    pretty.append(":::::::: Files that will be Sent - Last Modified Time ::::::::\n" );
-    for (auto file : to_be_sent_map_){
+    pretty.append( ":::::::: Files that will be deleted on the server ( Because older or deleted ) - Last Modified Time ::::::::\n");
+    for (auto file : to_be_elim_vector){
+        pretty.append(file.first + " - ");
+        pretty.append(std::to_string(file.second) + "\n");
+    }
+    pretty.append(":::::::: Files that will be Sent (New files or newer files) - Last Modified Time ::::::::\n" );
+    for (auto file : to_be_sent_vector ){
         pretty.append(file.first + " - ");
         pretty.append(std::to_string(file.second) + "\n");
     }
@@ -47,16 +77,18 @@ std::string Patch::PrettyPrint(){
         std::cout <<"= " << file << std::endl;
     }
 
-    std::cout << ":::::::: Deleted Files ::::::::" << std::endl;
-    std::cout << to_be_deleted_ << std::endl;
-    std::cout << ":::::::: Files that will be Sent - Last Modified Time ::::::::" << std::endl;
-    for (auto file : to_be_sent_map_){
+    std::cout << ":::::::: Files that will be deleted on the server ( Because older or deleted ) - Last Modified Time ::::::::" << std::endl;
+    for (auto file : to_be_elim_vector){
+        std::cout << file.first + " - " << file.second << std::endl;
+    }
+    std::cout << ":::::::: Files that will be Sent (New files or newer files) - Last Modified Time ::::::::" << std::endl;
+    for (auto file : to_be_sent_vector){
         std::cout << file.first + " - " << file.second << std::endl;
     }
     std::cout << ":::::::: Recap : new files (" << added_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : removed files (" << removed_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : common files (" << common_.size() << ")   ::::::::" << std::endl;
-    std::cout << ":::::::: Recap : Files that will be sent (" << to_be_sent_map_.size() << ")   ::::::::" << std::endl;
+    std::cout << ":::::::: Recap : Files that will be sent (" << to_be_sent_vector.size() << ")   ::::::::" << std::endl;
 
 
     return pretty;
