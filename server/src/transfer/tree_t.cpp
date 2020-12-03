@@ -1,5 +1,6 @@
 #include <sstream>
 #include "tree_t.h"
+#include "../../includes/database/database.h"
 #include <stdlib.h>     /* strtoul */
 #include <vector>
 #include <algorithm>
@@ -29,6 +30,9 @@ TreeT::TreeT(const std::filesystem::path& path){
 
     this->folder_path_ = path;
 
+    std::filesystem::path folder_name = path.lexically_relative("../backupFiles/backupROOT/");
+    std::string folder_name_string = folder_name.generic_string();
+
     for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
         itEntry != std::filesystem::recursive_directory_iterator();
         ++itEntry )
@@ -44,15 +48,14 @@ TreeT::TreeT(const std::filesystem::path& path){
 
         // // // // // // // // //
         // TODO retrieve the last modified time from the db and then uncomment this part and delete the otehr call in the block
-        //
+
+        Database db;
+        std::string time_str = db.getTimefromPath(folder_name_string, cross_platform_rep);
+
         // I assume that i have the std::string time_str;
-        // unsigned long mod_time = std::stoul(time_str, nullptr, 0);
-        // map_tree_time_.insert({cross_platform_rep, mod_time});
-        //
-        //
-        //
-        map_tree_time_.insert({cross_platform_rep, 1});
-        // // // // // // // // //
+        unsigned long mod_time = std::stoul(time_str, nullptr, 0);
+        map_tree_time_.insert({cross_platform_rep, mod_time});
+
     }
 }
 

@@ -24,6 +24,7 @@ Client::Client(RawEndpoint re, std::filesystem::path folder_watched) {
 /// We bind to the callback this, to that when called from the watcher, "this" is defined.
 /// https://stackoverflow.com/questions/14189440/c-callback-using-class-member/14189561
 void Client::StartWatching(){
+    Syncro();
     watcher_.SetUpdateCallback(std::bind(&Client::Syncro, this));
     watcher_.Start(folder_watched_);
 }
