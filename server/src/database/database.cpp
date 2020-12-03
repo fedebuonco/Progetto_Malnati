@@ -119,8 +119,8 @@ std::string Database::getTimefromPath(std::string foldername, std::string path) 
             std::string   time     = query.getColumn(0);
             return time;
         }
-        //Se non trova nulla ritorna 0
-        return std::string(0);
+        //Se non trova nulla ritorna 1
+        return std::to_string(1);
 
     }
     catch (std::exception& e)
@@ -129,7 +129,7 @@ std::string Database::getTimefromPath(std::string foldername, std::string path) 
         //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
     }
 
+    //Se non trova nulla ritorna 1
+    return std::to_string(1);
 
-
-    return std::string();
 }

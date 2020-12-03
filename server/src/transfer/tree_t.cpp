@@ -51,8 +51,8 @@ TreeT::TreeT(const std::filesystem::path& path){
 
         Database db;
         std::string time_str = db.getTimefromPath(folder_name_string, cross_platform_rep);
-
         // I assume that i have the std::string time_str;
+
         unsigned long mod_time = std::stoul(time_str, nullptr, 0);
         map_tree_time_.insert({cross_platform_rep, mod_time});
 

@@ -20,5 +20,6 @@ WORKDIR /app
 RUN mkdir /cmake-build-debug && cd cmake-build-debug && mkdir Prova
 RUN cp ./server ./cmake-build-debug
 WORKDIR /app/cmake-build-debug
+EXPOSE 3333/tcp
 CMD ["./server"]
 #CMD ["tree","./"]
