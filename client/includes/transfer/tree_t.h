@@ -10,9 +10,10 @@
 #include <map>
 #include <filesystem>
 
+/// The TreeT encapsulate a map containing for each element path a pair "element_path - last_modified_time"
 class TreeT {
 public:
-    std::string tree_;
+    /// Map containing for each element its last modified time.
     std::map<std::string,unsigned long > map_tree_time_;
     TreeT(const std::filesystem::path& path);
     TreeT(const std::string& tree, const std::string& time);

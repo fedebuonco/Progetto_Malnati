@@ -1,0 +1,65 @@
+\hypertarget{classWatcher}{}\doxysection{Watcher Class Reference}
+\label{classWatcher}\index{Watcher@{Watcher}}
+
+
+The watcher is a wrapper for panoptes watcher library, will take a folder and will check for changes in the file structure.  
+
+
+
+
+{\ttfamily \#include $<$watcher.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classWatcher_a72ba0076d0a2e31127790fec0917c36f}{Set\+Update\+Callback}} (const std\+::function$<$ void()$>$ \&update\+Callback)
+\item 
+void \mbox{\hyperlink{classWatcher_acf7e9381e7dbd850c9ebb8f121a6fe16}{listener\+Function}} (std\+::vector$<$ pfw\+::\+Event\+Ptr $>$ events)
+\item 
+void \mbox{\hyperlink{classWatcher_a609f12f64094bed602ae048114183847}{Start}} (std\+::filesystem\+::path path)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The watcher is a wrapper for panoptes watcher library, will take a folder and will check for changes in the file structure. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classWatcher_acf7e9381e7dbd850c9ebb8f121a6fe16}\label{classWatcher_acf7e9381e7dbd850c9ebb8f121a6fe16}} 
+\index{Watcher@{Watcher}!listenerFunction@{listenerFunction}}
+\index{listenerFunction@{listenerFunction}!Watcher@{Watcher}}
+\doxysubsubsection{\texorpdfstring{listenerFunction()}{listenerFunction()}}
+{\footnotesize\ttfamily void Watcher\+::listener\+Function (\begin{DoxyParamCaption}\item[{std\+::vector$<$ pfw\+::\+Event\+Ptr $>$}]{events }\end{DoxyParamCaption})}
+
+This is the function that will be called when a change is recorded. Prints the changes and then call the provided callback ( provided from \mbox{\hyperlink{classWatcher_a72ba0076d0a2e31127790fec0917c36f}{Watcher\+::\+Set\+Update\+Callback()}} ) 
+\begin{DoxyParams}{Parameters}
+{\em events} & The series of events (file deleted, added, etc.) that triggered the function. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classWatcher_a72ba0076d0a2e31127790fec0917c36f}\label{classWatcher_a72ba0076d0a2e31127790fec0917c36f}} 
+\index{Watcher@{Watcher}!SetUpdateCallback@{SetUpdateCallback}}
+\index{SetUpdateCallback@{SetUpdateCallback}!Watcher@{Watcher}}
+\doxysubsubsection{\texorpdfstring{SetUpdateCallback()}{SetUpdateCallback()}}
+{\footnotesize\ttfamily void Watcher\+::\+Set\+Update\+Callback (\begin{DoxyParamCaption}\item[{const std\+::function$<$ void()$>$ \&}]{update\+Callback }\end{DoxyParamCaption})}
+
+This method will assign the callback called in the \mbox{\hyperlink{classWatcher_acf7e9381e7dbd850c9ebb8f121a6fe16}{Watcher\+::listener\+Function()}} to the provided function. 
+\begin{DoxyParams}{Parameters}
+{\em update\+Callback} & The function that will be called as the callback. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classWatcher_a609f12f64094bed602ae048114183847}\label{classWatcher_a609f12f64094bed602ae048114183847}} 
+\index{Watcher@{Watcher}!Start@{Start}}
+\index{Start@{Start}!Watcher@{Watcher}}
+\doxysubsubsection{\texorpdfstring{Start()}{Start()}}
+{\footnotesize\ttfamily void Watcher\+::\+Start (\begin{DoxyParamCaption}\item[{std\+::filesystem\+::path}]{path }\end{DoxyParamCaption})}
+
+Start the watcher. 
+\begin{DoxyParams}{Parameters}
+{\em path} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/watcher/watcher.\+h\item 
+src/watcher/watcher.\+cpp\end{DoxyCompactItemize}

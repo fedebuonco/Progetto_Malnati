@@ -1,0 +1,102 @@
+\hypertarget{classConfig}{}\doxysection{Config Class Reference}
+\label{classConfig}\index{Config@{Config}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classConfig_a5e86c8ae138119f3cbc73776027bff8b}\label{classConfig_a5e86c8ae138119f3cbc73776027bff8b}} 
+{\bfseries Config} (const \mbox{\hyperlink{classConfig}{Config}} \&)=delete
+\item 
+\mbox{\Hypertarget{classConfig_a433310db217f53c7079b338eb79ff466}\label{classConfig_a433310db217f53c7079b338eb79ff466}} 
+\mbox{\hyperlink{classConfig}{Config}} \& {\bfseries operator=} (const \mbox{\hyperlink{classConfig}{Config}} \&)=delete
+\item 
+void \mbox{\hyperlink{classConfig_a14478ea081a6927566463944fceb9274}{Write\+Property}} (const std\+::string \&key, const std\+::string \&value)
+\item 
+std\+::string \mbox{\hyperlink{classConfig_ab4718b5863cfe506b70692764338ea38}{Read\+Property}} (const std\+::string \&key)
+\item 
+int \mbox{\hyperlink{classConfig_aba8880baff15be62efdcb6c796d2fbc3}{Set\+Config}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\item 
+void \mbox{\hyperlink{classConfig_a3f4f916ad790860ca689dc2c87f639af}{Print\+Configuration}} ()
+\item 
+\mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} \mbox{\hyperlink{classConfig_adcf9758b7008e59e4387d4c49e2573ad}{Read\+Raw\+Endpoint}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{classConfig}{Config}} $\ast$ \mbox{\hyperlink{classConfig_a5434be705a93f9a083dd3937a11ff085}{get\+\_\+\+Instance}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classConfig_a5434be705a93f9a083dd3937a11ff085}\label{classConfig_a5434be705a93f9a083dd3937a11ff085}} 
+\index{Config@{Config}!get\_Instance@{get\_Instance}}
+\index{get\_Instance@{get\_Instance}!Config@{Config}}
+\doxysubsubsection{\texorpdfstring{get\_Instance()}{get\_Instance()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classConfig}{Config}} $\ast$ Config\+::get\+\_\+\+Instance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Assures that only one instance is present. \begin{DoxyReturn}{Returns}
+the instance of config class 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classConfig_a3f4f916ad790860ca689dc2c87f639af}\label{classConfig_a3f4f916ad790860ca689dc2c87f639af}} 
+\index{Config@{Config}!PrintConfiguration@{PrintConfiguration}}
+\index{PrintConfiguration@{PrintConfiguration}!Config@{Config}}
+\doxysubsubsection{\texorpdfstring{PrintConfiguration()}{PrintConfiguration()}}
+{\footnotesize\ttfamily void Config\+::\+Print\+Configuration (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Print program configuration inside the console \mbox{\Hypertarget{classConfig_ab4718b5863cfe506b70692764338ea38}\label{classConfig_ab4718b5863cfe506b70692764338ea38}} 
+\index{Config@{Config}!ReadProperty@{ReadProperty}}
+\index{ReadProperty@{ReadProperty}!Config@{Config}}
+\doxysubsubsection{\texorpdfstring{ReadProperty()}{ReadProperty()}}
+{\footnotesize\ttfamily std\+::string Config\+::\+Read\+Property (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key }\end{DoxyParamCaption})}
+
+Read inside config JSON file and return the value associated with the given key 
+\begin{DoxyParams}{Parameters}
+{\em key} & JSON key \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value associated with the given key 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classConfig_adcf9758b7008e59e4387d4c49e2573ad}\label{classConfig_adcf9758b7008e59e4387d4c49e2573ad}} 
+\index{Config@{Config}!ReadRawEndpoint@{ReadRawEndpoint}}
+\index{ReadRawEndpoint@{ReadRawEndpoint}!Config@{Config}}
+\doxysubsubsection{\texorpdfstring{ReadRawEndpoint()}{ReadRawEndpoint()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} Config\+::\+Read\+Raw\+Endpoint (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Reads the raw endpoint from the json file. \begin{DoxyReturn}{Returns}
+A \mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} used later to set up all the sockets. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classConfig_aba8880baff15be62efdcb6c796d2fbc3}\label{classConfig_aba8880baff15be62efdcb6c796d2fbc3}} 
+\index{Config@{Config}!SetConfig@{SetConfig}}
+\index{SetConfig@{SetConfig}!Config@{Config}}
+\doxysubsubsection{\texorpdfstring{SetConfig()}{SetConfig()}}
+{\footnotesize\ttfamily int Config\+::\+Set\+Config (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+This function takes the command line parameters and set config file appropriately 
+\begin{DoxyParams}{Parameters}
+{\em argc} & number of arguments \\
+\hline
+{\em argv} & list of arguments \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 (no problem) or 1 (problems) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classConfig_a14478ea081a6927566463944fceb9274}\label{classConfig_a14478ea081a6927566463944fceb9274}} 
+\index{Config@{Config}!WriteProperty@{WriteProperty}}
+\index{WriteProperty@{WriteProperty}!Config@{Config}}
+\doxysubsubsection{\texorpdfstring{WriteProperty()}{WriteProperty()}}
+{\footnotesize\ttfamily void Config\+::\+Write\+Property (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key,  }\item[{const std\+::string \&}]{value }\end{DoxyParamCaption})}
+
+This function write Key, Value inside config JSON file 
+\begin{DoxyParams}{Parameters}
+{\em key} & JSON key \\
+\hline
+{\em value} & JSON value \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/config/config.\+h\item 
+src/config/config.\+cpp\end{DoxyCompactItemize}

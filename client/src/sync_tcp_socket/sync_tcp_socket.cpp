@@ -14,7 +14,7 @@
 
 /// Initialize socket, endpoint and parse the raw ip. After that opens the socket using the specified protocol, TCP.
 /// \param raw_ip_add Parsed raw ip
-/// \param port port connecting to
+/// \param port_n port connecting to
 SyncTCPSocket::SyncTCPSocket(const std::string& raw_ip_add, unsigned short port_n) :
                                            sock_(ios_) ,
                                            ep_(boost::asio::ip::address::from_string(raw_ip_add), port_n) {

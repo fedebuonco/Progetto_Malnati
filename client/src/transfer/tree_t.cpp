@@ -25,6 +25,8 @@ TreeT::TreeT(const std::string& tree, const std::string& time) {
     }
 }
 
+/// Build and populate the TreeT starting from a path.
+/// \param path Path of the directory that will be stored in the TreeT.
 TreeT::TreeT(const std::filesystem::path& path){
 
     for(auto itEntry = std::filesystem::recursive_directory_iterator(path);

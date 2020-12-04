@@ -12,6 +12,7 @@
 #include <pfw/NativeInterface.h>
 #include <bitset>
 
+/// The watcher is a wrapper for panoptes watcher library, will take a folder and will check for changes in the file structure.
 class Watcher{
 
     public:

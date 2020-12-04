@@ -1,0 +1,98 @@
+\hypertarget{classControlMessage}{}\doxysection{Control\+Message Class Reference}
+\label{classControlMessage}\index{ControlMessage@{ControlMessage}}
+
+
+{\ttfamily \#include $<$control\+\_\+message.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classControlMessage_a843d7a136a10b4d69f7dffe3812ef757}{Control\+Message}} (int tp)
+\item 
+\mbox{\hyperlink{classControlMessage_ab029e6985265bf0e7f9dc43ddc609ea3}{Control\+Message}} (const std\+::string \&json\+\_\+code)
+\item 
+std\+::string \mbox{\hyperlink{classControlMessage_ae306167fefa11ba8fd3d7bdf4b5f6d56}{To\+JSON}} ()
+\item 
+void \mbox{\hyperlink{classControlMessage_a91b4d203be4972dfb4a4773ac59f9456}{Add\+Element}} (const std\+::string \&element, const std\+::string \&value)
+\item 
+std\+::string \mbox{\hyperlink{classControlMessage_a608ec034f181fd17569eaf2c4dafa8e1}{Get\+Element}} (const std\+::string \&element)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classControlMessage_a1e04929d89399d9b3e9a3b4a3c5e1a78}\label{classControlMessage_a1e04929d89399d9b3e9a3b4a3c5e1a78}} 
+int \mbox{\hyperlink{classControlMessage_a1e04929d89399d9b3e9a3b4a3c5e1a78}{type\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Type of the message, in the server we switch actions depending on this type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Encapsulates a control message. A control message is either an auth or a treet message. It has various attributes and a \char`\"{}to\+\_\+json\char`\"{} method that will generate a result that will be sent to the server 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classControlMessage_a843d7a136a10b4d69f7dffe3812ef757}\label{classControlMessage_a843d7a136a10b4d69f7dffe3812ef757}} 
+\index{ControlMessage@{ControlMessage}!ControlMessage@{ControlMessage}}
+\index{ControlMessage@{ControlMessage}!ControlMessage@{ControlMessage}}
+\doxysubsubsection{\texorpdfstring{ControlMessage()}{ControlMessage()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Control\+Message\+::\+Control\+Message (\begin{DoxyParamCaption}\item[{int}]{tp }\end{DoxyParamCaption})}
+
+Constructor for the control message. Type is mandatory, then we can add other info by using \mbox{\hyperlink{classControlMessage_a91b4d203be4972dfb4a4773ac59f9456}{Add\+Element()}} 
+\begin{DoxyParams}{Parameters}
+{\em tp} & Type of the message (1 for auth, 2 for tree, etc) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classControlMessage_ab029e6985265bf0e7f9dc43ddc609ea3}\label{classControlMessage_ab029e6985265bf0e7f9dc43ddc609ea3}} 
+\index{ControlMessage@{ControlMessage}!ControlMessage@{ControlMessage}}
+\index{ControlMessage@{ControlMessage}!ControlMessage@{ControlMessage}}
+\doxysubsubsection{\texorpdfstring{ControlMessage()}{ControlMessage()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Control\+Message\+::\+Control\+Message (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{json\+\_\+code }\end{DoxyParamCaption})}
+
+Constructor for the control message. Build from the json string passed and also stores the type for immediate access 
+\begin{DoxyParams}{Parameters}
+{\em json\+\_\+code} & Contains the parsed json \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classControlMessage_a91b4d203be4972dfb4a4773ac59f9456}\label{classControlMessage_a91b4d203be4972dfb4a4773ac59f9456}} 
+\index{ControlMessage@{ControlMessage}!AddElement@{AddElement}}
+\index{AddElement@{AddElement}!ControlMessage@{ControlMessage}}
+\doxysubsubsection{\texorpdfstring{AddElement()}{AddElement()}}
+{\footnotesize\ttfamily void Control\+Message\+::\+Add\+Element (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{element,  }\item[{const std\+::string \&}]{value }\end{DoxyParamCaption})}
+
+Adds the parameter and the value to the ptree of the \mbox{\hyperlink{classControlMessage}{Control\+Message}} 
+\begin{DoxyParams}{Parameters}
+{\em element} & Name of the propriety \\
+\hline
+{\em value} & Value of the propriety \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classControlMessage_a608ec034f181fd17569eaf2c4dafa8e1}\label{classControlMessage_a608ec034f181fd17569eaf2c4dafa8e1}} 
+\index{ControlMessage@{ControlMessage}!GetElement@{GetElement}}
+\index{GetElement@{GetElement}!ControlMessage@{ControlMessage}}
+\doxysubsubsection{\texorpdfstring{GetElement()}{GetElement()}}
+{\footnotesize\ttfamily std\+::string Control\+Message\+::\+Get\+Element (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{element }\end{DoxyParamCaption})}
+
+Get an element from the message 
+\begin{DoxyParams}{Parameters}
+{\em element} & Name of the propriety \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value of the propriety 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classControlMessage_ae306167fefa11ba8fd3d7bdf4b5f6d56}\label{classControlMessage_ae306167fefa11ba8fd3d7bdf4b5f6d56}} 
+\index{ControlMessage@{ControlMessage}!ToJSON@{ToJSON}}
+\index{ToJSON@{ToJSON}!ControlMessage@{ControlMessage}}
+\doxysubsubsection{\texorpdfstring{ToJSON()}{ToJSON()}}
+{\footnotesize\ttfamily std\+::string Control\+Message\+::\+To\+JSON (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+This will convert the \mbox{\hyperlink{classControlMessage}{Control\+Message}} into a suitable JSON string (One that follows our protocol). \begin{DoxyReturn}{Returns}
+Json string of our control message. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/transfer/control\+\_\+message.\+h\item 
+src/transfer/control\+\_\+message.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,60 @@
+\hypertarget{classTreeT}{}\doxysection{TreeT Class Reference}
+\label{classTreeT}\index{TreeT@{TreeT}}
+
+
+The \mbox{\hyperlink{classTreeT}{TreeT}} encapsulate a map containing for each element path a pair \char`\"{}element\+\_\+path -\/ last\+\_\+modified\+\_\+time\char`\"{}.  
+
+
+
+
+{\ttfamily \#include $<$tree\+\_\+t.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classTreeT_ae19b016034d271f3f15c895a1c71c143}{TreeT}} (const std\+::filesystem\+::path \&path)
+\item 
+\mbox{\hyperlink{classTreeT_a9e2d5f32b138ada497e0504c62fa586a}{TreeT}} (const std\+::string \&tree, const std\+::string \&time)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classTreeT_ac354fa2794d2d1e15ce3d103dc8c0090}\label{classTreeT_ac354fa2794d2d1e15ce3d103dc8c0090}} 
+std\+::map$<$ std\+::string, unsigned long $>$ \mbox{\hyperlink{classTreeT_ac354fa2794d2d1e15ce3d103dc8c0090}{map\+\_\+tree\+\_\+time\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Map containing for each element its last modified time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{classTreeT}{TreeT}} encapsulate a map containing for each element path a pair \char`\"{}element\+\_\+path -\/ last\+\_\+modified\+\_\+time\char`\"{}. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classTreeT_ae19b016034d271f3f15c895a1c71c143}\label{classTreeT_ae19b016034d271f3f15c895a1c71c143}} 
+\index{TreeT@{TreeT}!TreeT@{TreeT}}
+\index{TreeT@{TreeT}!TreeT@{TreeT}}
+\doxysubsubsection{\texorpdfstring{TreeT()}{TreeT()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Tree\+T\+::\+TreeT (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{path }\end{DoxyParamCaption})}
+
+Build and populate the \mbox{\hyperlink{classTreeT}{TreeT}} starting from a path. 
+\begin{DoxyParams}{Parameters}
+{\em path} & Path of the directory that will be stored in the \mbox{\hyperlink{classTreeT}{TreeT}}. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classTreeT_a9e2d5f32b138ada497e0504c62fa586a}\label{classTreeT_a9e2d5f32b138ada497e0504c62fa586a}} 
+\index{TreeT@{TreeT}!TreeT@{TreeT}}
+\index{TreeT@{TreeT}!TreeT@{TreeT}}
+\doxysubsubsection{\texorpdfstring{TreeT()}{TreeT()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Tree\+T\+::\+TreeT (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{tree,  }\item[{const std\+::string \&}]{time }\end{DoxyParamCaption})}
+
+Starting from the ordered string sent by the server, it computes A mapping between the files present in te server and their Hashes 
+\begin{DoxyParams}{Parameters}
+{\em tree} & Directory tree if the server \\
+\hline
+{\em time} & timw of the files present in the server following the same order of the tree \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/transfer/tree\+\_\+t.\+h\item 
+src/transfer/tree\+\_\+t.\+cpp\end{DoxyCompactItemize}

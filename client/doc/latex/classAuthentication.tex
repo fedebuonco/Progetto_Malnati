@@ -1,0 +1,44 @@
+\hypertarget{classAuthentication}{}\doxysection{Authentication Class Reference}
+\label{classAuthentication}\index{Authentication@{Authentication}}
+
+
+{\ttfamily \#include $<$authentication.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classAuthentication_af0274455e3663b1749b19e99ccffdc4f}\label{classAuthentication_af0274455e3663b1749b19e99ccffdc4f}} 
+{\bfseries Authentication} (const \mbox{\hyperlink{classAuthentication}{Authentication}} \&)=delete
+\item 
+\mbox{\Hypertarget{classAuthentication_a472196234f5cde67ab8abce9efde2de6}\label{classAuthentication_a472196234f5cde67ab8abce9efde2de6}} 
+\mbox{\hyperlink{classAuthentication}{Authentication}} \& {\bfseries operator=} (const \mbox{\hyperlink{classAuthentication}{Authentication}} \&)=delete
+\item 
+\mbox{\hyperlink{structCredential}{Credential}} \mbox{\hyperlink{classAuthentication_a0dda96b95aca0c4034bd5f5e1a1eb437}{Read\+Credential}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classAuthentication_a3c5a0c8df7ea1638e1721477dbf914ec}\label{classAuthentication_a3c5a0c8df7ea1638e1721477dbf914ec}} 
+static \mbox{\hyperlink{classAuthentication}{Authentication}} $\ast$ {\bfseries get\+\_\+\+Instance} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class that handle the user authentication 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classAuthentication_a0dda96b95aca0c4034bd5f5e1a1eb437}\label{classAuthentication_a0dda96b95aca0c4034bd5f5e1a1eb437}} 
+\index{Authentication@{Authentication}!ReadCredential@{ReadCredential}}
+\index{ReadCredential@{ReadCredential}!Authentication@{Authentication}}
+\doxysubsubsection{\texorpdfstring{ReadCredential()}{ReadCredential()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structCredential}{Credential}} Authentication\+::\+Read\+Credential (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+This function read the username and hash\+\_\+password stored inside config.\+json \begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structCredential}{Credential}} (a struct with username and password) 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/config/authentication.\+h\item 
+src/config/authentication.\+cpp\end{DoxyCompactItemize}

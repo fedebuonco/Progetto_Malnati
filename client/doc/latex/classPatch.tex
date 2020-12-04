@@ -1,0 +1,96 @@
+\hypertarget{classPatch}{}\doxysection{Patch Class Reference}
+\label{classPatch}\index{Patch@{Patch}}
+
+
+{\ttfamily \#include $<$patch.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classPatch_afd18d33f468590fe3cec1483a6f8e4c2}{Patch}} (\mbox{\hyperlink{classTreeT}{TreeT}} client\+\_\+treet, \mbox{\hyperlink{classTreeT}{TreeT}} server\+\_\+treet)
+\item 
+std\+::string \mbox{\hyperlink{classPatch_a662ca51ef4c115013ed5a96702b30e5b}{Pretty\+Print}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{classPatch_a93480d21f602be19569131e328d8d7bc}{added\+\_\+}}
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{classPatch_a5693ee0c2f01343b6a0ef1f9e2817bf2}{removed\+\_\+}}
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{classPatch_acfb7565def5d1cea231e8478ca3d243d}{common\+\_\+}}
+\item 
+std\+::vector$<$ std\+::pair$<$ std\+::string, unsigned long $>$ $>$ \mbox{\hyperlink{classPatch_a30904b631e55ef4d26e1321b44efc790}{to\+\_\+be\+\_\+sent\+\_\+vector}}
+\item 
+std\+::vector$<$ std\+::pair$<$ std\+::string, unsigned long $>$ $>$ \mbox{\hyperlink{classPatch_aee6cc0596676f575f6528c8723873cd6}{to\+\_\+be\+\_\+elim\+\_\+vector}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Wraps in a compact way all the differences between the client and server. This difference is computed starting from the \mbox{\hyperlink{classTreeT}{TreeT}} of the client and of the server. Will be \char`\"{}applied\char`\"{} to the server. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classPatch_afd18d33f468590fe3cec1483a6f8e4c2}\label{classPatch_afd18d33f468590fe3cec1483a6f8e4c2}} 
+\index{Patch@{Patch}!Patch@{Patch}}
+\index{Patch@{Patch}!Patch@{Patch}}
+\doxysubsubsection{\texorpdfstring{Patch()}{Patch()}}
+{\footnotesize\ttfamily Patch\+::\+Patch (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classTreeT}{TreeT}}}]{client\+\_\+treet,  }\item[{\mbox{\hyperlink{classTreeT}{TreeT}}}]{server\+\_\+treet }\end{DoxyParamCaption})}
+
+We populate the to\+\_\+be\+\_\+sent\+\_\+vector an the to be elimnated 
+\begin{DoxyParams}{Parameters}
+{\em client\+\_\+treet} & \\
+\hline
+{\em server\+\_\+treet} & \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPatch_a662ca51ef4c115013ed5a96702b30e5b}\label{classPatch_a662ca51ef4c115013ed5a96702b30e5b}} 
+\index{Patch@{Patch}!PrettyPrint@{PrettyPrint}}
+\index{PrettyPrint@{PrettyPrint}!Patch@{Patch}}
+\doxysubsubsection{\texorpdfstring{PrettyPrint()}{PrettyPrint()}}
+{\footnotesize\ttfamily std\+::string Patch\+::\+Pretty\+Print (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Pretty Prints the changes contained in the patch \begin{DoxyReturn}{Returns}
+A string summing up the current client-\/server file situation. 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classPatch_a93480d21f602be19569131e328d8d7bc}\label{classPatch_a93480d21f602be19569131e328d8d7bc}} 
+\index{Patch@{Patch}!added\_@{added\_}}
+\index{added\_@{added\_}!Patch@{Patch}}
+\doxysubsubsection{\texorpdfstring{added\_}{added\_}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::string$>$ Patch\+::added\+\_\+}
+
+This vector contains the path of all the elements(files or dirs) in the client with a position and name not present in the server. \mbox{\Hypertarget{classPatch_acfb7565def5d1cea231e8478ca3d243d}\label{classPatch_acfb7565def5d1cea231e8478ca3d243d}} 
+\index{Patch@{Patch}!common\_@{common\_}}
+\index{common\_@{common\_}!Patch@{Patch}}
+\doxysubsubsection{\texorpdfstring{common\_}{common\_}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::string$>$ Patch\+::common\+\_\+}
+
+This vector contains the path of all the elements(files or dirs) in the server with both position and name equal in the client. Position and name are equal but last modified time could be different. \mbox{\Hypertarget{classPatch_a5693ee0c2f01343b6a0ef1f9e2817bf2}\label{classPatch_a5693ee0c2f01343b6a0ef1f9e2817bf2}} 
+\index{Patch@{Patch}!removed\_@{removed\_}}
+\index{removed\_@{removed\_}!Patch@{Patch}}
+\doxysubsubsection{\texorpdfstring{removed\_}{removed\_}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::string$>$ Patch\+::removed\+\_\+}
+
+This vector contains the path of all the elements(files or dirs) in the server with a position and name not present in the client. \mbox{\Hypertarget{classPatch_aee6cc0596676f575f6528c8723873cd6}\label{classPatch_aee6cc0596676f575f6528c8723873cd6}} 
+\index{Patch@{Patch}!to\_be\_elim\_vector@{to\_be\_elim\_vector}}
+\index{to\_be\_elim\_vector@{to\_be\_elim\_vector}!Patch@{Patch}}
+\doxysubsubsection{\texorpdfstring{to\_be\_elim\_vector}{to\_be\_elim\_vector}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::pair$<$std\+::string, unsigned long$>$ $>$ Patch\+::to\+\_\+be\+\_\+elim\+\_\+vector}
+
+This vector holds all the pairs element\+\_\+path\&last-\/modified-\/time of every element that will be deleted (or replaced) in the server ( could be a deleted file or a file older that one in the client and that we are currently sending). \mbox{\Hypertarget{classPatch_a30904b631e55ef4d26e1321b44efc790}\label{classPatch_a30904b631e55ef4d26e1321b44efc790}} 
+\index{Patch@{Patch}!to\_be\_sent\_vector@{to\_be\_sent\_vector}}
+\index{to\_be\_sent\_vector@{to\_be\_sent\_vector}!Patch@{Patch}}
+\doxysubsubsection{\texorpdfstring{to\_be\_sent\_vector}{to\_be\_sent\_vector}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::pair$<$std\+::string, unsigned long$>$ $>$ Patch\+::to\+\_\+be\+\_\+sent\+\_\+vector}
+
+This vector holds all the pairs element\+\_\+path\&last-\/modified-\/time of every element that will be sent to the server ( could be a new file or a file newer that one in the server). 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/transfer/patch.\+h\item 
+src/transfer/patch.\+cpp\end{DoxyCompactItemize}

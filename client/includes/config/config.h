@@ -13,7 +13,9 @@ extern bool DEBUG;
 
 /// Encapsulates a raw ip and a port.
 struct RawEndpoint{
+    /// Raw ip as a string, will be parsed.
     std::string raw_ip_address;
+    /// Raw port number.
     unsigned long port_num;
 };
 

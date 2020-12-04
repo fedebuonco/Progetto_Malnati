@@ -1,0 +1,36 @@
+\hypertarget{classClient}{}\doxysection{Client Class Reference}
+\label{classClient}\index{Client@{Client}}
+
+
+{\ttfamily \#include $<$client.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classClient_a7ff17edb7bc64aa18ae701bc1ded3079}{Client}} (\mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} re, std\+::filesystem\+::path folder\+\_\+watched)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The main class of the client. It represent an object that will connect to the server specified in the constructor and will ask to a watcher to whatch a specified folder. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classClient_a7ff17edb7bc64aa18ae701bc1ded3079}\label{classClient_a7ff17edb7bc64aa18ae701bc1ded3079}} 
+\index{Client@{Client}!Client@{Client}}
+\index{Client@{Client}!Client@{Client}}
+\doxysubsubsection{\texorpdfstring{Client()}{Client()}}
+{\footnotesize\ttfamily Client\+::\+Client (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}}}]{re,  }\item[{std\+::filesystem\+::path}]{folder\+\_\+watched }\end{DoxyParamCaption})}
+
+Construct a \mbox{\hyperlink{classClient}{Client}} and puts it in a state ready to track any changes in the folder. 
+\begin{DoxyParams}{Parameters}
+{\em re} & Endpoint to connect to. \\
+\hline
+{\em folder\+\_\+watched} & folder path that we want to keep monitored. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/client/client.\+h\item 
+src/client/client.\+cpp\end{DoxyCompactItemize}

@@ -6,7 +6,8 @@
 #define CLIENT_SYNC_TCP_SOCKET_H
 #include <boost/asio.hpp>
 
-/// SyncTCPSocket - establish a connection and auth
+/// Wrapper of a syncronous tcp socket.
+/// Will be used for MessageControls and Auth
 class SyncTCPSocket {
 private:
     // ordine di queste 3 istruzioni deve essere cosi.
@@ -19,6 +20,7 @@ public:
     bool Authenticate();
     void ConnectServer(int n_tries);
 
+    /// Boost socket
     boost::asio::ip::tcp::socket sock_;
 };
 
