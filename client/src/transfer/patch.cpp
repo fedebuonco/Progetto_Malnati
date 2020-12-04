@@ -42,6 +42,7 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
 }
 
 /// Pretty Prints the changes contained in the patch
+/// \return A string summing up the current client-server file situation.
 std::string Patch::PrettyPrint(){
 
     std::string pretty;

@@ -9,9 +9,10 @@ ControlMessage::ControlMessage(int tp) {
     this->json_mess_->put("Type" , tp);
 }
 
-/// Constructor for the control message. Build from the json string passed and also stores the type for
-/// faster access
-/// \param  Contains the parsed json
+/// Constructor for the control message.
+/// Build from the json string passed and also stores the type for
+/// immediate access
+/// \param json_code Contains the parsed json
 ControlMessage::ControlMessage(const std::string& json_code){
 
     json_mess_.reset(new boost::property_tree::ptree);
@@ -39,7 +40,8 @@ std::string ControlMessage::GetElement(const std::string& element) {
     return result;
 }
 
-/// This will convert the object into a suitable JSON string (One that follows our protocol).
+/// This will convert the ControlMessage into a suitable JSON string (One that follows our protocol).
+/// \return Json string of our control message.
 std::string ControlMessage::ToJSON() {
     //Create the variable to host the result
     std::string is;
