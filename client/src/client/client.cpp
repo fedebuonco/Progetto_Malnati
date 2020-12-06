@@ -45,9 +45,9 @@ void Client::Syncro(){
 
     }
 
-/// Authenticates the client by creating a syncTCPSocket and calling it's auth method. It is used to check correctness
-/// of the current configs.
-/// \return bool true if valid false otherwise
+/// Will send username and password. After that it will shutdown the send part of the socket thus providing the server a way to
+/// tell that the connection is over. After the authenticate the socket is basically useless and needs to be shutdown completly.
+/// \return True if Auth went ok and user has successfully logged in, False if not.
 bool Client::Auth() {
     //TODO qualche eccezione da fare il catch?
     //SyncTCPSocket for auth using raw endpoint provided at construction.
@@ -55,7 +55,41 @@ bool Client::Auth() {
     //socket will retry 5 times to connect
     tcpSocket.ConnectServer(5);
     //Try to authenticate and return true / false
-    return tcpSocket.Authenticate();
+
+    Credential credential = Authentication::get_Instance()->ReadCredential();
+
+    //Creation of the Auth ControlMessage type = 1
+    ControlMessage auth_message{1};
+
+    //Adding User and Password
+    auth_message.AddElement("Username", credential.username_);
+    auth_message.AddElement("HashPassword", credential.hash_password_);
+
+    //And sending it formatted in JSON language
+    SyncWriteCM(tcpSocket, auth_message);
+
+    //Now we have sent the ControlMessage, so from now on we will wait for the response.
+
+    //Now we use a message control for the response
+    ControlMessage response_message = SyncReadCM(tcpSocket);
+
+    if(response_message.type_ == 51){// it means we are actually dealing with a auth response (what we were expecting)
+        //TODO return true false accordingly to the body of the control message received for now we just check it is an auth response
+        // later on we will check the result
+        // auth = true /false
+        std::string auth_response = response_message.GetElement("auth");
+
+        if(auth_response=="true") {
+
+            if(DEBUG) std::cout << "\n\nUser " << Config::get_Instance()->ReadProperty("username") << " successfully authenticated."
+                                << std::endl;
+            return true;
+        }
+
+    }
+
+    //If we don't go to return true, there is a problem so return false
+    return false;
 }
 
 /// Request current tree and times of the cloud dir stored in the server. Handles the result by starting the diff
@@ -72,13 +106,33 @@ TreeT Client::RequestTree() {
     message_obj.AddElement("Username", credential.username_);
     message_obj.AddElement("HashPassword", credential.hash_password_);
     //And sending it formatted in JSON language
-    boost::asio::write(tcpSocket.sock_, boost::asio::buffer(message_obj.ToJSON()));
-    // we sent the tree req message, we will shutdown in order to tell the server that we sent all
-    tcpSocket.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
-    //Here is the server tree
+    //And sending it formatted in JSON language
+    SyncWriteCM(tcpSocket, message_obj);
+
+    //Now we have sent the ControlMessage, so from now on we will wait for the response.
+
+    //Now we use a message control for the response
+    ControlMessage response_message = SyncReadCM(tcpSocket);
+    if(DEBUG) std::cout << "Tree received successfully" << std::endl;
+    //We get the tree
+    std::string tree = response_message.GetElement("Tree");
+    //TODO Uncomment this as soon as the server will send the times
+    std::string time = response_message.GetElement("Time");
+    TreeT result{tree,time};
+    return result;
+}
+
+bool Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
+    //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
+    boost::asio::write(stcp.sock_, boost::asio::buffer(cm.ToJSON()));
+    stcp.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+}
+
+ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
+    // We read until the eof, then we return a ControlMessage using the buffer we read.
     boost::asio::streambuf response_buf;
     boost::system::error_code ec;
-    boost::asio::read(tcpSocket.sock_, response_buf, ec);
+    boost::asio::read(stcp.sock_, response_buf, ec);
     // This checks if the client has finished writing
     if (ec != boost::asio::error::eof){
         //TODO Sometimes we get here. When the server shuts down
@@ -88,14 +142,8 @@ TreeT Client::RequestTree() {
     //Read the response_buf using an iterator and store it in a string In order to store it in a ControlMessage
     // TODO might be an easier method to do this
     std::string response_json((std::istreambuf_iterator<char>(&response_buf)), std::istreambuf_iterator<char>() );
-    ControlMessage response_message{response_json};
-    if(DEBUG) std::cout << "Tree received successfully" << std::endl;
-    //We get the tree
-    std::string tree = response_message.GetElement("Tree");
-    //TODO Uncomment this as soon as the server will send the times
-    std::string time = response_message.GetElement("Time");
-    TreeT result{tree,time};
-    return result;
+    ControlMessage cm{response_json};
+    return cm;
 }
 
 /// Here we firstly send a ControlMessage that will tell what to delete in the server. After that we will start sending
