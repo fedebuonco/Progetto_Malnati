@@ -10,6 +10,7 @@
 #include <atomic>
 #include <memory>
 #include <iostream>
+#include <control_message.h>
 
 using namespace boost;
 
@@ -30,6 +31,7 @@ private:
     // is by suicide (delete this) after the client is handled
     ~Service(){};
     void HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock);
+    bool CheckAuthenticity(const ControlMessage& cm);
 };
 
 
