@@ -22,33 +22,13 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
     // we then check that the message is authenitic
     // and then we switch case in order to correctly handle it.
 
-    boost::asio::streambuf request_buf;
-    boost::system::error_code ec;
-    boost::asio::read(*sock, request_buf, ec);
-    // This checks if the client has finished writing
-    if (ec != boost::asio::error::eof){
-        //qua se non ho ricevuto la chiusura del client
-        std::cout<<"DEBUG: NON ho ricevuto il segnale di chiusura del client";
-        throw boost::system::system_error(ec);
-    }
-
-    //Read the request_buf using an iterator and store it in a string
-    //TODO might be an easier method to do this
-    std::string request_json( (std::istreambuf_iterator<char>(&request_buf)), std::istreambuf_iterator<char>() );
-    //DEBUG
-    std::cout << "Ho letto  " << request_json << std::endl;
-
-    //Now we parsed the request and we use the ptree object in  order to create the corresponding ControlMessage
-    ControlMessage request_message{request_json};
+    ControlMessage request_message = SyncReadCM(sock);
 
     // Here we check that the message is authentic
     if (!CheckAuthenticity(request_message)){
         ControlMessage check_result{51};
         check_result.AddElement("auth", "false");
-        boost::asio::write(*sock, boost::asio::buffer(check_result.ToJSON()));
-        // Send the eof error shutting down the server.
-        // TODO qua magicamente va ignorato l'errore GRAVISSIMO
-        sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
+        SyncWriteCM(sock, check_result);
     }
 
     // Here based on the type of the message we switch accordingly.
@@ -57,15 +37,13 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
         case 1:{//AUTH REQUEST
             ControlMessage check_result{51};
             check_result.AddElement("auth", "true");
-            boost::asio::write(*sock, boost::asio::buffer(check_result.ToJSON()));
-            // Send the eof error shutting down the server.
-            // TODO qua magicamente va ignorato l'errore GRAVISSIMO
-            sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
+
+            SyncWriteCM(sock, check_result);
             break;
         }
         case 2:{//TREE & TIME Request
             //Let's start building the Response Control Message
-
+            // TODO troppa roba qui, meglio fare una funzione chiamata da case 2
             ControlMessage treet_result{52};
             // We compute & add the tree
             std::string username = request_message.GetElement("Username");
@@ -111,10 +89,8 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             treet_result.AddElement("Tree", server_treet.genTree());
             treet_result.AddElement("Time", server_treet.genTimes());
             //TODO Implement DB and retrieve time according to this function
-            boost::asio::write(*sock, boost::asio::buffer(treet_result.ToJSON()));
-            // Send the eof error shutting down the server.
-            // TODO qua magicamente va ignorato l'errore GRAVISSIMO
-            sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
+
+            SyncWriteCM(sock, treet_result);
             break;
         }
         case 3:{//DELETE REQUEST
@@ -134,4 +110,29 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 bool Service::CheckAuthenticity(const ControlMessage& cm){
     Database authentication;
     return authentication.auth(cm.username_, cm.hashkey_);
+}
+
+bool Service::SyncWriteCM(std::shared_ptr<asio::ip::tcp::socket> sock, ControlMessage& cm){
+    //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
+    boost::asio::write(*sock, boost::asio::buffer(cm.ToJSON()));
+    sock->shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+}
+
+ControlMessage Service::SyncReadCM(std::shared_ptr<asio::ip::tcp::socket> sock){
+    // We read until the eof, then we return a ControlMessage using the buffer we read.
+    boost::asio::streambuf request_buf;
+    boost::system::error_code ec;
+    boost::asio::read(*sock, request_buf, ec);
+    // This checks if the client has finished writing
+    if (ec != boost::asio::error::eof){
+        //TODO Sometimes we get here. When the server shuts down
+        std::cerr<<"DEBUG: NON ho ricevuto il segnale di chiusura del client";
+        throw boost::system::system_error(ec);
+    }
+    //Read the response_buf using an iterator and store it in a string In order to store it in a ControlMessage
+    // TODO might be an easier method to do this
+    std::string response_json((std::istreambuf_iterator<char>(&request_buf)), std::istreambuf_iterator<char>() );
+    std::cout << "Ho letto  " << response_json << std::endl;
+    ControlMessage cm{response_json};
+    return cm;
 }

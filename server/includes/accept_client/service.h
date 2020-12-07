@@ -31,6 +31,8 @@ private:
     // is by suicide (delete this) after the client is handled
     ~Service(){};
     void HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock);
+    ControlMessage SyncReadCM(std::shared_ptr<asio::ip::tcp::socket> sock);
+    bool SyncWriteCM(std::shared_ptr<asio::ip::tcp::socket> sock, ControlMessage& cm);
     bool CheckAuthenticity(const ControlMessage& cm);
 };
 
