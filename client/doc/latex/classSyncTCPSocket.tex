@@ -12,8 +12,6 @@
 \mbox{\Hypertarget{classSyncTCPSocket_a9e14fa078f01ea83d69b0d4a0b263e11}\label{classSyncTCPSocket_a9e14fa078f01ea83d69b0d4a0b263e11}} 
 \mbox{\hyperlink{classSyncTCPSocket_a9e14fa078f01ea83d69b0d4a0b263e11}{$\sim$\+Sync\+TCPSocket}} ()
 \begin{DoxyCompactList}\small\item\em Shutdown both part(sending \& reciving) and closes the socket giving back the resource to the system. \end{DoxyCompactList}\item 
-bool \mbox{\hyperlink{classSyncTCPSocket_a461d5b33b3f26c01a5d951009787c873}{Authenticate}} ()
-\item 
 void \mbox{\hyperlink{classSyncTCPSocket_ace71a547ca906bf82fa9e2209ec945dd}{Connect\+Server}} (int n\+\_\+tries)
 \end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
@@ -44,15 +42,6 @@ Initialize socket, endpoint and parse the raw ip. After that opens the socket us
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{classSyncTCPSocket_a461d5b33b3f26c01a5d951009787c873}\label{classSyncTCPSocket_a461d5b33b3f26c01a5d951009787c873}} 
-\index{SyncTCPSocket@{SyncTCPSocket}!Authenticate@{Authenticate}}
-\index{Authenticate@{Authenticate}!SyncTCPSocket@{SyncTCPSocket}}
-\doxysubsubsection{\texorpdfstring{Authenticate()}{Authenticate()}}
-{\footnotesize\ttfamily bool Sync\+TCPSocket\+::\+Authenticate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
-
-Will send username and password. After that it will shutdown the send part of the socket thus providing the server a way to tell that the connection is over. After the authenticate the socket is basically useless and needs to be shutdown completly. \begin{DoxyReturn}{Returns}
-True if Auth went ok and user has successfully logged in, False if not. 
-\end{DoxyReturn}
 \mbox{\Hypertarget{classSyncTCPSocket_ace71a547ca906bf82fa9e2209ec945dd}\label{classSyncTCPSocket_ace71a547ca906bf82fa9e2209ec945dd}} 
 \index{SyncTCPSocket@{SyncTCPSocket}!ConnectServer@{ConnectServer}}
 \index{ConnectServer@{ConnectServer}!SyncTCPSocket@{SyncTCPSocket}}
