@@ -1,5 +1,6 @@
 
 #include "watcher.h"
+#include <files.h>
 /// This method will assign the callback called in the Watcher::listenerFunction() to the provided function.
 /// \param updateCallback The function that will be called as the callback.
 void Watcher::SetUpdateCallback(const std::function<void()> &updateCallback) {
@@ -12,8 +13,14 @@ void Watcher::listenerFunction(std::vector<pfw::EventPtr> events)
 {
     for (const auto &event : events) {
         std::bitset<16> typeBits(event->type);
-        std::cout << event->relativePath << " with the type: " << typeBits
-                  << std::endl;
+        std::cout << event->relativePath << " with the type: " << typeBits << std::endl;
+
+        std::string str;
+        std::ifstream fin("/home/fede/Documents/Progetto_Malnati/client/cmake-build-debug/Prova/ciao.txt", std::ios::binary);
+        CryptoPP::FileSource f(fin, new CryptoPP::Base64Encoder(
+                                       new CryptoPP::FileSink("/home/fede/Documents/Progetto_Malnati/client/cmake-build-debug/ciao.b64")));
+
+
     }
 
     update_callback();
