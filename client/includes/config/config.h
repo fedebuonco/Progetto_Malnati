@@ -33,8 +33,14 @@ public:
 
     static Config* get_Instance();
 
+
+
+
     void WriteProperty(const std::string& key, const std::string& value);
     std::string ReadProperty(const std::string& key);
+
+    bool IsConfigStructureCorrect();
+    void SetDefaultConfig();
 
     int SetConfig(int argc, char *argv[]);
 

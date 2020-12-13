@@ -4,12 +4,22 @@
 #include <client.h>
 #include <boost/property_tree/ptree.hpp>
 #include <watcher.h>
+#include <filesystem>
 
 int main(int argc, char *argv[]) {
      /**
      * CONFIGURATION PHASE
      * Program reads and writes inside config the option with which the program was run
      */
+
+     //Before starting the configuration, we check if the config structure (file or folder) are correct
+     if(!Config::get_Instance()->IsConfigStructureCorrect()){
+
+         //Structure is not correct, so we restore with default config structure
+         Config::get_Instance()->SetDefaultConfig();
+     }
+
+
     if (argc > 1) {
         int value = Config::get_Instance()->SetConfig(argc, argv);
         //TODO Per me è meglio usare eccezione

@@ -36,13 +36,13 @@ void Config::WriteProperty(const std::string& key, const std::string& value) {
     namespace pt = boost::property_tree;
 
     pt::ptree  root;
-
+    try {
     // Load the json file in this ptree
     // If we don't do this all the information inside json file will be deleted
     // TODO gestire errori nella lettura del json
     pt::read_json("../config_file/config.json", root);
 
-    try {
+
         root.put(key, value);
 
         //Read the file and put the content inside root
@@ -56,9 +56,9 @@ void Config::WriteProperty(const std::string& key, const std::string& value) {
 }
 
 /**
- * Read inside config JSON file and return the value associated with the given key
- * @param key: JSON key
- * @return the value associated with the given key
+ * Read inside config JSON file and return the value associated with the given key.
+ * @param   key: JSON key
+ * @return the value associated with the given key or 'NULL' if we don't have any value.
  */
 std::string Config::ReadProperty(const std::string &key) {
     namespace pt = boost::property_tree;
@@ -70,6 +70,12 @@ std::string Config::ReadProperty(const std::string &key) {
         pt::read_json("../config_file/config.json", root);
 
         auto value = root.get<std::string>(key);
+
+        //If the value is not present we retrieve NULL
+        //TODO: Controlla se questa aggiunta non ha causato problemi
+        if(value==""){
+            value="NULL";
+        }
 
         return value;
     }
@@ -244,6 +250,64 @@ RawEndpoint Config::ReadRawEndpoint() {
 
     return RawEndpoint{ip, port};
 }
+
+/**
+ * It checks if the config structure (file and folder) have a folder 'config_file' with inside 'config.json' file.
+ *
+ * @return 'true' if structure is correct, otherwise 'false'.
+ */
+bool Config::IsConfigStructureCorrect() {
+
+    std::filesystem::path config_file_path{ "../config_file/config.json" };
+    std::filesystem::directory_entry config_directory_path{"../config_file"};
+
+    //Funtion exists check if the given file path corresponds to an existing file or directory.
+    //We need also to check that 'config.json' is a file and that 'config_file' is a folder
+
+    if(      !(   std::filesystem::exists(config_directory_path) && std::filesystem::is_directory(config_directory_path)  )
+             ||  !(   std::filesystem::exists(config_file_path) && !std::filesystem::is_directory(config_file_path))
+
+       ){
+        return false;
+    }
+    return true;
+
+}
+
+/**
+ * It resets all the fields inside configuration file (config.json) with default value: <br>
+ *      - Default Endpoint:         127.0.0.1 3333      <br>
+ *      - Username and password:    empty               <br>
+ *      - Folder:                   empty               <br>
+ * <br>
+ * It also reset the configuration structure (create the correct folder and file) if it is broken for some reason (i.e. file or folder doesn't exist). <br>
+ *
+ * This function must be used when the program detect problem during configuration phase. In this way we restore all with the default files.
+ */
+void Config::SetDefaultConfig() {
+
+    if(DEBUG) std::cout << "Restore default configuration of config file and structure" << std::endl;
+
+    //First of all we delete the structure
+    std::filesystem::remove_all("../config_file");
+
+    //Now we create the 'config_file' folder and the config.json file
+    std::filesystem::create_directories("../config_file");
+    std::ofstream config_file ("../config_file/config.json");
+
+    //Fill the config.json file with the correct structure
+    config_file << "{\n"
+                   "    \"ip\": \"127.0.0.1\",\n"
+                   "    \"port\": \"3333\",\n"
+                   "    \"username\": \"\",\n"
+                   "    \"hash_password\": \"\",\n"
+                   "    \"path\": \"\"\n"
+                   "}";
+
+    config_file.close();
+
+}
+
 
 
 
