@@ -4,6 +4,7 @@
 #include <iostream>
 #include <utilities.h>
 #include <filesystem>
+#include <regex>
 
 #include "cryptlib.h"
 #include <sha.h>
@@ -100,12 +101,45 @@ std::string Config::ReadProperty(const std::string &key) {
  */
 int Config::SetConfig(int argc, char *argv[]) {
 
-    for (int i = 1; i < argc; ++i) {  //Start from 1 because argv[0] is the program name
+    //First we check if the user starts the program with "-d" or "--debug" option to show also the debug information during the configuration
+    for (int i = 1; i < argc; ++i) {
 
         std::string arg = argv[i];
 
+        if(arg=="-d" || arg=="--debug"){
+
+            //We found the "-d" or "--debug" option
+
+            //Then we check that the next argument has the '-' because we don't want that the user writes "-d debug"
+            //If we have the next argument (i+1<argc) but the next argument doesn't starts with '-' we catch an exception
+            if (i + 1 < argc && (static_cast<std::string>(argv[i + 1]).rfind('-', 0) == std::string::npos)){
+                //TODO: Exception
+                std::cerr
+                        << "Syntax error during configuration: -d don't want another argument"
+                        << std::endl;
+                return 1;
+            }
+
+            //We activate the debug prints and check with a print
+            DEBUG = true;
+            if(DEBUG) std::cout << "DEBUG activated correctly" << std::endl;
+        }
+
+    }
+
+    //After setting the debug configuration if present, we set the other configuration options
+    for (int i = 1; i < argc; ++i) {  //Start from 1 because argv[0] is the program name
+
+        //Every time we do the cycle inside argv[i] we have the -option name (i.e. "-c") and not the option argument
+        // (i.e. "username password") because we increment 'i' also inside the cycle every time we found an option.
+
+        std::string arg = argv[i];
+
+        //If the argument doesn't start with '-' there is a syntax problem
+        //(i.e. "-c username password 127.0.0.1" instead of "-c username password -s 127.0.0.1")
         if(static_cast<std::string>(argv[i]).rfind('-', 0) == std::string::npos){
-            std::cerr << "Syntax error: \"" << argv[i] << "\" is not an option. Option must starts with \"-\", digit -h for more information." << std::endl;
+            //TODO: Exception
+            std::cerr << "Syntax error: \"" << argv[i] << R"(" is not an option. Option must starts with "-", digit -h for more information.)" << std::endl;
             return 1;
         }
 
@@ -123,6 +157,7 @@ int Config::SetConfig(int argc, char *argv[]) {
                     std::string username = argv[++i];
                     std::string password = argv[++i];
 
+                //We want to store the hashed password and username inside config file
                     CryptoPP::SHA256 hash;
                     std::string digest;
 
@@ -136,6 +171,7 @@ int Config::SetConfig(int argc, char *argv[]) {
                     Config::get_Instance()->WriteProperty("hash_password", digest);
 
                 } else {
+                    //TODO: Exception
                     std::cerr
                             << "Syntax error: We didn't find 2 arguments between the -c or --credential and the next option"
                             << std::endl;
@@ -158,6 +194,7 @@ int Config::SetConfig(int argc, char *argv[]) {
                     Config::get_Instance()->WriteProperty("path", path_string);
 
                 } else {
+                    //TODO: Exception
                     std::cerr
                             << "Syntax error: We didn't find 1 valid arguments after the -f or --folder"
                             << std::endl;
@@ -175,10 +212,18 @@ int Config::SetConfig(int argc, char *argv[]) {
                     std::string ip = argv[++i];
                     std::string port = argv[++i];
 
+                    //TODO: Check regex ip to verify correctness
+                    std::regex pattern_ip("\\d{1,3}(\\.\\d{1,3}){3}");
+                    std::regex pattern_port("\\d{3}");
+
+                    if (std::regex_match (ip, std::regex("(sub)(.*)") ))
+                        std::cout << "string literal matched\n";
+
                     Config::get_Instance()->WriteProperty("ip", ip);
                     Config::get_Instance()->WriteProperty("port", port);
 
                 } else {
+                    //TODO: Exception
                     std::cerr
                             << "Syntax error: We didn't find 2 valid arguments after the -s or --server"
                             << std::endl;
@@ -191,27 +236,21 @@ int Config::SetConfig(int argc, char *argv[]) {
             case str2int("-h"):
             case str2int("--help"):
                 show_usage(argv[0]);
-                //TODO Verificare se è corretto
+                //TODO EXIT Verificare se è corretto
+                //TODO Verificare se fare tipo di eccezione speciale e fare chiudere al main
                 std::exit(0);
                
 
             case str2int("-d"):
             case str2int("--debug"): {
 
-
-                //We don't want that user write "-d debug"
-                if (i + 1 < argc && (static_cast<std::string>(argv[i + 1]).rfind('-', 0) == std::string::npos)){
-                    std::cerr
-                            << "Syntax error: -d don't want another argument"
-                            << std::endl;
-                    return 1;
-                }
-
-                    DEBUG = true;
+                //We go next because the debug configuration is already made
                 break;
             }
 
+            //If we arrive in the default option, it means that the option doesn't exist
             default:
+                //TODO: Exception
                 std::cerr << "\nError: The \"" << arg
                           << "\" option doesn't exist. Write -h or --help to see the available options"
                           << std::endl;
