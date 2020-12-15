@@ -6,6 +6,7 @@
 #include <iostream>
 #include <tree_t.h>
 #include <patch.h>
+#include <files.h>
 
 /// Construct a Client and puts it in a state ready to track any changes in the folder.
 /// \param re Endpoint to connect to.
@@ -27,6 +28,7 @@ void Client::StartWatching(){
     Syncro();
     watcher_.SetUpdateCallback(std::bind(&Client::Syncro, this));
     watcher_.Start(folder_watched_);
+
 }
 
 /// This is the main function, create a Tree and asks for the server Tree, with those it cretes a patch and process it
@@ -169,3 +171,4 @@ void Client::SendPatch(Patch& update){
     //TODO Here send the files asyncronulsy
 
 }
+

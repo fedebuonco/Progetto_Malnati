@@ -48,7 +48,10 @@ if (UNIX)
                 includes/transfer/tree_t.h
                 src/transfer/patch.cpp
                 includes/transfer/patch.h
-                )
+                src/client/sender.cpp
+                includes/client/sender.h
+                includes/client/file_sipper.h
+                src/client/file_sipper.cpp)
     target_link_libraries(client dl cryptopp PanoptesFW)
 endif (UNIX)
 
@@ -103,7 +106,7 @@ if (WIN32)
                 src/transfer/tree_t.cpp
                 includes/transfer/tree_t.h
                 src/transfer/patch.cpp
-                includes/transfer/patch.h)
+                includes/transfer/patch.h includes/client/file_sender.cpp includes/client/sender.h includes/client/file_sipper.h src/client/file_sipper.cpp)
 
         target_link_libraries(client PanoptesFW ${CRYPTOPP})
 
