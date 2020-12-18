@@ -1,9 +1,10 @@
 #include <async_service.h>
+#include <filesystem>
 
 AsyncService::AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock) :
 m_sock(sock)
         {
-            m_outputFile.open("Progetto-Malnati.zip", std::ios_base::binary);
+            first_sip_ = true;
         }
 
 void AsyncService::StartHandling() {
@@ -26,6 +27,18 @@ void AsyncService::StartHandling() {
 
 void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::size_t bytes_transferred) {
     // Process the request.
+
+    //We check if this is the first sip, if it is it contains metadata, and we must parse it.
+    if(first_sip_){
+        file_name_ = m_buf.data();
+        first_sip_ = false;
+        // We check if the folder does exist
+        std::filesystem::path filepath = std::filesystem::path(file_name_);
+        std::filesystem::create_directories(filepath.remove_filename());
+        m_outputFile.open(file_name_, std::ios_base::binary);
+        StartHandling();
+        return;
+    }
 
     m_outputFile.write(m_buf.data(), bytes_transferred);
 

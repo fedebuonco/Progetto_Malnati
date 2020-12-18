@@ -27,7 +27,7 @@ void FileSipper::Connect() {
     {    std::cout << "Currently in the async_connect callback " << std::endl;
         //TODO check if we still want to send the file
         OpenFile();
-        Sip(ec_);
+        FirstSip(ec_);
     });
 
 
@@ -48,6 +48,38 @@ void FileSipper::OpenFile() {
     //reset the stream;
     files_stream_.seekg(0, files_stream_.beg);
 }
+
+
+/// Takes the file and send its metadata to the server.
+/// \param t_ec
+void FileSipper::FirstSip(const boost::system::error_code& t_ec){
+    if (files_stream_) {
+        // We create the first sip by sending file metadata
+        int i =0;
+        buf_metadata.fill('\000');
+        for( auto letter : path_){
+            buf_metadata[i] = letter;
+            i++;
+        }
+        buf_metadata[i] = '\000';
+        auto buf = boost::asio::buffer(buf_metadata.data(),1024);
+        writeBuffer(buf);
+    }
+    else{
+        // Here we are if failbit or badbit are set to 1.
+        // The failbit could have been set by the eof, so we check it
+        if (files_stream_.eof()){
+            std::cout << "EOF Reached!" << std::endl;
+        } else { // Here if we had a different problem that made us fail! we trhrow exception
+            auto msg = "Failed while reading file";
+            std::cerr << msg << std::endl;
+            throw std::fstream::failure(msg);
+        }
+        ios_.stop();
+        return;
+    }
+}
+
 
 // Takes a sip of a file and sends it.
 void FileSipper::Sip(const boost::system::error_code& t_ec){
@@ -89,3 +121,6 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
     }
 
 }
+
+
+

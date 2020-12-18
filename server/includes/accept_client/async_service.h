@@ -25,13 +25,15 @@ private:
     std::shared_ptr<boost::asio::ip::tcp::socket> m_sock;
     std::string m_response;
     boost::asio::streambuf m_request;
+
     enum { MaxLength = 1024 };
     std::array<char, MaxLength> m_buf;
     boost::asio::streambuf m_requestBuf_;
     std::ofstream m_outputFile;
     size_t m_fileSize;
     int read_counter;
-    std::string m_fileName;
+    bool first_sip_;
+    std::string file_name_;
 };
 
 #endif //SERVER_ASYNC_SERVICE_H

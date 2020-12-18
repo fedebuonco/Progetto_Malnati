@@ -14,15 +14,6 @@ int main(int argc, char *argv[]) {
      */
 
 
-     RawEndpoint re_test;
-     re_test.raw_ip_address = "127.0.0.1";
-     re_test.port_num = 3343;
-     try {
-         FileSipper(re_test, "Prova/Progetto_Malnati.zip");
-     }catch(std::exception& e){
-         std::cerr << "Error " << e.what() << std::endl;
-     }
-
      if (argc > 1) {
         int value = Config::get_Instance()->SetConfig(argc, argv);
         //TODO Per me è meglio usare eccezione

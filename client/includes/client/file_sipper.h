@@ -29,6 +29,7 @@ class FileSipper {
     std::ifstream files_stream_;
     enum { MessageSize = 1024 };
     std::array<char, MessageSize> buf_array_;
+    std::array<char, MessageSize> buf_metadata;
     int file_size_;
     int sip_counter;
 
@@ -39,7 +40,7 @@ private:
     void OpenFile();
     void Connect();
     void Sip(const boost::system::error_code& t_ec);
-
+    void FirstSip(const boost::system::error_code& t_ec);
     template<class Buffer>
     void writeBuffer(Buffer& t_buffer)
     {

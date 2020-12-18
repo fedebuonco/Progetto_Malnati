@@ -3,7 +3,8 @@
 #include <base64.h>
 #include <sha.h>
 #include <hex.h>
-
+#include <config.h>
+#include <file_sipper.h>
 
 
 /// This method will assign the callback called in the Watcher::listenerFunction() to the provided function.
@@ -40,7 +41,20 @@ void Watcher::listenerFunction(std::vector<pfw::EventPtr> events)
                    continue;
                }
             }
+
+            ///
+            RawEndpoint re_test;
+            re_test.raw_ip_address = "127.0.0.1";
+            re_test.port_num = 3343;
+            try {
+                FileSipper(re_test, master_folder);
+            }catch(std::exception& e){
+                std::cerr << "Error " << e.what() << std::endl;
+            }
+
         }
+
+
 
         //TODO decide where to store them.
 
