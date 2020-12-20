@@ -212,12 +212,21 @@ int Config::SetConfig(int argc, char *argv[]) {
                     std::string ip = argv[++i];
                     std::string port = argv[++i];
 
-                    //TODO: Check regex ip to verify correctness
-                    std::regex pattern_ip("\\d{1,3}(\\.\\d{1,3}){3}");
-                    std::regex pattern_port("\\d{3}");
+                    /**
+                     * The two following expression are regex for ipv4 address and port
+                     * The IPv4 regex say that the structure must be: number1.number2.number3.number4 and each number go from 0 to 255.
+                     * The port address must be a number with max 5 digits
+                     */
 
-                    if (std::regex_match (ip, std::regex("(sub)(.*)") ))
-                        std::cout << "string literal matched\n";
+                    std::regex pattern_ip("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])" );
+                    std::regex pattern_port("\\d{1,5}");
+
+                    if (!std::regex_match (ip, pattern_ip ) || !std::regex_match (port, pattern_port )) {
+                        //TODO: Exception
+                        std::cerr << "Wrong IPv4 address or port format\n" << std::endl;
+                        return 1;
+
+                    }
 
                     Config::get_Instance()->WriteProperty("ip", ip);
                     Config::get_Instance()->WriteProperty("port", port);
