@@ -42,7 +42,7 @@ public:
     bool IsConfigStructureCorrect();
     void SetDefaultConfig();
 
-    int SetConfig(int argc, char *argv[]);
+    void SetConfig(int argc, char *argv[]);
 
     void PrintConfiguration();
 

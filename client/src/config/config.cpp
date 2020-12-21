@@ -15,6 +15,18 @@
 
 bool DEBUG=false;
 
+class SyntaxError : public std::exception
+{
+public:
+    SyntaxError(std::string msg) : m_message(msg) { }
+    const char * what () const throw ()
+    {
+        return m_message.c_str();
+    }
+private:
+    std::string m_message;
+};
+
 Config *Config::m_ConfigClass = nullptr;
 
 /// Assures that only one instance is present.
@@ -95,29 +107,26 @@ std::string Config::ReadProperty(const std::string &key) {
 
 /**
  * This function takes the command line parameters and set config file appropriately
+ * Throw an exception if the configuration syntax is wrongly formatted or the options are incorrect (e.x. wrong IPv4 structure).
  * @param argc: number of arguments
  * @param argv: list of arguments
- * @return 0 (no problem) or 1 (problems)
  */
-int Config::SetConfig(int argc, char *argv[]) {
+void Config::SetConfig(int argc, char *argv[]) {
 
-    //First we check if the user starts the program with "-d" or "--debug" option to show also the debug information during the configuration
+    //First we check if the user starts the program with "-d" or "--debug" option to show also the debug information during the configuration.
     for (int i = 1; i < argc; ++i) {
 
         std::string arg = argv[i];
 
         if(arg=="-d" || arg=="--debug"){
 
-            //We found the "-d" or "--debug" option
+            //We found the "-d" or "--debug" option inside the configuration options.
 
-            //Then we check that the next argument has the '-' because we don't want that the user writes "-d debug"
-            //If we have the next argument (i+1<argc) but the next argument doesn't starts with '-' we catch an exception
+            //Then we check that the next argument has the '-' because we don't want that the user writes for example "-d debug".
+            //If we have the next argument (i+1<argc) but the next argument doesn't starts with '-' we catch an exception.
             if (i + 1 < argc && (static_cast<std::string>(argv[i + 1]).rfind('-', 0) == std::string::npos)){
                 //TODO: Exception
-                std::cerr
-                        << "Syntax error during configuration: -d don't want another argument"
-                        << std::endl;
-                return 1;
+                throw  SyntaxError(std::string("Configuration syntax error: \"-d\" option doesn't want another argument. We found: ") + argv[i] + " " + argv[i+1]);
             }
 
             //We activate the debug prints and check with a print
@@ -139,8 +148,7 @@ int Config::SetConfig(int argc, char *argv[]) {
         //(i.e. "-c username password 127.0.0.1" instead of "-c username password -s 127.0.0.1")
         if(static_cast<std::string>(argv[i]).rfind('-', 0) == std::string::npos){
             //TODO: Exception
-            std::cerr << "Syntax error: \"" << argv[i] << R"(" is not an option. Option must starts with "-", digit -h for more information.)" << std::endl;
-            return 1;
+            throw  SyntaxError(std::string("Configuration syntax error: \"") + argv[i] + std::string("\" is not an option. Option must starts with \"-\", digit -h for more information."));
         }
 
         //We need to use 'str2int' function because switch cannot take string but only integer
@@ -157,7 +165,7 @@ int Config::SetConfig(int argc, char *argv[]) {
                     std::string username = argv[++i];
                     std::string password = argv[++i];
 
-                //We want to store the hashed password and username inside config file
+                    //We want to store the hashed password and username inside config file
                     CryptoPP::SHA256 hash;
                     std::string digest;
 
@@ -172,12 +180,8 @@ int Config::SetConfig(int argc, char *argv[]) {
 
                 } else {
                     //TODO: Exception
-                    std::cerr
-                            << "Syntax error: We didn't find 2 arguments between the -c or --credential and the next option"
-                            << std::endl;
-                    return 1;
+                    throw  SyntaxError(std::string("Configuration syntax error: We didn't find 2 arguments between the -c or --credential and the next option."));
                 }
-
                 break;
             }
             case str2int("-f"):
@@ -195,10 +199,7 @@ int Config::SetConfig(int argc, char *argv[]) {
 
                 } else {
                     //TODO: Exception
-                    std::cerr
-                            << "Syntax error: We didn't find 1 valid arguments after the -f or --folder"
-                            << std::endl;
-                    return 1;
+                    throw  SyntaxError(std::string("Configuration syntax error: We didn't find 1 valid arguments after the -f or --folder."));
                 }
 
             }
@@ -223,9 +224,7 @@ int Config::SetConfig(int argc, char *argv[]) {
 
                     if (!std::regex_match (ip, pattern_ip ) || !std::regex_match (port, pattern_port )) {
                         //TODO: Exception
-                        std::cerr << "Wrong IPv4 address or port format\n" << std::endl;
-                        return 1;
-
+                        throw  std::exception("Wrong IPv4 address or port format");
                     }
 
                     Config::get_Instance()->WriteProperty("ip", ip);
@@ -233,10 +232,7 @@ int Config::SetConfig(int argc, char *argv[]) {
 
                 } else {
                     //TODO: Exception
-                    std::cerr
-                            << "Syntax error: We didn't find 2 valid arguments after the -s or --server"
-                            << std::endl;
-                    return 1;
+                    throw  SyntaxError(std::string("Configuration syntax error: We didn't find 2 valid arguments after the -s or --server."));
                 }
 
                 break;
@@ -260,14 +256,11 @@ int Config::SetConfig(int argc, char *argv[]) {
             //If we arrive in the default option, it means that the option doesn't exist
             default:
                 //TODO: Exception
-                std::cerr << "\nError: The \"" << arg
-                          << "\" option doesn't exist. Write -h or --help to see the available options"
-                          << std::endl;
-                return 1;
+                throw  SyntaxError(std::string("Configuration syntax error: \"") + argv[i] + std::string("\" option doesn't exist. Write -h or --help to see the available options."));
         }
 
     }
-    return 0;
+
 }
 
 
