@@ -21,44 +21,18 @@ void Watcher::listenerFunction(std::vector<pfw::EventPtr> events)
     for (const auto &event : events) {
         std::bitset<16> typeBits(event->type);
         std::cout << event->relativePath << " with the type: " << typeBits << std::endl;
-        //TODO do not consider bakup files ( the ones ending in ~) and the dirs.
-        //TODO this are for linux and currently don't know why some are not computed.
-        if (typeBits == 0b00000001 || typeBits == 0b00000010 || typeBits == 0b00000011){ // Here it means we are adding a file or mod a file.
-            CryptoPP::SHA256 hash;
-            std::string digest;
-            std::filesystem::path master_folder = std::filesystem::path ("./Prova");
-            master_folder /= event->relativePath;
-            if (!std::filesystem::is_directory(master_folder)) {
-               try {
-                   CryptoPP::FileSource f(
-                           master_folder.generic_string().c_str(),
-                           true,
-                           new CryptoPP::HashFilter(hash,
-                                                    new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
-                   std::cout << digest << std::endl;
-               } catch(...){
-                   std::cerr <<master_folder.c_str() << " -- Not computed" << std::endl;
-                   continue;
-               }
-            }
 
-            ///
-            RawEndpoint re_test;
-            re_test.raw_ip_address = "127.0.0.1";
-            re_test.port_num = 3343;
-            try {
-                FileSipper(re_test, master_folder);
-            }catch(std::exception& e){
-                std::cerr << "Error " << e.what() << std::endl;
-            }
+        //TODO Implement crossplatform switchcase
 
-        }
-
-
-
-        //TODO decide where to store them.
+        // According to the bit we must perform one of the following
+        // * we delete the db row if we are in a file deletion
+        // * we hash the file and add a row in the db if we are adding a file
+        // * we hash the file and update the row in the db if we have modified a file
 
     }
+
+
+
 
     update_callback();
 

@@ -14,7 +14,7 @@
 #include <sync_tcp_socket.h>
 #include <iostream>
 
-///Encapsulates a file+hash that need to be sent to a server.
+/// Encapsulates a file+hash that need to be sent to a server.
 /// The file is sent in small "sips" and after each sending we call a callback.
 /// Offers a callback that, after performing some checks, calls for another
 /// sip, thus creating a chain of sent sips.
@@ -41,6 +41,7 @@ private:
     void Connect();
     void Sip(const boost::system::error_code& t_ec);
     void FirstSip(const boost::system::error_code& t_ec);
+
     template<class Buffer>
     void writeBuffer(Buffer& t_buffer)
     {
@@ -48,6 +49,7 @@ private:
                                  t_buffer,
                                  [this](boost::system::error_code ec, std::size_t)
                                  {
+                                     //TODO Add some error check
                                      Sip(ec);
                                  });
 

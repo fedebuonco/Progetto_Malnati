@@ -27,6 +27,7 @@ void AsyncAcceptClient::InitAccept() {
     std::shared_ptr<boost::asio::ip::tcp::socket>
             sock(new boost::asio::ip::tcp::socket(m_ios));
 
+    //TODO How are thread assigned to each async_accept
     m_acceptor.async_accept(*sock.get(),
                             [this, sock](
                                     const boost::system::error_code& error)

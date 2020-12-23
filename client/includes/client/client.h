@@ -31,6 +31,7 @@ private:
 public:
     Client(RawEndpoint re, std::filesystem::path folder_watched);
 
+    void InitHash();
 };
 
 #endif //CLIENT_CLIENT_H

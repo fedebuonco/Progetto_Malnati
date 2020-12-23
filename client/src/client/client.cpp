@@ -7,8 +7,10 @@
 #include <tree_t.h>
 #include <patch.h>
 #include <files.h>
+#include <sha.h>
+#include <hex.h>
 
-/// Construct a Client and puts it in a state ready to track any changes in the folder.
+/// Construct a Client, execute the first hashing of each file and puts it in a state ready to track any changes in the folder.
 /// \param re Endpoint to connect to.
 /// \param folder_watched folder path that we want to keep monitored.
 Client::Client(RawEndpoint re, std::filesystem::path folder_watched) {
@@ -18,6 +20,9 @@ Client::Client(RawEndpoint re, std::filesystem::path folder_watched) {
         std::cerr << "Username and/or password are not correct" << std::endl;
         std::exit(12);
     }
+    // We perfom the InitHash that helps us not hashing evything each time
+    InitHash();
+    // We start watching for further changes
     StartWatching();
 }
 
@@ -124,12 +129,14 @@ TreeT Client::RequestTree() {
     return result;
 }
 
+///
 bool Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
     //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
     boost::asio::write(stcp.sock_, boost::asio::buffer(cm.ToJSON()));
     stcp.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
 }
 
+///
 ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
     // We read until the eof, then we return a ControlMessage using the buffer we read.
     boost::asio::streambuf response_buf;
@@ -172,3 +179,62 @@ void Client::SendPatch(Patch& update){
 
 }
 
+/// Test each file to see if already present in the hash db, and acts accordingly in order to keep a database of each
+/// hash perfomed.
+void Client::InitHash(){
+    // For each file in the folder we look in the db using the relative filename and the last modified time.
+    for(auto itEntry = std::filesystem::recursive_directory_iterator(folder_watched_);
+        itEntry != std::filesystem::recursive_directory_iterator();
+        ++itEntry )
+    {
+        // We take the current element path, make it relative to the path specified and then we make it
+        // in a cross platform format (cross_platform_relative_element_path = cross_platform_rep)
+        auto element_path = itEntry->path();
+        std::filesystem::path relative_element_path = element_path.lexically_relative(folder_watched_);
+        std::string cross_platform_rep = relative_element_path.generic_string();
+        // We also add the "/" if it is a direcotry in order t diff it from non extension files.
+        if (std::filesystem::is_directory(element_path))
+            cross_platform_rep += "/";
+
+        //we now need to retrieve the last modified time.
+        struct stat temp_stat;
+        stat(element_path.generic_string().c_str(), &temp_stat);
+        unsigned long mod_time = temp_stat.st_mtime;
+
+        // Now we have the tuple cross_platform_rep - mod_time
+        // We use this tuple to see if we already hashed that version of the file.
+        // If we had, then we take the hash from the db, without hashing a second time
+        // the same file.
+        if(!AlreadyHashed(cross_platform_rep, mod_time)){
+            //Here only if the tuple filpath,mod_time is not present, so we need to hash and then update the db.
+            CryptoPP::SHA256 hash;
+            std::string digest;
+            if (!std::filesystem::is_directory(element_path)) {
+                try {
+                    CryptoPP::FileSource f(
+                                element_path.generic_string().c_str(),
+                                true,
+                                new CryptoPP::HashFilter(hash,
+                                                         new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
+                        // Here we have the hash of the file.
+                        // Now we can insert it in the DB
+
+                    InsertDB(cross_platform_rep, hash, mod_time);
+
+                } catch(std::exception& e){
+                        std::cerr <<"Hash of " << cross_platform_rep <<
+                        " could not be computed due to error " <<
+                        e.what() << std::endl;
+                        //TODO Gestire impossibiltà di hashing.
+                        continue;
+                }
+            }
+        }
+
+        // Now we clean the db for files that are not anymore in the folder
+        CleanDB();
+    }
+
+
+
+}

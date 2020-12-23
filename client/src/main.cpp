@@ -35,6 +35,7 @@ int main(int argc, char *argv[]) {
     }
     RawEndpoint raw_endpoint = Config::get_Instance()->ReadRawEndpoint();
     /**
+     * EXECUTION PHASE
      * The main builds the client that will contain the main logic of the app.
      */
     // Building the Client

@@ -31,6 +31,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
         SyncWriteCM(sock, check_result);
     }
 
+
     // Here based on the type of the message we switch accordingly.
     // All the message that arrive here are authentic.
     switch (request_message.type_) {

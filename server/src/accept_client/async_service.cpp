@@ -1,6 +1,9 @@
 #include <async_service.h>
 #include <filesystem>
 
+// TODO make sure that an asyncService manage a single file.
+// TODO
+
 AsyncService::AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock) :
 m_sock(sock)
         {
@@ -30,6 +33,8 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
 
     //We check if this is the first sip, if it is it contains metadata, and we must parse it.
     if(first_sip_){
+        //TODO open the file folder and
+        //TODO filename is actually a path
         file_name_ = m_buf.data();
         first_sip_ = false;
         // We check if the folder does exist
@@ -58,6 +63,9 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
 }
 
 void AsyncService::onFinish() {
+    //TODO FAI ClOSE DEL FILE
+    // TODO SHould check file integrity and send to the client the response if it is ok or not
+    //
     delete this;
 }
 

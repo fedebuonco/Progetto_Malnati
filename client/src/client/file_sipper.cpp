@@ -56,6 +56,8 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
     if (files_stream_) {
         // We create the first sip by sending file metadata
         int i =0;
+        // I paste the metadata in the buffer in this format
+        // FILENAME@HASH@DIMESION
         buf_metadata.fill('\000');
         for( auto letter : path_){
             buf_metadata[i] = letter;
@@ -118,8 +120,8 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
         }
     } else {
         std::cerr <<"Error "<< t_ec.value() << " -- "<< t_ec.message() <<std::endl;
+        //TODO Here error in the sending WriteBuffer
     }
-
 }
 
 

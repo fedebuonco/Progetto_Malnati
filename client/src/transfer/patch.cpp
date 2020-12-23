@@ -10,8 +10,6 @@
 /// \param server_treet
 Patch::Patch(TreeT client_treet, TreeT server_treet){
 
-    //TODO Generate also added_, common_, and removed_
-
     std::set<std::string> set_client;
     for(auto item : client_treet.map_tree_time_) {
         set_client.insert(item.first);
@@ -39,6 +37,9 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
     std::set_difference(begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
                         begin(client_treet.map_tree_time_), end(client_treet.map_tree_time_),
                         std::back_inserter(to_be_elim_vector));
+
+
+
 }
 
 /// Pretty Prints the changes contained in the patch
@@ -94,3 +95,5 @@ std::string Patch::PrettyPrint(){
 
     return pretty;
 }
+
+
