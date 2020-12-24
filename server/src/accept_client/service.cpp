@@ -117,6 +117,7 @@ bool Service::SyncWriteCM(std::shared_ptr<asio::ip::tcp::socket> sock, ControlMe
     //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
     boost::asio::write(*sock, boost::asio::buffer(cm.ToJSON()));
     sock->shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+    return true;
 }
 
 ControlMessage Service::SyncReadCM(std::shared_ptr<asio::ip::tcp::socket> sock){

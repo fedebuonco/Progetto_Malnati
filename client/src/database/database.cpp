@@ -5,7 +5,7 @@
 /// Takes in the db_path and opens a connection to it.
 /// \param db_path
 DatabaseConnection::DatabaseConnection(std::filesystem::path db_path, std::filesystem::path folder_watched) :
-    hash_db_(db_path.c_str(), SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE),
+    hash_db_(db_path.string(), SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE),
     folder_watched_(folder_watched){
     // We create the table if not exist.
 

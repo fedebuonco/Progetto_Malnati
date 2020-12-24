@@ -140,6 +140,7 @@ bool Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
     //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
     boost::asio::write(stcp.sock_, boost::asio::buffer(cm.ToJSON()));
     stcp.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+    return true;
 }
 
 ///

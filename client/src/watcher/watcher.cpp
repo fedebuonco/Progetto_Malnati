@@ -33,7 +33,7 @@ void Watcher::listenerFunction(std::vector<pfw::EventPtr> events)
         std::cout << event->relativePath << " with the type: " << typeBits << std::endl;
 
         // We don't take action regarding the changes in the db.
-        if (event->relativePath.c_str() == ".hash.db")
+        if (event->relativePath.string() == ".hash.db")
             continue;
 
     }
