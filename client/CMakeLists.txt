@@ -120,7 +120,12 @@ if (WIN32)
                 src/transfer/tree_t.cpp
                 includes/transfer/tree_t.h
                 src/transfer/patch.cpp
-                includes/transfer/patch.h includes/client/file_sender.cpp includes/client/sender.h includes/client/file_sipper.h src/client/file_sipper.cpp includes/database/database.h src/database/database.cpp)
+                includes/transfer/patch.h
+                includes/client/sender.h
+                includes/client/file_sipper.h
+                src/client/file_sipper.cpp
+                includes/database/database.h
+                src/database/database.cpp)
 
         target_link_libraries(client SQLiteCpp PanoptesFW ${CRYPTOPP})
 

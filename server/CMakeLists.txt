@@ -85,7 +85,11 @@ if (WIN32)
                 includes/sqlite/sqlite3.h
                 includes/database/database.h
                 src/database/database.cpp
-                src/accept_client/async_server.cpp src/accept_client/file_server.h includes/accept_client/async_accept_client.h includes/accept_client/async_service.h src/accept_client/async_service.cpp src/accept_client/async_accept_client.cpp)
+                src/accept_client/async_server.cpp
+                includes/accept_client/async_accept_client.h
+                includes/accept_client/async_service.h
+                src/accept_client/async_service.cpp
+                src/accept_client/async_accept_client.cpp)
 
         target_link_libraries(server SQLiteCpp)
 
