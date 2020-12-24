@@ -37,7 +37,7 @@ bool Database::auth(std::string username, std::string attemp_hash_password) {
     }
     catch (std::exception& e)
     {
-        std::cerr << "exception: " << e.what() << std::endl;
+        std::cerr << "exception: auth " << e.what() << std::endl;
         //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
     }
 
@@ -70,7 +70,7 @@ std::string Database::getUserPath(std::string username) {
     }
     catch (std::exception& e)
     {
-        std::cerr << "exception: " << e.what() << std::endl;
+        std::cerr << "exception: getUserPath " << e.what() << std::endl;
         //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
     }
 
@@ -93,7 +93,7 @@ void Database::createTable(std::string foldername) {
     }
     catch (std::exception& e)
     {
-        std::cerr << "exception: " << e.what() << std::endl;
+        std::cerr << "exception: createTable " << e.what() << std::endl;
         //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
     }
 
@@ -125,7 +125,7 @@ std::string Database::getTimefromPath(std::string foldername, std::string path) 
     }
     catch (std::exception& e)
     {
-        std::cerr << "exception: " << e.what() << std::endl;
+        std::cerr << "exception: getTimefromPath " << e.what() << std::endl;
         //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
     }
 

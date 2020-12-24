@@ -1,7 +1,7 @@
 //
 // Created by fede on 10/4/20.
 //
-
+#include <boost/asio.hpp>
 #include <filesystem>
 #include "accept_client.h"
 #include "server.h"
@@ -28,6 +28,24 @@ void Server::Run(unsigned short port_num) {
 
 ///Stops the server by waiting for the join of the thread spawned on the Start.
 void Server::Stop() {
+
     stop_.store(true);
-    thread_->join();
+
+    try {
+
+        boost::asio::ip::tcp::socket sock(ios_);
+        boost::asio::ip::tcp::endpoint ep_(boost::asio::ip::address::from_string("127.0.0.1"), 3333);
+        sock.open(ep_.protocol());
+        sock.connect(ep_);
+        boost::asio::write(sock, boost::asio::buffer("Shutdown Server\n"));
+        sock.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+        sock.close();
+
+        thread_->join();
+    } catch (std::exception &e) {
+        //The interrupt should occur from another thread
+        std::cerr<<"Thread not joined"<<std::endl;
+        std::exit(0);
+    }
+
 }
