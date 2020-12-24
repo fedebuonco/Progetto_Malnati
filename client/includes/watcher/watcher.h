@@ -20,10 +20,15 @@ class Watcher{
     void SetUpdateCallback(const std::function<void()> &updateCallback);
     void listenerFunction(std::vector<pfw::EventPtr> events);
     void Start(std::filesystem::path path);
+    Watcher(std::filesystem::path db_file, std::filesystem::path folder_watched);
 
     private:
-        std::unique_ptr<pfw::FileSystemWatcher> _watcher;
-        std::function<void()> update_callback;
+
+    std::filesystem::path db_file_;
+    std::filesystem::path folder_watched_;
+
+    std::unique_ptr<pfw::FileSystemWatcher> _watcher;
+    std::function<void()> update_callback;
 };
 
 

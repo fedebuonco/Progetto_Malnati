@@ -5,7 +5,15 @@
 #include <hex.h>
 #include <config.h>
 #include <file_sipper.h>
+#include <database.h>
 
+
+Watcher::Watcher(std::filesystem::path db_file, std::filesystem::path folder_watched) :
+    db_file_(db_file),
+    folder_watched_(folder_watched)
+{
+
+}
 
 /// This method will assign the callback called in the Watcher::listenerFunction() to the provided function.
 /// \param updateCallback The function that will be called as the callback.
@@ -18,6 +26,8 @@ void Watcher::SetUpdateCallback(const std::function<void()> &updateCallback) {
 /// \param events The series of events (file deleted, added, etc.) that triggered the function.
 void Watcher::listenerFunction(std::vector<pfw::EventPtr> events)
 {
+    // we open a db connection for all the events
+    DatabaseConnection db(db_file_,folder_watched_);
     for (const auto &event : events) {
         std::bitset<16> typeBits(event->type);
         std::cout << event->relativePath << " with the type: " << typeBits << std::endl;
@@ -26,14 +36,7 @@ void Watcher::listenerFunction(std::vector<pfw::EventPtr> events)
         if (event->relativePath.c_str() == ".hash.db")
             continue;
 
-        // According to the bit we must perform one of the following
-        // * we delete the db row if we are in a file deletion
-        // * we hash the file and add a row in the db if we are adding a file
-        // * we hash the file and update the row in the db if we have modified a file
-
-
     }
-
 
 
 

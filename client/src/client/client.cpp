@@ -10,14 +10,17 @@
 #include <sha.h>
 #include <hex.h>
 #include <database.h>
+#include <boost/algorithm/string/predicate.hpp>
 
 /// Construct a Client, execute the first hashing of each file and puts it in a state ready to track any changes in the folder.
 /// \param re Endpoint to connect to.
 /// \param folder_watched folder path that we want to keep monitored.
-Client::Client(RawEndpoint re, std::filesystem::path folder_watched) {
-    this->server_re_ = re;
-    this->folder_watched_ = folder_watched;
-    this->db_file_ = folder_watched / ".hash.db";
+Client::Client(RawEndpoint re, std::filesystem::path folder_watched) :
+    server_re_(re),
+    folder_watched_(folder_watched),
+    db_file_(folder_watched / ".hash.db"),
+    watcher_(db_file_, folder_watched_)
+{
     if(!Auth()){
         std::cerr << "Username and/or password are not correct" << std::endl;
         std::exit(12);
@@ -41,6 +44,7 @@ void Client::StartWatching(){
 /// This is the main function, create a Tree and asks for the server Tree, with those it cretes a patch and process it
 /// The processed patch is then used to fuel the SendPatch()
 void Client::Syncro(){
+    InitHash();
     //Generate Client tree string
     // std::string client_tree;
     // client_tree = GenerateTree(this->folder_watched_);
@@ -202,8 +206,8 @@ void Client::InitHash(){
         if (std::filesystem::is_directory(element_path))
             cross_platform_rep += "/";
 
-        // Now if the current element is a dir or the db we can go to the next iteration
-        if (std::filesystem::is_directory(element_path) || cross_platform_rep == ".hash.db" )
+        // Now if the current element is a dir or the db or its a temporary file we can go to the next iteration
+        if (std::filesystem::is_directory(element_path) || cross_platform_rep == ".hash.db" || boost::algorithm::ends_with(cross_platform_rep, "~") )
             continue;
 
         //we now need to retrieve the last modified time.

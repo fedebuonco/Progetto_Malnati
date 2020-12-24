@@ -71,9 +71,9 @@ void DatabaseConnection::InsertDB(std::string path_str, std::string hash, std::s
     while (query.executeStep())
     {
         // Demonstrate how to get some typed column value
-        std::string     old_fn = query.getColumn(1);
-        std::string     old_hs = query.getColumn(2);
-        std::string     old_lt  = query.getColumn(3);
+        std::string     old_fn = query.getColumn(0);
+        std::string     old_hs = query.getColumn(1);
+        std::string     old_lt  = query.getColumn(2);
 
         std::cout << "AUTH DB READ: "
                   " " << old_fn <<
@@ -87,10 +87,10 @@ void DatabaseConnection::InsertDB(std::string path_str, std::string hash, std::s
         SQLite::Transaction transaction(hash_db_);
 
         std::string sql_update = "UPDATE files "
-                                 " SET filename = " + old_fn +
-                                 " , hash = "     + hash +
-                                 " , lmt = "      + lmt_str +
-                                 " WHERE filename =  "     + old_fn;
+                                 " SET filename = \"" + old_fn +
+                                 "\" , hash = \""     + hash +
+                                 "\" , lmt = \""      + lmt_str +
+                                 "\" WHERE filename =  \""     + old_fn + "\"";
 
         int result_update = hash_db_.exec(sql_update);
 
