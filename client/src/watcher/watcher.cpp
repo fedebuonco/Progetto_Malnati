@@ -22,12 +22,15 @@ void Watcher::listenerFunction(std::vector<pfw::EventPtr> events)
         std::bitset<16> typeBits(event->type);
         std::cout << event->relativePath << " with the type: " << typeBits << std::endl;
 
-        //TODO Implement crossplatform switchcase
+        // We don't take action regarding the changes in the db.
+        if (event->relativePath.c_str() == ".hash.db")
+            continue;
 
         // According to the bit we must perform one of the following
         // * we delete the db row if we are in a file deletion
         // * we hash the file and add a row in the db if we are adding a file
         // * we hash the file and update the row in the db if we have modified a file
+
 
     }
 

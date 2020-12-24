@@ -19,6 +19,7 @@ class Client {
 private:
     RawEndpoint server_re_;
     std::filesystem::path folder_watched_;
+    std::filesystem::path db_file_;
     Watcher watcher_;
 
     bool Auth();
@@ -32,6 +33,8 @@ public:
     Client(RawEndpoint re, std::filesystem::path folder_watched);
 
     void InitHash();
+
+
 };
 
 #endif //CLIENT_CLIENT_H

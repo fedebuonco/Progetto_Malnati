@@ -13,11 +13,19 @@ include_directories(includes/utilities)
 include_directories(includes/watcher)
 include_directories(includes/config)
 include_directories(includes/client)
+include_directories(includes/sqlite)
+include_directories(includes/database)
 
 # We include the panoptes as a lib ( thanks god it has it's own already made CMakelist.txt)
 # Thus we can use it by adding it with the add_subdirectory()
 add_subdirectory(libs/panoptes)
 include_directories(libs/panoptes/include)
+
+# We include the SQLiteCpp as a lib ( thanks god it has it's own already made CMakelist.txt)
+# Thus we can use it by adding it with the add_subdirectory()
+add_subdirectory(libs/SQLiteCpp)
+include_directories(libs/SQLiteCpp/include)
+
 
 
 #--------UNIX-------------------
@@ -50,9 +58,13 @@ if (UNIX)
                 includes/transfer/patch.h
                 src/client/sender.cpp
                 includes/client/sender.h
+                src/sqlite/sqlite3.c
+                includes/sqlite/sqlite3.h
                 includes/client/file_sipper.h
-                src/client/file_sipper.cpp)
-    target_link_libraries(client dl cryptopp PanoptesFW)
+                src/client/file_sipper.cpp
+                includes/database/database.h
+                src/database/database.cpp)
+    target_link_libraries(client dl cryptopp SQLiteCpp PanoptesFW)
 endif (UNIX)
 
 #-------WIN---------------------
@@ -101,14 +113,16 @@ if (WIN32)
                 includes/config/authentication.h
                 src/transfer/control_message.cpp
                 includes/transfer/control_message.h
+                src/sqlite/sqlite3.c
+                includes/sqlite/sqlite3.h
                 src/client/client.cpp
                 includes/client/client.h
                 src/transfer/tree_t.cpp
                 includes/transfer/tree_t.h
                 src/transfer/patch.cpp
-                includes/transfer/patch.h includes/client/file_sender.cpp includes/client/sender.h includes/client/file_sipper.h src/client/file_sipper.cpp)
+                includes/transfer/patch.h includes/client/file_sender.cpp includes/client/sender.h includes/client/file_sipper.h src/client/file_sipper.cpp includes/database/database.h src/database/database.cpp)
 
-        target_link_libraries(client PanoptesFW ${CRYPTOPP})
+        target_link_libraries(client SQLiteCpp PanoptesFW ${CRYPTOPP})
 
     endif()
 endif (WIN32)

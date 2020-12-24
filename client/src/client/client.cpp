@@ -9,6 +9,7 @@
 #include <files.h>
 #include <sha.h>
 #include <hex.h>
+#include <database.h>
 
 /// Construct a Client, execute the first hashing of each file and puts it in a state ready to track any changes in the folder.
 /// \param re Endpoint to connect to.
@@ -16,6 +17,7 @@
 Client::Client(RawEndpoint re, std::filesystem::path folder_watched) {
     this->server_re_ = re;
     this->folder_watched_ = folder_watched;
+    this->db_file_ = folder_watched / ".hash.db";
     if(!Auth()){
         std::cerr << "Username and/or password are not correct" << std::endl;
         std::exit(12);
@@ -182,6 +184,10 @@ void Client::SendPatch(Patch& update){
 /// Test each file to see if already present in the hash db, and acts accordingly in order to keep a database of each
 /// hash perfomed.
 void Client::InitHash(){
+
+    // We open the db once here so that we limit the overhead
+    DatabaseConnection db(db_file_,folder_watched_);
+
     // For each file in the folder we look in the db using the relative filename and the last modified time.
     for(auto itEntry = std::filesystem::recursive_directory_iterator(folder_watched_);
         itEntry != std::filesystem::recursive_directory_iterator();
@@ -196,6 +202,10 @@ void Client::InitHash(){
         if (std::filesystem::is_directory(element_path))
             cross_platform_rep += "/";
 
+        // Now if the current element is a dir or the db we can go to the next iteration
+        if (std::filesystem::is_directory(element_path) || cross_platform_rep == ".hash.db" )
+            continue;
+
         //we now need to retrieve the last modified time.
         struct stat temp_stat;
         stat(element_path.generic_string().c_str(), &temp_stat);
@@ -205,36 +215,41 @@ void Client::InitHash(){
         // We use this tuple to see if we already hashed that version of the file.
         // If we had, then we take the hash from the db, without hashing a second time
         // the same file.
-        if(!AlreadyHashed(cross_platform_rep, mod_time)){
+
+        // If it is not a dir
+        if(!db.AlreadyHashed(cross_platform_rep, std::to_string(mod_time))){
             //Here only if the tuple filpath,mod_time is not present, so we need to hash and then update the db.
             CryptoPP::SHA256 hash;
             std::string digest;
-            if (!std::filesystem::is_directory(element_path)) {
+
                 try {
                     CryptoPP::FileSource f(
                                 element_path.generic_string().c_str(),
                                 true,
                                 new CryptoPP::HashFilter(hash,
                                                          new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
-                        // Here we have the hash of the file.
-                        // Now we can insert it in the DB
 
-                    InsertDB(cross_platform_rep, hash, mod_time);
+                    // We print the digest
+                    std::cout << "Digest is = " << digest << std::endl;
+
+                    // Here we have the hash of the file.
+                    // Now we can insert it in the DB
+                    db.InsertDB(cross_platform_rep, digest , std::to_string(mod_time));
 
                 } catch(std::exception& e){
-                        std::cerr <<"Hash of " << cross_platform_rep <<
-                        " could not be computed due to error " <<
+                        std::cerr <<"ERROR " <<
                         e.what() << std::endl;
                         //TODO Gestire impossibiltà di hashing.
+                        //TODO gestire errori db
                         continue;
                 }
-            }
+
         }
 
-        // Now we clean the db for files that are not anymore in the folder
-        CleanDB();
+
     }
 
 
-
+    // Now we clean the db for files that are not anymore in the folder
+    db.CleanOldRows();
 }
