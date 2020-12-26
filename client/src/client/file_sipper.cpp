@@ -53,17 +53,30 @@ void FileSipper::OpenFile() {
 /// Takes the file and send its metadata to the server.
 /// \param t_ec
 void FileSipper::FirstSip(const boost::system::error_code& t_ec){
+
+    // TODO We need to retrieve the entry from the the db
+    // and save the hash and lmt to a string.
+
     if (files_stream_) {
         // We create the first sip by sending file metadata
         int i =0;
         // I paste the metadata in the buffer in this format
-        // FILENAME@HASH@DIMESION
+        // FILENAME@HASH@LMT
         buf_metadata.fill('\000');
+
+        // We start costrugting the first sip, name of the file, then hash then lmt.
+        //name
         for( auto letter : path_){
             buf_metadata[i] = letter;
             i++;
         }
+        //TODO hash
+        //TODO lmt
+
+        //then we delimit the end using the terminator char
         buf_metadata[i] = '\000';
+
+        // And send it
         auto buf = boost::asio::buffer(buf_metadata.data(),1024);
         writeBuffer(buf);
     }
