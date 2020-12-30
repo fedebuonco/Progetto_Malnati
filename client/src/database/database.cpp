@@ -10,7 +10,7 @@ DatabaseConnection::DatabaseConnection(std::filesystem::path db_path, std::files
     // We create the table if not exist.
 
     std::string table_create = " CREATE TABLE IF NOT EXISTS files "
-                               " (filename TEXT PRIMARY KEY, hash TEXT, lmt TEXT )";
+                               " (filename TEXT PRIMARY KEY, hash TEXT, lmt TEXT , status TEXT )";
 
     int result_create = hash_db_.exec(table_create);
 
@@ -90,6 +90,7 @@ void DatabaseConnection::InsertDB(std::string path_str, std::string hash, std::s
                                  " SET filename = \"" + old_fn +
                                  "\" , hash = \""     + hash +
                                  "\" , lmt = \""      + lmt_str +
+                                 "\" , status = \""      + "NEW" +
                                  "\" WHERE filename =  \""     + old_fn + "\"";
 
         int result_update = hash_db_.exec(sql_update);
@@ -115,7 +116,9 @@ void DatabaseConnection::InsertDB(std::string path_str, std::string hash, std::s
     std::string sql_insert = "INSERT INTO files "
                              "VALUES ( \""     + path_str +
                                      "\" , \"" + hash +
-                                     "\" , \"" + lmt_str + "\") ";
+                                     "\" , \"" + lmt_str +
+                                     "\" , \"" + "NEW" +
+                                     "\") ";
 
     int result_insert = hash_db_.exec(sql_insert);
 

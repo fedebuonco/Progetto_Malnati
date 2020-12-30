@@ -42,6 +42,15 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
 
 }
 
+/// Takes the db files where we store the status and uses it in order to identify the file that we must dispatch.
+/// \param db_path
+/// \return int number of dispatched file.
+int Patch::Dispatch(const std::filesystem::path db_path){
+    // TODO for each file in the to be sent look the status and if is it 0 insert it in the queue.
+    // return counter
+    return 0;
+}
+
 /// Pretty Prints the changes contained in the patch
 /// \return A string summing up the current client-server file situation.
 std::string Patch::PrettyPrint(){

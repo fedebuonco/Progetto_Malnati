@@ -64,7 +64,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
 
             std::filesystem::directory_entry user_directory_path{ "../backupFiles/backupROOT/"+user_folder_name};
-
+            users_tree.
 
             //Check if this user has a folder inside backupROOT
             if (!user_directory_path.exists()) {
