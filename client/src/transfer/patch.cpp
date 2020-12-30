@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <config.h>
 #include <set>
+#include <database.h>
 #include "patch.h"
 
 /// We populate the to_be_sent_vector an the to be elimnated
@@ -45,9 +46,15 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
 /// Takes the db files where we store the status and uses it in order to identify the file that we must dispatch.
 /// \param db_path
 /// \return int number of dispatched file.
-int Patch::Dispatch(const std::filesystem::path db_path){
+int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::path folder_watched){
     // TODO for each file in the to be sent look the status and if is it 0 insert it in the queue.
-    // return counter
+    int counter = 0;
+    DatabaseConnection db(folder_watched, db_path);
+    for ( auto element : to_be_sent_vector){
+        // TODO check status<
+    }
+
+
     return 0;
 }
 

@@ -40,7 +40,7 @@ public:
     std::vector<std::pair<std::string, unsigned  long>> to_be_elim_vector;
 
     Patch(TreeT client_treet, TreeT server_treet);
-    int Dispatch(const std::filesystem::path db_path);
+    int Dispatch(const std::filesystem::path db_path, const std::filesystem::path folder_watched);
     std::string PrettyPrint();
 
 
