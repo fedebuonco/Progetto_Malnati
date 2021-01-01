@@ -14,4 +14,4 @@ server/backupFiles/backupROOT/*
 server/backupFiles/usersTREE/*
 
 
-client/config_file/config.json
+client/config_file/*

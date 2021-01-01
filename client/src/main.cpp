@@ -4,19 +4,44 @@
 #include <client.h>
 #include <boost/property_tree/ptree.hpp>
 #include <watcher.h>
+#include <filesystem>
 
 int main(int argc, char *argv[]) {
      /**
      * CONFIGURATION PHASE
      * Program reads and writes inside config the option with which the program was run
      */
+
+     //Before starting the configuration, we check if the config structure (file and folder) are correct
+     if(!Config::get_Instance()->IsConfigStructureCorrect()){
+
+         //Structure is not correct, so we restore with the default config structure
+         Config::get_Instance()->SetDefaultConfig();
+     }
+
+    //Check if there are some arguments
     if (argc > 1) {
-        int value = Config::get_Instance()->SetConfig(argc, argv);
-        //TODO Per me è meglio usare eccezione
-        if(value==1){
-            return 1;
+
+        //The user launch the program with configuration property
+        try {
+            int value = Config::get_Instance()->SetConfig(argc, argv);
+            //TODO Per me è meglio usare eccezione
+            if (value == 1) {
+                std::cout << "RETURN " << std::endl;
+                return 1;
+            }
+
         }
+        catch (std::exception& e){
+
+            std::cerr << e.what() << std::endl;
+            std::exit(1);
+        }
+
+
     }
+
+    //Shows the configuration with which the program is launched
     Config::get_Instance()->PrintConfiguration();
 
     /**
