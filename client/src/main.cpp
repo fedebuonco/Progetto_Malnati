@@ -24,16 +24,10 @@ int main(int argc, char *argv[]) {
 
         //The user launch the program with configuration property
         try {
-            int value = Config::get_Instance()->SetConfig(argc, argv);
-            //TODO Per me è meglio usare eccezione
-            if (value == 1) {
-                std::cout << "RETURN " << std::endl;
-                return 1;
-            }
-
+            Config::get_Instance()->SetConfig(argc, argv);
         }
         catch (std::exception& e){
-
+            //TODO: Controllare se tutto ok
             std::cerr << e.what() << std::endl;
             std::exit(1);
         }
