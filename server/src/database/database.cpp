@@ -3,13 +3,22 @@
 #include <string>
 #include <SQLiteCpp/Database.h>
 #include <iostream>
-#include <fstream>
+#include <Windows.h>
 
 bool Database::auth(std::string username, std::string attemp_hash_password) {
 
+    char str[MAX_PATH];
+    GetModuleFileNameA(NULL, str, MAX_PATH);
+    std::cout<<" full "<< str <<std::endl;
+    std::string full = std::string(str);
+    std::string todelete = "\\cmake-build-debug\\server.exe";
+    std::string s = full.substr(0,full.size() - todelete.size());
+
+
     try {
         // Open a database file
-        SQLite::Database    db("../backupFiles/authDB.db");
+        std::cout<<" path "<< s+"/backupFiles/authDB.db"<<std::endl;
+        SQLite::Database    db(s+"/backupFiles/authDB.db");
 
         // Compile a SQL query, containing one parameter (index 1)
         SQLite::Statement   query(db, "SELECT * FROM user WHERE username = ?");
@@ -46,10 +55,16 @@ bool Database::auth(std::string username, std::string attemp_hash_password) {
 }
 
 std::string Database::getUserPath(std::string username) {
+    char str[MAX_PATH];
+    GetModuleFileNameA(NULL, str, MAX_PATH);
+    std::cout<<" full "<< str <<std::endl;
+    std::string full = std::string(str);
+    std::string todelete = "\\cmake-build-debug\\server.exe";
+    std::string s = full.substr(0,full.size() - todelete.size());
 
     try {
         // Open a database file
-        SQLite::Database    db("../backupFiles/authDB.db");
+        SQLite::Database    db(s+"\\backupFiles\\authDB.db");
 
         // Compile a SQL query, containing one parameter (index 1)
         SQLite::Statement   query(db, "SELECT folderName FROM user WHERE username = ?");
@@ -74,13 +89,21 @@ std::string Database::getUserPath(std::string username) {
         //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
     }
 
+    return std::to_string(1);
+
 }
 
 void Database::createTable(std::string foldername) {
+    char str[MAX_PATH];
+    GetModuleFileNameA(NULL, str, MAX_PATH);
+    std::cout<<" full "<< str <<std::endl;
+    std::string full = std::string(str);
+    std::string todelete = "\\cmake-build-debug\\server.exe";
+    std::string s = full.substr(0,full.size() - todelete.size());
 
     try {
         // Open a database file in create/write mode
-        SQLite::Database    db("../backupFiles/usersTREE/"+foldername+".db", SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
+        SQLite::Database    db(s+"\\backupFiles\\usersTREE\\"+foldername+".db", SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
         std::cout << "SQLite database file '" << db.getFilename().c_str() << "' opened successfully\n";
 
         // Create a new table with an explicit "id" column aliasing the underlying rowid
@@ -100,11 +123,16 @@ void Database::createTable(std::string foldername) {
 }
 
 std::string Database::getTimefromPath(std::string foldername, std::string path) {
-
+    char str[MAX_PATH];
+    GetModuleFileNameA(NULL, str, MAX_PATH);
+    std::cout<<" full "<< str <<std::endl;
+    std::string full = std::string(str);
+    std::string todelete = "\\cmake-build-debug\\server.exe";
+    std::string s = full.substr(0,full.size() - todelete.size());
 
     try {
         // Open a database file
-        SQLite::Database    db("../backupFiles/usersTREE/"+foldername+".db");
+        SQLite::Database    db(s+"\\backupFiles\\usersTREE\\"+foldername+".db");
 
         // Compile a SQL query, containing one parameter (index 1)
         SQLite::Statement   query(db, "SELECT time FROM UserTree WHERE path= ?");

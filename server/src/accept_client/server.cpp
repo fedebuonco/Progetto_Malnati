@@ -6,7 +6,7 @@
 #include "accept_client.h"
 #include "server.h"
 
-Server::Server() : stop_(false){};
+Server::Server(std::string s) : stop_(false), serverPath(s){};
 
 /// Starts the server by taking control of the thread_ smart pointer
 void Server::Start(unsigned short port_num) {
@@ -37,7 +37,7 @@ void Server::Stop() {
         boost::asio::ip::tcp::endpoint ep_(boost::asio::ip::address::from_string("127.0.0.1"), 3333);
         sock.open(ep_.protocol());
         sock.connect(ep_);
-        boost::asio::write(sock, boost::asio::buffer("Shutdown Server\n"));
+        boost::asio::write(sock, boost::asio::buffer("99"));
         sock.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
         sock.close();
 

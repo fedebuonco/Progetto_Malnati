@@ -6,13 +6,19 @@
 #include <windows.h>
 #include "sqlite3.h"
 
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <filesystem>
+
 volatile sig_atomic_t flag = 0;
 void closeServer(int sig){ // can be called asynchronously
     flag = 1; // set flag
 }
 
 
-int main(){
+int main(int argc, char *argv[]){
+
+    std::string mypath = boost::filesystem::system_complete( boost::filesystem::path( argv[0] ) ).remove_filename().string();
 
     unsigned short port_num = 3333;
     std::cout << sqlite3_libversion() << std::endl;
@@ -20,13 +26,14 @@ int main(){
 
 
     try{
-        Server srv;
+        Server srv(argv[0]);
         srv.Start(port_num);
 
         // Register signals
         signal(SIGINT, closeServer);
         while(1)
             if(flag){ // my action when signal set it 1
+                std::cout<<"Shutdown Server"<<std::endl;
                 srv.Stop();
                 break;
             }
@@ -37,7 +44,6 @@ int main(){
             std::exit(0);
 
     }
-
-    return 0;
+        return 0;
 }
 

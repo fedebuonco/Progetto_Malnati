@@ -6,10 +6,13 @@
 #include <watcher.h>
 
 int main(int argc, char *argv[]) {
-     /**
-     * CONFIGURATION PHASE
-     * Program reads and writes inside config the option with which the program was run
-     */
+
+    /**
+    * CONFIGURATION PHASE
+    * Program reads and writes inside config the option with which the program was run
+    */
+    //std::cout<<"PATH: "<<argv[0]<<std::endl;
+    Config::get_Instance()->SetPath(argv[0]);
     if (argc > 1) {
         int value = Config::get_Instance()->SetConfig(argc, argv);
         //TODO Per me è meglio usare eccezione

@@ -16,8 +16,9 @@ private:
     std::unique_ptr<std::thread> thread_;
     boost::asio::io_service ios_;
     std::atomic<bool> stop_;
+    std::string serverPath;
 public:
-    Server();
+    Server(std::string s);
     void Start(unsigned short port_num);
     void Stop();
 private:

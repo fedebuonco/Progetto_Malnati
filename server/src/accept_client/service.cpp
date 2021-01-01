@@ -55,14 +55,18 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
     boost::asio::read(*sock, request_buf, ec);
     // This checks if the client has finished writing
     if (ec && ec != boost::asio::error::eof) {
+        //TODO: rimuovere stampa DEBUG
+        /** Chiusura del server: in caso di chiusura del server alcune volte stampa DEBUG... altre
+         * volte stampa Ho Letto ...
+         * Rimuovere la stampa DEBUG e non verrà stampato */
         //qua se non ho ricevuto la chiusura del client
-        const char *data = boost::asio::buffer_cast<const char *>(request_buf.data());
+        //const char *data = boost::asio::buffer_cast<const char *>(request_buf.data());
         //std::cout << "receive failed: " << data << std::endl;
-        if (strcmp(data, "Shutdown Server\n") != 0) {
-            std::cout << "DEBUG: NON ho ricevuto il segnale di chiusura del client";
-            //throw boost::system::system_error(ec);
-            return;
-        }
+        //if (strcmp(data, "Shutdown Server") != 0) {
+        std::cout << "DEBUG: NON ho ricevuto il segnale di chiusura del client";
+        //throw boost::system::system_error(ec);
+        return;
+        //}
     }
 
 
