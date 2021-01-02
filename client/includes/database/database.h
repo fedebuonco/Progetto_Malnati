@@ -20,5 +20,6 @@ public:
     void InsertDB(std::string path_str, std::string hash, std::string lmt_str);
     void CleanOldRows();
 
+    bool ChangeStatusToSending(const std::string& filename);
 };
 

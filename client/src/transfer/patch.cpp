@@ -49,13 +49,16 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
 int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::path folder_watched){
     // TODO for each file in the to be sent look the status and if is it 0 insert it in the queue.
     int counter = 0;
-    DatabaseConnection db(folder_watched, db_path);
+    DatabaseConnection db(db_path, folder_watched);
     for ( auto element : to_be_sent_vector){
-        // TODO check status<
+        if (db.ChangeStatusToSending(element.first)){ // THis return true only if the current status is "NEW" and changes it to "SENDING"
+            // TODO craeazione filepack nello heap.
+            // TODO Insert nella queue.
+            // send_queue_.insert(filepak)
+            counter++;
+        }
     }
-
-
-    return 0;
+    return counter;
 }
 
 /// Pretty Prints the changes contained in the patch
@@ -78,7 +81,7 @@ std::string Patch::PrettyPrint(){
         pretty.append(file.first + " - ");
         pretty.append(std::to_string(file.second) + "\n");
     }
-    pretty.append(":::::::: Files that will be Sent (New files or newer files) - Last Modified Time ::::::::\n" );
+    pretty.append(":::::::: Files that will be Sent or are in sending (New files or newer files) - Last Modified Time ::::::::\n" );
     for (auto file : to_be_sent_vector ){
         pretty.append(file.first + " - ");
         pretty.append(std::to_string(file.second) + "\n");
@@ -99,14 +102,14 @@ std::string Patch::PrettyPrint(){
     for (auto file : to_be_elim_vector){
         std::cout << file.first + " - " << file.second << std::endl;
     }
-    std::cout << ":::::::: Files that will be Sent (New files or newer files) - Last Modified Time ::::::::" << std::endl;
+    std::cout << ":::::::: Files that will be Sent or are in sending (New files or newer files) - Last Modified Time ::::::::" << std::endl;
     for (auto file : to_be_sent_vector){
         std::cout << file.first + " - " << file.second << std::endl;
     }
     std::cout << ":::::::: Recap : new files (" << added_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : removed files (" << removed_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : common files (" << common_.size() << ")   ::::::::" << std::endl;
-    std::cout << ":::::::: Recap : Files that will be sent (" << to_be_sent_vector.size() << ")   ::::::::" << std::endl;
+    std::cout << ":::::::: Recap : Files that will be sent or are in sending (" << to_be_sent_vector.size() << ")   ::::::::" << std::endl;
 
 
     return pretty;

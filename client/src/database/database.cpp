@@ -155,3 +155,53 @@ void DatabaseConnection::CleanOldRows(){
 
     }
 }
+
+/// Goes in the db and changes the status to "SENDING" but does it only if the current status is "NEW"
+/// \param filename of the file that we want to put in sending
+/// \return true if we succesfully switched the status to "NEW" to "SENDING"
+bool DatabaseConnection::ChangeStatusToSending(const std::string& filename) {
+
+    // Compile a SQL query, containing 1 parameters
+    SQLite::Statement   query(hash_db_, "SELECT * "
+                                        "FROM files "
+                                        "WHERE filename = ? ");
+
+    // Bind to ? of the query
+    query.bind(1, filename);
+
+    while (query.executeStep()) {
+        // Demonstrate how to get some typed column value
+        std::string current_status = query.getColumn(3);
+
+
+        std::cout << "AUTH DB READ: "
+                     " " << filename <<
+                  " " << "with status: " <<
+                  " " << current_status << std::endl;
+
+        if (current_status == "NEW"){
+            // we can put it in sending, so we update the row to notify future query for this file.
+
+            SQLite::Transaction transaction(hash_db_);
+
+            std::string sql_update_status = " UPDATE files "
+                                            " SET status = \'SENDING\' "
+                                            " WHERE filename =  \"" + filename + "\"";
+
+            int result_update = hash_db_.exec(sql_update_status);
+
+
+            std::cout << " Executed Update " << sql_update_status << std::endl;
+            std::cout << " With Result =  " << result_update << std::endl;
+
+            // Commit transaction
+            transaction.commit();
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
+
+}

@@ -52,6 +52,7 @@ void Client::Syncro(){
     // Then we ask for the Server's TreeT
     TreeT server_treet = RequestTree();
     Patch update(client_treet, server_treet);
+    update.Dispatch(db_file_, folder_watched_);
     if (DEBUG)
         update.PrettyPrint();
     //SendPatch(update);
