@@ -4,13 +4,17 @@
 #include <client.h>
 #include <boost/property_tree/ptree.hpp>
 #include <watcher.h>
+#include <files.h>
+#include <file_sipper.h>
 
 int main(int argc, char *argv[]) {
      /**
      * CONFIGURATION PHASE
      * Program reads and writes inside config the option with which the program was run
      */
-    if (argc > 1) {
+
+
+     if (argc > 1) {
         int value = Config::get_Instance()->SetConfig(argc, argv);
         //TODO Per me è meglio usare eccezione
         if(value==1){
@@ -31,6 +35,7 @@ int main(int argc, char *argv[]) {
     }
     RawEndpoint raw_endpoint = Config::get_Instance()->ReadRawEndpoint();
     /**
+     * EXECUTION PHASE
      * The main builds the client that will contain the main logic of the app.
      */
     // Building the Client

@@ -66,59 +66,5 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
     // std::cout << "Server connesso\n" << std::endl;
 }
 
-/// Will send username and password. After that it will shutdown the send part of the socket thus providing the server a way to
-/// tell that the connection is over. After the authenticate the socket is basically useless and needs to be shutdown completly.
-/// \return True if Auth went ok and user has successfully logged in, False if not.
-bool SyncTCPSocket::Authenticate() {
 
-    Credential credential = Authentication::get_Instance()->ReadCredential();
-
-    //Creation of the Auth ControlMessage type = 1
-    ControlMessage auth_message{1};
-
-    //Adding User and Password
-    auth_message.AddElement("Username", credential.username_);
-    auth_message.AddElement("HashPassword", credential.hash_password_);
-
-    //And sending it formatted in JSON language
-    boost::asio::write(sock_, boost::asio::buffer(auth_message.ToJSON()));
-    // we sent the Auth message, we will shutdown in order to tell the server that we sent all
-    sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
-
-    //Now we use an extensible buffer for the unknown size response
-    boost::asio::streambuf response_buf;
-
-    //Now let's wait the response using theAcceptClient same technique in the server
-    //(we will shut down the sending part on the server)
-    //prompting an eof error
-    boost::system::error_code ec;
-    boost::asio::read(sock_, response_buf, ec);
-    if (ec != boost::asio::error::eof) {
-        //TODO controlla errori
-    }
-    //We handle the response parsing a string and then printing it.
-    //Read the response_buf using an iterator and store it in a string
-    //TODO might be an easier method to do this
-    std::string response_json( (std::istreambuf_iterator<char>(&response_buf)), std::istreambuf_iterator<char>() );
-
-    //Now we parsed the request and we use the string in order to create the corresponding ControlMessage
-    ControlMessage response_message{response_json};
-    if(response_message.type_ == 51){// it means we are actually dealing with a auth response (what we were expecting)
-        //TODO return true false accordingly to the body of the control message received for now we just check it is an auth response
-        // later on we will check the result
-        // auth = true /false
-        std::string auth_response = response_message.GetElement("auth");
-
-        if(auth_response=="true") {
-
-            if(DEBUG) std::cout << "\n\nUser " << Config::get_Instance()->ReadProperty("username") << " successfully authenticated."
-                      << std::endl;
-            return true;
-        }
-
-    }
-
-    //If we don't go to return true, there is a problem so return false
-    return false;
-}
 

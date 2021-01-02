@@ -6,37 +6,6 @@
 #include "../../includes/database/database.h"
 #include "service.h"
 
-/// This generate directory tree following the tree command protocol available on linux
-std::string
-GenerateTree(const std::filesystem::path& path) {
-
-    std::vector<std::string> vector_result;
-    std::string result;
-
-    for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
-        itEntry != std::filesystem::recursive_directory_iterator();
-        ++itEntry )
-    {
-        const auto filepath = itEntry->path();
-        std::filesystem::path clean_filepath = filepath.lexically_relative(path);
-        std::string file_str = clean_filepath.generic_string();
-        if (std::filesystem::is_directory(filepath)) {
-            vector_result.push_back(file_str + "/" + '\n');
-        } else {
-            vector_result.push_back(file_str+ '\n');
-        }
-    }
-
-    //Here we sort the tree in alphabetic order to permit cross platform diff
-    std::sort(vector_result.begin(), vector_result.end());
-    for(auto clean_path : vector_result )
-    {
-        result.append(clean_path);
-    }
-
-    return result;
-}
-
 /// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and detach it
 /// \param sock TCP socket conneted to the client
 void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock) {
@@ -47,55 +16,35 @@ void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock) {
 /// Real handling starts here. Should distinguish auth requests and tree requests
 void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
-    //Here we read the request -> parse it in a ptree -> use the ptree to build the ControlMessage and then we
-    //Switch case in order to correctly handle it.
+    // Here we read the request
+    // parse it in a ptree,
+    // use the ptree to build the ControlMessage
+    // we then check that the message is authenitic
+    // and then we switch case in order to correctly handle it.
 
-    boost::asio::streambuf request_buf;
-    boost::system::error_code ec;
-    boost::asio::read(*sock, request_buf, ec);
-    // This checks if the client has finished writing
-    if (ec != boost::asio::error::eof){
-        //qua se non ho ricevuto la chiusura del client
-        std::cout<<"DEBUG: NON ho ricevuto il segnale di chiusura del client";
-        throw boost::system::system_error(ec);
+    ControlMessage request_message = SyncReadCM(sock);
+
+    // Here we check that the message is authentic
+    if (!CheckAuthenticity(request_message)){
+        ControlMessage check_result{51};
+        check_result.AddElement("auth", "false");
+        SyncWriteCM(sock, check_result);
     }
 
-    //Read the request_buf using an iterator and store it in a string
-    //TODO might be an easier method to do this
-    std::string request_json( (std::istreambuf_iterator<char>(&request_buf)), std::istreambuf_iterator<char>() );
-    //DEBUG
-    std::cout << "Ho letto  " << request_json << std::endl;
-
-    //Now we parsed the request and we use the ptree object in  order to create the corresponding ControlMessage
-    ControlMessage request_message{request_json};
 
     // Here based on the type of the message we switch accordingly.
+    // All the message that arrive here are authentic.
     switch (request_message.type_) {
         case 1:{//AUTH REQUEST
-            // TODO real checkIdentity and control message
-            // TODO change control message constructor for now in the client we will only check that is 51 not if auth = true/false
-            std::string hashpass = request_message.GetElement("HashPassword");
-            std::string username = request_message.GetElement("Username");
-
             ControlMessage check_result{51};
+            check_result.AddElement("auth", "true");
 
-            Database authentication;
-
-            if(authentication.auth(username, hashpass) ){
-                check_result.AddElement("auth", "true");
-            } else {
-                check_result.AddElement("auth", "false");
-            }
-
-            boost::asio::write(*sock, boost::asio::buffer(check_result.ToJSON()));
-            // Send the eof error shutting down the server.
-            // TODO qua magicamente va ignorato l'errore GRAVISSIMO
-            sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
+            SyncWriteCM(sock, check_result);
             break;
         }
         case 2:{//TREE & TIME Request
             //Let's start building the Response Control Message
-
+            // TODO troppa roba qui, meglio fare una funzione chiamata da case 2
             ControlMessage treet_result{52};
             // We compute & add the tree
             std::string username = request_message.GetElement("Username");
@@ -141,10 +90,8 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             treet_result.AddElement("Tree", server_treet.genTree());
             treet_result.AddElement("Time", server_treet.genTimes());
             //TODO Implement DB and retrieve time according to this function
-            boost::asio::write(*sock, boost::asio::buffer(treet_result.ToJSON()));
-            // Send the eof error shutting down the server.
-            // TODO qua magicamente va ignorato l'errore GRAVISSIMO
-            sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
+
+            SyncWriteCM(sock, treet_result);
             break;
         }
         case 3:{//DELETE REQUEST
@@ -152,7 +99,6 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
             // Here we delete the files that are in the mess.
             break;
         }
-
     }
 
     // Now the service class was instantiated in the heap &
@@ -162,3 +108,33 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
     delete this;
 }
 
+bool Service::CheckAuthenticity(const ControlMessage& cm){
+    Database authentication;
+    return authentication.auth(cm.username_, cm.hashkey_);
+}
+
+bool Service::SyncWriteCM(std::shared_ptr<asio::ip::tcp::socket> sock, ControlMessage& cm){
+    //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
+    boost::asio::write(*sock, boost::asio::buffer(cm.ToJSON()));
+    sock->shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+    return true;
+}
+
+ControlMessage Service::SyncReadCM(std::shared_ptr<asio::ip::tcp::socket> sock){
+    // We read until the eof, then we return a ControlMessage using the buffer we read.
+    boost::asio::streambuf request_buf;
+    boost::system::error_code ec;
+    boost::asio::read(*sock, request_buf, ec);
+    // This checks if the client has finished writing
+    if (ec != boost::asio::error::eof){
+        //TODO Sometimes we get here. When the server shuts down
+        std::cerr<<"DEBUG: NON ho ricevuto il segnale di chiusura del client";
+        throw boost::system::system_error(ec);
+    }
+    //Read the response_buf using an iterator and store it in a string In order to store it in a ControlMessage
+    // TODO might be an easier method to do this
+    std::string response_json((std::istreambuf_iterator<char>(&request_buf)), std::istreambuf_iterator<char>() );
+    std::cout << "Ho letto  " << response_json << std::endl;
+    ControlMessage cm{response_json};
+    return cm;
+}
