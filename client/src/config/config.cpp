@@ -238,10 +238,26 @@ void Config::PrintConfiguration() {
 }
 
 void Config::SetPath(std::string s) {
-    std::filesystem::path mypath = std::filesystem::absolute( std::filesystem::path( s ) ).remove_filename().parent_path().parent_path();
+    // The executable will be placed in the /bin being / the root of our project. ( so at the same level of /libs, /includes , etc)
+    // so in order to find the config folder and file we need to navigate to that folder
+    std::cout <<" STRING PASSED : "<< s << std::endl;
 
-    //std::cout <<"CUT: "<< full_path.string().substr(0,full_path.string().size() - todelete.size()) << std::endl;
-    this->exepath = mypath;
+    std::filesystem::path executable_path = std::filesystem::path(s).lexically_normal();
+    std::cout <<" executable_path : "<< executable_path.string() << std::endl;
+
+    // we get the absolute path
+    std::filesystem::path executable_path_abs = std::filesystem::absolute(executable_path);
+    std::cout <<" executable_path_abs : "<< executable_path_abs.string() << std::endl;
+
+    std::filesystem::path bin_path_abs = executable_path_abs.remove_filename();
+    std::cout <<" bin_path_abs : "<< bin_path_abs.string() << std::endl;
+
+    std::filesystem::path master_path_abs = bin_path_abs.parent_path().parent_path();
+    std::cout <<" master_path_abs : "<< master_path_abs.string() << std::endl;
+
+
+    std::cout <<" CUT: "<< master_path_abs.string() << std::endl;
+    this->exepath = master_path_abs;
 
 }
 
