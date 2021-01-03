@@ -18,15 +18,14 @@ void closeServer(int sig){ // can be called asynchronously
 
 int main(int argc, char *argv[]){
 
-    std::string mypath = boost::filesystem::system_complete( boost::filesystem::path( argv[0] ) ).remove_filename().string();
-
     unsigned short port_num = 3333;
     std::cout << sqlite3_libversion() << std::endl;
-
+    std::string mypath = boost::filesystem::system_complete( boost::filesystem::path( argv[0] ) ).remove_filename().parent_path().string();
+    std::cout<<"PATH: "<<mypath<<std::endl;
 
 
     try{
-        Server srv(argv[0]);
+        Server srv(mypath);
         srv.Start(port_num);
 
         // Register signals

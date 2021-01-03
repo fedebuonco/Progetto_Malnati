@@ -20,10 +20,11 @@ class Service {
 private:
     std::shared_ptr<asio::ip::tcp::socket> sock_;
     asio::streambuf request_buf_;
+    std::string serverPath;
 
 public:
     Service(){};
-    void ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock);
+    void ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock,std::string s);
 
 private:
     // The Destructor is made private, as the only way to delete a service

@@ -20,7 +20,7 @@ void Server::Start(unsigned short port_num) {
 void Server::Run(unsigned short port_num) {
     //TODO esempio di come se usiamo le parentesi tonde qua nel costruttore non funziona
     // malnati ha spiegato come mai a lezione
-    AcceptClient acc{ios_, port_num};
+    AcceptClient acc{ios_, port_num,this->serverPath};
     while(!stop_.load()) {
         acc.SpawnSession();
     }
@@ -37,7 +37,7 @@ void Server::Stop() {
         boost::asio::ip::tcp::endpoint ep_(boost::asio::ip::address::from_string("127.0.0.1"), 3333);
         sock.open(ep_.protocol());
         sock.connect(ep_);
-        boost::asio::write(sock, boost::asio::buffer("99"));
+        boost::asio::write(sock, boost::asio::buffer("Shutdown Server"));
         sock.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
         sock.close();
 

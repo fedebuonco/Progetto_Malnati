@@ -26,11 +26,12 @@ TreeT::TreeT(const std::string& tree, const std::string& time) {
     }
 }
 
-TreeT::TreeT(const std::filesystem::path& path){
+TreeT::TreeT(const std::filesystem::path& path, std::string sp){
 
+    this->serverPath = sp;
     this->folder_path_ = path;
 
-    std::filesystem::path folder_name = path.lexically_relative("../backupFiles/backupROOT/");
+    std::filesystem::path folder_name = path.lexically_relative(this->serverPath + "\\backupFiles\\backupROOT\\");
     std::string folder_name_string = folder_name.generic_string();
 
     for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
@@ -50,7 +51,7 @@ TreeT::TreeT(const std::filesystem::path& path){
         // TODO retrieve the last modified time from the db and then uncomment this part and delete the otehr call in the block
 
         Database db;
-        std::string time_str = db.getTimefromPath(folder_name_string, cross_platform_rep);
+        std::string time_str = db.getTimefromPath(folder_name_string, cross_platform_rep, this->serverPath);
         // I assume that i have the std::string time_str;
 
         unsigned long mod_time = std::stoul(time_str, nullptr, 0);

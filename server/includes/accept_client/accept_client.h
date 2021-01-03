@@ -19,8 +19,9 @@ class AcceptClient{
 private:
     boost::asio::io_service& ios_;
     boost::asio::ip::tcp::acceptor acceptor_;
+    std::string serverPath;
 public:
-    AcceptClient(boost::asio::io_service& ios, unsigned short port_num);
+    AcceptClient(boost::asio::io_service& ios, unsigned short port_num, std::string s);
     void SpawnSession();
 
 

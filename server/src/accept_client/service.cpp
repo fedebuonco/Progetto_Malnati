@@ -39,7 +39,8 @@ GenerateTree(const std::filesystem::path& path) {
 
 /// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and detach it
 /// \param sock TCP socket conneted to the client
-void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock) {
+void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock,std::string s) {
+    this->serverPath=s;
     std::thread th(([this, sock] () {HandleClient(sock);}));
     th.detach();
 }
@@ -92,7 +93,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
                 Database authentication;
 
-                if (authentication.auth(username, hashpass)) {
+                if (authentication.auth(username, hashpass, this->serverPath)) {
                     check_result.AddElement("auth", "true");
                 } else {
                     check_result.AddElement("auth", "false");
@@ -112,20 +113,20 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                 std::string username = request_message.GetElement("Username");
 
                 Database db;
-                std::string user_folder_name = db.getUserPath(username);
+                std::string user_folder_name = db.getUserPath(username, this->serverPath);
 
                 std::cout << "User folder: " << user_folder_name << std::endl;
 
-                std::filesystem::directory_entry users_tree{"../backupFiles/usersTREE"};
+                std::filesystem::directory_entry users_tree{this->serverPath + "\\backupFiles\\usersTREE"};
                 if (!users_tree.exists()) {
                     //User doesn't have a folder, so we create a new one and we add a user db
 
                     //TODO Check error during creation of directory
-                    std::filesystem::create_directories("../backupFiles/usersTREE");
+                    std::filesystem::create_directories(this->serverPath + "\\backupFiles\\usersTREE");
                 }
 
 
-                std::filesystem::directory_entry user_directory_path{"../backupFiles/backupROOT/" + user_folder_name};
+                std::filesystem::directory_entry user_directory_path{this->serverPath + "\\backupFiles\\backupROOT\\" + user_folder_name};
 
 
                 //Check if this user has a folder inside backupROOT
@@ -139,7 +140,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
 
                     //Create DB file for the user TREE
-                    db.createTable(user_folder_name);
+                    db.createTable(user_folder_name, this->serverPath );
                 }
                 /*TODO Se si verifica un eccezione tra la creazione dello userfolder e il createTable (db utente)
                 vediamo la directory ma non vediamo il DB. Azione da fare è RIPROVA. Questo potrebbe creare problemi, consiglio di fare nella catch una politica
@@ -149,7 +150,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
                 //TODO - IL PROGRAMMA TERMINA MALE SE METTI CARTELLA CHE NON TROVA
                 // TODO change the dir accordingly to username of the client
-                TreeT server_treet(user_directory_path);
+                TreeT server_treet(user_directory_path, this->serverPath);
                 treet_result.AddElement("Tree", server_treet.genTree());
                 treet_result.AddElement("Time", server_treet.genTimes());
                 //TODO Implement DB and retrieve time according to this function
