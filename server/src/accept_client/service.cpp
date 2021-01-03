@@ -39,8 +39,8 @@ GenerateTree(const std::filesystem::path& path) {
 
 /// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and detach it
 /// \param sock TCP socket conneted to the client
-void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock,std::string s) {
-    this->serverPath=s;
+void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock,std::filesystem::path serverP) {
+    this->serverPath=serverP;
     std::thread th(([this, sock] () {HandleClient(sock);}));
     th.detach();
 }
@@ -117,16 +117,18 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
                 std::cout << "User folder: " << user_folder_name << std::endl;
 
-                std::filesystem::directory_entry users_tree{this->serverPath + "\\backupFiles\\usersTREE"};
+                std::filesystem::path userpath = this->serverPath / "backupFiles" / "usersTREE";
+                std::filesystem::directory_entry users_tree{userpath.string()};
                 if (!users_tree.exists()) {
                     //User doesn't have a folder, so we create a new one and we add a user db
 
                     //TODO Check error during creation of directory
-                    std::filesystem::create_directories(this->serverPath + "\\backupFiles\\usersTREE");
+                    std::filesystem::path createdir = this->serverPath / "backupFiles" / "usersTREE";
+                    std::filesystem::create_directories(createdir.string());
                 }
 
-
-                std::filesystem::directory_entry user_directory_path{this->serverPath + "\\backupFiles\\backupROOT\\" + user_folder_name};
+                userpath = this->serverPath / "backupFiles" / "backupROOT" / user_folder_name;
+                std::filesystem::directory_entry user_directory_path{userpath.string()};
 
 
                 //Check if this user has a folder inside backupROOT

@@ -10,6 +10,7 @@
 #include <atomic>
 #include <memory>
 #include <iostream>
+#include <filesystem>
 
 using namespace boost;
 
@@ -20,11 +21,11 @@ class Service {
 private:
     std::shared_ptr<asio::ip::tcp::socket> sock_;
     asio::streambuf request_buf_;
-    std::string serverPath;
+    std::filesystem::path serverPath;
 
 public:
     Service(){};
-    void ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock,std::string s);
+    void ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock,std::filesystem::path serverP);
 
 private:
     // The Destructor is made private, as the only way to delete a service

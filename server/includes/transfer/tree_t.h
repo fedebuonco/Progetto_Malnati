@@ -15,8 +15,8 @@ public:
     std::string tree_;
     std::filesystem::path folder_path_;
     std::map<std::string,unsigned long > map_tree_time_;
-    std::string serverPath;
-    TreeT(const std::filesystem::path& path, std::string sp);
+    std::filesystem::path serverPath;
+    TreeT(const std::filesystem::path& path, std::filesystem::path serverP);
     TreeT(const std::string& tree, const std::string& time);
 
     std::string genTree();

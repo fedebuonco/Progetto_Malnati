@@ -8,11 +8,12 @@
 #include <boost/asio.hpp>
 #include "service.h"
 #include "accept_client.h"
+#include <filesystem>
 
-AcceptClient::AcceptClient(asio::io_service& ios, unsigned short port_num,std::string s) :
+AcceptClient::AcceptClient(asio::io_service& ios, unsigned short port_num,std::filesystem::path serverPath) :
         ios_(ios),
         acceptor_(ios_,boost::asio::ip::tcp::endpoint(boost::asio::ip::address_v4::any(),port_num)),
-        serverPath(s)
+        serverPath(serverPath)
 {
     acceptor_.listen();
 }

@@ -6,8 +6,6 @@
 #include <windows.h>
 #include "sqlite3.h"
 
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
 #include <filesystem>
 
 volatile sig_atomic_t flag = 0;
@@ -20,8 +18,8 @@ int main(int argc, char *argv[]){
 
     unsigned short port_num = 3333;
     std::cout << sqlite3_libversion() << std::endl;
-    std::string mypath = boost::filesystem::system_complete( boost::filesystem::path( argv[0] ) ).remove_filename().parent_path().string();
-    std::cout<<"PATH: "<<mypath<<std::endl;
+    std::filesystem::path mypath = std::filesystem::absolute( std::filesystem::path( argv[0] ) ).remove_filename().parent_path().parent_path();
+    std::cout<<"PATH: "<<mypath.string()<<std::endl;
 
 
     try{

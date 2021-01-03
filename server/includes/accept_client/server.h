@@ -9,6 +9,7 @@
 #include <thread>
 #include <atomic>
 #include <boost/asio.hpp>
+#include <filesystem>
 
 /// Creates a server that listen on a specific port.
 class Server {
@@ -16,9 +17,9 @@ private:
     std::unique_ptr<std::thread> thread_;
     boost::asio::io_service ios_;
     std::atomic<bool> stop_;
-    std::string serverPath;
+    std::filesystem::path serverPath;
 public:
-    Server(std::string s);
+    Server(std::filesystem::path serverPath);
     void Start(unsigned short port_num);
     void Stop();
 private:

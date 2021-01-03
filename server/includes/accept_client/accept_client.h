@@ -9,6 +9,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include "service.h"
 #include "accept_client.h"
+#include <filesystem>
 
 #define BACKLOG_SIZE 10
 
@@ -19,9 +20,9 @@ class AcceptClient{
 private:
     boost::asio::io_service& ios_;
     boost::asio::ip::tcp::acceptor acceptor_;
-    std::string serverPath;
+    std::filesystem::path serverPath;
 public:
-    AcceptClient(boost::asio::io_service& ios, unsigned short port_num, std::string s);
+    AcceptClient(boost::asio::io_service& ios, unsigned short port_num, std::filesystem::path serverPath);
     void SpawnSession();
 
 

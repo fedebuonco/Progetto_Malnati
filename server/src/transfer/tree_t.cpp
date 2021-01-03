@@ -26,12 +26,12 @@ TreeT::TreeT(const std::string& tree, const std::string& time) {
     }
 }
 
-TreeT::TreeT(const std::filesystem::path& path, std::string sp){
+TreeT::TreeT(const std::filesystem::path& path, std::filesystem::path serverP){
 
-    this->serverPath = sp;
+    this->serverPath = serverP;
     this->folder_path_ = path;
 
-    std::filesystem::path folder_name = path.lexically_relative(this->serverPath + "\\backupFiles\\backupROOT\\");
+    std::filesystem::path folder_name = path.lexically_relative(this->serverPath / "backupFiles" / "backupROOT");
     std::string folder_name_string = folder_name.generic_string();
 
     for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
