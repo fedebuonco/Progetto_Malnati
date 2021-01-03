@@ -40,13 +40,15 @@ void Config::WriteProperty(const std::string& key, const std::string& value) {
     // Load the json file in this ptree
     // If we don't do this all the information inside json file will be deleted
     // TODO gestire errori nella lettura del json
-    pt::read_json(this->exepath+"/config_file/config.json", root);
+    std::filesystem::path jread = this->exepath / "config_file" / "config.json";
+    pt::read_json(jread.string(), root);
 
     try {
         root.put(key, value);
 
         //Read the file and put the content inside root
-        pt::write_json(this->exepath+"/config_file/config.json", root);
+        std::filesystem::path jsonwrite = this->exepath / "config_file" / "config.json";
+        pt::write_json(jsonwrite.string(), root);
     }
     catch ( const boost::property_tree::json_parser_error& e1) {
         std::cerr <<"The configuration file was not found" << std::endl;
@@ -68,7 +70,8 @@ std::string Config::ReadProperty(const std::string &key) {
     try {
         // TODO gestire errori nella lettura del json
         //Read the file and put the content inside root
-        pt::read_json(this->exepath+"/config_file/config.json", root);
+        std::filesystem::path jsonread = this->exepath / "config_file"/"config.json";
+        pt::read_json(jsonread.string(), root);
 
         auto value = root.get<std::string>(key);
 
@@ -235,13 +238,10 @@ void Config::PrintConfiguration() {
 }
 
 void Config::SetPath(std::string s) {
-    boost::filesystem::path full_path( boost::filesystem::initial_path<boost::filesystem::path>() );
-    full_path = boost::filesystem::system_complete( boost::filesystem::path( s ) ).remove_filename();
-    full_path.parent_path();
-
+    std::filesystem::path mypath = std::filesystem::absolute( std::filesystem::path( s ) ).remove_filename().parent_path().parent_path();
 
     //std::cout <<"CUT: "<< full_path.string().substr(0,full_path.string().size() - todelete.size()) << std::endl;
-    this->exepath = full_path.parent_path().string();
+    this->exepath = mypath;
 
 }
 

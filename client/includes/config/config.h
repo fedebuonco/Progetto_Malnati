@@ -7,7 +7,7 @@
 #include <boost/filesystem/path.hpp>
 #include <iostream>
 #include <string>
-#include <xstring>
+#include <filesystem>
 
 //Any source file that includes this will be able to use "DEBUG"
 //The value is define inside utilities.cpp
@@ -48,7 +48,7 @@ public:
     RawEndpoint ReadRawEndpoint();
 
 private:
-    std::string exepath;
+    std::filesystem::path exepath;
 
 };
 
