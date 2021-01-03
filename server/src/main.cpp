@@ -3,7 +3,6 @@
 #include <boost/asio.hpp>
 #include <server.h>
 #include <SQLiteCpp/Database.h>
-#include <windows.h>
 #include "sqlite3.h"
 
 #include <filesystem>
