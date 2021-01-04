@@ -240,7 +240,7 @@ void Config::PrintConfiguration() {
 void Config::SetPath(std::string s) {
     std::filesystem::path mypath = std::filesystem::absolute( std::filesystem::path( s ) ).remove_filename().parent_path().parent_path();
 
-    //std::cout <<"CUT: "<< full_path.string().substr(0,full_path.string().size() - todelete.size()) << std::endl;
+    std::cout <<"PATH CLIENT: "<< mypath.string() << std::endl;
     this->exepath = mypath;
 
 }
