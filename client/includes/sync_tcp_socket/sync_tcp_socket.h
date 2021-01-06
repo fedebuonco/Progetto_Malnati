@@ -17,7 +17,6 @@ private:
 public:
     SyncTCPSocket(const std::string& raw_ip_add, unsigned short port);
     ~SyncTCPSocket();
-    bool Authenticate();
     void ConnectServer(int n_tries);
 
     /// Boost socket

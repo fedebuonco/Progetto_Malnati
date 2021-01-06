@@ -7,6 +7,8 @@
 #include <tree_t.h>
 #include <patch.h>
 #include <watcher.h>
+#include <sync_tcp_socket.h>
+#include <control_message.h>
 
 /// The main class of the client.
 /// It represent an object that will connect to the server
@@ -17,6 +19,7 @@ class Client {
 private:
     RawEndpoint server_re_;
     std::filesystem::path folder_watched_;
+    std::filesystem::path db_file_;
     Watcher watcher_;
 
     bool Auth();
@@ -24,8 +27,14 @@ private:
     void Syncro();
     void SendPatch(Patch &update);
     TreeT RequestTree();
+    bool SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm);
+    ControlMessage SyncReadCM(SyncTCPSocket& stcp);
 public:
     Client(RawEndpoint re, std::filesystem::path folder_watched);
+
+    void InitHash();
+
+
 };
 
 #endif //CLIENT_CLIENT_H

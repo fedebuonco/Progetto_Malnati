@@ -9,7 +9,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-///Encapsulates a control message. A control message is either an auth or a tree message. It has various attributes and
+/// Encapsulates a control message. A control message is either an auth or a tree message. It has various attributes and
 /// a "to_json" method that will generate a result that will be sent to the server
 class ControlMessage {
 private:
@@ -17,7 +17,8 @@ private:
 
 public:
     int type_;
-
+    std::string username_;
+    std::string hashkey_;
     ControlMessage(int tp);
     ControlMessage(std::string json_code);
     std::string ToJSON();

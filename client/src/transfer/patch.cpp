@@ -4,14 +4,13 @@
 #include <config.h>
 #include <iterator>
 #include <set>
+#include <database.h>
 #include "patch.h"
 
 /// We populate the to_be_sent_vector an the to be elimnated
 /// \param client_treet
 /// \param server_treet
 Patch::Patch(TreeT client_treet, TreeT server_treet){
-
-    //TODO Generate also added_, common_, and removed_
 
     std::set<std::string> set_client;
     for(auto item : client_treet.map_tree_time_) {
@@ -40,6 +39,27 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
     std::set_difference(begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
                         begin(client_treet.map_tree_time_), end(client_treet.map_tree_time_),
                         std::back_inserter(to_be_elim_vector));
+
+
+
+}
+
+/// Takes the db files where we store the status and uses it in order to identify the file that we must dispatch.
+/// \param db_path
+/// \return int number of dispatched file.
+int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::path folder_watched){
+    // TODO for each file in the to be sent look the status and if is it 0 insert it in the queue.
+    int counter = 0;
+    DatabaseConnection db(db_path, folder_watched);
+    for ( auto element : to_be_sent_vector){
+        if (db.ChangeStatusToSending(element.first)){ // THis return true only if the current status is "NEW" and changes it to "SENDING"
+            // TODO craeazione filepack nello heap.
+            // TODO Insert nella queue.
+            // send_queue_.insert(filepak)
+            counter++;
+        }
+    }
+    return counter;
 }
 
 /// Pretty Prints the changes contained in the patch
@@ -62,7 +82,7 @@ std::string Patch::PrettyPrint(){
         pretty.append(file.first + " - ");
         pretty.append(std::to_string(file.second) + "\n");
     }
-    pretty.append(":::::::: Files that will be Sent (New files or newer files) - Last Modified Time ::::::::\n" );
+    pretty.append(":::::::: Files that will be Sent or are in sending (New files or newer files) - Last Modified Time ::::::::\n" );
     for (auto file : to_be_sent_vector ){
         pretty.append(file.first + " - ");
         pretty.append(std::to_string(file.second) + "\n");
@@ -83,15 +103,17 @@ std::string Patch::PrettyPrint(){
     for (auto file : to_be_elim_vector){
         std::cout << file.first + " - " << file.second << std::endl;
     }
-    std::cout << ":::::::: Files that will be Sent (New files or newer files) - Last Modified Time ::::::::" << std::endl;
+    std::cout << ":::::::: Files that will be Sent or are in sending (New files or newer files) - Last Modified Time ::::::::" << std::endl;
     for (auto file : to_be_sent_vector){
         std::cout << file.first + " - " << file.second << std::endl;
     }
     std::cout << ":::::::: Recap : new files (" << added_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : removed files (" << removed_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : common files (" << common_.size() << ")   ::::::::" << std::endl;
-    std::cout << ":::::::: Recap : Files that will be sent (" << to_be_sent_vector.size() << ")   ::::::::" << std::endl;
+    std::cout << ":::::::: Recap : Files that will be sent or are in sending (" << to_be_sent_vector.size() << ")   ::::::::" << std::endl;
 
 
     return pretty;
 }
+
+

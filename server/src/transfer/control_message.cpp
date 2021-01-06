@@ -13,8 +13,10 @@ ControlMessage::ControlMessage(int tp) {
     this->json_mess_->put("Type" , tp);
 }
 
-/// Constructor for the control message. Build from the json string passed
-/// and also stores the type (integer of the message) for faster access.
+/// Constructor for the control message , used for message arrivving from the client
+/// Build from the json string recived and also stores the type,
+/// username and hashed password  in members of the class
+/// for faster access.
 /// \param  Contains the parsed json
 ControlMessage::ControlMessage(std::string json_code){
 
@@ -23,9 +25,12 @@ ControlMessage::ControlMessage(std::string json_code){
     std::stringstream ss;
     ss << json_code;
     boost::property_tree::read_json(ss, *this->json_mess_);
-    // And also store the type. For faster access
+    // And also store some infos, for faster access
     int t =  json_mess_->get<int>("Type");
     this->type_ = t;
+    // TODO check if not found then we should notify the user.
+    this->username_ = json_mess_->get<std::string>("Username");
+    this->hashkey_ = json_mess_->get<std::string>("HashPassword");
 
 };
 

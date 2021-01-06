@@ -17,7 +17,8 @@ WORKDIR /app
 RUN cmake . && make
 # We set the working directory because we use some relative path in the configs
 WORKDIR /app
-RUN mkdir /cmake-build-debug && cd cmake-build-debug && mkdir Prova
+EXPOSE 3333/tcp
+#RUN mkdir /cmake-build-debug && cd cmake-build-debug && mkdir Prova
 RUN cp ./client ./cmake-build-debug
 WORKDIR /app/cmake-build-debug
 CMD ["./client","-d","-s","127.0.0.1","3333"]

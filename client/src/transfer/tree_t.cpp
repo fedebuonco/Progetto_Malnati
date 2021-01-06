@@ -5,6 +5,9 @@
 #include <algorithm>
 #include <sys/stat.h>
 
+// TODO we mnust add hash in the treet filename,<hash,time> .
+
+
 /// Starting from the ordered string sent by the server, it computes A mapping between the files present in te server and their
 /// Hashes
 /// \param tree Directory tree if the server
