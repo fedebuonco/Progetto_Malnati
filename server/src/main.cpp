@@ -11,14 +11,10 @@ volatile sig_atomic_t flag = 0;
 void closeServer(int sig){ // can be called asynchronously
     flag = 1; // set flag
 }
-
+const unsigned int DEFAULT_THREAD_POOL_SIZE = 1;
 
 int main(int argc, char *argv[]){
 
-
-const unsigned int DEFAULT_THREAD_POOL_SIZE = 1;
-
-int main(){
     unsigned short aport_num = 3343;
     unsigned short port_num = 3333;
     std::cout << sqlite3_libversion() << std::endl;
