@@ -1,15 +1,16 @@
-
 #include "../../includes/database/database.h"
 #include <string>
 #include <SQLiteCpp/Database.h>
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 
-bool Database::auth(std::string username, std::string attemp_hash_password) {
+bool Database::auth(std::string username, std::string attemp_hash_password, std::filesystem::path serverP) {
 
     try {
         // Open a database file
-        SQLite::Database    db("../backupFiles/authDB.db");
+        std::filesystem::path db_path = serverP / "backupFiles" / "authDB.db" ;
+        SQLite::Database    db(db_path.string());
 
         // Compile a SQL query, containing one parameter (index 1)
         SQLite::Statement   query(db, "SELECT * FROM user WHERE username = ?");
@@ -45,11 +46,12 @@ bool Database::auth(std::string username, std::string attemp_hash_password) {
     return false;
 }
 
-std::string Database::getUserPath(std::string username) {
+std::string Database::getUserPath(std::string username, std::filesystem::path serverP) {
 
     try {
         // Open a database file
-        SQLite::Database    db("../backupFiles/authDB.db");
+        std::filesystem::path db_path = serverP / "backupFiles" / "authDB.db" ;
+        SQLite::Database    db(db_path.string());
 
         // Compile a SQL query, containing one parameter (index 1)
         SQLite::Statement   query(db, "SELECT folderName FROM user WHERE username = ?");
@@ -74,13 +76,16 @@ std::string Database::getUserPath(std::string username) {
         //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
     }
 
+    return "";
 }
 
-void Database::createTable(std::string foldername) {
+void Database::createTable(std::string foldername, std::filesystem::path serverP) {
 
     try {
         // Open a database file in create/write mode
-        SQLite::Database    db("../backupFiles/usersTREE/"+foldername+".db", SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
+        std::string folderext = foldername+".db";
+        std::filesystem::path db_path = serverP / "backupFiles" / "usersTREE" / folderext ;
+        SQLite::Database    db(db_path.string(), SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
         std::cout << "SQLite database file '" << db.getFilename().c_str() << "' opened successfully\n";
 
         // Create a new table with an explicit "id" column aliasing the underlying rowid
@@ -99,12 +104,14 @@ void Database::createTable(std::string foldername) {
 
 }
 
-std::string Database::getTimefromPath(std::string foldername, std::string path) {
+std::string Database::getTimefromPath(std::string foldername, std::string path, std::filesystem::path serverP) {
 
 
     try {
         // Open a database file
-        SQLite::Database    db("../backupFiles/usersTREE/"+foldername+".db");
+        std::string folderext = foldername+".db";
+        std::filesystem::path db_path = serverP / "backupFiles" / "usersTREE" / folderext ;
+        SQLite::Database    db(db_path.string());
 
         // Compile a SQL query, containing one parameter (index 1)
         SQLite::Statement   query(db, "SELECT time FROM UserTree WHERE path= ?");

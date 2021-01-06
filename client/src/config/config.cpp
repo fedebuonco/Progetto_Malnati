@@ -53,13 +53,15 @@ void Config::WriteProperty(const std::string& key, const std::string& value) {
     // Load the json file in this ptree
     // If we don't do this all the information inside json file will be deleted
     // TODO gestire errori nella lettura del json
-    pt::read_json("../config_file/config.json", root);
+    std::filesystem::path jread = this->exepath / "config_file" / "config.json";
+    pt::read_json(jread.string(), root);
 
 
         root.put(key, value);
 
         //Read the file and put the content inside root
-        pt::write_json("../config_file/config.json", root);
+        std::filesystem::path jsonwrite = this->exepath / "config_file" / "config.json";
+        pt::write_json(jsonwrite.string(), root);
     }
     catch ( const boost::property_tree::json_parser_error& e1) {
         std::cerr <<"The configuration file was not found" << std::endl;
@@ -76,11 +78,13 @@ void Config::WriteProperty(const std::string& key, const std::string& value) {
 std::string Config::ReadProperty(const std::string &key) {
     namespace pt = boost::property_tree;
     pt::ptree  root;
-
+    //
+    // std::cout<<"in ReadProperty: "<<this->exepath<<std::endl;
     try {
         // TODO gestire errori nella lettura del json
         //Read the file and put the content inside root
-        pt::read_json("../config_file/config.json", root);
+        std::filesystem::path jsonread = this->exepath / "config_file"/"config.json";
+        pt::read_json(jsonread.string(), root);
 
         auto value = root.get<std::string>(key);
 
@@ -137,6 +141,7 @@ void Config::SetConfig(int argc, char *argv[]) {
     }
 
     //After setting the debug configuration if present, we set the other configuration options
+
     for (int i = 1; i < argc; ++i) {  //Start from 1 because argv[0] is the program name
 
         //Every time we do the cycle inside argv[i] we have the -option name (i.e. "-c") and not the option argument
@@ -278,6 +283,29 @@ void Config::PrintConfiguration() {
 
 }
 
+void Config::SetPath(std::string s) {
+    // The executable will be placed in the /bin being / the root of our project. ( so at the same level of /libs, /includes , etc)
+    // so in order to find the config folder and file we need to navigate to that folder
+    std::cout <<" STRING PASSED : "<< s << std::endl;
+
+    std::filesystem::path executable_path = std::filesystem::path(s).lexically_normal();
+    std::cout <<" executable_path : "<< executable_path.string() << std::endl;
+
+    // we get the absolute path
+    std::filesystem::path executable_path_abs = std::filesystem::absolute(executable_path);
+    std::cout <<" executable_path_abs : "<< executable_path_abs.string() << std::endl;
+
+    std::filesystem::path bin_path_abs = executable_path_abs.remove_filename();
+    std::cout <<" bin_path_abs : "<< bin_path_abs.string() << std::endl;
+
+    std::filesystem::path master_path_abs = bin_path_abs.parent_path().parent_path();
+    std::cout <<" master_path_abs : "<< master_path_abs.string() << std::endl;
+
+
+    std::cout <<" CUT: "<< master_path_abs.string() << std::endl;
+    this->exepath = master_path_abs;
+
+}
 
 
 /// Reads the raw endpoint from the json file.

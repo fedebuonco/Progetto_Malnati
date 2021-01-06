@@ -3,8 +3,11 @@
 //
 
 #pragma once
-
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <iostream>
 #include <string>
+#include <filesystem>
 
 //Any source file that includes this will be able to use "DEBUG"
 //The value is define inside utilities.cpp
@@ -46,7 +49,12 @@ public:
 
     void PrintConfiguration();
 
+    void SetPath(std::string s);
+
     RawEndpoint ReadRawEndpoint();
+
+private:
+    std::filesystem::path exepath;
 
 };
 

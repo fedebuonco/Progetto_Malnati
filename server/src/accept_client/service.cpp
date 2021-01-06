@@ -8,7 +8,8 @@
 
 /// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and detach it
 /// \param sock TCP socket conneted to the client
-void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock) {
+void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock,std::filesystem::path serverP) {
+    this->serverPath=serverP;
     std::thread th(([this, sock] () {HandleClient(sock);}));
     th.detach();
 }
@@ -22,84 +23,120 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
     // we then check that the message is authenitic
     // and then we switch case in order to correctly handle it.
 
-    ControlMessage request_message = SyncReadCM(sock);
-
-    // Here we check that the message is authentic
-    if (!CheckAuthenticity(request_message)){
-        ControlMessage check_result{51};
-        check_result.AddElement("auth", "false");
-        SyncWriteCM(sock, check_result);
+    boost::asio::streambuf request_buf;
+    boost::system::error_code ec;
+    boost::asio::read(*sock, request_buf, ec);
+    // This checks if the client has finished writing
+    if (ec && ec != boost::asio::error::eof) {
+        //TODO: rimuovere stampa DEBUG
+        /** Chiusura del server: in caso di chiusura del server alcune volte stampa DEBUG... altre
+         * volte stampa Ho Letto ...
+         * Rimuovere la stampa DEBUG e non verrà stampato */
+        //qua se non ho ricevuto la chiusura del client
+        //const char *data = boost::asio::buffer_cast<const char *>(request_buf.data());
+        //std::cout << "receive failed: " << data << std::endl;
+        //if (strcmp(data, "Shutdown Server") != 0) {
+        std::cout << "DEBUG: NON ho ricevuto il segnale di chiusura del client";
+        //throw boost::system::system_error(ec);
+        return;
+        //}
     }
+ 
+    //Now we parsed the request and we use the ptree object in  order to create the corresponding ControlMessage
+    try{
+        //ControlMessage request_message{request_json};
 
+        ControlMessage request_message = SyncReadCM(sock);
 
-    // Here based on the type of the message we switch accordingly.
-    // All the message that arrive here are authentic.
-    switch (request_message.type_) {
-        case 1:{//AUTH REQUEST
+        // Here we check that the message is authentic
+        if (!CheckAuthenticity(request_message)){
             ControlMessage check_result{51};
-            check_result.AddElement("auth", "true");
-
+            check_result.AddElement("auth", "false");
             SyncWriteCM(sock, check_result);
-            break;
         }
-        case 2:{//TREE & TIME Request
-            //Let's start building the Response Control Message
-            // TODO troppa roba qui, meglio fare una funzione chiamata da case 2
-            ControlMessage treet_result{52};
-            // We compute & add the tree
-            std::string username = request_message.GetElement("Username");
+      
 
-            Database db;
-            std::string user_folder_name = db.getUserPath(username);
+     // Here based on the type of the message we switch accordingly.
+     // All the message that arrive here are authentic.
+    switch (request_message.type_) {
+            case 1:{//AUTH REQUEST
+                ControlMessage check_result{51};
+                check_result.AddElement("auth", "true");
 
-            std::cout << "User folder: " << user_folder_name << std::endl;
+                SyncWriteCM(sock, check_result);
+                break;
+            }    
+        
+            case 2: {//TREE & TIME Request
+                //Let's start building the Response Control Message
 
-            std::filesystem::directory_entry users_tree{ "../backupFiles/usersTREE"};
-            if (!users_tree.exists()) {
-                //User doesn't have a folder, so we create a new one and we add a user db
+                ControlMessage treet_result{52};
+                // We compute & add the tree
+                std::string username = request_message.GetElement("Username");
 
-                //TODO Check error during creation of directory
-                std::filesystem::create_directories("../backupFiles/usersTREE");
+                Database db;
+                std::string user_folder_name = db.getUserPath(username, this->serverPath);
+
+                std::cout << "User folder: " << user_folder_name << std::endl;
+
+                std::filesystem::path userpath = this->serverPath / "backupFiles" / "usersTREE";
+                std::filesystem::directory_entry users_tree{userpath.string()};
+                if (!users_tree.exists()) {
+                    //User doesn't have a folder, so we create a new one and we add a user db
+
+                    //TODO Check error during creation of directory
+                    std::filesystem::path createdir = this->serverPath / "backupFiles" / "usersTREE";
+                    std::filesystem::create_directories(createdir.string());
+                }
+
+                userpath = this->serverPath / "backupFiles" / "backupROOT" / user_folder_name;
+                std::filesystem::directory_entry user_directory_path{userpath.string()};
+
+
+                //Check if this user has a folder inside backupROOT
+                if (!user_directory_path.exists()) {
+                    //User doesn't have a folder, so we create a new one and we add a user db
+
+                    //TODO Check error during creation of directory
+                    std::filesystem::create_directories(user_directory_path);
+                    std::cout << "User doesn't have the folder. I create a new folder name: " << user_folder_name
+                              << std::endl;
+
+
+                    //Create DB file for the user TREE
+                    db.createTable(user_folder_name, this->serverPath );
+                }
+                /*TODO Se si verifica un eccezione tra la creazione dello userfolder e il createTable (db utente)
+                vediamo la directory ma non vediamo il DB. Azione da fare è RIPROVA. Questo potrebbe creare problemi, consiglio di fare nella catch una politica
+                 che cancella sia la cartella principale (tanto in questo punto è vuota) ed il db. Ricordo comunque che nel caso in cui
+                 il db esiste quando entriamo sulla createTable droppo comunque la tabella e la ricreo.
+                */
+
+                //TODO - IL PROGRAMMA TERMINA MALE SE METTI CARTELLA CHE NON TROVA
+                // TODO change the dir accordingly to username of the client
+                TreeT server_treet(user_directory_path, this->serverPath);
+                treet_result.AddElement("Tree", server_treet.genTree());
+                treet_result.AddElement("Time", server_treet.genTimes());
+                //TODO Implement DB and retrieve time according to this function
+                boost::asio::write(*sock, boost::asio::buffer(treet_result.ToJSON()));
+                // Send the eof error shutting down the server.
+                // TODO qua magicamente va ignorato l'errore GRAVISSIMO
+                sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
+                break;
             }
-
-
-            std::filesystem::directory_entry user_directory_path{ "../backupFiles/backupROOT/"+user_folder_name};
-
-
-            //Check if this user has a folder inside backupROOT
-            if (!user_directory_path.exists()) {
-               //User doesn't have a folder, so we create a new one and we add a user db
-
-               //TODO Check error during creation of directory
-               std::filesystem::create_directories(user_directory_path);
-               std::cout << "User doesn't have the folder. I create a new folder name: " << user_folder_name << std::endl;
-
-
-               //Create DB file for the user TREE
-               db.createTable(user_folder_name);
+            case 3: {//DELETE REQUEST
+                //TODO Implement DB and retrive the dir accordingly to username of the client
+                // Here we delete the files that are in the mess.
+                break;
             }
-            /*TODO Se si verifica un eccezione tra la creazione dello userfolder e il createTable (db utente)
-            vediamo la directory ma non vediamo il DB. Azione da fare è RIPROVA. Questo potrebbe creare problemi, consiglio di fare nella catch una politica
-             che cancella sia la cartella principale (tanto in questo punto è vuota) ed il db. Ricordo comunque che nel caso in cui
-             il db esiste quando entriamo sulla createTable droppo comunque la tabella e la ricreo.
-            */
-
-            //TODO - IL PROGRAMMA TERMINA MALE SE METTI CARTELLA CHE NON TROVA
-            // TODO change the dir accordingly to username of the client
-            TreeT server_treet (user_directory_path);
-            treet_result.AddElement("Tree", server_treet.genTree());
-            treet_result.AddElement("Time", server_treet.genTimes());
-            //TODO Implement DB and retrieve time according to this function
-
-            SyncWriteCM(sock, treet_result);
-            break;
+        
         }
-        case 3:{//DELETE REQUEST
-            //TODO Implement DB and retrive the dir accordingly to username of the client
-            // Here we delete the files that are in the mess.
-            break;
-        }
+
+    }catch(std::exception& e){
+        std::cerr<<"Errore client - chiusura "<<std::endl;
+        return;
     }
+
 
     // Now the service class was instantiated in the heap &
     // As the service class has finished it's work we are gonna delete it here
@@ -110,7 +147,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
 bool Service::CheckAuthenticity(const ControlMessage& cm){
     Database authentication;
-    return authentication.auth(cm.username_, cm.hashkey_);
+    return authentication.auth(cm.username_, cm.hashkey_, this->serverPath);
 }
 
 bool Service::SyncWriteCM(std::shared_ptr<asio::ip::tcp::socket> sock, ControlMessage& cm){

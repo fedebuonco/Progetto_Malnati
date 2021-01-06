@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <algorithm>
 #include <config.h>
+#include <iterator>
 #include <set>
 #include <database.h>
 #include "patch.h"

@@ -5,11 +5,13 @@
 #include <filesystem>
 
 int main(int argc, char *argv[]) {
+
     /**
     * CONFIGURATION AND VALIDATION PHASE
     * Program reads from the command line the new configuration options and writes it inside config.json
     * Program validates the configuration parameters.
     */
+    Config::get_Instance()->SetPath(argv[0]);
 
      //Before starting the configuration, we check if the config structure (file and folder) are correct
      if(!Config::get_Instance()->IsConfigStructureCorrect()){
