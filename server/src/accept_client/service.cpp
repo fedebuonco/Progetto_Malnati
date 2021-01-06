@@ -23,29 +23,9 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
     // we then check that the message is authenitic
     // and then we switch case in order to correctly handle it.
 
-    boost::asio::streambuf request_buf;
-    boost::system::error_code ec;
-    boost::asio::read(*sock, request_buf, ec);
-    // This checks if the client has finished writing
-    if (ec && ec != boost::asio::error::eof) {
-        //TODO: rimuovere stampa DEBUG
-        /** Chiusura del server: in caso di chiusura del server alcune volte stampa DEBUG... altre
-         * volte stampa Ho Letto ...
-         * Rimuovere la stampa DEBUG e non verrà stampato */
-        //qua se non ho ricevuto la chiusura del client
-        //const char *data = boost::asio::buffer_cast<const char *>(request_buf.data());
-        //std::cout << "receive failed: " << data << std::endl;
-        //if (strcmp(data, "Shutdown Server") != 0) {
-        std::cout << "DEBUG: NON ho ricevuto il segnale di chiusura del client";
-        //throw boost::system::system_error(ec);
-        return;
-        //}
-    }
- 
     //Now we parsed the request and we use the ptree object in  order to create the corresponding ControlMessage
     try{
         //ControlMessage request_message{request_json};
-
         ControlMessage request_message = SyncReadCM(sock);
 
         // Here we check that the message is authentic
@@ -118,10 +98,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                 treet_result.AddElement("Tree", server_treet.genTree());
                 treet_result.AddElement("Time", server_treet.genTimes());
                 //TODO Implement DB and retrieve time according to this function
-                boost::asio::write(*sock, boost::asio::buffer(treet_result.ToJSON()));
-                // Send the eof error shutting down the server.
-                // TODO qua magicamente va ignorato l'errore GRAVISSIMO
-                sock->shutdown(boost::asio::socket_base::shutdown_both, ec);
+                SyncWriteCM(sock, treet_result);
                 break;
             }
             case 3: {//DELETE REQUEST

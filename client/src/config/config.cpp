@@ -229,7 +229,7 @@ void Config::SetConfig(int argc, char *argv[]) {
 
                     if (!std::regex_match (ip, pattern_ip ) || !std::regex_match (port, pattern_port )) {
                         //TODO: Exception
-                        throw  std::exception("Wrong IPv4 address or port format");
+                        throw  SyntaxError(std::string("Wrong IPv4 address or port format"));
                     }
 
                     Config::get_Instance()->WriteProperty("ip", ip);
