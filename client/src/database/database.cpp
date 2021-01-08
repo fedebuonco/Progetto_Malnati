@@ -148,8 +148,11 @@ void DatabaseConnection::CleanOldRows(){
         // We build the path
         std::filesystem::path full_path = folder_watched_ / fn;
         if(!std::filesystem::exists(full_path)){
-            std::string row_delete =   " DELETE FROM files WHERE filename='"+ fn +"'";
-            int result_create = hash_db_.exec(row_delete);
+
+            SQLite::Statement   row_delete(hash_db_, " DELETE FROM files WHERE filename= ? ;");
+
+            row_delete.bind(1, fn);
+            row_delete.exec();
             std::cout << "Deleted from DB row " << fn << std::endl;
         }
 
