@@ -1,7 +1,3 @@
-//
-// Created by fede on 12/10/20.
-//
-
 #include <file_sipper.h>
 #include <string>
 #include <sync_tcp_socket.h>
@@ -10,10 +6,10 @@
 FileSipper::FileSipper(RawEndpoint re, const std::string &path) :
     sock_(ios_) ,
     ep_(boost::asio::ip::address::from_string(re.raw_ip_address), re.port_num),
-    path_(path)
+    path_(path),
+    sip_counter(0)
     {
-        sip_counter = 0;
-        std::cout << "Creating FileSipper for file " <<  path << std::endl;
+        if(DEBUG) std::cout << "Creating FileSipper for file " <<  path << std::endl;
         sock_.open(ep_.protocol());
         Connect();
         ios_.run();
@@ -22,15 +18,15 @@ FileSipper::FileSipper(RawEndpoint re, const std::string &path) :
 //TODO iterator endpoint not single...
 /// We async connect to the specified server.
 void FileSipper::Connect() {
-    std::cout << "Connecting to "<<  ep_.address() <<" for file " <<  path_ << std::endl;
-    sock_.async_connect(ep_, [this](boost::system::error_code ec)
-    {    std::cout << "Currently in the async_connect callback " << std::endl;
-        //TODO check if we still want to send the file
+    if(DEBUG) std::cout << "Connecting to "<<  ep_.address() <<" for file " <<  path_ << std::endl;
+
+    sock_.async_connect(ep_, [this](boost::system::error_code ec) {
+        if(DEBUG) std::cout << "Currently in the async_connect callback " << std::endl;
+        //TODO check if we still want to send the file. In teoria non serve perchè fatto in patch
+        //TODO Handle exception
         OpenFile();
         FirstSip(ec_);
     });
-
-
 }
 
 // Opens a file
@@ -54,8 +50,12 @@ void FileSipper::OpenFile() {
 /// \param t_ec
 void FileSipper::FirstSip(const boost::system::error_code& t_ec){
 
-    // TODO We need to retrieve the entry from the the db
+    // TODO We need to retrieve the entry from the the db (path, hash, lmt, STATUS)
+    // Ne abbiamo bisogno perchè il server deve rifare hash e controllare
+    // lmt ci serve perchè il server deve memorizzare quello più nuovo
     // and save the hash and lmt to a string.
+
+    //TODO: Devo partire sempre?
 
     if (files_stream_) {
         // We create the first sip by sending file metadata

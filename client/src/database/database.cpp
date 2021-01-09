@@ -1,6 +1,7 @@
 #include <database.h>
 #include <filesystem>
 #include <SQLiteCpp/Transaction.h>
+#include <config.h>
 
 /// Takes in the db_path and opens a connection to it.
 /// \param db_path
@@ -34,22 +35,18 @@ bool DatabaseConnection::AlreadyHashed(std::string filename, std::string lmt){
 
     while (query.executeStep())
     {
-        // Demonstrate how to get some typed column value
+        // Retrieve filename fn, hash hs, and last modified time lt.
         std::string     fn = query.getColumn(0);
         std::string     hs = query.getColumn(1);
         std::string     lt  = query.getColumn(2);
 
-        std::cout << "AUTH DB READ: " << fn <<
-                                  " " << hs <<
-                                  " " << lt << std::endl;
+        if(DEBUG) std::cout << "TUPLE DB READ: " << fn << " " << hs << " " << lt << std::endl;
         // We can return true, as the tuple already exists.
         return true;
     }
 
-    // Here if we did not find any row.
-    // The file could be new or changed and so the lmt is different.
+    // Here if we did not find any row. The file could be new or changed and so the lmt is different.
     return false;
-
 }
 
 /// Insert a row in the db. If the db contains a tuple path_str - lmt_str
@@ -136,26 +133,25 @@ void DatabaseConnection::InsertDB(std::string path_str, std::string hash, std::s
 /// We check the db against the file in the folder,
 /// if a row doesn't have the counterpart in the folder is removed.
 void DatabaseConnection::CleanOldRows(){
-    // Compile a SQL query, containing 2 parameters
+
     SQLite::Statement   query(hash_db_, "SELECT * "
                                                     "FROM files ");
     while (query.executeStep())
     {
-        // Demonstrate how to get some typed column value
-        std::string     fn = query.getColumn(0);
+        // We get the filename from the DB
+        std::string fn = query.getColumn(0);
 
-        // We get the filename and check it against the fs, if it does not exist we delete the row in
-        // We build the path
+        // We check if the filename from the DB has the corresponding file in the folder.
         std::filesystem::path full_path = folder_watched_ / fn;
         if(!std::filesystem::exists(full_path)){
-
+            //Inside the folder we don't have this file anymore (i.e. this file was deleted when the program was not running).
             SQLite::Statement   row_delete(hash_db_, " DELETE FROM files WHERE filename= ? ;");
-
             row_delete.bind(1, fn);
-            row_delete.exec();
-            std::cout << "Deleted from DB row " << fn << std::endl;
-        }
 
+            row_delete.exec();
+
+            if(DEBUG) std::cout << "Deleted from DB row " << fn << std::endl;
+        }
     }
 }
 

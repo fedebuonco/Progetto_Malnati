@@ -18,15 +18,15 @@
 class Patch {
 public:
 
-    /// This vector contains the path of all the elements(files or dirs) in the client with a position
+    /// This vector contains the path of all the elements (files or dirs) in the client with a position
     /// and name not present in the server.
     std::vector<std::string> added_;
 
-    /// This vector contains the path of all the elements(files or dirs) in the server with a position
+    /// This vector contains the path of all the elements (files or dirs) in the server with a position
     /// and name not present in the client.
     std::vector<std::string> removed_;
 
-    /// This vector contains the path of all the elements(files or dirs) in the server with both position
+    /// This vector contains the path of all the elements (files or dirs) in the server with both position
     /// and name equal in the client. Position and name are equal but last modified time could be different.
     std::vector<std::string> common_;
 

@@ -35,6 +35,8 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
     if(first_sip_){
         //TODO open the file folder and
         //TODO filename is actually a path
+        //TODO Hash, time last modified
+
         file_name_ = m_buf.data();
         first_sip_ = false;
         // We check if the folder does exist
@@ -64,8 +66,11 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
 
 void AsyncService::onFinish() {
     //TODO FAI ClOSE DEL FILE
-    // TODO SHould check file integrity and send to the client the response if it is ok or not
-    //
+    //TODO SALVA FILE DENTRO LA CARTELLA marco_01
+    //TODO: CHECK HASH CHE ARRIVA DAL CLIENT CON HASH CALCOLATO CON IL FILE SALVATO E VEDI SE SONO UGUALI
+    //TODO: SE SONO UGUALI ****INSERT NEL DB**** DELL UTENTE
+    //TODO SHould check file integrity and send to the client the response if it is ok or not
+
     delete this;
 }
 

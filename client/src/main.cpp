@@ -55,8 +55,8 @@ int main(int argc, char *argv[]) {
     Client client{raw_endpoint, path};
 
     //TODO Change this leaving the main in the background.
+    //TODO We need something to close the client once is running like in the server.
     std::cin.ignore();
 
-    //TODO We need something to close the client once is running?
 }
 

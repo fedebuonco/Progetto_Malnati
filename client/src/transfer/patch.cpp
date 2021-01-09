@@ -7,7 +7,7 @@
 #include <database.h>
 #include "patch.h"
 
-/// We populate the to_be_sent_vector an the to be elimnated
+/// We populate the to_be_sent_vector and the to_be_eliminated_vector
 /// \param client_treet
 /// \param server_treet
 Patch::Patch(TreeT client_treet, TreeT server_treet){
@@ -22,26 +22,23 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
         set_server.insert(item.first);
     }
 
-    //Now i have the two sets I can compute set_difference(set_client,set_server)  client - server
+    // Now I have the two sets I can compute set_difference(set_client,set_server)  client - server
     set_difference(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(added_, added_.end()));
-    //Now i have the two sets I can compute set_difference(,set_server, set_client)  server - client
+    // Now I have the two sets I can compute set_difference(,set_server, set_client)  server - client
     set_difference(set_server.begin(), set_server.end(), set_client.begin(), set_client.end(), inserter(removed_, removed_.end()));
-    //Now we can find the common files
+    // Now we can find the common files
     set_intersection(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(common_, common_.end()));
 
-    //here we gen the to be sent
+    // We gen the to_be_sent
     std::set_difference(begin(client_treet.map_tree_time_), end(client_treet.map_tree_time_),
                         begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
                         std::back_inserter(to_be_sent_vector));
 
 
-    //here we gen the to be elim
+    // We gen the to_be_eliminated
     std::set_difference(begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
                         begin(client_treet.map_tree_time_), end(client_treet.map_tree_time_),
                         std::back_inserter(to_be_elim_vector));
-
-
-
 }
 
 /// Takes the db files where we store the status and uses it in order to identify the file that we must dispatch.

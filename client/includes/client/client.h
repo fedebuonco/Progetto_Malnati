@@ -13,7 +13,7 @@
 /// The main class of the client.
 /// It represent an object that will connect to the server
 /// specified in the constructor and will
-/// ask to a watcher to whatch a specified folder.
+/// ask to a watcher to watch a specified folder.
 class Client {
 
 private:

@@ -1,7 +1,3 @@
-//
-// Created by fede on 10/4/20.
-//
-
 #ifndef SERVER_SERVICE_H
 #define SERVER_SERVICE_H
 #include <boost/asio.hpp>
@@ -26,6 +22,7 @@ private:
     std::filesystem::path serverPath;
 
 public:
+    //TODO: Secondo me non è necessario
     Service(){};
     void ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock,std::filesystem::path serverP);
 

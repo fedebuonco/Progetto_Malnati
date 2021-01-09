@@ -6,6 +6,8 @@
 #include "accept_client.h"
 #include "server.h"
 
+bool DEBUG=true;
+
 Server::Server(std::filesystem::path serverPath) : stop_(false), serverPath(serverPath){};
 
 /// Starts the server by taking control of the thread_ smart pointer
@@ -24,6 +26,7 @@ void Server::Run(unsigned short port_num) {
     while(!stop_.load()) {
         acc.SpawnSession();
     }
+
 }
 
 ///Stops the server by waiting for the join of the thread spawned on the Start.
@@ -32,16 +35,21 @@ void Server::Stop() {
     stop_.store(true);
 
     try {
-
         boost::asio::ip::tcp::socket sock(ios_);
         boost::asio::ip::tcp::endpoint ep_(boost::asio::ip::address::from_string("127.0.0.1"), 3333);
         sock.open(ep_.protocol());
         sock.connect(ep_);
-        boost::asio::write(sock, boost::asio::buffer("Shutdown Server"));
+
+        std::cout<<"Starting to shutdown Synchronous Server..."<<std::endl;
+        ControlMessage check_result{5};
+
+        boost::asio::write(sock, boost::asio::buffer(check_result.ToJSON()));
         sock.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+
         sock.close();
 
         thread_->join();
+        std::cout<<"Successfully to shutdown Synchronous Server..."<<std::endl;
     } catch (std::exception &e) {
         //The interrupt should occur from another thread
         std::cerr<<"Thread not joined"<<std::endl;

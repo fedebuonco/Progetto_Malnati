@@ -11,6 +11,8 @@
 #include <boost/asio.hpp>
 #include <filesystem>
 
+extern bool DEBUG;
+
 /// Creates a server that listen on a specific port.
 class Server {
 private:

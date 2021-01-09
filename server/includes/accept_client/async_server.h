@@ -23,6 +23,5 @@ private:
     std::unique_ptr<AsyncAcceptClient> acc;
     std::vector<std::unique_ptr<std::thread>> m_thread_pool;
 
-
 };
 #endif //SERVER_ASYNC_SERVER_H

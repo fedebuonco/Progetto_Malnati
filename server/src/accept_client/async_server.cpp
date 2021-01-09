@@ -26,8 +26,9 @@ void AsyncServer::Start(unsigned short port_num, unsigned int thread_pool_size) 
 void AsyncServer::Stop() {
     acc->Stop();
     m_ios.stop();
-
+    std::cout<<"Starting to shutdown Asynchronous Server..."<<std::endl;
     for (auto& th : m_thread_pool) {
         th->join();
     }
+    std::cout<<"Successfully to shutdown Asynchronous Server..."<<std::endl;
 }

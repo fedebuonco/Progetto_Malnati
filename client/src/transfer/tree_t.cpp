@@ -5,21 +5,21 @@
 #include <algorithm>
 #include <sys/stat.h>
 
-// TODO we mnust add hash in the treet filename,<hash,time> .
+// TODO we must add hash in the treet filename,<hash,time> .
 
 
-/// Starting from the ordered string sent by the server, it computes A mapping between the files present in te server and their
-/// Hashes
-/// \param tree Directory tree if the server
-/// \param time timw of the files present in the server following the same order of the tree
+/// Starting from the ordered string sent by the server, it computes a mapping between the files present in the server and their hashes
+/// \param tree: Directory tree if the server
+/// \param time: Time of the files present in the server following the same order of the tree
 TreeT::TreeT(const std::string& tree, const std::string& time) {
     //Now we fill the map using the two string we got
     std::istringstream stream_tree{tree};
     std::istringstream stream_time{time};
     std::string filename;
     std::string file_time;
-    while ( (std::getline(stream_tree, filename)))
-    {
+
+    while (std::getline(stream_tree, filename)) {
+
         if (std::getline(stream_time, file_time)) {
             map_tree_time_.insert(std::pair<std::string, unsigned long>(filename, std::stoul(file_time, nullptr, 0)));
         } else {
@@ -41,7 +41,8 @@ TreeT::TreeT(const std::filesystem::path& path){
         auto element_path = itEntry->path();
         std::filesystem::path relative_element_path = element_path.lexically_relative(path);
         std::string cross_platform_rep = relative_element_path.generic_string();
-        // We also add the "/" if it is a direcotry in order t diff it from non extension files.
+
+        // We also add the "/" if it is a directory in order to differentiate it from non extension files.
         if (std::filesystem::is_directory(element_path))
             cross_platform_rep += "/";
 

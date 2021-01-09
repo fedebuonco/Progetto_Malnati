@@ -23,10 +23,11 @@ Client::Client(RawEndpoint re, std::filesystem::path folder_watched) :
 {
     if(!Auth()){
         std::cerr << "Username and/or password are not correct" << std::endl;
-        std::exit(12);
+        std::exit(EXIT_FAILURE);
     }
-    // We perfom the InitHash that helps us not hashing evything each time
-    InitHash();
+    // We perform the InitHash that helps us not hashing everything each time
+    //InitHash(); TODO: Togliere??
+
     // We start watching for further changes
     StartWatching();
 }
@@ -44,24 +45,33 @@ void Client::StartWatching(){
 /// This is the main function, create a Tree and asks for the server Tree, with those it cretes a patch and process it
 /// The processed patch is then used to fuel the SendPatch()
 void Client::Syncro(){
+    // We perform the InitHash that helps us not hashing everything each time
     InitHash();
-    //Generate Client tree string
-    // std::string client_tree;
-    // client_tree = GenerateTree(this->folder_watched_);
-    TreeT client_treet(this->folder_watched_);
-    // Then we ask for the Server's TreeT
-    TreeT server_treet = RequestTree();
-    Patch update(client_treet, server_treet);
-    update.Dispatch(db_file_, folder_watched_);
-    if (DEBUG)
-        update.PrettyPrint();
-    //SendPatch(update);
 
+    // Generate Client tree starting from the folder watched
+    //std::string client_tree; //TODO: Togliere?
+    //client_tree = GenerateTree(this->folder_watched_);
+    TreeT client_treet(this->folder_watched_);
+
+    // We ask the server to send us the user TREE.
+    TreeT server_treet = RequestTree();
+
+    // Need to figure out which files the server doesn't have (we need to send) and the file the server have to delete.
+    Patch update(client_treet, server_treet);
+
+    //TODO: Quindi mando messaggi al server 53 con i file da eliminare
+
+    //
+    update.Dispatch(db_file_, folder_watched_);
+
+    if (DEBUG) update.PrettyPrint();
+
+    //SendPatch(update);
     }
 
 /// Will send username and password. After that it will shutdown the send part of the socket thus providing the server a way to
-/// tell that the connection is over. After the authenticate the socket is basically useless and needs to be shutdown completly.
-/// \return True if Auth went ok and user has successfully logged in, False if not.
+/// tell that the connection is over. After the authentication the socket is basically useless and needs to be shutdown completely.
+/// \return 'True' if Auth went ok and user has successfully logged in, 'False' if not.
 bool Client::Auth() {
     //TODO qualche eccezione da fare il catch?
     //SyncTCPSocket for auth using raw endpoint provided at construction.
@@ -72,10 +82,8 @@ bool Client::Auth() {
 
     Credential credential = Authentication::get_Instance()->ReadCredential();
 
-    //Creation of the Auth ControlMessage type = 1
+    //Creation of the message with type:1 (it means an authentication request) with inside Username and Password
     ControlMessage auth_message{1};
-
-    //Adding User and Password
     auth_message.AddElement("Username", credential.username_);
     auth_message.AddElement("HashPassword", credential.hash_password_);
 
@@ -87,39 +95,39 @@ bool Client::Auth() {
     //Now we use a message control for the response
     ControlMessage response_message = SyncReadCM(tcpSocket);
 
-    if(response_message.type_ == 51){// it means we are actually dealing with a auth response (what we were expecting)
-        //TODO return true false accordingly to the body of the control message received for now we just check it is an auth response
-        // later on we will check the result
-        // auth = true /false
+    //We are expecting a message with an auth response (type:51)
+    if(response_message.type_ == 51){
+        //The answer is inherent with the request, so we read the reply message.
+
+        //We retrieve the auth information inside the response message.
         std::string auth_response = response_message.GetElement("auth");
 
         if(auth_response=="true") {
-
-            if(DEBUG) std::cout << "\n\nUser " << Config::get_Instance()->ReadProperty("username") << " successfully authenticated."
-                                << std::endl;
+            //The user is authenticated so we return true
+            if(DEBUG) std::cout << "\n\nUser " << Config::get_Instance()->ReadProperty("username") << " successfully authenticated." << std::endl;
             return true;
         }
-
     }
 
-    //If we don't go to return true, there is a problem so return false
+    //If we don't enter to return true, there is a problem: the authentication failed or the reply message is wrong.
+    //In any case, we return false.
     return false;
 }
 
-/// Request current tree and times of the cloud dir stored in the server. Handles the result by starting the diff
-/// computation.
+/// Request current tree and times of the cloud dir stored in the server.
+/// Handles the result by starting the diff computation.
 TreeT Client::RequestTree() {
     //SyncTCPSocket for request
     Credential credential = Authentication::get_Instance()->ReadCredential();
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
     //socket will retry 5 times to connect
     tcpSocket.ConnectServer(5);
-    //Here we create the ControlMessage for TreeRequest ( Type = 2 )
+
+    // We create the message for TreeRequest (Type: 2) adding inside Username and HashPassword
     ControlMessage message_obj{2};
-    //Adding Username and Hash Password
     message_obj.AddElement("Username", credential.username_);
     message_obj.AddElement("HashPassword", credential.hash_password_);
-    //And sending it formatted in JSON language
+
     //And sending it formatted in JSON language
     SyncWriteCM(tcpSocket, message_obj);
 
@@ -127,12 +135,15 @@ TreeT Client::RequestTree() {
 
     //Now we use a message control for the response
     ControlMessage response_message = SyncReadCM(tcpSocket);
-    if(DEBUG) std::cout << "Tree received successfully" << std::endl;
-    //We get the tree
+    if(DEBUG) std::cout << "Tree received successfully from server" << std::endl;
+
+    //We get the tree & time list
     std::string tree = response_message.GetElement("Tree");
-    //TODO Uncomment this as soon as the server will send the times
     std::string time = response_message.GetElement("Time");
+
+    //Build a TreeT object with the server tree
     TreeT result{tree,time};
+
     return result;
 }
 
@@ -204,7 +215,7 @@ void Client::InitHash(){
         auto element_path = itEntry->path();
         std::filesystem::path relative_element_path = element_path.lexically_relative(folder_watched_);
         std::string cross_platform_rep = relative_element_path.generic_string();
-        // We also add the "/" if it is a direcotry in order t diff it from non extension files.
+        // We also add the "/" if it is a directory in order to diff it from non extension files.
         if (std::filesystem::is_directory(element_path))
             cross_platform_rep += "/";
 
@@ -212,50 +223,47 @@ void Client::InitHash(){
         if (std::filesystem::is_directory(element_path) || cross_platform_rep == ".hash.db" || boost::algorithm::ends_with(cross_platform_rep, "~") )
             continue;
 
-        //we now need to retrieve the last modified time.
+        // We now need to retrieve the last modified time.
         struct stat temp_stat;
         stat(element_path.generic_string().c_str(), &temp_stat);
         unsigned long mod_time = temp_stat.st_mtime;
 
-        // Now we have the tuple cross_platform_rep - mod_time
+        // Now we have the tuple ( cross_platform_rep , mod_time )
         // We use this tuple to see if we already hashed that version of the file.
-        // If we had, then we take the hash from the db, without hashing a second time
-        // the same file.
+        // If we had, then we take the hash from the db, without hashing a second time the same file.
 
         // If it is not a dir
         if(!db.AlreadyHashed(cross_platform_rep, std::to_string(mod_time))){
-            //Here only if the tuple filpath,mod_time is not present, so we need to hash and then update the db.
+            //Here only if the tuple ( cross_platform_rep , mod_time ) is not present, so we need to hash and then update the db.
             CryptoPP::SHA256 hash;
             std::string digest;
 
-                try {
-                    CryptoPP::FileSource f(
-                                element_path.generic_string().c_str(),
-                                true,
-                                new CryptoPP::HashFilter(hash,
-                                                         new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
+            try {
+                CryptoPP::FileSource f(
+                            element_path.generic_string().c_str(),
+                            true,
+                            new CryptoPP::HashFilter(hash,
+                                                     new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
 
-                    // We print the digest
-                    std::cout << "Digest is = " << digest << std::endl;
+                // We print the digest
+                if(DEBUG) std::cout << "Digest is = " << digest << std::endl;
 
-                    // Here we have the hash of the file.
-                    // Now we can insert it in the DB
-                    db.InsertDB(cross_platform_rep, digest , std::to_string(mod_time));
+                // Here we have the hash of the file.
+                // Now we can insert it in the DB
+                db.InsertDB(cross_platform_rep, digest , std::to_string(mod_time));
 
-                } catch(std::exception& e){
-                        std::cerr <<"ERROR " <<
-                        e.what() << std::endl;
-                        //TODO Gestire impossibiltà di hashing.
-                        //TODO gestire errori db
-                        continue;
-                }
-
+            } catch(std::exception& e){
+                    std::cerr <<"ERROR " <<
+                    e.what() << std::endl;
+                    //TODO Gestire impossibiltà di hashing.     Proviamo un'altra volta a farlo?
+                    //TODO gestire errori db
+                    continue;
+            }
         }
-
-
     }
 
-
-    // Now we clean the db for files that are not anymore in the folder
+    // Now we clean the db for files that are not anymore in the folder.
     db.CleanOldRows();
+
+    // We now have the DB and client folder aligned.
 }

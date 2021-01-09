@@ -1,7 +1,3 @@
-//
-// Created by fede on 12/10/20.
-//
-
 #ifndef CLIENT_FILE_SIPPER_H
 #define CLIENT_FILE_SIPPER_H
 
@@ -19,6 +15,7 @@
 /// Offers a callback that, after performing some checks, calls for another
 /// sip, thus creating a chain of sent sips.
 class FileSipper {
+    //FileSipper is made of path_ and hash_
     std::string path_;
     std::string hash_;
 
@@ -27,10 +24,16 @@ class FileSipper {
     boost::asio::ip::tcp::socket sock_;
     boost::system::error_code ec_;
     std::ifstream files_stream_;
+
+    //The file will be sent in small portions of this size
     enum { MessageSize = 1024 };
+
     std::array<char, MessageSize> buf_array_;
     std::array<char, MessageSize> buf_metadata;
+
+    //Dimension of the file to send
     int file_size_;
+    //Number of sip (i.e. block) in which the file is split
     int sip_counter;
 
 public:
