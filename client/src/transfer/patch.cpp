@@ -13,12 +13,12 @@
 Patch::Patch(TreeT client_treet, TreeT server_treet){
 
     std::set<std::string> set_client;
-    for(auto item : client_treet.map_tree_time_) {
+    for(const auto& item : client_treet.map_tree_time_) {
         set_client.insert(item.first);
     }
 
     std::set<std::string> set_server;
-    for(auto item : server_treet.map_tree_time_) {
+    for(const auto& item : server_treet.map_tree_time_) {
         set_server.insert(item.first);
     }
 

@@ -25,8 +25,6 @@ Client::Client(RawEndpoint re, std::filesystem::path folder_watched) :
         std::cerr << "Username and/or password are not correct" << std::endl;
         std::exit(EXIT_FAILURE);
     }
-    // We perform the InitHash that helps us not hashing everything each time
-    //InitHash(); TODO: Togliere??
 
     // We start watching for further changes
     StartWatching();
@@ -48,12 +46,10 @@ void Client::Syncro(){
     // We perform the InitHash that helps us not hashing everything each time
     InitHash();
 
-    // Generate Client tree starting from the folder watched
-    //std::string client_tree; //TODO: Togliere?
-    //client_tree = GenerateTree(this->folder_watched_);
+    // Generate Client tree & time starting from the folder watched
     TreeT client_treet(this->folder_watched_);
 
-    // We ask the server to send us the user TREE.
+    // We ask the server to send us the user TREE & TIME.
     TreeT server_treet = RequestTree();
 
     // Need to figure out which files the server doesn't have (we need to send) and the file the server have to delete.
@@ -65,7 +61,7 @@ void Client::Syncro(){
     if (DEBUG) update.PrettyPrint();
 
     // Send the server the information about file to add and file to remove
-    //SendPatch(update);
+    SendRemoval(update);
     }
 
 /// Will send username and password. After that it will shutdown the send part of the socket thus providing the server a way to
@@ -173,31 +169,35 @@ ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
     return cm;
 }
 
+std::string genTree(const std::vector<std::pair<std::string, unsigned long>>& vector) {
+    std::string tree;
+    for(const auto& element : vector)
+    {
+        tree.append(element.first + "\n");
+    }
+    return tree;
+}
+
+
 /// Here we firstly send a ControlMessage that will tell what to delete in the server. After that we will start sending
 /// the newer files.
 /// \param update processed patch
-void Client::SendPatch(Patch& update){
+void Client::SendRemoval(Patch& update){
 
-    //****Sending delete ControlMessage****
     Credential credential_ = Authentication::get_Instance()->ReadCredential();
 
     //Creation of the Auth ControlMessage type: 3 with inside Username, Password and the list of file to be deleted
     ControlMessage delete_message{3};
     delete_message.AddElement("Username",credential_.username_);
-    delete_message.AddElement("Password:",credential_.hash_password_ );
-    //delete_message.AddElement("To_be_deleted",update.to_be_elim_vector);
+    delete_message.AddElement("HashPassword",credential_.hash_password_ );
+    //delete_message.AddElement("To_be_deleted", genTree(update.to_be_elim_vector));
 
     //And sending it formatted in JSON language
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
-    boost::asio::write(tcpSocket.sock_, boost::asio::buffer(delete_message.ToJSON()));
-
-    // we sent the Auth message, we will shutdown in order to tell the server that we sent all
-    tcpSocket.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
-
-    //*****Now we can focus on new and common********
-    //TODO Here send the files asynchronously
+    SyncWriteCM(tcpSocket, delete_message);
 
 }
+
 
 /// Test each file to see if already present in the hash db, and acts accordingly in order to keep a database of each
 /// hash performed.
@@ -226,6 +226,7 @@ void Client::InitHash(){
 
         // We now need to retrieve the last modified time.
         struct stat temp_stat;
+        // Put inside our struct temp_state the metadata like last modified time
         stat(element_path.generic_string().c_str(), &temp_stat);
         unsigned long mod_time = temp_stat.st_mtime;
 

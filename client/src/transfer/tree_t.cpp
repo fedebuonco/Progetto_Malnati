@@ -1,11 +1,6 @@
 #include <sstream>
 #include "tree_t.h"
-#include <stdlib.h>     /* strtoul */
-#include <vector>
 #include <algorithm>
-#include <sys/stat.h>
-
-// TODO we must add hash in the treet filename,<hash,time> .
 
 
 /// Starting from the ordered string sent by the server, it computes a mapping between the files present in the server and their hashes
@@ -18,13 +13,9 @@ TreeT::TreeT(const std::string& tree, const std::string& time) {
     std::string filename;
     std::string file_time;
 
-    while (std::getline(stream_tree, filename)) {
 
-        if (std::getline(stream_time, file_time)) {
+    while (std::getline(stream_tree, filename) && std::getline(stream_time, file_time)) {
             map_tree_time_.insert(std::pair<std::string, unsigned long>(filename, std::stoul(file_time, nullptr, 0)));
-        } else {
-            map_tree_time_.insert(std::pair<std::string, unsigned long>(filename, 0));
-        }
     }
 }
 
