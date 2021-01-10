@@ -9,8 +9,10 @@
 
 
 volatile sig_atomic_t flag = 0;
+int flag2 = 1;
 void closeServer(int sig){ // can be called asynchronously
     flag = 1; // set flag
+    flag2 = 1;
 }
 
 const unsigned int DEFAULT_THREAD_POOL_SIZE = 1;
@@ -45,8 +47,9 @@ int main(int argc, char *argv[]){
 
         // Register signals
         signal(SIGINT, closeServer);
+        signal(SIGTERM, closeServer);
         while(1)
-            if(flag){ // my action when signal set it 1
+            if(flag2){ // my action when signal set it 1
 
                 //TODO: Queste due devono essere chiamate anche quando il programma termina senza chiusura utente
                 //Inserirle dentro asrv e srv distruttori se non è già stato fatto

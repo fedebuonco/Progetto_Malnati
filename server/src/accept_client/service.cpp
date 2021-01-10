@@ -144,7 +144,8 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
         }
 
     }
-    catch (boost::system::system_error& e){
+    catch (std::invalid_argument& e){
+        std::cerr<<"CIAO !" << e.what()  << std::endl;
         //TODO: Qui andiamo quando terminiamo con ctrl e anche quando c'è un eccezione
         delete this;
         return;

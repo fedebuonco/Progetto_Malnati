@@ -10,6 +10,7 @@
 #include "accept_client.h"
 #include <filesystem>
 
+
 AcceptClient::AcceptClient(asio::io_service& ios, unsigned short port_num,std::filesystem::path serverPath) :
         ios_(ios),
         acceptor_(ios_,boost::asio::ip::tcp::endpoint(boost::asio::ip::address_v4::any(),port_num)),
@@ -24,8 +25,8 @@ AcceptClient::AcceptClient(asio::io_service& ios, unsigned short port_num,std::f
 void AcceptClient::SpawnSession() {
 
     std::shared_ptr<boost::asio::ip::tcp::socket> sock(new boost::asio::ip::tcp::socket(ios_));
-
     acceptor_.accept(*sock.get());
+    if(!stop_.load())
     //TODO what is the following syntax for? Creates a new session and also calls immediately a method?
     (new Service)->ReadRequest(sock, this->serverPath);
 

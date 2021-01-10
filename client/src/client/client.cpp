@@ -61,7 +61,7 @@ void Client::Syncro(){
     if (DEBUG) update.PrettyPrint();
 
     // Send the server the information about file to add and file to remove
-    SendRemoval(update);
+    // SendRemoval(update);
     }
 
 /// Will send username and password. After that it will shutdown the send part of the socket thus providing the server a way to

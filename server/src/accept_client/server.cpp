@@ -6,7 +6,7 @@
 #include "accept_client.h"
 #include "server.h"
 
-bool DEBUG=true;
+bool DEBUG=false;
 
 Server::Server(std::filesystem::path serverPath) : stop_(false), serverPath(serverPath){};
 
@@ -47,7 +47,10 @@ void Server::Stop() {
         sock.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
 
         sock.close();
-
+        // This closes the server by joining the main. It kill also the accept_client.
+        // If the accept client has already spawned the last service then
+        // the main closes the last service during its switch case.
+        // In order to not do that we stop the spawn of the last service by checking the global var.
         thread_->join();
         std::cout<<"Successfully to shutdown Synchronous Server..."<<std::endl;
     } catch (std::exception &e) {
