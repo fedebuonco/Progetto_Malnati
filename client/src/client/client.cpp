@@ -59,13 +59,12 @@ void Client::Syncro(){
     // Need to figure out which files the server doesn't have (we need to send) and the file the server have to delete.
     Patch update(client_treet, server_treet);
 
-    //TODO: Quindi mando messaggi al server 53 con i file da eliminare
-
-    //
+    // This function identify the file that have to be sent really
     update.Dispatch(db_file_, folder_watched_);
 
     if (DEBUG) update.PrettyPrint();
 
+    // Send the server the information about file to add and file to remove
     //SendPatch(update);
     }
 
@@ -178,28 +177,30 @@ ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
 /// the newer files.
 /// \param update processed patch
 void Client::SendPatch(Patch& update){
-    //Sending delete ControlMessage
-    //Creation of the Auth ControlMessage type = 3
+
+    //****Sending delete ControlMessage****
     Credential credential_ = Authentication::get_Instance()->ReadCredential();
-    SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
+
+    //Creation of the Auth ControlMessage type: 3 with inside Username, Password and the list of file to be deleted
     ControlMessage delete_message{3};
-    //Adding User and Password
     delete_message.AddElement("Username",credential_.username_);
     delete_message.AddElement("Password:",credential_.hash_password_ );
-    //We add the delete string
-    //delete_message.AddElement("To_be_deleted",update.to_be_deleted_);
+    //delete_message.AddElement("To_be_deleted",update.to_be_elim_vector);
+
     //And sending it formatted in JSON language
+    SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
     boost::asio::write(tcpSocket.sock_, boost::asio::buffer(delete_message.ToJSON()));
+
     // we sent the Auth message, we will shutdown in order to tell the server that we sent all
     tcpSocket.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
 
-    // Now we can focus on new and common
-    //TODO Here send the files asyncronulsy
+    //*****Now we can focus on new and common********
+    //TODO Here send the files asynchronously
 
 }
 
 /// Test each file to see if already present in the hash db, and acts accordingly in order to keep a database of each
-/// hash perfomed.
+/// hash performed.
 void Client::InitHash(){
 
     // We open the db once here so that we limit the overhead

@@ -116,12 +116,28 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                 //Find inside the DB the name of the server's folder in which we have stored the users file.
                 std::string user_folder_name = db.getUserPath(username, this->serverPath);
 
-                // File anche multiple
-                // TODO Here we delete the files that are in the message and Update the user.DB
+                //Take the list of files to be deleted
+                //std::string list_to_be_deleted = request_message.GetElement("Deleted");
+
+                //For each file we delete the file itself and the row inside user tree DB
+                //for(auto file : list_to_be_deleted ) {
+                    //Delete the file
+                    //std::filesystem::path file_path = this->serverPath / "backupFiles" / "backupROOT" / user_folder_name / file ;
+
+                    //std::error_code ec;
+                    //bool result = std::filesystem::remove(file_path, ec);
+
+                        //TODO: This file doesn't exist or we have error
+                        //if(!result)
+
+                    //We doesn't care if the file exists or not; we try anyway to delete the row inside DB
+                    //db.deleteFile(user_folder_name, list_to_be_deleted, this->serverPath);
+                //}
+
                 break;
             }
             default: {
-                std::cout << "Default case" << std::endl;
+                if(DEBUG) std::cout << "Service.cpp SWITCH; Default case" << std::endl;
                 break;
             }
 
