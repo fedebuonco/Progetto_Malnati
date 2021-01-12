@@ -31,31 +31,37 @@ void Server::Run(unsigned short port_num) {
 
 ///Stops the server by waiting for the join of the thread spawned on the Start.
 void Server::Stop() {
-
     stop_.store(true);
 
     try {
+        // Here we send the fake message in order to close the server.
+        // We have a race condition where the last service handling this message could or could not be spawned
+        // so we send it but an exception telling us that the service is not present could arise.
+        // In order to manage that we just save the exception in ec, without ever looking at it.
+        boost::system::error_code ec;
         boost::asio::ip::tcp::socket sock(ios_);
         boost::asio::ip::tcp::endpoint ep_(boost::asio::ip::address::from_string("127.0.0.1"), 3333);
-        sock.open(ep_.protocol());
-        sock.connect(ep_);
+        sock.open(ep_.protocol(), ec);
+        sock.connect(ep_,ec);
 
-        std::cout<<"Starting to shutdown Synchronous Server..."<<std::endl;
+        std::cout << "Starting to shutdown Synchronous Server..." << std::endl;
         ControlMessage check_result{5};
 
-        boost::asio::write(sock, boost::asio::buffer(check_result.ToJSON()));
-        sock.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+        boost::asio::write(sock, boost::asio::buffer(check_result.ToJSON()),ec);
+        sock.shutdown(boost::asio::ip::tcp::socket::shutdown_both,ec);
 
         sock.close();
+
         // This closes the server by joining the main. It kill also the accept_client.
         // If the accept client has already spawned the last service then
         // the main closes the last service during its switch case.
         // In order to not do that we stop the spawn of the last service by checking the global var.
+
         thread_->join();
         std::cout<<"Successfully to shutdown Synchronous Server..."<<std::endl;
     } catch (std::exception &e) {
         //The interrupt should occur from another thread
-        std::cerr<<"Thread not joined"<<std::endl;
+        std::cerr<<"Thread not joined "<<  e.what() << std::endl;
         std::exit(0);
     }
 
