@@ -3,8 +3,26 @@
 #include <config.h>
 #include <client.h>
 #include <filesystem>
+#include <queue>
+#include <sender.h>
+#include "file_sipper.h"
+
+volatile sig_atomic_t flag = 0;
+void closeServer(int sig){ // can be called asynchronously
+    flag = 1; // set flag
+}
+
+void Stop(){
+
+}
+
 
 int main(int argc, char *argv[]) {
+
+    //QUEUE
+    Shared_Queue sq;
+
+
 
     /**
     * CONFIGURATION AND VALIDATION PHASE
@@ -52,11 +70,21 @@ int main(int argc, char *argv[]) {
     // Building the Client
     // TODO These could also be a thread?
     std::filesystem::path path = std::filesystem::path(Config::get_Instance()->ReadProperty("path"));
+
+
+    std::thread ts( [&sq]() {
+        Sender sender(static_cast<std::shared_ptr<Shared_Queue>>(&sq));
+        sender.Sender_Action();
+    });
+
+
     Client client{raw_endpoint, path};
 
     //TODO Change this leaving the main in the background.
     //TODO We need something to close the client once is running like in the server.
-    std::cin.ignore();
+    //std::cin.ignore();
+
+
 
 }
 
