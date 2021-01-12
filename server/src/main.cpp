@@ -8,7 +8,7 @@
 
 
 
-std::atomic<bool> is_terminated = true;
+std::atomic<bool> is_terminated = false;
 
 void closeServer(int sig){ // can be called asynchronously
     is_terminated = true;
