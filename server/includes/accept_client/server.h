@@ -18,6 +18,10 @@ extern bool DEBUG;
 class Server {
 private:
     std::unique_ptr<std::thread> thread_;
+public:
+    const std::unique_ptr<std::thread> &getThread() const;
+
+private:
     boost::asio::io_service ios_;
     std::atomic<bool> stop_;
     std::filesystem::path serverPath;

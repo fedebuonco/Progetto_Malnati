@@ -4,7 +4,20 @@
 #include <client.h>
 #include <filesystem>
 
+volatile sig_atomic_t flag = 0;
+void closeServer(int sig){ // can be called asynchronously
+    flag = 1; // set flag
+}
+
+void Stop(){
+
+}
+
+
 int main(int argc, char *argv[]) {
+
+    //QUEUE
+
 
     /**
     * CONFIGURATION AND VALIDATION PHASE
@@ -52,11 +65,26 @@ int main(int argc, char *argv[]) {
     // Building the Client
     // TODO These could also be a thread?
     std::filesystem::path path = std::filesystem::path(Config::get_Instance()->ReadProperty("path"));
+
+
+
     Client client{raw_endpoint, path};
 
     //TODO Change this leaving the main in the background.
     //TODO We need something to close the client once is running like in the server.
-    std::cin.ignore();
+    //std::cin.ignore();
+
+    while(1)
+        std::string s;
+        std::cin<<s;
+        if(flag){ // my action when signal set it 1
+
+            //TODO: Queste due devono essere chiamate anche quando il programma termina senza chiusura utente
+            //Inserirle dentro asrv e srv distruttori se non è già stato fatto
+            Stop();
+            Stop();
+            break;
+        }
 
 }
 

@@ -53,6 +53,8 @@ int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::
         if (db.ChangeStatusToSending(element.first)){ // THis return true only if the current status is "NEW" and changes it to "SENDING"
             // TODO craeazione filepack nello heap.
             // TODO Insert nella queue.
+            // CREO FILESIPPER
+            // Sender::getIns()->insert(filepack);
             // send_queue_.insert(filepak)
             counter++;
         }
