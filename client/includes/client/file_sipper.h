@@ -39,11 +39,14 @@ class FileSipper {
 public:
     FileSipper(RawEndpoint re, std::string const& path);
 
+
 private:
     void OpenFile();
     void Connect();
     void Sip(const boost::system::error_code& t_ec);
     void FirstSip(const boost::system::error_code& t_ec);
+
+
 
     template<class Buffer>
     void writeBuffer(Buffer& t_buffer)

@@ -6,7 +6,7 @@
 #include "accept_client.h"
 #include "server.h"
 
-bool DEBUG=false;
+bool DEBUG=true;
 
 Server::Server(std::filesystem::path serverPath) : stop_(false), serverPath(serverPath){};
 

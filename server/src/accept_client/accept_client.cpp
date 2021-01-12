@@ -27,7 +27,7 @@ void AcceptClient::SpawnSession() {
 
     std::shared_ptr<boost::asio::ip::tcp::socket> sock(new boost::asio::ip::tcp::socket(ios_));
     acceptor_.accept(*sock.get());
-    if(!stop_.load())
+    
     //TODO what is the following syntax for? Creates a new session and also calls immediately a method?
     if(!flag){
         (new Service)->ReadRequest(sock, this->serverPath);

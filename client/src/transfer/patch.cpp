@@ -55,7 +55,7 @@ int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::
             // TODO Insert nella queue.
             // CREO FILESIPPER
             // Sender::getIns()->insert(filepack);
-            // send_queue_.insert(filepak)
+            // send_queue_.insert(filepak);
             counter++;
         }
     }

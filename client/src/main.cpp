@@ -3,6 +3,9 @@
 #include <config.h>
 #include <client.h>
 #include <filesystem>
+#include <queue>
+#include <sender.h>
+#include "file_sipper.h"
 
 volatile sig_atomic_t flag = 0;
 void closeServer(int sig){ // can be called asynchronously
@@ -17,6 +20,8 @@ void Stop(){
 int main(int argc, char *argv[]) {
 
     //QUEUE
+    Shared_Queue sq;
+
 
 
     /**
@@ -67,6 +72,11 @@ int main(int argc, char *argv[]) {
     std::filesystem::path path = std::filesystem::path(Config::get_Instance()->ReadProperty("path"));
 
 
+    std::thread ts( [&sq]() {
+        Sender sender(static_cast<std::shared_ptr<Shared_Queue>>(&sq));
+        sender.Sender_Action();
+    });
+
 
     Client client{raw_endpoint, path};
 
@@ -74,17 +84,7 @@ int main(int argc, char *argv[]) {
     //TODO We need something to close the client once is running like in the server.
     //std::cin.ignore();
 
-    while(1)
-        std::string s;
-        std::cin<<s;
-        if(flag){ // my action when signal set it 1
 
-            //TODO: Queste due devono essere chiamate anche quando il programma termina senza chiusura utente
-            //Inserirle dentro asrv e srv distruttori se non è già stato fatto
-            Stop();
-            Stop();
-            break;
-        }
 
 }
 
