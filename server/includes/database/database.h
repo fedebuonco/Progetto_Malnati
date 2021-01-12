@@ -15,6 +15,7 @@ public:
 
     std::string getTimefromPath(std::string foldername, std::string path, std::filesystem::path serverP);
 
+    void deleteFile(std::string foldername, std::string path, std::filesystem::path serverP);
 };
 
 

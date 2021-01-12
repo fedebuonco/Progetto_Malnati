@@ -13,7 +13,7 @@
 /// The main class of the client.
 /// It represent an object that will connect to the server
 /// specified in the constructor and will
-/// ask to a watcher to whatch a specified folder.
+/// ask to a watcher to watch a specified folder.
 class Client {
 
 private:
@@ -25,7 +25,7 @@ private:
     bool Auth();
     void StartWatching();
     void Syncro();
-    void SendPatch(Patch &update);
+    void SendRemoval(Patch &update);
     TreeT RequestTree();
     bool SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm);
     ControlMessage SyncReadCM(SyncTCPSocket& stcp);

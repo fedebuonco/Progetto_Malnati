@@ -26,11 +26,16 @@ ControlMessage::ControlMessage(std::string json_code){
     ss << json_code;
     boost::property_tree::read_json(ss, *this->json_mess_);
     // And also store some infos, for faster access
-    int t =  json_mess_->get<int>("Type");
-    this->type_ = t;
-    // TODO check if not found then we should notify the user.
-    this->username_ = json_mess_->get<std::string>("Username");
-    this->hashkey_ = json_mess_->get<std::string>("HashPassword");
+    try {
+        int t = json_mess_->get<int>("Type");
+        this->type_ = t;
+        this->username_ = json_mess_->get<std::string>("Username");
+        this->hashkey_ = json_mess_->get<std::string>("HashPassword");
+    } catch(std::exception& e)
+    {
+        throw std::invalid_argument(" -- Message is incorrectly formatted");
+    }
+
 
 };
 

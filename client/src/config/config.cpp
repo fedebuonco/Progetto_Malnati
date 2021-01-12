@@ -237,7 +237,8 @@ void Config::SetConfig(int argc, char *argv[]) {
 
                 } else {
                     //TODO: Exception
-                    throw  SyntaxError(std::string("Configuration syntax error: We didn't find 2 valid arguments after the -s or --server."));
+                    throw  std::invalid_argument("Configuration syntax error: We didn't find 2 valid arguments after the -s or --server.");
+                    //throw  SyntaxError(std::string("Configuration syntax error: We didn't find 2 valid arguments after the -s or --server."));
                 }
 
                 break;

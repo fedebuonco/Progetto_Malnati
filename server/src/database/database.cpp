@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <server.h>
 
 bool Database::auth(std::string username, std::string attemp_hash_password, std::filesystem::path serverP) {
 
@@ -86,7 +87,7 @@ void Database::createTable(std::string foldername, std::filesystem::path serverP
         std::string folderext = foldername+".db";
         std::filesystem::path db_path = serverP / "backupFiles" / "usersTREE" / folderext ;
         SQLite::Database    db(db_path.string(), SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
-        std::cout << "SQLite database file '" << db.getFilename().c_str() << "' opened successfully\n";
+        //std::cout << "SQLite database file '" << db.getFilename().c_str() << "' opened successfully\n";
 
         // Create a new table with an explicit "id" column aliasing the underlying rowid
         db.exec("DROP TABLE IF EXISTS UserTree");
@@ -138,5 +139,35 @@ std::string Database::getTimefromPath(std::string foldername, std::string path, 
 
     //Se non trova nulla ritorna 1
     return std::to_string(1);
+
+}
+
+void Database::deleteFile(std::string foldername, std::string path, std::filesystem::path serverP) {
+
+    try{
+        std::string folderext = foldername+".db";
+        std::filesystem::path db_path = serverP / "backupFiles" / "usersTREE" / folderext ;
+        SQLite::Database    db(db_path.string(), SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
+
+        // Compile a SQL query, containing one parameter (index 1)
+        SQLite::Statement   query(db, "DELETE FROM UserTree WHERE path= ?");
+
+        // Bind the integer value 6 to the first parameter of the SQL query
+        query.bind(1, path);
+
+        // Loop to execute the query step by step, to get rows of result
+        while (query.executeStep())
+        {
+            // Demonstrate how to get some typed column value
+            if(DEBUG) std::cout << "Deleted ROW" << std::endl;
+        }
+        //If the filename doesn't exist, we don't do nothing
+    }
+    catch (std::exception& e) {
+        std::cerr << "exception: " << e.what() << std::endl;
+        //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
+    }
+
+
 
 }
