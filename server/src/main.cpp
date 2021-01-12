@@ -8,11 +8,10 @@
 
 
 
-volatile sig_atomic_t flag = 0;
-int flag2 = 1;
+std::atomic<bool> is_terminated = true;
+
 void closeServer(int sig){ // can be called asynchronously
-    flag = 1; // set flag
-    flag2 = 1;
+    is_terminated = true;
 }
 
 const unsigned int DEFAULT_THREAD_POOL_SIZE = 1;
@@ -48,22 +47,20 @@ int main(int argc, char *argv[]){
         // Register signals
         signal(SIGINT, closeServer);
         signal(SIGTERM, closeServer);
-        while(1)
-            if(flag2){ // my action when signal set it 1
-
+        while(true) {
+            if(is_terminated) {
                 //TODO: Queste due devono essere chiamate anche quando il programma termina senza chiusura utente
                 //Inserirle dentro asrv e srv distruttori se non è già stato fatto
                 asrv.Stop();
                 srv.Stop();
-                break;
+                return 0;
             }
-
+        }
     }catch(...){
             //TODO catch
             std::cerr<<"GENERAL ERROR"<<std::endl;
             std::exit(EXIT_FAILURE);
     }
-
     return 0;
 }
 

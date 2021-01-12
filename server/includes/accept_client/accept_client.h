@@ -23,7 +23,7 @@ private:
     std::filesystem::path serverPath;
 public:
     AcceptClient(boost::asio::io_service& ios, unsigned short port_num, std::filesystem::path serverPath);
-    void SpawnSession();
+    void SpawnSession(const std::atomic<bool>& stop);
 
 
 };
