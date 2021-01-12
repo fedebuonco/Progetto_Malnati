@@ -27,6 +27,7 @@ void Server::Run(unsigned short port_num) {
         acc.SpawnSession();
     }
 
+
 }
 
 ///Stops the server by waiting for the join of the thread spawned on the Start.
@@ -59,4 +60,8 @@ void Server::Stop() {
         std::exit(0);
     }
 
+}
+
+const std::unique_ptr<std::thread> &Server::getThread() const {
+    return thread_;
 }

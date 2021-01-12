@@ -10,6 +10,7 @@
 #include "accept_client.h"
 #include <filesystem>
 
+volatile sig_atomic_t flag=0;
 
 AcceptClient::AcceptClient(asio::io_service& ios, unsigned short port_num,std::filesystem::path serverPath) :
         ios_(ios),
@@ -28,7 +29,9 @@ void AcceptClient::SpawnSession() {
     acceptor_.accept(*sock.get());
     if(!stop_.load())
     //TODO what is the following syntax for? Creates a new session and also calls immediately a method?
-    (new Service)->ReadRequest(sock, this->serverPath);
+    if(!flag){
+        (new Service)->ReadRequest(sock, this->serverPath);
+    }
 
 }
 

@@ -5,11 +5,10 @@
 #include "sqlite3.h"
 #include <async_server.h>
 #include <filesystem>
+#include "accept_client.h"
 
 
 
-volatile sig_atomic_t flag = 0;
-int flag2 = 1;
 void closeServer(int sig){ // can be called asynchronously
     flag = 1; // set flag
     flag2 = 1;
@@ -55,6 +54,7 @@ int main(int argc, char *argv[]){
                 //Inserirle dentro asrv e srv distruttori se non è già stato fatto
                 asrv.Stop();
                 srv.Stop();
+
                 break;
             }
 
