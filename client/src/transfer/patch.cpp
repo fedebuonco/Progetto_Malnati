@@ -54,8 +54,13 @@ int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::
             // TODO craeazione filepack nello heap.
             // TODO Insert nella queue.
             // CREO FILESIPPER
-            // Sender::getIns()->insert(filepack);
+            // Sender::getInstance()->insert(filepack);
+            //A insert passo il puntatore del filesipper
             // send_queue_.insert(filepak);
+
+
+            ///// Sender::getInstance()->insert(std::packaged_task< bool ( FileSipper ) > task, filesipper);
+            //submit(std::packaged_task< bool ( FileSipper ) >
             counter++;
         }
     }

@@ -64,6 +64,8 @@ if (UNIX)
                 src/client/file_sipper.cpp
                 includes/database/database.h
                 src/database/database.cpp
+                includes/client/shared_queue.h
+                src/client/shared_queue.cpp
                )
     target_link_libraries(client dl cryptopp SQLiteCpp PanoptesFW)
 endif (UNIX)
@@ -127,7 +129,10 @@ if (WIN32)
                 includes/client/file_sipper.h
                 src/client/file_sipper.cpp
                 includes/database/database.h
-                src/database/database.cpp)
+                src/database/database.cpp
+                includes/client/shared_queue.h
+                src/client/shared_queue.cpp
+                )
 
         target_link_libraries(client SQLiteCpp PanoptesFW ${CRYPTOPP})
 

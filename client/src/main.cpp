@@ -7,6 +7,7 @@
 #include <sender.h>
 #include "file_sipper.h"
 
+//TODO: da terminmare
 volatile sig_atomic_t flag = 0;
 void closeServer(int sig){ // can be called asynchronously
     flag = 1; // set flag
@@ -19,8 +20,9 @@ void Stop(){
 
 int main(int argc, char *argv[]) {
 
-    //QUEUE
-    Shared_Queue sq;
+    //FileSipper Queue
+    //This is the queue of ready files to be sent
+    std::shared_ptr<SharedQueue> sq_ptr= std::make_shared<SharedQueue>();
 
 
 
@@ -72,9 +74,9 @@ int main(int argc, char *argv[]) {
     std::filesystem::path path = std::filesystem::path(Config::get_Instance()->ReadProperty("path"));
 
 
-    std::thread ts( [&sq]() {
-        Sender sender(static_cast<std::shared_ptr<Shared_Queue>>(&sq));
-        sender.Sender_Action();
+    std::thread thread_sender( [sq_ptr]() {
+        Sender::get_Instance()->setSharedQueue(sq_ptr);
+        Sender::get_Instance()->Sender_Action();
     });
 
 

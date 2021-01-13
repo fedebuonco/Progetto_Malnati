@@ -36,9 +36,13 @@ class FileSipper {
     //Number of sip (i.e. block) in which the file is split
     int sip_counter;
 
+    bool ready;
+
 public:
     FileSipper(RawEndpoint re, std::string const& path);
-
+    void Start();
+    bool isReady() const;
+    void setReady(bool ready);
 
 private:
     void OpenFile();
