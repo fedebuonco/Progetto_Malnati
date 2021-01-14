@@ -20,6 +20,7 @@ class FileSipper {
     std::string hash_;
     std::string lmt_;
     std::string file_string_;
+    std::string metadata_;
 
     boost::asio::io_service ios_;
     boost::asio::ip::tcp::endpoint ep_;

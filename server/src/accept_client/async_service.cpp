@@ -37,12 +37,28 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
         //TODO filename is actually a path
         //TODO Hash, time last modified
 
-        file_name_ = m_buf.data();
+        metadata_ = m_buf.data();
+
+        //Now on metadata_ i have the HASH@LMT@FILENAME, i will parse everything
+        std::size_t current, previous = 0;
+        current = metadata_.find("@");
+        std::string hash = metadata_.substr(previous, current - previous);
+        previous = current + 1;
+        current = metadata_.find("@", previous);
+        std::string lmt = metadata_.substr(previous, current - previous);
+        previous = current + 1;
+        current = metadata_.find("@", previous);
+        std::string file_string = metadata_.substr(previous, current - previous);
+
+
         first_sip_ = false;
         // We check if the folder does exist
-        std::filesystem::path filepath = std::filesystem::path(file_name_);
-        std::filesystem::create_directories(filepath.remove_filename());
-        m_outputFile.open(file_name_, std::ios_base::binary);
+        //TODO actually use user folder.
+        std::filesystem::path user_folder = std::filesystem::path ("./Prova");
+        std::filesystem::path filepath = user_folder / file_string;
+        std::filesystem::path filepath2 = user_folder / file_string;
+        std::filesystem::create_directories(filepath2.remove_filename());
+        m_outputFile.open(filepath, std::ios_base::binary);
         StartHandling();
         return;
     }

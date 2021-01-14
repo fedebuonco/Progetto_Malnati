@@ -13,7 +13,10 @@ FileSipper::FileSipper(RawEndpoint re, std::filesystem::path file_path, std::str
         file_string_(file_string),
         sip_counter(0)
 {
+    //let's build the metadata for future firstsip
+    metadata_ = hash_ + "@" + lmt_ + "@" + file_string_;
     if(DEBUG) std::cout << "Creating FileSipper for file " <<  path_.string() << std::endl;
+    if(DEBUG) std::cout << "With metadata =  " << metadata_ << std::endl;
     sock_.open(ep_.protocol());
 
 }
@@ -64,21 +67,13 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
         // We create the first sip by sending file metadata
         int i =0;
         // I paste the metadata in the buffer in this format
-        // FILENAME@HASH@LMT
         buf_metadata.fill('\000');
-
-        // We start costrugting the first sip, name of the file, then hash then lmt.
-        //name
-        for( auto letter : path_.string()){
+        for( auto letter : metadata_){
             buf_metadata[i] = letter;
             i++;
         }
-        //TODO hash
-        //TODO lmt
-
         //then we delimit the end using the terminator char
         buf_metadata[i] = '\000';
-
         // And send it
         auto buf = boost::asio::buffer(buf_metadata.data(),1024);
         writeBuffer(buf);

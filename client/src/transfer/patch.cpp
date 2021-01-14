@@ -59,7 +59,10 @@ int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::
                 re_test.raw_ip_address = "127.0.0.1";
                 re_test.port_num = 3343;
                 std::filesystem::path f = folder_watched / element.first;
-                auto fs = FileSipper(re_test, f.string());
+                //todo retrieve hash and lmt
+                std::string hs = "ciao";
+                std::string lmt = "123";
+                auto fs = FileSipper(re_test, f, element.first, hs, lmt);
                 fs.Send();
                 counter++;
 
