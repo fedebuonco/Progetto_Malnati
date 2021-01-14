@@ -6,6 +6,7 @@
 #include <set>
 #include <database.h>
 #include <file_sipper.h>
+#include <authentication.h>
 #include "patch.h"
 
 /// We populate the to_be_sent_vector and the to_be_eliminated_vector
@@ -54,15 +55,18 @@ int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::
             // TODO craeazione filessiper nello heap.
             // TODO Insert nella queue.
 
+            // We retrieve the needed metadata
+            Credential credential = Authentication::get_Instance()->ReadCredential();
+            std::string file_hash;
+            std::string file_lmt;
+            db.GetMetadata(element.first, file_hash, file_lmt);
+
             try {
                 RawEndpoint re_test;
                 re_test.raw_ip_address = "127.0.0.1";
                 re_test.port_num = 3343;
                 std::filesystem::path f = folder_watched / element.first;
-                //todo retrieve hash and lmt
-                std::string hs = "ciao";
-                std::string lmt = "123";
-                auto fs = FileSipper(re_test, f, element.first, hs, lmt);
+                auto fs = FileSipper(re_test,credential.username_, f, element.first, file_hash, file_lmt);
                 fs.Send();
                 counter++;
 

@@ -204,3 +204,25 @@ bool DatabaseConnection::ChangeStatusToSending(const std::string& filename) {
     }
 
 }
+
+void DatabaseConnection::GetMetadata(const std::string& filename, std::string& hash, std::string& lmt){
+    // Compile a SQL query, containing 1 parameters
+    SQLite::Statement   query(hash_db_, "SELECT * "
+                                        "FROM files "
+                                        "WHERE filename = ? "
+                                        );
+    // Bind to ? of the query
+    query.bind(1, filename);
+
+    while (query.executeStep())
+    {
+        // Retrieve filename fn, hash hs, and last modified time lt.
+        std::string     hs = query.getColumn(1);
+        std::string     lt = query.getColumn(2);
+        hash = hs;
+        lmt = lt;
+        if(DEBUG) std::cout << "TUPLE DB READ: " << filename << " " << hash << " " << lmt << std::endl;
+
+    }
+
+}

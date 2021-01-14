@@ -39,16 +39,27 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
 
         metadata_ = m_buf.data();
 
-        //Now on metadata_ i have the HASH@LMT@FILENAME, i will parse everything
+        //Now on metadata_ i have the USER@HASH@LMT@FILENAME, i will parse everything
         std::size_t current, previous = 0;
-        current = metadata_.find("@");
+
+        current = metadata_.find("@",previous);
+        std::string user = metadata_.substr(previous, current - previous);
+        previous = current + 1;
+
+        current = metadata_.find("@",previous);
         std::string hash = metadata_.substr(previous, current - previous);
         previous = current + 1;
-        current = metadata_.find("@", previous);
+
+        current = metadata_.find("@",previous);
         std::string lmt = metadata_.substr(previous, current - previous);
         previous = current + 1;
-        current = metadata_.find("@", previous);
+
+        current = metadata_.find("@",previous);
         std::string file_string = metadata_.substr(previous, current - previous);
+        previous = current + 1;
+
+
+
 
 
         first_sip_ = false;

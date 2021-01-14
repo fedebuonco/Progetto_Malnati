@@ -3,7 +3,7 @@
 #include <sync_tcp_socket.h>
 #include <iostream>
 
-FileSipper::FileSipper(RawEndpoint re, std::filesystem::path file_path, std::string file_string, std::string hash,
+FileSipper::FileSipper(RawEndpoint re, std::string username,  std::filesystem::path file_path, std::string file_string, std::string hash,
                        std::string lmt)  :
         sock_(ios_) ,
         ep_(boost::asio::ip::address::from_string(re.raw_ip_address), re.port_num),
@@ -11,10 +11,11 @@ FileSipper::FileSipper(RawEndpoint re, std::filesystem::path file_path, std::str
         hash_(hash),
         lmt_(lmt),
         file_string_(file_string),
+        username_(username),
         sip_counter(0)
 {
     //let's build the metadata for future firstsip
-    metadata_ = hash_ + "@" + lmt_ + "@" + file_string_;
+    metadata_ = username_ + "@" + hash_ + "@" + lmt_ + "@" + file_string_;
     if(DEBUG) std::cout << "Creating FileSipper for file " <<  path_.string() << std::endl;
     if(DEBUG) std::cout << "With metadata =  " << metadata_ << std::endl;
     sock_.open(ep_.protocol());

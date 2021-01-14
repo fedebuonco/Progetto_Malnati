@@ -18,6 +18,7 @@ public:
     DatabaseConnection(std::filesystem::path db_path, std::filesystem::path folder_watched);
     bool AlreadyHashed(std::string filename, std::string lmt);
     void InsertDB(std::string path_str, std::string hash, std::string lmt_str);
+    void GetMetadata(const std::string& filename, std::string& hash, std::string& lmt);
     void CleanOldRows();
 
     bool ChangeStatusToSending(const std::string& filename);

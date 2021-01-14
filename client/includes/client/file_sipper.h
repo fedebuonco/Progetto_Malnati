@@ -21,6 +21,7 @@ class FileSipper {
     std::string lmt_;
     std::string file_string_;
     std::string metadata_;
+    std::string username_;
 
     boost::asio::io_service ios_;
     boost::asio::ip::tcp::endpoint ep_;
@@ -40,7 +41,7 @@ class FileSipper {
     int sip_counter;
 
 public:
-    FileSipper(RawEndpoint re, std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
+    FileSipper(RawEndpoint re, std::string username, std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
     void FileSipper::Send();
 
 private:
