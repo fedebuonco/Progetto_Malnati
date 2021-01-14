@@ -6,6 +6,7 @@
 #include <set>
 #include <database.h>
 #include "patch.h"
+#include <sender.h>
 
 /// We populate the to_be_sent_vector and the to_be_eliminated_vector
 /// \param client_treet
@@ -56,7 +57,9 @@ int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::
             // CREO FILESIPPER
             // Sender::getInstance()->insert(filepack);
             //A insert passo il puntatore del filesipper
-            // send_queue_.insert(filepak);
+
+
+
 
 
             ///// Sender::getInstance()->insert(std::packaged_task< bool ( FileSipper ) > task, filesipper);

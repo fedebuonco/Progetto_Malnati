@@ -1,5 +1,16 @@
 #include <shared_queue.h>
 
+#include <boost/thread/thread.hpp>
+
+SharedQueue *SharedQueue::m_SharedQueue = nullptr;
+
+SharedQueue *SharedQueue::get_Instance() {
+    if(!m_SharedQueue){
+        m_SharedQueue = new SharedQueue();
+    }
+    return m_SharedQueue;
+}
+
 /***
  * Get the size of the SharedQueue
  * @return
@@ -19,8 +30,17 @@ std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
 
     //While is necessary to prevent spurious wakeups
     //Thread waits when queue is empty OR all files in filesippers are in sending
-    while( ( queue.empty() || queue.size() == active_fs )  )
-        cv.wait(l, [this]() { return !( queue.empty()  || queue.size() == active_fs ) ; });
+    while( ( queue.empty() || queue.size() == active_fs) && Sender::get_Instance()->isFlag()  ) {
+        std::cout<< "EMPTY SHARED QUEUE "<<std::endl;
+        cv.wait(l, [this]() { return !( (queue.empty() || queue.size() == active_fs) && Sender::get_Instance()->isFlag() ); });
+        std::cout << std::this_thread::get_id << "  pool "<<std::endl;
+    }
+
+    if( !Sender::get_Instance()->isFlag() ){
+        return nullptr;
+    }
+
+    std::cout<< "EXIT FROM EMPTY "<<std::endl;
 
     std::shared_ptr<FileSipper> queue_front;
 
@@ -52,4 +72,10 @@ void SharedQueue::add(std::shared_ptr<FileSipper> fsipper){
 int SharedQueue::getActiveFs(){
     std::lock_guard<std::mutex> l(m);
     return active_fs;
+}
+
+void SharedQueue::setFlag(bool flag) {
+    std::lock_guard<std::mutex> l(m);
+    SharedQueue::flag = flag;
+    cv.notify_all();
 }

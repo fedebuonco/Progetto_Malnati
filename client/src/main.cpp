@@ -8,23 +8,19 @@
 #include "file_sipper.h"
 
 //TODO: da terminmare
-volatile sig_atomic_t flag = 0;
+std::atomic<bool> is_terminated = false;
+
 void closeServer(int sig){ // can be called asynchronously
-    flag = 1; // set flag
+    is_terminated = true;
 }
 
 void Stop(){
-
+    std::cout<<" END "<<std::endl;
+    Sender::get_Instance()->setFlag(false);
 }
 
 
 int main(int argc, char *argv[]) {
-
-    //FileSipper Queue
-    //This is the queue of ready files to be sent
-    std::shared_ptr<SharedQueue> sq_ptr= std::make_shared<SharedQueue>();
-
-
 
     /**
     * CONFIGURATION AND VALIDATION PHASE
@@ -39,7 +35,6 @@ int main(int argc, char *argv[]) {
          //Structure is not correct, so we restore with the default config structure
          Config::get_Instance()->SetDefaultConfig();
      }
-
 
     if (argc > 1) {
         //The user provides some configuration arguments from the command line
@@ -69,23 +64,42 @@ int main(int argc, char *argv[]) {
      * The main builds the client that will contain the main logic of the app.
      */
 
-    // Building the Client
-    // TODO These could also be a thread?
-    std::filesystem::path path = std::filesystem::path(Config::get_Instance()->ReadProperty("path"));
+    std::thread thread_client( [ raw_endpoint ]() {
+        Client client{raw_endpoint, std::filesystem::path(Config::get_Instance()->ReadProperty("path")) };
+    });
 
-
-    std::thread thread_sender( [sq_ptr]() {
-        Sender::get_Instance()->setSharedQueue(sq_ptr);
+    std::thread thread_sender( []() {
         Sender::get_Instance()->Sender_Action();
     });
 
 
-    Client client{raw_endpoint, path};
-
     //TODO Change this leaving the main in the background.
     //TODO We need something to close the client once is running like in the server.
-    //std::cin.ignore();
 
+
+    signal(SIGINT, closeServer);
+    signal(SIGTERM, closeServer);
+
+    while(true) {
+        if(is_terminated) {
+            //TODO: Queste due devono essere chiamate anche quando il programma termina senza chiusura utente
+            //Inserirle dentro asrv e srv distruttori se non è già stato fatto
+            Stop();
+            std::cout<<" WHO IS "<<std::endl;
+            thread_client.join();
+            std::cout<<" client "<<std::endl;
+            thread_sender.join();
+            std::cout<<" sender "<<std::endl;
+
+            return 0;
+        }
+
+        //Menu
+
+        //scelta
+
+
+    }
 
 
 }

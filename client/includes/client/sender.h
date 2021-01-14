@@ -26,9 +26,9 @@ class Sender {
     //std::mutex m;
     //std::condition_variable cv;
     bool flag = true;
-    std::shared_ptr<SharedQueue> shared_queue;
+    //std::shared_ptr<SharedQueue> shared_queue;
 public:
-    void setSharedQueue(const std::shared_ptr<SharedQueue> &sharedQueue);
+    //void setSharedQueue(const std::shared_ptr<SharedQueue> &sharedQueue);
     //Singleton, eliminate copy and assignment
     Sender(const Sender&)= delete;
     Sender& operator=(const Sender&)=delete;
@@ -36,6 +36,11 @@ public:
 
     void insert(std::shared_ptr<FileSipper> s);
     void Sender_Action();
+
+    bool isFlag() const;
+
+    void setFlag(bool flag);
+
     std::shared_ptr<FileSipper> choosen();
 
 
