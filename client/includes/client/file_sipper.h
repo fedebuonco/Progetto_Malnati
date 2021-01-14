@@ -16,8 +16,10 @@
 /// sip, thus creating a chain of sent sips.
 class FileSipper {
     //FileSipper is made of path_ and hash_
-    std::string path_;
+    std::filesystem::path path_;
     std::string hash_;
+    std::string lmt_;
+    std::string file_string_;
 
     boost::asio::io_service ios_;
     boost::asio::ip::tcp::endpoint ep_;
@@ -37,7 +39,8 @@ class FileSipper {
     int sip_counter;
 
 public:
-    FileSipper(RawEndpoint re, std::string const& path);
+    FileSipper(RawEndpoint re, std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
+    void FileSipper::Send();
 
 private:
     void OpenFile();

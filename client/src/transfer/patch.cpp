@@ -5,6 +5,7 @@
 #include <iterator>
 #include <set>
 #include <database.h>
+#include <file_sipper.h>
 #include "patch.h"
 
 /// We populate the to_be_sent_vector and the to_be_eliminated_vector
@@ -45,16 +46,29 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
 /// \param db_path
 /// \return int number of dispatched file.
 int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::path folder_watched){
-
     // TODO for each file in the to be sent look the status and if is it 0 insert it in the queue.
     int counter = 0;
     DatabaseConnection db(db_path, folder_watched);
     for ( auto element : to_be_sent_vector){
         if (db.ChangeStatusToSending(element.first)){ // THis return true only if the current status is "NEW" and changes it to "SENDING"
-            // TODO craeazione filepack nello heap.
+            // TODO craeazione filessiper nello heap.
             // TODO Insert nella queue.
-            // send_queue_.insert(filepak)
-            counter++;
+
+            try {
+                RawEndpoint re_test;
+                re_test.raw_ip_address = "127.0.0.1";
+                re_test.port_num = 3343;
+                std::filesystem::path f = folder_watched / element.first;
+                auto fs = FileSipper(re_test, f.string());
+                fs.Send();
+                counter++;
+
+            } catch(std::exception& e)
+            {
+                std::cerr << "Erporre" << e.what() << std::endl;
+                std::exit(123213);
+            }
+
         }
     }
     return counter;

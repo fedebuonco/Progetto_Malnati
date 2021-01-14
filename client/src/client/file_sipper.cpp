@@ -3,22 +3,32 @@
 #include <sync_tcp_socket.h>
 #include <iostream>
 
-FileSipper::FileSipper(RawEndpoint re, const std::string &path) :
-    sock_(ios_) ,
-    ep_(boost::asio::ip::address::from_string(re.raw_ip_address), re.port_num),
-    path_(path),
-    sip_counter(0)
-    {
-        if(DEBUG) std::cout << "Creating FileSipper for file " <<  path << std::endl;
-        sock_.open(ep_.protocol());
-        Connect();
-        ios_.run();
-    }
+FileSipper::FileSipper(RawEndpoint re, std::filesystem::path file_path, std::string file_string, std::string hash,
+                       std::string lmt)  :
+        sock_(ios_) ,
+        ep_(boost::asio::ip::address::from_string(re.raw_ip_address), re.port_num),
+        path_(file_path),
+        hash_(hash),
+        lmt_(lmt),
+        file_string_(file_string),
+        sip_counter(0)
+{
+    if(DEBUG) std::cout << "Creating FileSipper for file " <<  path_.string() << std::endl;
+    sock_.open(ep_.protocol());
+
+}
+
+
+/// Methods that starts the sending of the File.
+void FileSipper::Send(){
+    Connect();
+    ios_.run();
+}
 
 //TODO iterator endpoint not single...
 /// We async connect to the specified server.
 void FileSipper::Connect() {
-    if(DEBUG) std::cout << "Connecting to "<<  ep_.address() <<" for file " <<  path_ << std::endl;
+    if(DEBUG) std::cout << "Connecting to "<<  ep_.address() <<" for file " <<  path_.string() << std::endl;
 
     sock_.async_connect(ep_, [this](boost::system::error_code ec) {
         if(DEBUG) std::cout << "Currently in the async_connect callback " << std::endl;
@@ -34,7 +44,7 @@ void FileSipper::OpenFile() {
     std::cout << "Opening File" << std::endl;
     files_stream_.open(path_.c_str(), std::ios_base::binary);
     if (files_stream_.fail())
-        throw std::fstream::failure("Failed while opening file " + path_);
+        throw std::fstream::failure("Failed while opening file " + path_.string());
 
     //retrieve the byte size
     files_stream_.seekg(0, files_stream_.end);
@@ -50,13 +60,6 @@ void FileSipper::OpenFile() {
 /// \param t_ec
 void FileSipper::FirstSip(const boost::system::error_code& t_ec){
 
-    // TODO We need to retrieve the entry from the the db (path, hash, lmt, STATUS)
-    // Ne abbiamo bisogno perchè il server deve rifare hash e controllare
-    // lmt ci serve perchè il server deve memorizzare quello più nuovo
-    // and save the hash and lmt to a string.
-
-    //TODO: Devo partire sempre?
-
     if (files_stream_) {
         // We create the first sip by sending file metadata
         int i =0;
@@ -66,7 +69,7 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
 
         // We start costrugting the first sip, name of the file, then hash then lmt.
         //name
-        for( auto letter : path_){
+        for( auto letter : path_.string()){
             buf_metadata[i] = letter;
             i++;
         }
