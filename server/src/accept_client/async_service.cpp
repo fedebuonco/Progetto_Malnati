@@ -1,6 +1,8 @@
 #include <async_service.h>
 #include <filesystem>
+#include <server.h>
 #include "../../includes/database/database.h"
+
 
 
 AsyncService::AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock, std::filesystem::path server_path) :
@@ -86,11 +88,11 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
 }
 
 void AsyncService::onFinish() {
-    //TODO FAI ClOSE DEL FILE
-    //TODO SALVA FILE DENTRO LA CARTELLA marco_01
-    //TODO: CHECK HASH CHE ARRIVA DAL CLIENT CON HASH CALCOLATO CON IL FILE SALVATO E VEDI SE SONO UGUALI
-    //TODO: SE SONO UGUALI ****INSERT NEL DB**** DELL UTENTE
-    //TODO SHould check file integrity and send to the client the response if it is ok or not
+    //We close the file and compute its hash in order to comapre it with the provided one.
+    m_outputFile.close();
+    //TODO compute hash and compare it to hash_
+    //TODO if ok insert it in the db with the filename, hash_ and lmt_
+    //TODO notify client that we have the correct file and the filesipper can modify the client db in the client.
 
     delete this;
 }
