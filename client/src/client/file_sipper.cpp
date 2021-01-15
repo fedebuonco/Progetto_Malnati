@@ -25,6 +25,8 @@ FileSipper::FileSipper(RawEndpoint re, std::string username,  std::filesystem::p
 
 /// Methods that starts the sending of the File.
 void FileSipper::Send(){
+    // We make the status true, so that we know the filesipper has been sent.
+    status = true;
     Connect();
     ios_.run();
 }
@@ -59,7 +61,6 @@ void FileSipper::OpenFile() {
     files_stream_.seekg(0, files_stream_.beg);
 }
 
-
 /// Takes the file and send its metadata to the server.
 /// \param t_ec
 void FileSipper::FirstSip(const boost::system::error_code& t_ec){
@@ -93,7 +94,6 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
         return;
     }
 }
-
 
 // Takes a sip of a file and sends it.
 void FileSipper::Sip(const boost::system::error_code& t_ec){
@@ -135,6 +135,8 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
         //TODO Here error in the sending WriteBuffer
     }
 }
+
+
 
 
 

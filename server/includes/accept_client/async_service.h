@@ -9,10 +9,11 @@
 #include <iostream>
 #include <boost/asio/streambuf.hpp>
 #include <fstream>
+#include <filesystem>
 
 class AsyncService {
 public:
-    AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock);
+    AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock, std::filesystem::path server_path);
     void StartHandling();
 
 private:
@@ -22,6 +23,7 @@ private:
 
 
 private:
+    std::filesystem::path server_path_;
     std::shared_ptr<boost::asio::ip::tcp::socket> m_sock;
     std::string m_response;
     boost::asio::streambuf m_request;

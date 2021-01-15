@@ -1,10 +1,10 @@
 #include <async_service.h>
 #include <filesystem>
+#include "../../includes/database/database.h"
 
-// TODO make sure that an asyncService manage a single file.
-// TODO
 
-AsyncService::AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock) :
+AsyncService::AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock, std::filesystem::path server_path) :
+server_path_(server_path),
 m_sock(sock)
         {
             first_sip_ = true;
@@ -33,9 +33,6 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
 
     //We check if this is the first sip, if it is it contains metadata, and we must parse it.
     if(first_sip_){
-        //TODO open the file folder and
-        //TODO filename is actually a path
-        //TODO Hash, time last modified
 
         metadata_ = m_buf.data();
 
@@ -58,16 +55,13 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
         std::string file_string = metadata_.substr(previous, current - previous);
         previous = current + 1;
 
-
-
-
-
         first_sip_ = false;
-        // We check if the folder does exist
-        //TODO actually use user folder.
-        std::filesystem::path user_folder = std::filesystem::path ("./Prova");
-        std::filesystem::path filepath = user_folder / file_string;
-        std::filesystem::path filepath2 = user_folder / file_string;
+        // We check if the folder does exist by querying the db.
+        Database db;
+        std::string user_path_str = db.getUserPath(user, server_path_);
+        std::filesystem::path user_path = std::filesystem::path(user_path_str);
+        std::filesystem::path filepath = server_path_ / "backupFiles" / "backupROOT" / user_path / file_string;
+        std::filesystem::path filepath2 = server_path_ / "backupFiles" / "backupROOT" / user_path / file_string;
         std::filesystem::create_directories(filepath2.remove_filename());
         m_outputFile.open(filepath, std::ios_base::binary);
         StartHandling();
