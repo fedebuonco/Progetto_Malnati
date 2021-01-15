@@ -23,11 +23,12 @@ void AsyncService::StartHandling() {
                                       // if we don't we will get an ec signaling EOF
                                       // we must also look out for ec.value coming from other possible errors.
                                       // if ec.value == 2 is EOF we can call the onFinish
+                                      std::cout << ec.value() << ec.message() << std::endl;
                                       if (!ec.value()) {
                                           onRequestReceived(ec, bytes);
                                       }
                                       else if (ec.value() == 2 ) { // EOF
-                                          std::cout << ec.value() << ec.message() << std::endl;
+
                                           onFinish();
                                       }
                                   });
@@ -94,9 +95,19 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
 void AsyncService::onFinish() {
     //We close the file and compute its hash in order to comapre it with the provided one.
     m_outputFile.close();
+
     //TODO compute hash and compare it to hash_
     //TODO if ok insert it in the db with the filename, hash_ and lmt_
-    //TODO notify client that we have the correct file and the filesipper can modify the client db in the client.
+
+    //We send the OK
+    m_buf.fill('\000');
+    m_buf[0] = '1';
+    m_sock.get()->async_write_some(boost::asio::buffer(m_buf.data(), m_buf.size()),
+                                  [this](boost::system::error_code ec, size_t bytes){
+                                      if (!ec.value()) {
+                                          std::cout << "Sent OK!" << std::endl;
+                                      }
+                                  });
 
     delete this;
 }

@@ -50,16 +50,19 @@ private:
     void Connect();
     void Sip(const boost::system::error_code& t_ec);
     void FirstSip(const boost::system::error_code& t_ec);
+    void FileSipper::WaitOk();
 
     template<class Buffer>
     void writeBuffer(Buffer& t_buffer)
     {
         boost::asio::async_write(sock_,
                                  t_buffer,
-                                 [this](boost::system::error_code ec, std::size_t)
+                                 [this](boost::system::error_code ec, std::size_t size)
                                  {
-                                     //TODO Add some error check
+                                     //Let's see the status of the sip, in order to see if this is the last one.
+                                     std::cout << "STATUS async write: " << ec.value() << " written " << size << std::endl;
                                      Sip(ec);
+
                                  });
 
     }

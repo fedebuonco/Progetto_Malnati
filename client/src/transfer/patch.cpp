@@ -50,24 +50,25 @@ int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::
     // TODO for each file in the to be sent look the status and if is it 0 insert it in the queue.
     int counter = 0;
     DatabaseConnection db(db_path, folder_watched);
+    // Here we retrieve the metadata that is common to every filesipper: endpoint and usernmae
+    // we also add 10 to the port.
+    Credential credential = Authentication::get_Instance()->ReadCredential();
+    RawEndpoint raw_endpoint = Config::get_Instance()->ReadRawEndpoint();
+    raw_endpoint.port_num += 10;
+
     for ( auto element : to_be_sent_vector){
         if (db.ChangeStatusToSending(element.first)){ // THis return true only if the current status is "NEW" and changes it to "SENDING"
-            // TODO craeazione filessiper nello heap.
-            // TODO Insert nella queue.
-
-            // We retrieve the needed metadata
-            Credential credential = Authentication::get_Instance()->ReadCredential();
+            // We retrieve the needed metadata for the file: hash and lmt
             std::string file_hash;
             std::string file_lmt;
             db.GetMetadata(element.first, file_hash, file_lmt);
 
             try {
-                RawEndpoint re_test;
-                re_test.raw_ip_address = "127.0.0.1";
-                re_test.port_num = 3343;
                 std::filesystem::path f = folder_watched / element.first;
-                auto fs = FileSipper(re_test,credential.username_, f, element.first, file_hash, file_lmt);
-                fs.Send();
+                // TODO craeazione filessiper nello heap.
+                // TODO Insert nella queue.
+                auto fs =  new FileSipper(raw_endpoint,credential.username_, f, element.first, file_hash, file_lmt);
+                fs->Send();
                 counter++;
 
             } catch(std::exception& e)
