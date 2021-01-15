@@ -19,11 +19,15 @@ void AsyncService::StartHandling() {
     m_sock.get()->async_read_some(boost::asio::buffer(m_buf.data(), m_buf.size()),
                                   [this](boost::system::error_code ec, size_t bytes)
                                   {
+                                      // Here we check if we have more to read.
+                                      // if we don't we will get an ec signaling EOF
+                                      // we must also look out for ec.value coming from other possible errors.
+                                      // if ec.value == 2 is EOF we can call the onFinish
                                       if (!ec.value()) {
                                           onRequestReceived(ec, bytes);
                                       }
-                                      else {
-                                          std::cout << "Errore" << std::endl;
+                                      else if (ec.value() == 2 ) { // EOF
+                                          std::cout << ec.value() << ec.message() << std::endl;
                                           onFinish();
                                       }
                                   });
