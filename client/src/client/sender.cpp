@@ -2,20 +2,6 @@
 
 const unsigned int DEFAULT_THREAD_POOL_SIZE = 1;
 
-Sender *Sender::m_Sender = nullptr;
-
-Sender *Sender::get_Instance() {
-    if(!m_Sender){
-        m_Sender = new Sender();
-    }
-    return m_Sender;
-}
-
-/*
-void Sender::setSharedQueue(const std::shared_ptr<SharedQueue> &sharedQueue) {
-    shared_queue = sharedQueue;
-}
-*/
 
 ///
 /// \param s
@@ -26,10 +12,6 @@ void Sender::setSharedQueue(const std::shared_ptr<SharedQueue> &sharedQueue) {
  * submit(task, filesippee) ???????
  * }
  * */
-void Sender::insert(std::shared_ptr<FileSipper> s){
-    SharedQueue::get_Instance()->add(s);
-
-}
 
 void Sender::Sender_Action(){
 
@@ -52,8 +34,6 @@ void Sender::Sender_Action(){
         //choose one: use shared_queue method to find if there is a ready filesipper to be sent
         std::shared_ptr<FileSipper> choosen_fs = SharedQueue::get_Instance()->get_ready_FileSipper();
 
-        //cv.wait(l, [this](){ return shared_queue->size()>0 && ( shared_queue->size() - shared_queue->getActiveFileSipper() ) > 0 ; } );
-        //if(shared_queue->size()>0 && ( shared_queue->size() - shared_queue->getActiveFileSipper() ) > 0)
         boost::asio::post(pool, [choosen_fs](){
 
             std::cout << std::this_thread::get_id << "  pool "<<std::endl;
@@ -81,9 +61,6 @@ void Sender::Sender_Action(){
 /// MUTEX ?????
 void Sender::setFlag(bool flag) {
     Sender::flag = flag;
-    if(flag == false){
-        SharedQueue::get_Instance()->setFlag(flag);
-    }
 }
 
 bool Sender::isFlag() const {

@@ -30,22 +30,20 @@ std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
 
     //While is necessary to prevent spurious wakeups
     //Thread waits when queue is empty OR all files in filesippers are in sending
-    while( ( queue.empty() || queue.size() == active_fs) && Sender::get_Instance()->isFlag()  ) {
+    while( ( queue.empty() || queue.size() == active_fs) && SharedQueue::get_Instance()->isFlag()  ) {
         std::cout<< "EMPTY SHARED QUEUE "<<std::endl;
-        cv.wait(l, [this]() { return !( (queue.empty() || queue.size() == active_fs) && Sender::get_Instance()->isFlag() ); });
+        cv.wait(l, [this]() { return !( (queue.empty() || queue.size() == active_fs) && SharedQueue::get_Instance()->isFlag() ); });
         std::cout << std::this_thread::get_id << "  pool "<<std::endl;
     }
 
-    if( !Sender::get_Instance()->isFlag() ){
+    if( !SharedQueue::get_Instance()->isFlag() ){
         return nullptr;
     }
 
-    std::cout<< "EXIT FROM EMPTY "<<std::endl;
 
     std::shared_ptr<FileSipper> queue_front;
-
     do{
-        queue_front  =  queue.front();
+        queue_front  =  queue.front(); //TODO Scorrere tutta la lista finche non troviamo il primo che può essere inviato partendo dal primo inserito
     }while(!queue_front->isReady());
 
     //I have the mutex
@@ -63,7 +61,7 @@ void SharedQueue::remove_end(){
  * Add a new ptrFileSipper in the SharedQueue
  * @param fsipper
  */
-void SharedQueue::add(std::shared_ptr<FileSipper> fsipper){
+void SharedQueue::insert(std::shared_ptr<FileSipper> fsipper){
     std::lock_guard<std::mutex> l(m);
     queue.push(fsipper);
     cv.notify_all();
@@ -78,4 +76,8 @@ void SharedQueue::setFlag(bool flag) {
     std::lock_guard<std::mutex> l(m);
     SharedQueue::flag = flag;
     cv.notify_all();
+}
+
+bool SharedQueue::isFlag() const {
+    return flag;
 }

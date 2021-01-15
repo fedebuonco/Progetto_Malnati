@@ -14,11 +14,6 @@ void closeServer(int sig){ // can be called asynchronously
     is_terminated = true;
 }
 
-void Stop(){
-    std::cout<<" END "<<std::endl;
-    Sender::get_Instance()->setFlag(false);
-}
-
 
 int main(int argc, char *argv[]) {
 
@@ -68,8 +63,9 @@ int main(int argc, char *argv[]) {
         Client client{raw_endpoint, std::filesystem::path(Config::get_Instance()->ReadProperty("path")) };
     });
 
-    std::thread thread_sender( []() {
-        Sender::get_Instance()->Sender_Action();
+    Sender sender;
+    std::thread thread_sender( [&sender]() {        //TODO:Controllare &
+        sender.Sender_Action();
     });
 
 
@@ -84,7 +80,8 @@ int main(int argc, char *argv[]) {
         if(is_terminated) {
             //TODO: Queste due devono essere chiamate anche quando il programma termina senza chiusura utente
             //Inserirle dentro asrv e srv distruttori se non è già stato fatto
-            Stop();
+            sender.setFlag(false);
+            SharedQueue::get_Instance()->setFlag(false); //Fermiamo anche shared queue bloccato nella cv
             std::cout<<" WHO IS "<<std::endl;
             thread_client.join();
             std::cout<<" client "<<std::endl;
