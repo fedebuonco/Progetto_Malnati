@@ -17,6 +17,8 @@
 class FileSipper {
     //FileSipper is made of path_ and hash_
     std::filesystem::path path_;
+    std::filesystem::path folder_watched_;
+    std::filesystem::path db_path_;
     std::string hash_;
     std::string lmt_;
     std::string file_string_;
@@ -42,7 +44,7 @@ class FileSipper {
     int sip_counter;
 
 public:
-    FileSipper(RawEndpoint re, std::string username, std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
+    FileSipper(RawEndpoint re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
     void FileSipper::Send();
 
 private:

@@ -2,11 +2,14 @@
 #include <string>
 #include <sync_tcp_socket.h>
 #include <iostream>
+#include <database.h>
 
-FileSipper::FileSipper(RawEndpoint re, std::string username,  std::filesystem::path file_path, std::string file_string, std::string hash,
+FileSipper::FileSipper(RawEndpoint re, std::filesystem::path folder_watched, std::filesystem::path db_path,  std::string username,  std::filesystem::path file_path, std::string file_string, std::string hash,
                        std::string lmt)  :
         sock_(ios_) ,
         ep_(boost::asio::ip::address::from_string(re.raw_ip_address), re.port_num),
+        folder_watched_(folder_watched),
+        db_path_(db_path),
         path_(file_path),
         hash_(hash),
         lmt_(lmt),
@@ -159,6 +162,9 @@ void FileSipper::WaitOk(){
      */
     sock_.read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()));
     std::cout << "Risultato di checksum : "  << buf_metadata[0]  <<std::endl;
+    // Here based on the checksum result we modify the database.
+    DatabaseConnection db(db_path_, folder_watched_);
+    db.ChangeStatusToSent(file_string_);
 
 }
 
