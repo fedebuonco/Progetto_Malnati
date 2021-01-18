@@ -59,9 +59,9 @@ int main(int argc, char *argv[]) {
      * The main builds the client that will contain the main logic of the app.
      */
 
-    std::thread thread_client( [ raw_endpoint ]() {
+    //std::thread thread_client( [ = ]() {
         Client client{raw_endpoint, std::filesystem::path(Config::get_Instance()->ReadProperty("path")) };
-    });
+    //});
 
     Sender sender;
     std::thread thread_sender( [&sender]() {        //TODO:Controllare &
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
             sender.setFlag(false);
             SharedQueue::get_Instance()->setFlag(false); //Fermiamo anche shared queue bloccato nella cv
             std::cout<<" WHO IS "<<std::endl;
-            thread_client.join();
+            //thread_client.join();
             std::cout<<" client "<<std::endl;
             thread_sender.join();
             std::cout<<" sender "<<std::endl;

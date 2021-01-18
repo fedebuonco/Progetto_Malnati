@@ -43,9 +43,9 @@ std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
 
     std::shared_ptr<FileSipper> fs_list_front;
 
-    do{
+   do{
         fs_list_front  =  fs_list.front();
-    }while(!fs_list_front->isReady());
+    }while(!fs_list_front->status);
 
     //I have the mutex
     active_fs ++;

@@ -24,7 +24,6 @@ class FileSipper {
     std::string file_string_;
     std::string metadata_;
     std::string username_;
-    bool status = false;
 
     boost::asio::io_service ios_;
     boost::asio::ip::tcp::endpoint ep_;
@@ -50,6 +49,7 @@ public:
     void Send();
 
 
+    bool status = false;
 private:
     void OpenFile();
     void Connect();

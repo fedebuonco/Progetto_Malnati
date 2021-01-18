@@ -144,19 +144,6 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
     }
 }
 
-bool FileSipper::isReady() const {
-    return ready;
-}
-
-void FileSipper::setReady(bool ready) {
-    FileSipper::ready = ready;
-}
-
-
-
-
-
-
 void FileSipper::WaitOk(){
     buf_metadata.fill('\000');
     /*
