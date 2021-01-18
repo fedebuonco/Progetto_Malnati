@@ -59,7 +59,7 @@ void Client::Syncro(){
     Patch update(client_treet, server_treet);
 
 
-    SendRemoval(update);s
+    SendRemoval(update);
     // This function identify the file that have to be sent really
     update.Dispatch(db_file_, folder_watched_);
     // We also need to send the removal regarding the older file in the server.
