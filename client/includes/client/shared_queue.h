@@ -1,14 +1,14 @@
 #pragma once
 
 
-#include <queue>
+#include <list>
 #include "file_sipper.h"
 #include <sender.h>
 
 /// This is the shared queue. Each FileSipper is demanded to send a file. The Sender decides who starts sending
 class SharedQueue{
 
-    std::queue<std::shared_ptr<FileSipper>> queue;
+    std::list<std::shared_ptr<FileSipper>> fs_list;
     std::mutex m;
     std::condition_variable cv;
     //possibly use atomic
