@@ -39,6 +39,8 @@ if (UNIX)
             ../src/transfer/tree_t.cpp
             ../includes/transfer/patch.h
             ../src/transfer/patch.cpp
+            ../includes/client/shared_queue.h
+            ../src/client/shared_queue.cpp
             )
     target_link_libraries(test cryptopp PanoptesFW)
 endif (UNIX)
@@ -96,6 +98,8 @@ if (WIN32)
                 ../src/transfer/tree_t.cpp
                 ../includes/transfer/patch.h
                 ../src/transfer/patch.cpp
+                ../includes/client/shared_queue.h
+                ../src/client/shared_queue.cpp
                 )
 
         target_link_libraries(test ${CRYPTOPP} PanoptesFW)

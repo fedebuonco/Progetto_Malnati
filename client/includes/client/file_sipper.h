@@ -16,8 +16,14 @@
 /// sip, thus creating a chain of sent sips.
 class FileSipper {
     //FileSipper is made of path_ and hash_
-    std::string path_;
+    std::filesystem::path path_;
+    std::filesystem::path folder_watched_;
+    std::filesystem::path db_path_;
     std::string hash_;
+    std::string lmt_;
+    std::string file_string_;
+    std::string metadata_;
+    std::string username_;
 
     boost::asio::io_service ios_;
     boost::asio::ip::tcp::endpoint ep_;
@@ -36,24 +42,34 @@ class FileSipper {
     //Number of sip (i.e. block) in which the file is split
     int sip_counter;
 
-public:
-    FileSipper(RawEndpoint re, std::string const& path);
+    bool ready;
 
+public:
+    FileSipper(RawEndpoint re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
+    void Send();
+
+
+    bool status = false;
 private:
     void OpenFile();
     void Connect();
     void Sip(const boost::system::error_code& t_ec);
     void FirstSip(const boost::system::error_code& t_ec);
+    void WaitOk();
+
+
 
     template<class Buffer>
     void writeBuffer(Buffer& t_buffer)
     {
         boost::asio::async_write(sock_,
                                  t_buffer,
-                                 [this](boost::system::error_code ec, std::size_t)
+                                 [this](boost::system::error_code ec, std::size_t size)
                                  {
-                                     //TODO Add some error check
+                                     //Let's see the status of the sip, in order to see if this is the last one.
+                                     std::cout << "STATUS async write: " << ec.value() << " written " << size << std::endl;
                                      Sip(ec);
+
                                  });
 
     }

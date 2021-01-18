@@ -2,23 +2,42 @@
 #include <string>
 #include <sync_tcp_socket.h>
 #include <iostream>
+#include <database.h>
 
-FileSipper::FileSipper(RawEndpoint re, const std::string &path) :
-    sock_(ios_) ,
-    ep_(boost::asio::ip::address::from_string(re.raw_ip_address), re.port_num),
-    path_(path),
-    sip_counter(0)
-    {
-        if(DEBUG) std::cout << "Creating FileSipper for file " <<  path << std::endl;
-        sock_.open(ep_.protocol());
-        Connect();
-        ios_.run();
-    }
+FileSipper::FileSipper(RawEndpoint re, std::filesystem::path folder_watched, std::filesystem::path db_path,  std::string username,  std::filesystem::path file_path, std::string file_string, std::string hash,
+                       std::string lmt)  :
+        sock_(ios_) ,
+        ep_(boost::asio::ip::address::from_string(re.raw_ip_address), re.port_num),
+        folder_watched_(folder_watched),
+        db_path_(db_path),
+        path_(file_path),
+        hash_(hash),
+        lmt_(lmt),
+        file_string_(file_string),
+        username_(username),
+        sip_counter(0)
+{
+    //let's build the metadata for future firstsip
+    metadata_ = username_ + "@" + hash_ + "@" + lmt_ + "@" + file_string_;
+    if(DEBUG) std::cout << "Creating FileSipper for file " <<  path_.string() << std::endl;
+    if(DEBUG) std::cout << "With metadata =  " << metadata_ << std::endl;
+    sock_.open(ep_.protocol());
+
+}
+
+
+/// Methods that starts the sending of the File.
+void FileSipper::Send(){
+    // We make the status true, so that we know the filesipper has been sent.
+    status = true;
+    Connect();
+    ios_.run();
+}
 
 //TODO iterator endpoint not single...
 /// We async connect to the specified server.
 void FileSipper::Connect() {
-    if(DEBUG) std::cout << "Connecting to "<<  ep_.address() <<" for file " <<  path_ << std::endl;
+    if(DEBUG) std::cout << "Connecting to "<<  ep_.address() <<" for file " <<  path_.string() << std::endl;
 
     sock_.async_connect(ep_, [this](boost::system::error_code ec) {
         if(DEBUG) std::cout << "Currently in the async_connect callback " << std::endl;
@@ -34,7 +53,7 @@ void FileSipper::OpenFile() {
     std::cout << "Opening File" << std::endl;
     files_stream_.open(path_.c_str(), std::ios_base::binary);
     if (files_stream_.fail())
-        throw std::fstream::failure("Failed while opening file " + path_);
+        throw std::fstream::failure("Failed while opening file " + path_.string());
 
     //retrieve the byte size
     files_stream_.seekg(0, files_stream_.end);
@@ -45,37 +64,21 @@ void FileSipper::OpenFile() {
     files_stream_.seekg(0, files_stream_.beg);
 }
 
-
 /// Takes the file and send its metadata to the server.
 /// \param t_ec
 void FileSipper::FirstSip(const boost::system::error_code& t_ec){
-
-    // TODO We need to retrieve the entry from the the db (path, hash, lmt, STATUS)
-    // Ne abbiamo bisogno perchè il server deve rifare hash e controllare
-    // lmt ci serve perchè il server deve memorizzare quello più nuovo
-    // and save the hash and lmt to a string.
-
-    //TODO: Devo partire sempre?
 
     if (files_stream_) {
         // We create the first sip by sending file metadata
         int i =0;
         // I paste the metadata in the buffer in this format
-        // FILENAME@HASH@LMT
         buf_metadata.fill('\000');
-
-        // We start costrugting the first sip, name of the file, then hash then lmt.
-        //name
-        for( auto letter : path_){
+        for( auto letter : metadata_){
             buf_metadata[i] = letter;
             i++;
         }
-        //TODO hash
-        //TODO lmt
-
         //then we delimit the end using the terminator char
         buf_metadata[i] = '\000';
-
         // And send it
         auto buf = boost::asio::buffer(buf_metadata.data(),1024);
         writeBuffer(buf);
@@ -85,6 +88,7 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
         // The failbit could have been set by the eof, so we check it
         if (files_stream_.eof()){
             std::cout << "EOF Reached!" << std::endl;
+
         } else { // Here if we had a different problem that made us fail! we trhrow exception
             auto msg = "Failed while reading file";
             std::cerr << msg << std::endl;
@@ -94,7 +98,6 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
         return;
     }
 }
-
 
 // Takes a sip of a file and sends it.
 void FileSipper::Sip(const boost::system::error_code& t_ec){
@@ -123,6 +126,10 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
             // The failbit could have been set by the eof, so we check it
             if (files_stream_.eof()){
                 std::cout << "EOF Reached!" << std::endl;
+                // We can call WaitOk where we wait for the ok from the server;
+                files_stream_.close();
+                sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+                WaitOk();
             } else { // Here if we had a different problem that made us fail! we trhrow exception
                 auto msg = "Failed while reading file";
                 std::cerr << msg << std::endl;
@@ -137,5 +144,28 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
     }
 }
 
+void FileSipper::WaitOk(){
+    buf_metadata.fill('\000');
+    /*
+    sock_.async_read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()),
+                                  [this](boost::system::error_code ec, size_t bytes)
+                                  {
+                                      if (!ec.value()) {
+                                          std::cout << "Risultato di checksum : "  << buf_metadata[0] << " e la ec.value è " << ec.value() <<std::endl;
+                                          //TODO act depending on checksum result
+                                      }
+                                      else if (ec.value() == 2 ) { // EOF
+                                          std::cout << "Risultato di checksum : " << buf_metadata[0] << " e la ec.value è " << ec.value() <<  std::endl;
+                                          //TODO act depending on checksum result
+                                      }
+                                  });
+     */
+    sock_.read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()));
+    std::cout << "Risultato di checksum : "  << buf_metadata[0]  <<std::endl;
+    // Here based on the checksum result we modify the database.
+    DatabaseConnection db(db_path_, folder_watched_);
+    db.ChangeStatusToSent(file_string_);
+
+}
 
 
