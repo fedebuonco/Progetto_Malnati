@@ -22,5 +22,6 @@ public:
     void CleanOldRows();
 
     bool ChangeStatusToSending(const std::string& filename);
+    bool ChangeStatusToSent(const std::string& filename);
 };
 

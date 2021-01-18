@@ -67,7 +67,7 @@ int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::
                 std::filesystem::path f = folder_watched / element.first;
                 // TODO craeazione filessiper nello heap.
                 // TODO Insert nella queue.
-                auto fs =  new FileSipper(raw_endpoint,credential.username_, f, element.first, file_hash, file_lmt);
+                auto fs =  new FileSipper(raw_endpoint, folder_watched , db_path ,credential.username_, f, element.first, file_hash, file_lmt);
                 fs->Send();
                 counter++;
 
