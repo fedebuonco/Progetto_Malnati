@@ -21,6 +21,9 @@ include_directories(libs/SQLiteCpp/include)
 #--------UNIX-------------------
 if (UNIX)
     set(CMAKE_CXX_FLAGS -pthread)
+
+    include_directories(libs/cryptopp/include)
+
     add_executable(server
             src/main.cpp
             src/accept_client/accept_client.cpp
@@ -42,7 +45,7 @@ if (UNIX)
             src/accept_client/async_server.cpp
             includes/accept_client/async_server.h
             includes/accept_client/async_accept_client.h includes/accept_client/async_service.h src/accept_client/async_service.cpp src/accept_client/async_accept_client.cpp)
-    target_link_libraries(server SQLiteCpp dl)
+    target_link_libraries(server SQLiteCpp cryptopp dl)
 endif (UNIX)
 
 #-------WIN---------------------
@@ -66,6 +69,15 @@ if (WIN32)
         # including in the project the Boost dir and giving to the linker the path where to look for libraries
         include_directories(${Boost_INCLUDE_DIR})
         link_directories(${Boost_LIBRARY_DIR})
+
+        include_directories(libs/cryptopp/include)
+        unset(CRYPTOPP CACHE)
+        find_library(CRYPTOPP cryptlib HINTS libs/cryptopp REQUIRED)
+        if(NOT CRYPTOPP)
+            message(FATAL_ERROR "Cryptopp Not found")
+        endif()
+
+        message(STATUS ${CRYPTOPP})
 
         add_executable(server
                 src/main.cpp
@@ -91,7 +103,7 @@ if (WIN32)
                 src/accept_client/async_service.cpp
                 src/accept_client/async_accept_client.cpp)
 
-        target_link_libraries(server SQLiteCpp)
+        target_link_libraries(server SQLiteCpp ${CRYPTOPP})
 
     endif()
 endif (WIN32)

@@ -33,7 +33,7 @@ int main(int argc, char *argv[]){
         Server srv(mypath);
 
         //This asynchronous server manages and stores files sent by clients.
-        AsyncServer asrv;
+        AsyncServer asrv(mypath);
 
         //Define the number of thread based on the hardware
         unsigned int thread_pool_size = std::thread::hardware_concurrency() * 2;

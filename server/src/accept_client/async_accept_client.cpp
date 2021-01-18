@@ -3,8 +3,10 @@
 //
 
 #include <async_accept_client.h>
+#include <filesystem>
 
-AsyncAcceptClient::AsyncAcceptClient(boost::asio::io_service& ios, unsigned short port_num) :
+AsyncAcceptClient::AsyncAcceptClient(boost::asio::io_service& ios, unsigned short port_num, std::filesystem::path server_path) :
+server_path_(server_path),
 m_ios(ios),
 m_acceptor(m_ios,
            boost::asio::ip::tcp::endpoint(
@@ -41,7 +43,7 @@ void AsyncAcceptClient::onAccept(const boost::system::error_code& ec,
               std::shared_ptr<boost::asio::ip::tcp::socket> sock)
 {
 
-    (new AsyncService(sock))->StartHandling();
+    (new AsyncService(sock, server_path_))->StartHandling();
 
     // Init next async accept operation if
     // acceptor has not been stopped yet.

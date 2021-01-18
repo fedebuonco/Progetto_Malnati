@@ -5,6 +5,8 @@
 #include <iterator>
 #include <set>
 #include <database.h>
+#include <file_sipper.h>
+#include <authentication.h>
 #include "patch.h"
 #include <sender.h>
 
@@ -46,25 +48,36 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
 /// \param db_path
 /// \return int number of dispatched file.
 int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::path folder_watched){
-
     // TODO for each file in the to be sent look the status and if is it 0 insert it in the queue.
     int counter = 0;
     DatabaseConnection db(db_path, folder_watched);
+    // Here we retrieve the metadata that is common to every filesipper: endpoint and usernmae
+    // we also add 10 to the port.
+    Credential credential = Authentication::get_Instance()->ReadCredential();
+    RawEndpoint raw_endpoint = Config::get_Instance()->ReadRawEndpoint();
+    raw_endpoint.port_num += 10;
+
     for ( auto element : to_be_sent_vector){
         if (db.ChangeStatusToSending(element.first)){ // THis return true only if the current status is "NEW" and changes it to "SENDING"
-            // TODO craeazione filepack nello heap.
-            // TODO Insert nella queue.
-            // CREO FILESIPPER
-            // SharedQueue::getInstance()->insert(filepack);
-            //A insert passo il puntatore del filesipper
+            // We retrieve the needed metadata for the file: hash and lmt
+            std::string file_hash;
+            std::string file_lmt;
+            db.GetMetadata(element.first, file_hash, file_lmt);
 
+            try {
+                std::filesystem::path f = folder_watched / element.first;
+                // TODO craeazione filessiper nello heap.
+                // TODO Insert nella queue.
+                auto fs =  new FileSipper(raw_endpoint, folder_watched , db_path ,credential.username_, f, element.first, file_hash, file_lmt);
+                fs->Send();
+                counter++;
 
+            } catch(std::exception& e)
+            {
+                std::cerr << "Erporre" << e.what() << std::endl;
+                std::exit(123213);
+            }
 
-
-
-            ///// Sender::getInstance()->insert(std::packaged_task< bool ( FileSipper ) > task, filesipper);
-            //submit(std::packaged_task< bool ( FileSipper ) >
-            counter++;
         }
     }
     return counter;

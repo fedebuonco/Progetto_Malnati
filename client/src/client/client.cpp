@@ -6,9 +6,12 @@
 #include <iostream>
 #include <tree_t.h>
 #include <patch.h>
+
+//CryptoPP
 #include <files.h>
 #include <sha.h>
 #include <hex.h>
+
 #include <database.h>
 #include <boost/algorithm/string/predicate.hpp>
 
@@ -239,6 +242,7 @@ void Client::InitHash(){
             //Here only if the tuple ( cross_platform_rep , mod_time ) is not present, so we need to hash and then update the db.
             CryptoPP::SHA256 hash;
             std::string digest;
+
 
             try {
                 CryptoPP::FileSource f(
