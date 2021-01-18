@@ -30,9 +30,9 @@ std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
 
     //While is necessary to prevent spurious wakeups
     //Thread waits when queue is empty OR all files in filesippers are in sending
-    while( ( fs_list.empty() || fs_list.size() == active_fs) && Sender::get_Instance()->isFlag()  ) {
+    while( ( fs_list.empty() || fs_list.size() == active_fs) && SharedQueue::get_Instance()->isFlag()  ) {
         std::cout<< "EMPTY SHARED QUEUE "<<fs_list.size() << std::endl;
-        cv.wait(l, [this]() { return !( (fs_list.empty() || fs_list.size() == active_fs) && Sender::get_Instance()->isFlag() ); });
+        cv.wait(l, [this]() { return !( (fs_list.empty() || fs_list.size() == active_fs) && SharedQueue::get_Instance()->isFlag() ); });
         std::cout << std::this_thread::get_id << "  pool "<<std::endl;
     }
 
