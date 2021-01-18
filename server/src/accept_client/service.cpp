@@ -117,22 +117,23 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                 std::string user_folder_name = db.getUserPath(username, this->serverPath);
 
                 //Take the list of files to be deleted
-                //std::string list_to_be_deleted = request_message.GetElement("Deleted");
+                std::string list_to_be_deleted = request_message.GetElement("To_be_deleted");
 
                 //For each file we delete the file itself and the row inside user tree DB
-                //for(auto file : list_to_be_deleted ) {
+                std::string file;
+                std::istringstream stream_tbd{list_to_be_deleted};
+                while(std::getline(stream_tbd, file)){
                     //Delete the file
-                    //std::filesystem::path file_path = this->serverPath / "backupFiles" / "backupROOT" / user_folder_name / file ;
-
-                    //std::error_code ec;
-                    //bool result = std::filesystem::remove(file_path, ec);
+                    std::filesystem::path file_path = this->serverPath / "backupFiles" / "backupROOT" / user_folder_name / file ;
+                    std::error_code ec;
+                    bool result = std::filesystem::remove(file_path, ec);
 
                         //TODO: This file doesn't exist or we have error
-                        //if(!result)
+                        // if(!result)
 
                     //We doesn't care if the file exists or not; we try anyway to delete the row inside DB
-                    //db.deleteFile(user_folder_name, list_to_be_deleted, this->serverPath);
-                //}
+                    db.deleteFile(user_folder_name, file, this->serverPath);
+                }
 
                 break;
             }

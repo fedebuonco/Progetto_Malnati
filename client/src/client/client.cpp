@@ -58,8 +58,11 @@ void Client::Syncro(){
     // Need to figure out which files the server doesn't have (we need to send) and the file the server have to delete.
     Patch update(client_treet, server_treet);
 
+
+    SendRemoval(update);s
     // This function identify the file that have to be sent really
     update.Dispatch(db_file_, folder_watched_);
+    // We also need to send the removal regarding the older file in the server.
 
     if (DEBUG) update.PrettyPrint();
 
@@ -148,12 +151,14 @@ TreeT Client::RequestTree() {
 ///
 bool Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
     //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
+    std::string test = cm.ToJSON();
+    std::cout << test << std::endl;
     boost::asio::write(stcp.sock_, boost::asio::buffer(cm.ToJSON()));
     stcp.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
     return true;
 }
 
-///
+///boost::asio::write(stcp.so
 ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
     // We read until the eof, then we return a ControlMessage using the buffer we read.
     boost::asio::streambuf response_buf;
@@ -193,10 +198,11 @@ void Client::SendRemoval(Patch& update){
     ControlMessage delete_message{3};
     delete_message.AddElement("Username",credential_.username_);
     delete_message.AddElement("HashPassword",credential_.hash_password_ );
-    //delete_message.AddElement("To_be_deleted", genTree(update.to_be_elim_vector));
+    delete_message.AddElement("To_be_deleted", genTree(update.to_be_elim_vector));
 
     //And sending it formatted in JSON language
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
+    tcpSocket.ConnectServer(5);
     SyncWriteCM(tcpSocket, delete_message);
 
 }

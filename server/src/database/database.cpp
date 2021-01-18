@@ -5,6 +5,7 @@
 #include <fstream>
 #include <filesystem>
 #include <server.h>
+#include <SQLiteCpp/Transaction.h>
 
 bool Database::auth(std::string username, std::string attemp_hash_password, std::filesystem::path serverP) {
 
@@ -172,7 +173,7 @@ void Database::deleteFile(std::string foldername, std::string path, std::filesys
 
 }
 
-void Database::insertFile(std::string userName, std::filesystem::path pathName, std::string hash, std::string lmt, std::filesystem::path serverP) {
+void Database::insertFile(std::string userName, std::string pathName, std::string hash, std::string lmt, std::filesystem::path serverP) {
 
     try {
         std::filesystem::path db_path = serverP / "backupFiles" / "authDB.db" ;
@@ -197,12 +198,40 @@ void Database::insertFile(std::string userName, std::filesystem::path pathName, 
         std::filesystem::path db_path1 = serverP / "backupFiles" / "usersTREE" / folderext;
         SQLite::Database db1(db_path1.string(), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
 
+        //Now we look if the file is already present in the db
+        // Compile a SQL query, containing 1 parameters
+        SQLite::Statement   query_ifpresent(db1, "SELECT * FROM UserTree WHERE path = ?;");
+
+        // Bind to ? of the query
+        query_ifpresent.bind(1, pathName);
+        // Loop to execute the query step by step, to get rows of result
+        while (query_ifpresent.executeStep()) {
+            // Demonstrate how to get some typed column value
+            std::string id = query_ifpresent.getColumn(0);
+            // Begin transaction
+            SQLite::Transaction transaction(db1);
+
+            std::string sql_update = "UPDATE UserTree "
+                                     " SET time = \"" + lmt +
+                                     "\" WHERE id =  \""     + id + "\"";
+
+            int result_update = db1.exec(sql_update);
+
+
+            std::cout << " Executed Update " << sql_update << std::endl;
+            std::cout << " With Result =  " << result_update << std::endl;
+
+            // Commit transaction
+            transaction.commit();
+            return;
+        }
+
         if (DEBUG) std::cout << "SQLite database file '" << db1.getFilename().c_str() << "' opened successfully\n";
 
         // Compile a SQL query, containing one parameter (index 1)
         SQLite::Statement   query1(db1, "INSERT INTO UserTree(path, time) VALUES (?,?)");
 
-        query1.bind(1, pathName.string());
+        query1.bind(1, pathName);
         query1.bind(2, lmt);
 
         query1.exec();

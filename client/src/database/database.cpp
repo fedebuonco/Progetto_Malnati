@@ -77,9 +77,6 @@ void DatabaseConnection::InsertDB(std::string path_str, std::string hash, std::s
                   " " << old_hs <<
                   " " << old_lt << std::endl;
 
-        // So the row with this filename and lmt already exists, we must update it
-        // TODO update hash.
-
         // Begin transaction
         SQLite::Transaction transaction(hash_db_);
 
@@ -104,9 +101,6 @@ void DatabaseConnection::InsertDB(std::string path_str, std::string hash, std::s
 
     // Here we arrive only if the tuple is not found, so we must simply insert a new row
     // TODO Insert new row.
-
-
-
     // Begin transaction
     SQLite::Transaction transaction(hash_db_);
 
