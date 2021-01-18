@@ -124,6 +124,7 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
             if (files_stream_.eof()){
                 std::cout << "EOF Reached!" << std::endl;
                 // We can call WaitOk where we wait for the ok from the server;
+                files_stream_.close();
                 sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
                 WaitOk();
             } else { // Here if we had a different problem that made us fail! we trhrow exception

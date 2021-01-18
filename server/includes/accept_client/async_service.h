@@ -35,8 +35,14 @@ private:
     size_t m_fileSize;
     int read_counter;
     bool first_sip_;
-    std::string file_name_;
+
     std::string metadata_;
+    std::string received_hash_;
+    std::string received_user_;
+    std::string received_lmt_;
+    std::string received_file_string_;
+
+    std::filesystem::path created_file_path_;
 };
 
 #endif //SERVER_ASYNC_SERVICE_H

@@ -91,7 +91,7 @@ void Database::createTable(std::string foldername, std::filesystem::path serverP
 
         // Create a new table with an explicit "id" column aliasing the underlying rowid
         db.exec("DROP TABLE IF EXISTS UserTree");
-        db.exec("CREATE TABLE UserTree (id INTEGER PRIMARY KEY, path TEXT, time TEXT)");
+        db.exec("CREATE TABLE UserTree (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, path TEXT, time TEXT)");
 
         // first row
         //int nb = db.exec("INSERT INTO UserTree VALUES (NULL, \"PROVA\", \"1155\")");
@@ -169,5 +169,48 @@ void Database::deleteFile(std::string foldername, std::string path, std::filesys
     }
 
 
+
+}
+
+void Database::insertFile(std::string userName, std::filesystem::path pathName, std::string hash, std::string lmt, std::filesystem::path serverP) {
+
+    try {
+        std::filesystem::path db_path = serverP / "backupFiles" / "authDB.db" ;
+        SQLite::Database    db(db_path.string());
+
+        // Compile a SQL query, containing one parameter (index 1)
+        SQLite::Statement   query(db, "SELECT folderName FROM user WHERE username = ?");
+
+        // Bind the integer value 6 to the first parameter of the SQL query
+        query.bind(1, userName);
+
+        std::string folder;
+
+        // Loop to execute the query step by step, to get rows of result
+        while (query.executeStep()) {
+            // Demonstrate how to get some typed column value
+           std::string folderLocale = query.getColumn(0);
+           folder=folderLocale;
+       }
+
+        std::string folderext = folder + ".db";
+        std::filesystem::path db_path1 = serverP / "backupFiles" / "usersTREE" / folderext;
+        SQLite::Database db1(db_path1.string(), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+
+        if (DEBUG) std::cout << "SQLite database file '" << db1.getFilename().c_str() << "' opened successfully\n";
+
+        // Compile a SQL query, containing one parameter (index 1)
+        SQLite::Statement   query1(db1, "INSERT INTO UserTree(path, time) VALUES (?,?)");
+
+        query1.bind(1, pathName.string());
+        query1.bind(2, lmt);
+
+        query1.exec();
+
+    }
+    catch (std::exception& e) {
+        std::cerr << "exception: " << e.what() << std::endl;
+        //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
+    }
 
 }
