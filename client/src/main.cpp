@@ -3,6 +3,17 @@
 #include <config.h>
 #include <client.h>
 #include <filesystem>
+#include <queue>
+#include <sender.h>
+#include "file_sipper.h"
+
+//TODO: da terminmare
+std::atomic<bool> is_terminated = false;
+
+void closeServer(int sig){ // can be called asynchronously
+    is_terminated = true;
+}
+
 
 int main(int argc, char *argv[]) {
 
@@ -19,7 +30,6 @@ int main(int argc, char *argv[]) {
          //Structure is not correct, so we restore with the default config structure
          Config::get_Instance()->SetDefaultConfig();
      }
-
 
     if (argc > 1) {
         //The user provides some configuration arguments from the command line
@@ -49,14 +59,45 @@ int main(int argc, char *argv[]) {
      * The main builds the client that will contain the main logic of the app.
      */
 
-    // Building the Client
-    // TODO These could also be a thread?
-    std::filesystem::path path = std::filesystem::path(Config::get_Instance()->ReadProperty("path"));
-    Client client{raw_endpoint, path};
+    std::thread thread_client( [ raw_endpoint ]() {
+        Client client{raw_endpoint, std::filesystem::path(Config::get_Instance()->ReadProperty("path")) };
+    });
+
+    Sender sender;
+    std::thread thread_sender( [&sender]() {        //TODO:Controllare &
+        sender.Sender_Action();
+    });
+
 
     //TODO Change this leaving the main in the background.
     //TODO We need something to close the client once is running like in the server.
-    std::cin.ignore();
+
+
+    signal(SIGINT, closeServer);
+    signal(SIGTERM, closeServer);
+
+    while(true) {
+        if(is_terminated) {
+            //TODO: Queste due devono essere chiamate anche quando il programma termina senza chiusura utente
+            //Inserirle dentro asrv e srv distruttori se non è già stato fatto
+            sender.setFlag(false);
+            SharedQueue::get_Instance()->setFlag(false); //Fermiamo anche shared queue bloccato nella cv
+            std::cout<<" WHO IS "<<std::endl;
+            thread_client.join();
+            std::cout<<" client "<<std::endl;
+            thread_sender.join();
+            std::cout<<" sender "<<std::endl;
+
+            return 0;
+        }
+
+        //Menu
+
+        //scelta
+
+
+    }
+
 
 }
 
