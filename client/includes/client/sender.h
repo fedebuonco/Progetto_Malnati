@@ -16,25 +16,16 @@
 /// Takes files from the queue and gives them to FileSippers, in order to be sent
 class Sender {
 
-    //Sender(std::shared_ptr<SharedQueue> queue): shared_queue(queue){};
-    Sender()= default;
-    static Sender* m_Sender;
-
     //TODO: is it ok threads here??
     //std::vector<std::thread> threads[N];
     int count = 0;
     //std::mutex m;
     //std::condition_variable cv;
     bool flag = true;
-    //std::shared_ptr<SharedQueue> shared_queue;
-public:
-    //void setSharedQueue(const std::shared_ptr<SharedQueue> &sharedQueue);
-    //Singleton, eliminate copy and assignment
-    Sender(const Sender&)= delete;
-    Sender& operator=(const Sender&)=delete;
-    static Sender* get_Instance();
 
-    void insert(std::shared_ptr<FileSipper> s);
+public:
+
+
     void Sender_Action();
 
     bool isFlag() const;

@@ -22,14 +22,14 @@ class SharedQueue{
 
 public:
     void setFlag(bool flag);
+    bool isFlag() const;
 
-public:
     int getActiveFs();
     int size();
     //Extract next FileSipper to start. Not remove from the queue!
     std::shared_ptr<FileSipper> get_ready_FileSipper();
     void remove_end();
-    void add(std::shared_ptr<FileSipper> fsipper);
+    void insert(std::shared_ptr<FileSipper> fsipper);
 
     SharedQueue(const SharedQueue&)= delete;
     SharedQueue& operator=(const SharedQueue&)=delete;

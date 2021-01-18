@@ -36,11 +36,10 @@ std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
         std::cout << std::this_thread::get_id << "  pool "<<std::endl;
     }
 
-    if( !Sender::get_Instance()->isFlag() ){
+    if( !SharedQueue::get_Instance()->isFlag() ){
         return nullptr;
     }
 
-    std::cout<< "EXIT FROM EMPTY "<<std::endl;
 
     std::shared_ptr<FileSipper> fs_list_front;
 
@@ -64,7 +63,7 @@ void SharedQueue::remove_end(){
  * Add a new ptrFileSipper in the SharedQueue
  * @param fsipper
  */
-void SharedQueue::add(std::shared_ptr<FileSipper> fsipper){
+void SharedQueue::insert(std::shared_ptr<FileSipper> fsipper){
     std::lock_guard<std::mutex> l(m);
     fs_list.push_front(fsipper);
     cv.notify_all();
@@ -79,4 +78,8 @@ void SharedQueue::setFlag(bool flag) {
     std::lock_guard<std::mutex> l(m);
     SharedQueue::flag = flag;
     cv.notify_all();
+}
+
+bool SharedQueue::isFlag() const {
+    return flag;
 }
