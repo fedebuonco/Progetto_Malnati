@@ -36,6 +36,9 @@ void AsyncService::StartHandling() {
 
                                           onFinish();
                                       }
+
+                                      //todo delete se ho altri tipi di problemi strani.
+
                                   });
 
 }
