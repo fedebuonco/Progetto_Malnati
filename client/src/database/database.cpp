@@ -77,9 +77,6 @@ void DatabaseConnection::InsertDB(std::string path_str, std::string hash, std::s
                   " " << old_hs <<
                   " " << old_lt << std::endl;
 
-        // So the row with this filename and lmt already exists, we must update it
-        // TODO update hash.
-
         // Begin transaction
         SQLite::Transaction transaction(hash_db_);
 
@@ -104,9 +101,6 @@ void DatabaseConnection::InsertDB(std::string path_str, std::string hash, std::s
 
     // Here we arrive only if the tuple is not found, so we must simply insert a new row
     // TODO Insert new row.
-
-
-
     // Begin transaction
     SQLite::Transaction transaction(hash_db_);
 
@@ -235,6 +229,56 @@ bool DatabaseConnection::ChangeStatusToSent(const std::string& filename) {
 //TODO use the correct bind dont format string manually
             std::string sql_update_status = " UPDATE files "
                                             " SET status = \'SENT\' "
+                                            " WHERE filename =  \"" + filename + "\"";
+
+            int result_update = hash_db_.exec(sql_update_status);
+
+            std::cout << " Executed Update " << sql_update_status << std::endl;
+            std::cout << " With Result =  " << result_update << std::endl;
+
+            // Commit transaction
+            transaction.commit();
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
+
+}
+
+
+/// Goes in the db and changes the status to "NEW" but does it only if the current status is "SENDING"
+/// \param filename of the file that we want to put in as NEW
+/// \return true if we succesfully switched the status to "SENDING" to "NEW"
+bool DatabaseConnection::ChangeStatusToNew(const std::string& filename) {
+
+    // Compile a SQL query, containing 1 parameters
+    SQLite::Statement   query(hash_db_, "SELECT * "
+                                        "FROM files "
+                                        "WHERE filename = ? ");
+
+    // Bind to ? of the query
+    query.bind(1, filename);
+
+    while (query.executeStep()) {
+        // Demonstrate how to get some typed column value
+        std::string current_status = query.getColumn(3);
+
+
+        std::cout << "AUTH DB READ: "
+                     " " << filename <<
+                  " " << "with status: " <<
+                  " " << current_status << std::endl;
+
+        if (current_status == "SENDING"){
+
+
+            SQLite::Transaction transaction(hash_db_);
+//TODO use the correct bind dont format string manually
+            std::string sql_update_status = " UPDATE files "
+                                            " SET status = \'NEW\' "
                                             " WHERE filename =  \"" + filename + "\"";
 
             int result_update = hash_db_.exec(sql_update_status);

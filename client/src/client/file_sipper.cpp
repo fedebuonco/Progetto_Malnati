@@ -163,8 +163,18 @@ void FileSipper::WaitOk(){
     sock_.read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()));
     std::cout << "Risultato di checksum : "  << buf_metadata[0]  <<std::endl;
     // Here based on the checksum result we modify the database.
+    int checksum_ok = buf_metadata[0] -'0';
     DatabaseConnection db(db_path_, folder_watched_);
-    db.ChangeStatusToSent(file_string_);
+    if (!checksum_ok){ // we need to retry sending the file has the server did not receive the file in a correct way
+        db.ChangeStatusToNew(file_string_);
+        status = false;
+        //TODO se vogliamo farlo rifare a lui devo fare puntatore a socket per poi ditruggerlo e ricrearlo.
+        //this->Send();
+    } else { // here if the server has recevied the correct file.
+        db.ChangeStatusToSent(file_string_);
+        status = false;
+    }
+
 
 }
 
