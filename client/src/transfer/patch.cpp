@@ -8,6 +8,7 @@
 #include <file_sipper.h>
 #include <authentication.h>
 #include "patch.h"
+#include <sender.h>
 
 /// We populate the to_be_sent_vector and the to_be_eliminated_vector
 /// \param client_treet

@@ -24,7 +24,6 @@ class FileSipper {
     std::string file_string_;
     std::string metadata_;
     std::string username_;
-    bool status = false;
 
     boost::asio::io_service ios_;
     boost::asio::ip::tcp::endpoint ep_;
@@ -43,16 +42,22 @@ class FileSipper {
     //Number of sip (i.e. block) in which the file is split
     int sip_counter;
 
+    bool ready;
+
 public:
     FileSipper(RawEndpoint re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
     void Send();
 
+
+    bool status = false;
 private:
     void OpenFile();
     void Connect();
     void Sip(const boost::system::error_code& t_ec);
     void FirstSip(const boost::system::error_code& t_ec);
     void WaitOk();
+
+
 
     template<class Buffer>
     void writeBuffer(Buffer& t_buffer)
