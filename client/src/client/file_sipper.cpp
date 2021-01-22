@@ -146,20 +146,6 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
 
 void FileSipper::WaitOk(){
     buf_metadata.fill('\000');
-    /*
-    sock_.async_read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()),
-                                  [this](boost::system::error_code ec, size_t bytes)
-                                  {
-                                      if (!ec.value()) {
-                                          std::cout << "Risultato di checksum : "  << buf_metadata[0] << " e la ec.value è " << ec.value() <<std::endl;
-                                          //TODO act depending on checksum result
-                                      }
-                                      else if (ec.value() == 2 ) { // EOF
-                                          std::cout << "Risultato di checksum : " << buf_metadata[0] << " e la ec.value è " << ec.value() <<  std::endl;
-                                          //TODO act depending on checksum result
-                                      }
-                                  });
-     */
     sock_.read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()));
     std::cout << "Risultato di checksum : "  << buf_metadata[0]  <<std::endl;
     // Here based on the checksum result we modify the database.

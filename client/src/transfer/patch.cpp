@@ -48,7 +48,6 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
 /// \param db_path
 /// \return int number of dispatched file.
 int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::path folder_watched){
-    // TODO for each file in the to be sent look the status and if is it 0 insert it in the queue.
     int counter = 0;
     DatabaseConnection db(db_path, folder_watched);
     // Here we retrieve the metadata that is common to every filesipper: endpoint and usernmae

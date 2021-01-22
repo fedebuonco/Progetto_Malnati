@@ -99,8 +99,6 @@ void DatabaseConnection::InsertDB(std::string path_str, std::string hash, std::s
         return;
     }
 
-    // Here we arrive only if the tuple is not found, so we must simply insert a new row
-    // TODO Insert new row.
     // Begin transaction
     SQLite::Transaction transaction(hash_db_);
 
@@ -173,22 +171,16 @@ bool DatabaseConnection::ChangeStatusToSending(const std::string& filename) {
                   " " << current_status << std::endl;
 
         if (current_status == "NEW"){
-            // we can put it in sending, so we update the row to notify future query for this file.
 
-            SQLite::Transaction transaction(hash_db_);
+            SQLite::Statement   update_to_sending(hash_db_, " UPDATE files "
+                                                     " SET status = \'SENDING\' "
+                                                     " WHERE filename =  ? " );
+            update_to_sending.bind(1, filename);
+            int result_update = update_to_sending.exec();
 
-            std::string sql_update_status = " UPDATE files "
-                                            " SET status = \'SENDING\' "
-                                            " WHERE filename =  \"" + filename + "\"";
-
-            int result_update = hash_db_.exec(sql_update_status);
-
-
-            std::cout << " Executed Update " << sql_update_status << std::endl;
+            std::cout << " Executed Update to Sending" << std::endl;
             std::cout << " With Result =  " << result_update << std::endl;
 
-            // Commit transaction
-            transaction.commit();
             return true;
         } else {
             return false;
@@ -225,19 +217,15 @@ bool DatabaseConnection::ChangeStatusToSent(const std::string& filename) {
         if (current_status == "SENDING"){
 
 
-            SQLite::Transaction transaction(hash_db_);
-//TODO use the correct bind dont format string manually
-            std::string sql_update_status = " UPDATE files "
-                                            " SET status = \'SENT\' "
-                                            " WHERE filename =  \"" + filename + "\"";
+            SQLite::Statement   update_to_sent(hash_db_, " UPDATE files "
+                                                        " SET status = \'SENT\' "
+                                                        " WHERE filename =  ? " );
+            update_to_sent.bind(1, filename);
+            int result_update = update_to_sent.exec();
 
-            int result_update = hash_db_.exec(sql_update_status);
-
-            std::cout << " Executed Update " << sql_update_status << std::endl;
+            std::cout << " Executed Update to Sent" << std::endl;
             std::cout << " With Result =  " << result_update << std::endl;
 
-            // Commit transaction
-            transaction.commit();
             return true;
         } else {
             return false;
@@ -275,19 +263,15 @@ bool DatabaseConnection::ChangeStatusToNew(const std::string& filename) {
         if (current_status == "SENDING"){
 
 
-            SQLite::Transaction transaction(hash_db_);
-//TODO use the correct bind dont format string manually
-            std::string sql_update_status = " UPDATE files "
-                                            " SET status = \'NEW\' "
-                                            " WHERE filename =  \"" + filename + "\"";
+            SQLite::Statement   update_to_sent(hash_db_, " UPDATE files "
+                                                         " SET status = \'NEW\' "
+                                                         " WHERE filename =  ? " );
+            update_to_sent.bind(1, filename);
+            int result_update = update_to_sent.exec();
 
-            int result_update = hash_db_.exec(sql_update_status);
-
-            std::cout << " Executed Update " << sql_update_status << std::endl;
+            std::cout << " Executed Update to Sent" << std::endl;
             std::cout << " With Result =  " << result_update << std::endl;
 
-            // Commit transaction
-            transaction.commit();
             return true;
         } else {
             return false;
