@@ -50,7 +50,7 @@ void FileSipper::Connect() {
 
 // Opens a file
 void FileSipper::OpenFile() {
-    std::cout << "Opening File" << std::endl;
+    std::cout << "Opening File  " << this->file_string_ << std::endl;
     files_stream_.open(path_.c_str(), std::ios_base::binary);
     if (files_stream_.fail())
         throw std::fstream::failure("Failed while opening file " + path_.string());
@@ -136,6 +136,7 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
                 throw std::fstream::failure(msg);
             }
             ios_.stop();
+            //SharedQueue::get_Instance()->remove_element(this);
             return;
         }
     } else {

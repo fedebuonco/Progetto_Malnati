@@ -66,14 +66,16 @@ int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::
             try {
                 std::filesystem::path f = folder_watched / element.first;
                 // TODO craeazione filessiper nello heap.
+                //make-hared crea nello heap, fs sarà uno shared_ptr
+                auto fs =  std::make_shared<FileSipper>(raw_endpoint, folder_watched , db_path ,credential.username_, f, element.first, file_hash, file_lmt);
                 // TODO Insert nella queue.
-                auto fs =  new FileSipper(raw_endpoint, folder_watched , db_path ,credential.username_, f, element.first, file_hash, file_lmt);
-                fs->Send();
+                SharedQueue::get_Instance()->insert(fs);
+                //fs->Send();
                 counter++;
 
             } catch(std::exception& e)
             {
-                std::cerr << "Erporre" << e.what() << std::endl;
+                std::cerr << "Erorre" << e.what() << std::endl;
                 std::exit(123213);
             }
 

@@ -38,6 +38,11 @@ void Sender::Sender_Action(){
 
             std::cout << std::this_thread::get_id << "  pool "<<std::endl;
 
+            choosen_fs->Send();
+            std::cout << " FACCIO PARTIRE FS SCELTO  "<<std::endl;
+
+            SharedQueue::get_Instance()->remove_element(choosen_fs);
+
             ////
             // Fetch the associated future<> from packaged_task<>
             ///std::future<std::bool> result = pop.get_future();

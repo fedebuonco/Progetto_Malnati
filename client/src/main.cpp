@@ -5,7 +5,6 @@
 #include <filesystem>
 #include <queue>
 #include <sender.h>
-#include "file_sipper.h"
 
 //TODO: da terminmare
 std::atomic<bool> is_terminated = false;

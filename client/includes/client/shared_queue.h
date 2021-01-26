@@ -28,7 +28,7 @@ public:
     int size();
     //Extract next FileSipper to start. Not remove from the queue!
     std::shared_ptr<FileSipper> get_ready_FileSipper();
-    void remove_end();
+    void remove_element(std::shared_ptr<FileSipper> fsipper);
     void insert(std::shared_ptr<FileSipper> fsipper);
 
     SharedQueue(const SharedQueue&)= delete;

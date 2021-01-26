@@ -4,13 +4,12 @@
 #include <boost/asio/streambuf.hpp>
 #include <boost/asio/io_service.hpp>
 #include <fstream>
-#include <queue>
-#include <file_sipper.h>
 #include <condition_variable>
 #include <boost/asio/io_service.hpp>
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
 #include <shared_queue.h>
+#include <file_sipper.h>
 
 
 /// Takes files from the queue and gives them to FileSippers, in order to be sent
