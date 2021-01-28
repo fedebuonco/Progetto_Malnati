@@ -49,7 +49,6 @@ public:
 
     std::string file_string_;
 
-    std::string metadata_;
     std::atomic<bool> status = false;
 private:
     void OpenFile();

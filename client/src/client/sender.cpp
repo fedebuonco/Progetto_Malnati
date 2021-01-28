@@ -12,7 +12,6 @@ const unsigned int DEFAULT_THREAD_POOL_SIZE = 1;
 
     //choosen_fs->FileSipper::Start();
     // e aggiorno db
-}
 
 void Sender::Sender_Action(){
 
