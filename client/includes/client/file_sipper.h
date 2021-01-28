@@ -21,6 +21,7 @@ class FileSipper {
     std::filesystem::path db_path_;
     std::string hash_;
     std::string lmt_;
+    std::string metadata_;
     std::string username_;
 
     boost::asio::io_service ios_;
@@ -46,10 +47,10 @@ public:
     FileSipper(RawEndpoint re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
     void Send();
 
-
-    bool status = false;
     std::string file_string_;
+
     std::string metadata_;
+    std::atomic<bool> status = false;
 private:
     void OpenFile();
     void Connect();

@@ -12,19 +12,18 @@ class SharedQueue{
     std::mutex m;
     std::condition_variable cv;
     //possibly use atomic
-    int active_fs = 0;
+    std::atomic<int> active_fs = 0;
     static SharedQueue* m_SharedQueue;
     bool flag = true;
 
 
-    //Sender(std::shared_ptr<SharedQueue> queue): shared_queue(queue){};
+    //Sender(std::unique_ptr<SharedQueue> queue): shared_queue(queue){};
     SharedQueue()= default;
 
 public:
     void setFlag(bool flag);
     bool isFlag() const;
 
-    int getActiveFs();
     int size();
     //Extract next FileSipper to start. Not remove from the queue!
     std::shared_ptr<FileSipper> get_ready_FileSipper();
