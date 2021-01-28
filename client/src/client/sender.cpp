@@ -39,7 +39,9 @@ void Sender::Sender_Action(){
             std::cout << std::this_thread::get_id << "  pool "<<std::endl;
 
             choosen_fs->Send();
-            std::cout << " FACCIO PARTIRE FS SCELTO  "<<std::endl;
+            std::cout << " FACCIO PARTIRE FS SCELTO  " << choosen_fs->file_string_ << std::endl;
+
+            // shared
 
             SharedQueue::get_Instance()->remove_element(choosen_fs);
 

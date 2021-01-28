@@ -73,8 +73,9 @@ std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
 //TODO è necessaria?
 void SharedQueue::remove_element(std::shared_ptr<FileSipper> fsipper){
     std::lock_guard<std::mutex> l(m);
-    std::cout<<"Remove element" <<std::endl;
+    std::cout<< std::endl << "Removing element "  << fsipper->file_string_ << std::endl;
     fs_list.remove(fsipper);
+    std::cout<< std::endl << "Removed element "  << fsipper->file_string_ << std::endl;
     //delete  fsipper.get();
     SharedQueue::get_Instance()->active_fs--;
 }

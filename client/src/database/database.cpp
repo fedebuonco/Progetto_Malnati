@@ -15,8 +15,8 @@ DatabaseConnection::DatabaseConnection(std::filesystem::path db_path, std::files
 
     int result_create = hash_db_.exec(table_create);
 
-    std::cout << " Executed Create " << table_create << std::endl;
-    std::cout << " With Result =  " << result_create << std::endl;
+    //std::cout << " Executed Create " << table_create << std::endl;
+    //std::cout << " With Result =  " << result_create << std::endl;
 
 }
 
@@ -40,7 +40,7 @@ bool DatabaseConnection::AlreadyHashed(std::string filename, std::string lmt){
         std::string     hs = query.getColumn(1);
         std::string     lt  = query.getColumn(2);
 
-        if(DEBUG) std::cout << "TUPLE DB READ: " << fn << " " << hs << " " << lt << std::endl;
+        //if(DEBUG) std::cout << "TUPLE DB READ: " << fn << " " << hs << " " << lt << std::endl;
         // We can return true, as the tuple already exists.
         return true;
     }
@@ -204,15 +204,15 @@ bool DatabaseConnection::ChangeStatusToSent(const std::string& filename) {
     // Bind to ? of the query
     query.bind(1, filename);
 
+    std::cout << "Sto per cambiare il file " << filename  << " a SENT"  << std::endl;
+
+
     while (query.executeStep()) {
         // Demonstrate how to get some typed column value
         std::string current_status = query.getColumn(3);
 
 
-        std::cout << "AUTH DB READ: "
-                     " " << filename <<
-                  " " << "with status: " <<
-                  " " << current_status << std::endl;
+        std::cout << "Il file " << filename  << " era in "  << current_status << std::endl;
 
         if (current_status == "SENDING"){
 

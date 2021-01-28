@@ -116,7 +116,7 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
                 throw std::fstream::failure(msg);
             }
             // Here we have the sip and can write it.
-            std::cout << "WriteBuffer called for sip N :" << sip_counter << std::endl;
+            //std::cout << "WriteBuffer called for sip N :" << sip_counter << std::endl;
             sip_counter++;
             auto buf = boost::asio::buffer(buf_array_.data(), static_cast<size_t>(files_stream_.gcount()));
             writeBuffer(buf);
@@ -129,6 +129,7 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
                 // We can call WaitOk where we wait for the ok from the server;
                 files_stream_.close();
                 sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+                std::cout << "Inviato  :" << this->file_string_ << std::endl;
                 WaitOk();
             } else { // Here if we had a different problem that made us fail! we trhrow exception
                 auto msg = "Failed while reading file";
@@ -148,7 +149,7 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
 void FileSipper::WaitOk(){
     buf_metadata.fill('\000');
     sock_.read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()));
-    std::cout << "Risultato di checksum : "  << buf_metadata[0]  <<std::endl;
+    std::cout << "Risultato di checksum di " << this->file_string_ << " --> "<< buf_metadata[0]  <<std::endl;
     // Here based on the checksum result we modify the database.
     int checksum_ok = buf_metadata[0] -'0';
     DatabaseConnection db(db_path_, folder_watched_);

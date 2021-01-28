@@ -20,6 +20,9 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
         set_client.insert(item.first);
     }
 
+    // We remove the hash.db from the set, it will not be considered in the dispatch
+    set_client.erase(".hash.db");
+
     std::set<std::string> set_server;
     for(const auto& item : server_treet.map_tree_time_) {
         set_server.insert(item.first);

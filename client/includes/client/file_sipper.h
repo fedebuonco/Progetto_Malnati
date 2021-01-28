@@ -21,8 +21,6 @@ class FileSipper {
     std::filesystem::path db_path_;
     std::string hash_;
     std::string lmt_;
-    std::string file_string_;
-    std::string metadata_;
     std::string username_;
 
     boost::asio::io_service ios_;
@@ -50,6 +48,8 @@ public:
 
 
     bool status = false;
+    std::string file_string_;
+    std::string metadata_;
 private:
     void OpenFile();
     void Connect();
@@ -67,7 +67,7 @@ private:
                                  [this](boost::system::error_code ec, std::size_t size)
                                  {
                                      //Let's see the status of the sip, in order to see if this is the last one.
-                                     std::cout << "STATUS async write: " << ec.value() << " written " << size << std::endl;
+                                     //std::cout << "STATUS async write: " << ec.value() << " written " << size << std::endl;
                                      Sip(ec);
 
                                  });

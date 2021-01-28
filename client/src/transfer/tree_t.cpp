@@ -39,6 +39,10 @@ TreeT::TreeT(const std::filesystem::path& path){
         if (std::filesystem::is_directory(element_path))
             cross_platform_rep += "/";
 
+        // We don't insert the hash.db
+        if (cross_platform_rep == ".hash.db")
+            continue;
+
         //we now need to retrieve the last modified time.
         struct stat temp_stat;
         stat(element_path.generic_string().c_str(), &temp_stat);
