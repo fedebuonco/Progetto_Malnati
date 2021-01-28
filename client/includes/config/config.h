@@ -49,7 +49,7 @@ public:
 
     void PrintConfiguration();
 
-    void SetPath(std::string s);
+    void SetPath(const std::string& your_path);
 
     RawEndpoint ReadRawEndpoint();
 

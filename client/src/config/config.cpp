@@ -5,27 +5,27 @@
 #include <utilities.h>
 #include <filesystem>
 #include <regex>
+#include <utility>
 
 #include "cryptlib.h"
 #include <sha.h>
 #include <filters.h>
 #include <hex.h>
 
-
-
+//True means we are in debug, so we print more information in the console
 bool DEBUG=false;
 
-class SyntaxError : public std::exception
-{
-public:
-    SyntaxError(std::string msg) : m_message(msg) { }
-    const char * what () const throw ()
-    {
-        return m_message.c_str();
-    }
+class SyntaxError : public std::exception {
 private:
     std::string m_message;
+
+public:
+    explicit SyntaxError(std::string msg) : m_message(std::move(msg)) { }
+    [[nodiscard]] const char * what () const noexcept override {
+        return m_message.c_str();
+    }
 };
+
 
 Config *Config::m_ConfigClass = nullptr;
 
@@ -40,72 +40,70 @@ Config *Config::get_Instance() {
 }
 
 /**
- * This function write Key, Value inside config JSON file
+ * This function write a couple (Key:"Value") inside "config.json" file
  * @param key: JSON key
  * @param value: JSON value
  */
 void Config::WriteProperty(const std::string& key, const std::string& value) {
 
-    namespace pt = boost::property_tree;
+    boost::property_tree::ptree  root;
 
-    pt::ptree  root;
     try {
-    // Load the json file in this ptree
-    // If we don't do this all the information inside json file will be deleted
-    // TODO gestire errori nella lettura del json
-    std::filesystem::path jread = this->exepath / "config_file" / "config.json";
-    pt::read_json(jread.string(), root);
+        //Read the file and put the content inside root. If the file is wrong formatted, generate a pt::json_parser::json_parser_error.
+        //If we don't do this all the information inside json file will be deleted
+        std::filesystem::path config_file = this->exepath / "config_file" / "config.json";
+        boost::property_tree::read_json(config_file.string(), root);
 
-
+        //Create a node key, value
         root.put(key, value);
 
-        //Read the file and put the content inside root
-        std::filesystem::path jsonwrite = this->exepath / "config_file" / "config.json";
-        pt::write_json(jsonwrite.string(), root);
+        //Overwrite the file with the root. If the file is wrong formatted, generate a pt::json_parser::json_parser_error.
+        boost::property_tree::write_json(config_file.string(), root);
     }
-    catch ( const boost::property_tree::json_parser_error& e1) {
-        std::cerr <<"The configuration file was not found" << std::endl;
-
-        std::exit(12);   //TODO: Check the error status
+    catch (const boost::property_tree::ptree_bad_path& e){
+        if(DEBUG) std::cerr << e.what() << std::endl;
+        std::cerr << "\nThe \"" << key << "\" was not found inside config.json" << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+    catch (const boost::property_tree::json_parser::json_parser_error& e) {
+        if(DEBUG) std::cerr << e.what() << std::endl;
+        std::cerr <<"\nThe configuration file was not found or is bad formatted" << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 }
 
 /**
  * Read inside config JSON file and return the value associated with the given key.
- * @param   key: JSON key
+ * @param  key: JSON key
  * @return the value associated with the given key or 'NULL' if we don't have any value.
  */
 std::string Config::ReadProperty(const std::string &key) {
-    namespace pt = boost::property_tree;
-    pt::ptree  root;
-    //
-    // std::cout<<"in ReadProperty: "<<this->exepath<<std::endl;
+
+    boost::property_tree::ptree  root;
+
     try {
-        // TODO gestire errori nella lettura del json
-        //Read the file and put the content inside root
-        std::filesystem::path jsonread = this->exepath / "config_file"/"config.json";
-        pt::read_json(jsonread.string(), root);
+        //Read the file and put the content inside root. If the file is wrong formatted, generate a pt::json_parser::json_parser_error.
+        std::filesystem::path config_file = this->exepath / "config_file" / "config.json";
+        boost::property_tree::read_json(config_file.string(), root);
 
+        //We get the value, if the key is not present, get() method will throw a pt::ptree_bad_path exception.
         auto value = root.get<std::string>(key);
+        //auto value = root.get<std::string>(key, 'NULL'); //If you want to return default value.
 
-        //If the value is not present we retrieve NULL
-        //TODO: Controlla se questa aggiunta non ha causato problemi
-        if(value==""){
-            value="NULL";
-        }
+        //If the value is not present but the key is present we retrieve NULL.
+        if(value.empty()) value="NULL";
 
         return value;
     }
-    catch (const boost::property_tree::ptree_bad_path& e2){
-        std::cerr << "The \"" << key << "\" was not found inside config.json" << std::endl;
-
-        std::exit(23);   //TODO: Check the error status
-
+    catch (const boost::property_tree::ptree_bad_path& e){
+        if(DEBUG) std::cerr << e.what() << std::endl;
+        std::cerr << "\nThe \"" << key << "\" was not found inside config.json" << std::endl;
+        std::exit(EXIT_FAILURE);
     }
-    catch (const boost::property_tree::json_parser_error& e1) {
-        std::cerr <<"The configuration file was not found. Check if there is config.json" << std::endl;
-
-        std::exit(12);   //TODO: Check the error status
+    catch (const boost::property_tree::json_parser::json_parser_error& e) {
+        if(DEBUG) std::cerr << e.what() << std::endl;
+        std::cerr <<"\nThe configuration file was not found or is bad formatted" << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 }
 
@@ -275,37 +273,44 @@ void Config::SetConfig(int argc, char *argv[]) {
  */
 void Config::PrintConfiguration() {
 
+    std::string username = Config::get_Instance()->ReadProperty("username");
+    std::string backup_folder = Config::get_Instance()->ReadProperty("path");
+    std::string ip = Config::get_Instance()->ReadProperty("ip");
+    std::string port = Config::get_Instance()->ReadProperty("port");
+
     std::cout   << "\n\nProgram started with:\n"
-                << "\t Username: \t" << Config::get_Instance()->ReadProperty("username")<< "\n"
-                << "\t Backup folder: " << Config::get_Instance()->ReadProperty("path") << "\n"
-                << "\t Ip and port: \t" << Config::get_Instance()->ReadProperty("ip") << " " << Config::get_Instance()->ReadProperty("port") <<"\n"
+                << "\t Username: \t" << username << "\n"
+                << "\t Backup folder: " << backup_folder << "\n"
+                << "\t Ip and port: \t" << ip << " " << port <<"\n"
                 << "\t Debug: \t" << std::boolalpha << DEBUG << "\n"
                 << std::endl;
-
 }
 
-void Config::SetPath(std::string s) {
+/**
+ * This function will found the absolute path that points to client folder
+ * @param your_path : This the path with which the executable is launched
+ */
+void Config::SetPath(const std::string& your_path) {
     // The executable will be placed in the /bin being / the root of our project. ( so at the same level of /libs, /includes , etc)
     // so in order to find the config folder and file we need to navigate to that folder
-    std::cout <<" STRING PASSED : "<< s << std::endl;
+    //std::cout << " STRING PASSED : " << your_path << std::endl;
 
-    std::filesystem::path executable_path = std::filesystem::path(s).lexically_normal();
-    std::cout <<" executable_path : "<< executable_path.string() << std::endl;
+    std::filesystem::path executable_path = std::filesystem::path(your_path).lexically_normal();
+    //std::cout <<" executable_path : "<< executable_path.string() << std::endl;
 
     // we get the absolute path
     std::filesystem::path executable_path_abs = std::filesystem::absolute(executable_path);
-    std::cout <<" executable_path_abs : "<< executable_path_abs.string() << std::endl;
+    //std::cout <<" executable_path_abs : "<< executable_path_abs.string() << std::endl;
 
     std::filesystem::path bin_path_abs = executable_path_abs.remove_filename();
-    std::cout <<" bin_path_abs : "<< bin_path_abs.string() << std::endl;
+    //std::cout <<" bin_path_abs : "<< bin_path_abs.string() << std::endl;
 
     std::filesystem::path master_path_abs = bin_path_abs.parent_path().parent_path();
-    std::cout <<" master_path_abs : "<< master_path_abs.string() << std::endl;
+    //std::cout <<" master_path_abs : "<< master_path_abs.string() << std::endl;
 
+    std::cout << "Path \"" << your_path << "\" converted into \"" << master_path_abs.string() << "\"." << std::endl;
 
-    std::cout <<" CUT: "<< master_path_abs.string() << std::endl;
     this->exepath = master_path_abs;
-
 }
 
 
@@ -331,7 +336,7 @@ bool Config::IsConfigStructureCorrect() {
     std::filesystem::path config_file_path{ "../config_file/config.json" };
     std::filesystem::directory_entry config_directory_path{"../config_file"};
 
-    //Funtion exists check if the given file path corresponds to an existing file or directory.
+    //Function exists check if the given file path corresponds to an existing file or directory.
     //We need also to check that 'config.json' is a file and that 'config_file' is a folder
 
     if(      !(   std::filesystem::exists(config_directory_path) && std::filesystem::is_directory(config_directory_path)  )
@@ -341,7 +346,6 @@ bool Config::IsConfigStructureCorrect() {
         return false;
     }
     return true;
-
 }
 
 /**

@@ -188,7 +188,7 @@ bool DatabaseConnection::ChangeStatusToSending(const std::string& filename) {
 
 
     }
-
+    return true;
 }
 
 /// Goes in the db and changes the status to "SENT" but does it only if the current status is "SENDING"
