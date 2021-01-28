@@ -1,7 +1,3 @@
-//
-// Created by marco on 21/09/20.
-//
-
 #pragma once
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
@@ -28,6 +24,7 @@ struct RawEndpoint{
 class Config {
     Config()= default;
     static Config* m_ConfigClass;
+    std::filesystem::path exepath;
 
 public:
     //Singleton, eliminate copy and assignment
@@ -36,9 +33,6 @@ public:
 
     static Config* get_Instance();
 
-
-
-
     void WriteProperty(const std::string& key, const std::string& value);
     std::string ReadProperty(const std::string& key);
 
@@ -46,15 +40,10 @@ public:
     void SetDefaultConfig();
 
     void SetConfig(int argc, char *argv[]);
+    void SetPath(const std::string& your_path);
 
     void PrintConfiguration();
 
-    void SetPath(const std::string& your_path);
-
     RawEndpoint ReadRawEndpoint();
-
-private:
-    std::filesystem::path exepath;
-
 };
 

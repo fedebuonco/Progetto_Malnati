@@ -32,7 +32,6 @@ int main(int argc, char *argv[]) {
             Config::get_Instance()->SetConfig(argc, argv);
         }
         catch (std::exception& e){
-            //TODO: For me exit_failure is ok, we don't need an error code
             std::cerr << e.what() << std::endl;
             std::exit(EXIT_FAILURE);
         }

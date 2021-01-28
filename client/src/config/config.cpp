@@ -1,12 +1,16 @@
-#include "config.h"
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#include <iostream>
+#include <config.h>
 #include <utilities.h>
+
+#include <iostream>
 #include <filesystem>
 #include <regex>
 #include <utility>
 
+//Include for boost
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
+//Include for CRYTPO.CPP
 #include "cryptlib.h"
 #include <sha.h>
 #include <filters.h>
@@ -121,7 +125,6 @@ void Config::SetConfig(int argc, char *argv[]) {
         std::string arg = argv[i];
 
         if(arg=="-d" || arg=="--debug"){
-
             //We found the "-d" or "--debug" option inside the configuration options.
 
             //Then we check that the next argument has the '-' because we don't want that the user writes for example "-d debug".
@@ -187,6 +190,7 @@ void Config::SetConfig(int argc, char *argv[]) {
                 }
                 break;
             }
+
             case str2int("-f"):
             case str2int("--folder"): {
 
@@ -204,9 +208,10 @@ void Config::SetConfig(int argc, char *argv[]) {
                     //TODO: Exception
                     throw  SyntaxError(std::string("Configuration syntax error: We didn't find 1 valid arguments after the -f or --folder."));
                 }
-
-            }
                 break;
+            }
+
+
             case str2int("-s"):
             case str2int("--server"): {
 
@@ -236,23 +241,18 @@ void Config::SetConfig(int argc, char *argv[]) {
                 } else {
                     //TODO: Exception
                     throw  std::invalid_argument("Configuration syntax error: We didn't find 2 valid arguments after the -s or --server.");
-                    //throw  SyntaxError(std::string("Configuration syntax error: We didn't find 2 valid arguments after the -s or --server."));
                 }
-
                 break;
-
             }
+
             case str2int("-h"):
-            case str2int("--help"):
+            case str2int("--help"): {
                 show_usage(argv[0]);
-                //TODO EXIT Verificare se è corretto
-                //TODO Verificare se fare tipo di eccezione speciale e fare chiudere al main
                 std::exit(0);
-               
+            }
 
             case str2int("-d"):
             case str2int("--debug"): {
-
                 //We go next because the debug configuration is already made
                 break;
             }
@@ -318,9 +318,8 @@ void Config::SetPath(const std::string& your_path) {
 /// \return A RawEndpoint used later to set up all the sockets.
 RawEndpoint Config::ReadRawEndpoint() {
 
+    //Take the ip and the port (covert the string to unsigned long for the port)
     std::string ip = Config::get_Instance()->ReadProperty("ip");
-
-    //We convert the string in unsigned long
     auto port = std::stoul( Config::get_Instance()->ReadProperty("port"));
 
     return RawEndpoint{ip, port};
