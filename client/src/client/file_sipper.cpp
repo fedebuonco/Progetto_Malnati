@@ -29,7 +29,7 @@ FileSipper::FileSipper(RawEndpoint re, std::filesystem::path folder_watched, std
 /// Methods that starts the sending of the File.
 void FileSipper::Send(){
     // We make the status true, so that we know the filesipper has been sent.
-    status = true;
+    status.store(true);
     Connect();
     ios_.run();
 }
@@ -116,7 +116,7 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
                 throw std::fstream::failure(msg);
             }
             // Here we have the sip and can write it.
-            std::cout << "WriteBuffer called for sip N :" << sip_counter << std::endl;
+            //std::cout << "WriteBuffer called for sip N :" << sip_counter << std::endl;
             sip_counter++;
             auto buf = boost::asio::buffer(buf_array_.data(), static_cast<size_t>(files_stream_.gcount()));
             writeBuffer(buf);
@@ -153,13 +153,22 @@ void FileSipper::WaitOk(){
     int checksum_ok = buf_metadata[0] -'0';
     DatabaseConnection db(db_path_, folder_watched_);
     if (!checksum_ok){ // we need to retry sending the file has the server did not receive the file in a correct way
-        db.ChangeStatusToNew(file_string_);
-        status = false;
+        try {
+            db.ChangeStatusToNew(file_string_);
+            status.store(false);
+        } catch (...) {
+            std::cout<<" WaitOk "<<std::endl;
+        }
         //TODO se vogliamo farlo rifare a lui devo fare puntatore a socket per poi ditruggerlo e ricrearlo.
         //this->Send();
     } else { // here if the server has recevied the correct file.
-        db.ChangeStatusToSent(file_string_);
-        status = false;
+        try {
+            db.ChangeStatusToSent(file_string_);
+
+        status.store(false);
+        }catch(...){
+            std::cout<<" WaitOk "<<std::endl;
+        }
     }
 
 
