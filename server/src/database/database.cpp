@@ -200,7 +200,7 @@ void Database::insertFile(std::string userName, std::string pathName, std::strin
 
         //Now we look if the file is already present in the db
         // Compile a SQL query, containing 1 parameters
-        SQLite::Statement   query_ifpresent(db1, "SELECT * FROM UserTree WHERE path = ?;");
+        SQLite::Statement   query_ifpresent(db1, "SELECT * FROM UserTree WHERE path = ?");
 
         // Bind to ? of the query
         query_ifpresent.bind(1, pathName);
@@ -216,10 +216,6 @@ void Database::insertFile(std::string userName, std::string pathName, std::strin
                                      "\" WHERE id =  \""     + id + "\"";
 
             int result_update = db1.exec(sql_update);
-
-
-            std::cout << " Executed Update " << sql_update << std::endl;
-            std::cout << " With Result =  " << result_update << std::endl;
 
             // Commit transaction
             transaction.commit();
