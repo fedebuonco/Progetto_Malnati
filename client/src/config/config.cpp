@@ -293,20 +293,12 @@ void Config::PrintConfiguration() {
 void Config::SetPath(const std::string& your_path) {
     // The executable will be placed in the /bin being / the root of our project. ( so at the same level of /libs, /includes , etc)
     // so in order to find the config folder and file we need to navigate to that folder
-    //std::cout << " STRING PASSED : " << your_path << std::endl;
 
     std::filesystem::path executable_path = std::filesystem::path(your_path).lexically_normal();
-    //std::cout <<" executable_path : "<< executable_path.string() << std::endl;
-
     // we get the absolute path
     std::filesystem::path executable_path_abs = std::filesystem::absolute(executable_path);
-    //std::cout <<" executable_path_abs : "<< executable_path_abs.string() << std::endl;
-
     std::filesystem::path bin_path_abs = executable_path_abs.remove_filename();
-    //std::cout <<" bin_path_abs : "<< bin_path_abs.string() << std::endl;
-
     std::filesystem::path master_path_abs = bin_path_abs.parent_path().parent_path();
-    //std::cout <<" master_path_abs : "<< master_path_abs.string() << std::endl;
 
     std::cout << "Path \"" << your_path << "\" converted into \"" << master_path_abs.string() << "\"." << std::endl;
 
@@ -332,8 +324,9 @@ RawEndpoint Config::ReadRawEndpoint() {
  */
 bool Config::IsConfigStructureCorrect() {
 
-    std::filesystem::path config_file_path{ "../config_file/config.json" };
-    std::filesystem::directory_entry config_directory_path{"../config_file"};
+    std::filesystem::path config_file_folder = this->exepath / "config_file";
+    std::filesystem::path config_file_path = this->exepath / "config_file" / "config.json";
+    std::filesystem::directory_entry config_directory_path{config_file_folder};
 
     //Function exists check if the given file path corresponds to an existing file or directory.
     //We need also to check that 'config.json' is a file and that 'config_file' is a folder
@@ -362,14 +355,16 @@ void Config::SetDefaultConfig() {
     if(DEBUG) std::cout << "Restore default configuration of config file and structure" << std::endl;
 
     //First of all we delete the structure
-    std::filesystem::remove_all("../config_file");
+    std::filesystem::path config_file_folder = this->exepath / "config_file";
+    std::filesystem::path config_file = this->exepath / "config_file" / "config.json";
+    std::filesystem::remove_all(config_file_folder);
 
     //Now we create the 'config_file' folder and the config.json file
-    std::filesystem::create_directories("../config_file");
-    std::ofstream config_file ("../config_file/config.json");
+    std::filesystem::create_directories(config_file_folder);
+    std::ofstream config_file_stream (config_file);
 
     //Fill the config.json file with the correct structure
-    config_file << "{\n"
+    config_file_stream << "{\n"
                    "    \"ip\": \"127.0.0.1\",\n"
                    "    \"port\": \"3333\",\n"
                    "    \"username\": \"\",\n"
@@ -377,7 +372,7 @@ void Config::SetDefaultConfig() {
                    "    \"path\": \"\"\n"
                    "}";
 
-    config_file.close();
+    config_file_stream.close();
 
 }
 

@@ -31,9 +31,9 @@ std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
 
     //While is necessary to prevent spurious wakeups
     //Thread waits when queue is empty OR all files in filesippers are in sending
-    while( ( fs_list.empty() || (fs_list.size() == active_fs.load())) && SharedQueue::get_Instance()->isFlag()  ) {
+    while( ( fs_list.size()==0 || (fs_list.size() == active_fs.load())) && SharedQueue::get_Instance()->isFlag()  ) {
         std::cout<< " wait:   fs_list.size =  "<<fs_list.size() << " and active_fs = "<<active_fs.load()<< std::endl;
-        cv.wait(l, [this]() { return !( (fs_list.empty() || (fs_list.size() == active_fs.load())) && SharedQueue::get_Instance()->isFlag() ); });
+        cv.wait(l, [this]() { return !( (fs_list.size()==0 || (fs_list.size() == active_fs.load())) && SharedQueue::get_Instance()->isFlag() ); });
         std::cout << "After wait " << std::this_thread::get_id << "  pool "<<std::endl;
     }
 
@@ -53,8 +53,8 @@ std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
             it->get()->status.store(true);
             std::cout<<"E' false, lo scelgo : "<< it->get() <<std::endl;
             fs_find = true;
-            fs_selected = static_cast<const std::shared_ptr<FileSipper>>(it->get());
-            break;
+            active_fs.fetch_add(1);
+            return *it;
         }
     }
 
@@ -86,7 +86,7 @@ void SharedQueue::remove_element(std::shared_ptr<FileSipper> fsipper){
 
     std::cout << std::this_thread::get_id  <<"REMOVED size: " <<fs_list.size()<<std::endl;
     SharedQueue::get_Instance()->active_fs.fetch_sub(1);
-    cv.notify_all();
+    if(fs_list.size() && active_fs.load()<fs_list.size()) cv.notify_all();
 }
 
 /***

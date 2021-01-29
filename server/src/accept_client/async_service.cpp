@@ -19,8 +19,6 @@ m_sock(sock)
 
 void AsyncService::StartHandling() {
 
-    std::cout << "StartHandling chiamata " << std::endl;
-
     m_sock.get()->async_read_some(boost::asio::buffer(m_buf.data(), m_buf.size()),
                                   [this](boost::system::error_code ec, size_t bytes)
                                   {
