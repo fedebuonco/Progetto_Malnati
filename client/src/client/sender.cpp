@@ -34,9 +34,9 @@ void Sender::Sender_Action(){
         std::shared_ptr<FileSipper> choosen_fs = SharedQueue::get_Instance()->get_ready_FileSipper();
 
         boost::asio::post(pool,[choosen_fs](){
-                            
+                            std::cout << " FACCIO PARTIRE FS SCELTO  " << choosen_fs->file_string_ <<std::endl;
+
                             choosen_fs->Send();
-                            std::cout << " FACCIO PARTIRE FS SCELTO  "<<std::endl;
 
                             SharedQueue::get_Instance()->remove_element(choosen_fs);
         });

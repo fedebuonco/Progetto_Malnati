@@ -26,12 +26,12 @@ void AsyncService::StartHandling() {
                                       // if we don't we will get an ec signaling EOF
                                       // we must also look out for ec.value coming from other possible errors.
                                       // if ec.value == 2 is EOF we can call the onFinish
-                                      std::cout << ec.value() << ec.message() << std::endl;
+                                      //std::cout << ec.value() << ec.message() << std::endl;
                                       if (!ec.value()) {
                                           onRequestReceived(ec, bytes);
                                       }
                                       else if (ec.value() == 2 ) { // EOF
-
+                                          std::cout << ec.value() << ec.message() << std::endl;
                                           onFinish();
                                       }
 

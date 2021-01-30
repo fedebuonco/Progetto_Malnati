@@ -21,7 +21,7 @@ DatabaseConnection::DatabaseConnection(const std::filesystem::path& db_path, std
     catch (std::exception& e)
     {
         std::cout << "SQLite exception: " << e.what() << std::endl;
-        std::exit(EXIT_FAILURE);        //TODO: Va bene uscire?
+        //std::exit(EXIT_FAILURE);        //TODO: Va bene uscire?
     }
 }
 
@@ -42,7 +42,7 @@ bool DatabaseConnection::AlreadyHashed(const std::string& filename, const std::s
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        std::exit(EXIT_FAILURE);
+        //std::exit(EXIT_FAILURE);
     }
 
     // Here if we did not find any row. The file could be new or changed and so the lmt is different.
@@ -88,7 +88,7 @@ void DatabaseConnection::InsertDB(const std::string& path_str, const std::string
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        std::exit(EXIT_FAILURE);
+        //std::exit(EXIT_FAILURE);
     }
 }
 
@@ -116,7 +116,7 @@ void DatabaseConnection::CleanOldRows(){
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        std::exit(EXIT_FAILURE);
+        //std::exit(EXIT_FAILURE);
     }
 }
 
@@ -148,7 +148,7 @@ bool DatabaseConnection::ChangeStatusToSending(const std::string& filename) {
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        std::exit(EXIT_FAILURE);
+        //std::exit(EXIT_FAILURE);
     }
 
     return false;
@@ -181,7 +181,7 @@ bool DatabaseConnection::ChangeStatusToSent(const std::string& filename) {
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        std::exit(EXIT_FAILURE);
+        //std::exit(EXIT_FAILURE);
     }
 
     return false;
@@ -217,7 +217,7 @@ bool DatabaseConnection::ChangeStatusToNew(const std::string& filename) {
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        std::exit(EXIT_FAILURE);
+        //std::exit(EXIT_FAILURE);
     }
 
     return false;
@@ -246,6 +246,6 @@ void DatabaseConnection::GetMetadata(const std::string& filename, std::string& h
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        std::exit(EXIT_FAILURE);
+        //std::exit(EXIT_FAILURE);
     }
 }
