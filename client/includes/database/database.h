@@ -4,10 +4,13 @@
 #include <SQLiteCpp/Database.h>
 #include <iostream>
 #include <filesystem>
+#include <mutex>
 
 class DatabaseConnection{
     std::filesystem::path folder_watched_;
     SQLite::Database hash_db_;
+    static std::mutex db_mutex_;
+
 
 public:
     DatabaseConnection(const std::filesystem::path& db_path, std::filesystem::path  folder_watched);

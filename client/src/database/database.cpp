@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <utility>
 
+std::mutex DatabaseConnection::db_mutex_;
 /**
  * Constructor. Takes the db_path and folder_watched and create a db connection.
  * @param db_path: db path where store the hash & time
@@ -12,6 +13,8 @@
 DatabaseConnection::DatabaseConnection(const std::filesystem::path& db_path, std::filesystem::path folder_watched) :
     hash_db_(db_path.string(), SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE),
     folder_watched_(std::move(folder_watched)){
+
+    std::lock_guard<std::mutex>lg(db_mutex_);
 
     try {
         // We create the table if not exist.
@@ -28,7 +31,7 @@ DatabaseConnection::DatabaseConnection(const std::filesystem::path& db_path, std
 /// Checks if a row is present in the db by scanning using tuple filename - lastModTime
 /// \return bool true if present, false if not
 bool DatabaseConnection::AlreadyHashed(const std::string& filename, const std::string& lmt){
-
+    std::lock_guard<std::mutex>lg(db_mutex_);
     try {
         SQLite::Statement query(hash_db_, "SELECT * FROM files WHERE filename = ? AND lmt = ?");
         query.bind(1, filename);
@@ -55,7 +58,7 @@ bool DatabaseConnection::AlreadyHashed(const std::string& filename, const std::s
 /// \param hash The hash of the file we are inserting
 /// \param lmt_str The last modified time of the version of the file we are inserting.
 void DatabaseConnection::InsertDB(const std::string& path_str, const std::string& hash, const std::string& lmt_str){
-
+    std::lock_guard<std::mutex>lg(db_mutex_);
     try{
         SQLite::Statement query(hash_db_, "SELECT * FROM files WHERE filename = ?");
         query.bind(1, path_str);
@@ -95,7 +98,7 @@ void DatabaseConnection::InsertDB(const std::string& path_str, const std::string
 /// We check the db against the file in the folder,
 /// if a row doesn't have the counterpart in the folder is removed.
 void DatabaseConnection::CleanOldRows(){
-
+    std::lock_guard<std::mutex>lg(db_mutex_);
     try {
         SQLite::Statement query(hash_db_, "SELECT * FROM files");
         while (query.executeStep()) {
@@ -124,7 +127,7 @@ void DatabaseConnection::CleanOldRows(){
 /// \param filename of the file that we want to put in sending
 /// \return true if we successfully switched the status to "NEW" to "SENDING"
 bool DatabaseConnection::ChangeStatusToSending(const std::string& filename) {
-
+    std::lock_guard<std::mutex>lg(db_mutex_);
     try {
         SQLite::Statement query(hash_db_, "SELECT * FROM files WHERE filename = ?");
         query.bind(1, filename);
@@ -158,7 +161,7 @@ bool DatabaseConnection::ChangeStatusToSending(const std::string& filename) {
 /// \param filename of the file that we want to put in as SENT
 /// \return true if we successfully switched the status to "SENDING" to "SENT"
 bool DatabaseConnection::ChangeStatusToSent(const std::string& filename) {
-
+    std::lock_guard<std::mutex>lg(db_mutex_);
     try {
         SQLite::Statement query(hash_db_, "SELECT * FROM files WHERE filename = ?");
         query.bind(1, filename);
@@ -192,7 +195,7 @@ bool DatabaseConnection::ChangeStatusToSent(const std::string& filename) {
 /// \param filename of the file that we want to put in as NEW
 /// \return true if we successfully switched the status to "SENDING" to "NEW"
 bool DatabaseConnection::ChangeStatusToNew(const std::string& filename) {
-
+    std::lock_guard<std::mutex>lg(db_mutex_);
     try {
 
         SQLite::Statement query(hash_db_, "SELECT * FROM files WHERE filename = ?");
@@ -226,7 +229,7 @@ bool DatabaseConnection::ChangeStatusToNew(const std::string& filename) {
 
 //TODO: A cosa serve se non ritorna nulla
 void DatabaseConnection::GetMetadata(const std::string& filename, std::string& hash, std::string& lmt){
-
+    std::lock_guard<std::mutex>lg(db_mutex_);
     try{
 
         SQLite::Statement query(hash_db_, "SELECT * FROM files WHERE filename = ?");

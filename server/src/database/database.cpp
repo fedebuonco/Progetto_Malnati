@@ -7,9 +7,9 @@
 #include <server.h>
 #include <SQLiteCpp/Transaction.h>
 #include <sqlite3.h>
-
+std::mutex Database::db_mutex_;
 bool Database::auth(std::string username, std::string attemp_hash_password, std::filesystem::path serverP) {
-
+    std::lock_guard<std::mutex>lg(db_mutex_);
     try {
         // Open a database file
         std::filesystem::path db_path = serverP / "backupFiles" / "authDB.db" ;
@@ -50,7 +50,7 @@ bool Database::auth(std::string username, std::string attemp_hash_password, std:
 }
 
 std::string Database::getUserPath(std::string username, std::filesystem::path serverP) {
-
+    std::lock_guard<std::mutex>lg(db_mutex_);
     try {
         // Open a database file
         std::filesystem::path db_path = serverP / "backupFiles" / "authDB.db" ;
@@ -83,7 +83,7 @@ std::string Database::getUserPath(std::string username, std::filesystem::path se
 }
 
 void Database::createTable(std::string foldername, std::filesystem::path serverP) {
-
+    std::lock_guard<std::mutex>lg(db_mutex_);
     try {
         // Open a database file in create/write mode
         std::string folderext = foldername+".db";
@@ -108,7 +108,7 @@ void Database::createTable(std::string foldername, std::filesystem::path serverP
 }
 
 std::string Database::getTimefromPath(std::string foldername, std::string path, std::filesystem::path serverP) {
-
+    std::lock_guard<std::mutex>lg(db_mutex_);
 
     try {
         // Open a database file
@@ -145,7 +145,7 @@ std::string Database::getTimefromPath(std::string foldername, std::string path, 
 }
 
 void Database::deleteFile(std::string foldername, std::string path, std::filesystem::path serverP) {
-
+    std::lock_guard<std::mutex>lg(db_mutex_);
     try{
         std::string folderext = foldername+".db";
         std::filesystem::path db_path = serverP / "backupFiles" / "usersTREE" / folderext ;
@@ -175,6 +175,7 @@ void Database::deleteFile(std::string foldername, std::string path, std::filesys
 }
 
 void Database::insertFile(std::string userName, std::string pathName, std::string hash, std::string lmt, std::filesystem::path serverP) {
+    std::lock_guard<std::mutex>lg(db_mutex_);
     int remainingWriteAttempts = 10;
 
     while(remainingWriteAttempts > 0) {
