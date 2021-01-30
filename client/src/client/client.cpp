@@ -176,11 +176,11 @@ ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
     return cm;
 }
 
-std::string genTree(const std::vector<std::pair<std::string, unsigned long>>& vector) {
+std::string genTree(const std::vector<std::string>& vector) {
     std::string tree;
     for(const auto& element : vector)
     {
-        tree.append(element.first + "\n");
+        tree.append(element + "\n");
     }
     return tree;
 }
@@ -190,20 +190,21 @@ std::string genTree(const std::vector<std::pair<std::string, unsigned long>>& ve
 /// the newer files.
 /// \param update processed patch
 void Client::SendRemoval(Patch& update){
-
+    if(update.removed_.empty()){
+        return;
+    }
     Credential credential_ = Authentication::get_Instance()->ReadCredential();
 
     //Creation of the Auth ControlMessage type: 3 with inside Username, Password and the list of file to be deleted
     ControlMessage delete_message{3};
     delete_message.AddElement("Username",credential_.username_);
     delete_message.AddElement("HashPassword",credential_.hash_password_ );
-    delete_message.AddElement("To_be_deleted", genTree(update.to_be_elim_vector));
+    delete_message.AddElement("To_be_deleted", genTree(update.removed_));
 
     //And sending it formatted in JSON language
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
     tcpSocket.ConnectServer(5);
     SyncWriteCM(tcpSocket, delete_message);
-
 }
 
 
