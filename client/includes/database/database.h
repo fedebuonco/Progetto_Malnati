@@ -5,11 +5,12 @@
 #include <iostream>
 #include <filesystem>
 #include <mutex>
+#include <shared_mutex>
 
 class DatabaseConnection{
     std::filesystem::path folder_watched_;
     SQLite::Database hash_db_;
-    static std::mutex db_mutex_;
+    static std::shared_mutex db_mutex_;
 
 
 public:
