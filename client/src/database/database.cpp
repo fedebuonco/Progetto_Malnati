@@ -95,6 +95,20 @@ void DatabaseConnection::InsertDB(const std::string& path_str, const std::string
     }
 }
 
+/// Changes all the tuple that are in SENDING to NEW
+int DatabaseConnection::SetBackToNew(){
+    std::unique_lock lg(db_mutex_);
+    SQLite::Statement  query(hash_db_, "UPDATE files "
+                                       "SET status = 'NEW' "
+                                       "WHERE status = 'SENDING'");
+    int cnt = 0;
+    while(query.executeStep()){
+        cnt++;
+    }
+    return cnt;
+}
+
+
 /// We check the db against the file in the folder,
 /// if a row doesn't have the counterpart in the folder is removed.
 void DatabaseConnection::CleanOldRows(){
