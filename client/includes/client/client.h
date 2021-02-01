@@ -25,6 +25,7 @@ private:
     bool Auth();
     void StartWatching();
     void Syncro();
+    int  RecoverSending();
     void SendRemoval(Patch &update);
     TreeT RequestTree();
     bool SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm);

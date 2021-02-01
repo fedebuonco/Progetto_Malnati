@@ -49,6 +49,21 @@ bool DatabaseConnection::AlreadyHashed(std::string filename, std::string lmt){
     return false;
 }
 
+
+/// Changes all the tuple that are in SENDING to NEW
+int DatabaseConnection::SetBackToNew(){
+
+	SQLite::Statement  query(hash_db_, "UPDATE files "
+			                   "SET status = 'NEW' "
+					   "WHERE status = 'SENDING'");
+	int cnt = 0;
+	while(query.executeStep()){
+		cnt++;
+	}
+	return cnt;
+}
+
+
 /// Insert a row in the db. If the db contains a tuple path_str - lmt_str
 /// then that row is updated with the
 /// new hash, otherwise we simply add a new row to the db.

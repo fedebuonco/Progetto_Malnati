@@ -29,6 +29,11 @@ Client::Client(RawEndpoint re, std::filesystem::path folder_watched) :
         std::exit(EXIT_FAILURE);
     }
 
+    
+    // We recover the sending files
+    int recovered = RecoverSending();
+    if (DEBUG) std::cout << "Recovered " << recovered << "files." << std::endl;
+     
     // We start watching for further changes
     StartWatching();
 }
@@ -114,6 +119,21 @@ bool Client::Auth() {
     //In any case, we return false.
     return false;
 }
+
+/// Scans the db and put the failed "SENDING" to "NEW" again, they will be re-sync as soon as possible.
+/// Returns the recovered files.
+int Client::RecoverSending() {
+	
+    // We open the db once here so that we limit the overhead
+    DatabaseConnection db(db_file_,folder_watched_);
+
+    // We change the sending to new 
+    int recovered = db.SetBackToNew();
+ 
+    return recovered;
+
+}
+
 
 /// Request current tree and times of the cloud dir stored in the server.
 /// Handles the result by starting the diff computation.

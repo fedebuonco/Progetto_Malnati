@@ -20,7 +20,7 @@ public:
     void InsertDB(std::string path_str, std::string hash, std::string lmt_str);
     void GetMetadata(const std::string& filename, std::string& hash, std::string& lmt);
     void CleanOldRows();
-
+    int  SetBackToNew();
     bool ChangeStatusToSending(const std::string& filename);
     bool ChangeStatusToSent(const std::string& filename);
     bool ChangeStatusToNew(const std::string& filename);
