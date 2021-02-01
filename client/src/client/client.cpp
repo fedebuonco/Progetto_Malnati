@@ -33,6 +33,7 @@ Client::Client(RawEndpoint re, std::filesystem::path folder_watched) :
     int recovered = RecoverSending();
     if (DEBUG) std::cout << "Recovered " << recovered << "files." << std::endl;
 
+
     // We start watching for further changes
     StartWatching();
 }
@@ -123,15 +124,18 @@ bool Client::Auth() {
 /// Returns the recovered files.
 int Client::RecoverSending() {
 
+
     // We open the db once here so that we limit the overhead
     DatabaseConnection db(db_file_,folder_watched_);
 
     // We change the sending to new
     int recovered = db.SetBackToNew();
 
+
     return recovered;
 
 }
+
 
 /// Request current tree and times of the cloud dir stored in the server.
 /// Handles the result by starting the diff computation.

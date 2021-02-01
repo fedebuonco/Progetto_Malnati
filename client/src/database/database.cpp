@@ -52,7 +52,9 @@ bool DatabaseConnection::AlreadyHashed(const std::string& filename, const std::s
     return false;
 }
 
-/// Insert a row in the db. If the db contains a tuple path_str - lmt_str then that row is updated with the
+
+/// Insert a row in the db. If the db contains a tuple path_str - lmt_str
+/// then that row is updated with the
 /// new hash, otherwise we simply add a new row to the db.
 /// \param path_str The filename path we are inserting
 /// \param hash The hash of the file we are inserting
@@ -258,6 +260,7 @@ void DatabaseConnection::GetMetadata(const std::string& filename, std::string& h
             lmt = lt;
             if(DEBUG) std::cout << "TUPLE DB READ: " << filename << " " << hash << " " << lmt << std::endl;
 
+
         }
     }
     catch (std::exception& e)
@@ -266,3 +269,4 @@ void DatabaseConnection::GetMetadata(const std::string& filename, std::string& h
         //std::exit(EXIT_FAILURE);
     }
 }
+
