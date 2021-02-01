@@ -29,11 +29,11 @@ Client::Client(RawEndpoint re, std::filesystem::path folder_watched) :
         std::exit(EXIT_FAILURE);
     }
 
-    
     // We recover the sending files
     int recovered = RecoverSending();
     if (DEBUG) std::cout << "Recovered " << recovered << "files." << std::endl;
-     
+
+
     // We start watching for further changes
     StartWatching();
 }
@@ -123,13 +123,15 @@ bool Client::Auth() {
 /// Scans the db and put the failed "SENDING" to "NEW" again, they will be re-sync as soon as possible.
 /// Returns the recovered files.
 int Client::RecoverSending() {
-	
+
+
     // We open the db once here so that we limit the overhead
     DatabaseConnection db(db_file_,folder_watched_);
 
-    // We change the sending to new 
+    // We change the sending to new
     int recovered = db.SetBackToNew();
- 
+
+
     return recovered;
 
 }
@@ -172,7 +174,6 @@ TreeT Client::RequestTree() {
 bool Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
     //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
     std::string test = cm.ToJSON();
-    std::cout << test << std::endl;
     boost::asio::write(stcp.sock_, boost::asio::buffer(cm.ToJSON()));
     stcp.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
     return true;
@@ -197,11 +198,11 @@ ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
     return cm;
 }
 
-std::string genTree(const std::vector<std::pair<std::string, unsigned long>>& vector) {
+std::string genTree(const std::vector<std::string>& vector) {
     std::string tree;
     for(const auto& element : vector)
     {
-        tree.append(element.first + "\n");
+        tree.append(element + "\n");
     }
     return tree;
 }
@@ -211,20 +212,21 @@ std::string genTree(const std::vector<std::pair<std::string, unsigned long>>& ve
 /// the newer files.
 /// \param update processed patch
 void Client::SendRemoval(Patch& update){
-
+    if(update.removed_.empty()){
+        return;
+    }
     Credential credential_ = Authentication::get_Instance()->ReadCredential();
 
     //Creation of the Auth ControlMessage type: 3 with inside Username, Password and the list of file to be deleted
     ControlMessage delete_message{3};
     delete_message.AddElement("Username",credential_.username_);
     delete_message.AddElement("HashPassword",credential_.hash_password_ );
-    delete_message.AddElement("To_be_deleted", genTree(update.to_be_elim_vector));
+    delete_message.AddElement("To_be_deleted", genTree(update.removed_));
 
     //And sending it formatted in JSON language
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
     tcpSocket.ConnectServer(5);
     SyncWriteCM(tcpSocket, delete_message);
-
 }
 
 

@@ -37,7 +37,7 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
     while (n_tries) {
         try {
 
-            if (DEBUG)  std::cout << "\nEstablishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
+            //if (DEBUG)  std::cout << "\nEstablishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
 
             sock_.connect(ep_);
             break; // Usciamo dal while perchè connessione avvenuta con successo

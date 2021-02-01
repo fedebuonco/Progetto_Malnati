@@ -30,9 +30,11 @@ void Watcher::listenerFunction(std::vector<pfw::EventPtr> events)
     DatabaseConnection db(db_file_,folder_watched_);
     for (const auto &event : events) {
         std::bitset<16> typeBits(event->type);
-        std::cout << event->relativePath << " with the type: " << typeBits << std::endl;
+        //std::cout << event->relativePath << " with the type: " << typeBits << std::endl;
 
         // We don't take action regarding the changes in the db.
+        if (event->relativePath.string() == ".hash.db" && events.size() == 1)
+            return;
         if (event->relativePath.string() == ".hash.db")
             continue;
 

@@ -1,23 +1,23 @@
-//
-// Created by fede on 12/24/20.
-//
 #pragma once
 
 #include <string>
 #include <SQLiteCpp/Database.h>
 #include <iostream>
 #include <filesystem>
+#include <mutex>
+#include <shared_mutex>
 
 class DatabaseConnection{
     std::filesystem::path folder_watched_;
-    std::filesystem::path db_path;
     SQLite::Database hash_db_;
+    static std::shared_mutex db_mutex_;
+
 
 public:
-
-    DatabaseConnection(std::filesystem::path db_path, std::filesystem::path folder_watched);
-    bool AlreadyHashed(std::string filename, std::string lmt);
-    void InsertDB(std::string path_str, std::string hash, std::string lmt_str);
+    DatabaseConnection(const std::filesystem::path& db_path, std::filesystem::path  folder_watched);
+    int  SetBackToNew();
+    bool AlreadyHashed(const std::string& filename, const std::string& lmt);
+    void InsertDB(const std::string& path_str, const std::string& hash, const std::string& lmt_str);
     void GetMetadata(const std::string& filename, std::string& hash, std::string& lmt);
     void CleanOldRows();
     int  SetBackToNew();

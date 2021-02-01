@@ -3,9 +3,10 @@
 
 #include <string>
 #include <filesystem>
-
+#include <mutex>
+#include <shared_mutex>
 class Database {
-
+    static std::shared_mutex db_mutex_;
 public:
     bool auth(std::string username, std::string hashpassword, std::filesystem::path serverP);
 

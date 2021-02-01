@@ -21,7 +21,6 @@ class FileSipper {
     std::filesystem::path db_path_;
     std::string hash_;
     std::string lmt_;
-    std::string file_string_;
     std::string metadata_;
     std::string username_;
 
@@ -48,8 +47,9 @@ public:
     FileSipper(RawEndpoint re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
     void Send();
 
+    std::string file_string_;
 
-    bool status = false;
+    std::atomic<bool> status = false;
 private:
     void OpenFile();
     void Connect();
@@ -67,7 +67,7 @@ private:
                                  [this](boost::system::error_code ec, std::size_t size)
                                  {
                                      //Let's see the status of the sip, in order to see if this is the last one.
-                                     std::cout << "STATUS async write: " << ec.value() << " written " << size << std::endl;
+                                     //std::cout << "STATUS async write: " << ec.value() << " written " << size << std::endl;
                                      Sip(ec);
 
                                  });
