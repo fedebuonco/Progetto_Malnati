@@ -25,16 +25,16 @@ void Sender::Sender_Action(){
 
 
     boost::asio::thread_pool pool(thread_pool_size);
-    std::cout<<" THREADPOOL SIZE "<<thread_pool_size<<std::endl;
+    //std::cout<<" THREADPOOL SIZE "<<thread_pool_size<<std::endl;
 
 
     while(flag){
-        std::cout << std::this_thread::get_id << " WHILE CERCO POOL  "<<std::endl;
+        //std::cout << std::this_thread::get_id << " WHILE CERCO POOL  "<<std::endl;
         //choose one: use shared_queue method to find if there is a ready filesipper to be sent
         std::shared_ptr<FileSipper> choosen_fs = SharedQueue::get_Instance()->get_ready_FileSipper();
 
         boost::asio::post(pool,[choosen_fs](){
-                            std::cout << " FACCIO PARTIRE FS SCELTO  " << choosen_fs->file_string_ <<std::endl;
+                            //std::cout << " FACCIO PARTIRE FS SCELTO  " << choosen_fs->file_string_ <<std::endl;
 
                             choosen_fs->Send();
 
@@ -42,7 +42,7 @@ void Sender::Sender_Action(){
         });
 
      }
-    std::cout<<" join pool"<<std::endl;
+    //std::cout<<" join pool"<<std::endl;
     // Wait for all tasks in the pool to complete.
     pool.join();
 

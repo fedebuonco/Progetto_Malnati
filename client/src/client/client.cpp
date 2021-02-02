@@ -31,7 +31,7 @@ Client::Client(RawEndpoint re, std::filesystem::path folder_watched) :
 
     // We recover the sending files
     int recovered = RecoverSending();
-    if (DEBUG) std::cout << "Recovered " << recovered << "files." << std::endl;
+    if (DEBUG) std::cout << "Recovered " << recovered << " files from previous failed sendings" << std::endl;
 
 
     // We start watching for further changes
@@ -158,7 +158,7 @@ TreeT Client::RequestTree() {
 
     //Now we use a message control for the response
     ControlMessage response_message = SyncReadCM(tcpSocket);
-    if(DEBUG) std::cout << "Tree received successfully from server" << std::endl;
+    //if(DEBUG) std::cout << "Tree received successfully from server" << std::endl;
 
     //We get the tree & time list
     std::string tree = response_message.GetElement("Tree");
@@ -280,7 +280,7 @@ void Client::InitHash(){
                                                      new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
 
                 // We print the digest
-                if(DEBUG) std::cout << "Digest is = " << digest << std::endl;
+                //if(DEBUG) std::cout << "Digest is = " << digest << std::endl;
 
                 // Here we have the hash of the file.
                 // Now we can insert it in the DB

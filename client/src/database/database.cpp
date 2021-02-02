@@ -258,7 +258,7 @@ void DatabaseConnection::GetMetadata(const std::string& filename, std::string& h
             std::string     lt = query.getColumn(2);
             hash = hs;
             lmt = lt;
-            if(DEBUG) std::cout << "TUPLE DB READ: " << filename << " " << hash << " " << lmt << std::endl;
+            //if(DEBUG) std::cout << "TUPLE DB READ: " << filename << " " << hash << " " << lmt << std::endl;
 
 
         }

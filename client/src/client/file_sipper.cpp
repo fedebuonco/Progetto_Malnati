@@ -19,8 +19,8 @@ FileSipper::FileSipper(RawEndpoint re, std::filesystem::path folder_watched, std
 {
     //let's build the metadata for future firstsip
     metadata_ = username_ + "@" + hash_ + "@" + lmt_ + "@" + file_string_;
-    if(DEBUG) std::cout << "Creating FileSipper for file " <<  path_.string() << std::endl;
-    if(DEBUG) std::cout << "With metadata =  " << metadata_ << std::endl;
+    //if(DEBUG) std::cout << "Creating FileSipper for file " <<  path_.string() << std::endl;
+    //if(DEBUG) std::cout << "With metadata =  " << metadata_ << std::endl;
     sock_.open(ep_.protocol());
 
 }
@@ -37,10 +37,10 @@ void FileSipper::Send(){
 //TODO iterator endpoint not single...
 /// We async connect to the specified server.
 void FileSipper::Connect() {
-    if(DEBUG) std::cout << "Connecting to "<<  ep_.address() <<" for file " <<  path_.string() << std::endl;
+    //if(DEBUG) std::cout << "Connecting to "<<  ep_.address() <<" for file " <<  path_.string() << std::endl;
 
     sock_.async_connect(ep_, [this](boost::system::error_code ec) {
-        if(DEBUG) std::cout << "Currently in the async_connect callback " << std::endl;
+        //if(DEBUG) std::cout << "Currently in the async_connect callback " << std::endl;
         //TODO check if we still want to send the file. In teoria non serve perchè fatto in patch
         //TODO Handle exception
         OpenFile();
@@ -50,7 +50,7 @@ void FileSipper::Connect() {
 
 // Opens a file
 void FileSipper::OpenFile() {
-    std::cout << "Opening File  " << this->file_string_ << std::endl;
+    //std::cout << "Opening File  " << this->file_string_ << std::endl;
     files_stream_.open(path_.c_str(), std::ios_base::binary);
     if (files_stream_.fail())
         throw std::fstream::failure("Failed while opening file " + path_.string());
@@ -59,7 +59,7 @@ void FileSipper::OpenFile() {
     files_stream_.seekg(0, files_stream_.end);
     auto fileSize = files_stream_.tellg();
     this->file_size_ = fileSize;
-    std::cout << "File Opened, Size : " << file_size_ << std::endl;
+    //std::cout << "File Opened, Size : " << file_size_ << std::endl;
     //reset the stream;
     files_stream_.seekg(0, files_stream_.beg);
 }
@@ -87,7 +87,7 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
         // Here we are if failbit or badbit are set to 1.
         // The failbit could have been set by the eof, so we check it
         if (files_stream_.eof()){
-            std::cout << "EOF Reached!" << std::endl;
+            //std::cout << "EOF Reached!" << std::endl;
 
         } else { // Here if we had a different problem that made us fail! we trhrow exception
             auto msg = "Failed while reading file";
@@ -125,11 +125,11 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
             // Here we are if failbit or badbit are set to 1.
             // The failbit could have been set by the eof, so we check it
             if (files_stream_.eof()){
-                std::cout << "EOF Reached!" << std::endl;
+                //std::cout << "EOF Reached!" << std::endl;
                 // We can call WaitOk where we wait for the ok from the server;
                 files_stream_.close();
                 sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
-                std::cout << "Inviato  :" << this->file_string_ << std::endl;
+                //std::cout << "Inviato  :" << this->file_string_ << std::endl;
                 WaitOk();
             } else { // Here if we had a different problem that made us fail! we trhrow exception
                 auto msg = "Failed while reading file";
@@ -149,7 +149,7 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
 void FileSipper::WaitOk(){
     buf_metadata.fill('\000');
     sock_.read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()));
-    std::cout << "Risultato di checksum di " << this->file_string_ << " --> "<< buf_metadata[0]  <<std::endl;
+    //std::cout << "Risultato di checksum di " << this->file_string_ << " --> "<< buf_metadata[0]  <<std::endl;
     // Here based on the checksum result we modify the database.
     int checksum_ok = buf_metadata[0] -'0';
     DatabaseConnection db(db_path_, folder_watched_);
@@ -158,7 +158,7 @@ void FileSipper::WaitOk(){
             db.ChangeStatusToNew(file_string_);
             status.store(false);
         } catch (...) {
-            std::cout<<" WaitOk "<<std::endl;
+            //std::cout<<" WaitOk "<<std::endl;
         }
         //TODO se vogliamo farlo rifare a lui devo fare puntatore a socket per poi ditruggerlo e ricrearlo.
         //this->Send();
@@ -168,7 +168,7 @@ void FileSipper::WaitOk(){
 
         status.store(false);
         }catch(...){
-            std::cout<<" WaitOk "<<std::endl;
+            //std::cout<<" WaitOk "<<std::endl;
         }
     }
 
