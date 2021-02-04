@@ -45,7 +45,8 @@ TreeT::TreeT(const std::filesystem::path& path, std::filesystem::path serverP){
         std::string cross_platform_rep = relative_element_path.generic_string();
         // We also add the "/" if it is a direcotry in order t diff it from non extension files.
         if (std::filesystem::is_directory(element_path))
-            cross_platform_rep += "/";
+            continue;
+            //cross_platform_rep += "/";
 
         // // // // // // // // //
         // TODO retrieve the last modified time from the db and then uncomment this part and delete the otehr call in the block

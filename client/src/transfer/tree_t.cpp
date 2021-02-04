@@ -37,7 +37,8 @@ TreeT::TreeT(const std::filesystem::path& path){
 
         // We also add the "/" if it is a directory in order to differentiate it from non extension files.
         if (std::filesystem::is_directory(element_path))
-            cross_platform_rep += "/";
+            continue;
+            //cross_platform_rep += "/";
 
         // We don't insert the hash.db
         if (cross_platform_rep == ".hash.db")

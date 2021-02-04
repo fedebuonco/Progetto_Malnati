@@ -13,11 +13,21 @@
 /// We populate the to_be_sent_vector and the to_be_eliminated_vector
 /// \param client_treet
 /// \param server_treet
+
+bool EndsWith (std::string const &fullString, std::string const &ending) {
+    if (fullString.length() >= ending.length()) {
+        return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
+    } else {
+        return false;
+    }
+}
+
 Patch::Patch(TreeT client_treet, TreeT server_treet){
 
     std::set<std::string> set_client;
     for(const auto& item : client_treet.map_tree_time_) {
-        set_client.insert(item.first);
+        if (!EndsWith(item.first, "/"))
+            set_client.insert(item.first);
     }
 
     // We remove the hash.db from the set, it will not be considered in the dispatch
@@ -28,6 +38,7 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
 
     std::set<std::string> set_server;
     for(const auto& item : server_treet.map_tree_time_) {
+        if (!EndsWith(item.first, "/"))
         set_server.insert(item.first);
     }
 
@@ -38,7 +49,12 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
     // Now we can find the common files
     set_intersection(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(common_, common_.end()));
 
-    // We gen the to_be_sent
+
+    for (auto item : server_treet.map_tree_time_){
+        if (EndsWith(item.first, "/"))
+            server_treet.map_tree_time_.erase(item.first);
+    }
+
     std::set_difference(begin(client_treet.map_tree_time_), end(client_treet.map_tree_time_),
                         begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
                         std::back_inserter(to_be_sent_vector));
