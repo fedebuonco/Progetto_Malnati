@@ -1,6 +1,8 @@
 #include <sstream>
 #include "tree_t.h"
 #include <algorithm>
+#include <stdlib.h>
+#include <iostream>
 //Necesario per linux
 #include <sys/stat.h>
 
@@ -16,19 +18,48 @@ TreeT::TreeT(const std::string& tree, const std::string& time) {
     std::string file_time;
 
 
-    while (std::getline(stream_tree, filename) && std::getline(stream_time, file_time)) {
-            map_tree_time_.insert(std::pair<std::string, unsigned long>(filename, std::stoul(file_time, nullptr, 0)));
+    try {
+        /**std::stoul Exceptions:
+         * std::invalid_argument if no conversion could be performed
+         * std::out_of_range if the converted value would fall out of
+         *                      the range of the result type or if the
+         *                      underlying function (std::strtoul or
+         *                      std::strtoull) sets errno to ERANGE.
+         */
+        while ((std::getline(stream_tree, filename))) {
+            if (std::getline(stream_time, file_time)) {
+                map_tree_time_.insert(
+                        std::pair<std::string, unsigned long>(filename, std::stoul(file_time, nullptr, 0)));
+            } else {
+                map_tree_time_.insert(std::pair<std::string, unsigned long>(filename, 0));
+            }
+        }
+    }catch(std::invalid_argument& ia){
+        //Error in conversion std::stoul
+        std::cerr << "Invalid argument creating tree: " << ia.what() << '\n';
+        std::exit(EXIT_FAILURE);
+
+    }catch(std::out_of_range& orr){
+        //Error in conversion std::stoul
+        std::cerr << "Out of range creating tree: " << orr.what() << '\n';
+        std::exit(EXIT_FAILURE);
+
     }
+
 }
 
 /// Build and populate the TreeT starting from a path.
 /// \param path Path of the directory that will be stored in the TreeT.
 TreeT::TreeT(const std::filesystem::path& path){
+    std::error_code ec;
 
-    for(auto itEntry = std::filesystem::recursive_directory_iterator(path);
+    for(auto itEntry = std::filesystem::recursive_directory_iterator(path,ec);
         itEntry != std::filesystem::recursive_directory_iterator();
         ++itEntry )
     {
+        if(ec){
+            std::exit(EXIT_FAILURE);
+        }
         // We take the current element path, make it relative to the path specified and then we make it
         // in a cross platform format (cross_platform_relative_element_path = cross_platform_rep)
         auto element_path = itEntry->path();
