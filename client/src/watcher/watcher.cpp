@@ -7,10 +7,12 @@
 #include <file_sipper.h>
 #include <database.h>
 
+#include <utility>
 
-Watcher::Watcher(std::filesystem::path db_file, std::filesystem::path folder_watched) :
-    db_file_(db_file),
-    folder_watched_(folder_watched)
+
+Watcher::Watcher(std::filesystem::path  db_file, std::filesystem::path folder_watched) :
+    db_file_(std::move(db_file)),
+    folder_watched_(std::move(folder_watched))
 {
 
 }
@@ -31,7 +33,7 @@ bool isASCII (const std::string& s)
 /// This is the function that will be called when a change is recorded.
 /// Prints the changes and then call the provided callback ( provided from Watcher::SetUpdateCallback() )
 /// \param events The series of events (file deleted, added, etc.) that triggered the function.
-void Watcher::listenerFunction(std::vector<pfw::EventPtr> events)
+void Watcher::listenerFunction(const std::vector<pfw::EventPtr>& events)
 {
     // we open a db connection for all the events
     DatabaseConnection db(db_file_,folder_watched_);
@@ -52,15 +54,13 @@ void Watcher::listenerFunction(std::vector<pfw::EventPtr> events)
 
     }
 
-
-
     update_callback();
 
 }
 
 /// Start the watcher.
 /// \param path
-void Watcher::Start(std::filesystem::path path){
+void Watcher::Start(const std::filesystem::path& path){
     _watcher = std::make_unique<pfw::FileSystemWatcher>(
             path, std::chrono::milliseconds(1),
             std::bind(&Watcher::listenerFunction, this,
