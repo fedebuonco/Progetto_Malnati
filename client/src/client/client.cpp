@@ -14,12 +14,13 @@
 
 #include <database.h>
 #include <boost/algorithm/string/predicate.hpp>
+#include <utility>
 
 /// Construct a Client, execute the first hashing of each file and puts it in a state ready to track any changes in the folder.
 /// \param re Endpoint to connect to.
 /// \param folder_watched folder path that we want to keep monitored.
-Client::Client(RawEndpoint re, std::filesystem::path folder_watched) :
-    server_re_(re),
+Client::Client(RawEndpoint re, const std::filesystem::path& folder_watched) :
+    server_re_(std::move(re)),
     folder_watched_(folder_watched),
     db_file_(folder_watched / ".hash.db"),
     watcher_(db_file_, folder_watched_)
@@ -31,7 +32,7 @@ Client::Client(RawEndpoint re, std::filesystem::path folder_watched) :
 
     // We recover the sending files
     int recovered = RecoverSending();
-    if (DEBUG) std::cout << "Recovered " << recovered << " files from previous failed sendings" << std::endl;
+    if (DEBUG) std::cout << "Recovered " << recovered << " files from previous failed sending" << std::endl;
 
 
     // We start watching for further changes
@@ -43,12 +44,12 @@ Client::Client(RawEndpoint re, std::filesystem::path folder_watched) :
 /// https://stackoverflow.com/questions/14189440/c-callback-using-class-member/14189561
 void Client::StartWatching(){
     Syncro();
-    watcher_.SetUpdateCallback(std::bind(&Client::Syncro, this));
+    watcher_.SetUpdateCallback([this] { Syncro(); });
     watcher_.Start(folder_watched_);
 
 }
 
-/// This is the main function, create a Tree and asks for the server Tree, with those it cretes a patch and process it
+/// This is the main function, create a Tree and asks for the server Tree, with those it creates a patch and process it
 /// The processed patch is then used to fuel the SendPatch()
 void Client::Syncro(){
     // We perform the InitHash that helps us not hashing everything each time
@@ -124,16 +125,13 @@ bool Client::Auth() {
 /// Returns the recovered files.
 int Client::RecoverSending() {
 
-
     // We open the db once here so that we limit the overhead
     DatabaseConnection db(db_file_,folder_watched_);
 
     // We change the sending to new
     int recovered = db.SetBackToNew();
 
-
     return recovered;
-
 }
 
 
@@ -285,30 +283,26 @@ void Client::InitHash(){
             CryptoPP::SHA256 hash;
             std::string digest;
 
-
             try {
-                CryptoPP::FileSource f(
+                    CryptoPP::FileSource f(
                             element_path.generic_string().c_str(),
                             true,
                             new CryptoPP::HashFilter(hash,
                                                      new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
 
-                // We print the digest
-                //if(DEBUG) std::cout << "Digest is = " << digest << std::endl;
+                    // We print the digest
+                    //if(DEBUG) std::cout << "Digest is = " << digest << std::endl;
 
-                // Here we have the hash of the file.
-                // Now we can insert it in the DB
-                db.InsertDB(cross_platform_rep, digest , std::to_string(mod_time));
+                    // Here we have the hash of the file.
+                    // Now we can insert it in the DB
+                    db.InsertDB(cross_platform_rep, digest, std::to_string(mod_time));
 
-            } catch(std::exception& e){
-                    std::cerr <<"ERROR " <<
-                    e.what() << std::endl;
-                    //TODO Gestire impossibiltà di hashing.     Proviamo un'altra volta a farlo?
-                    //TODO gestire errori db
-                    continue;
+                } catch (std::exception &e) {
+
+                }
             }
+
         }
-    }
 
     // Now we clean the db for files that are not anymore in the folder.
     db.CleanOldRows();

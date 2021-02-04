@@ -31,7 +31,7 @@ private:
     bool SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm);
     ControlMessage SyncReadCM(SyncTCPSocket& stcp);
 public:
-    Client(RawEndpoint re, std::filesystem::path folder_watched);
+    Client(RawEndpoint re, const std::filesystem::path& folder_watched);
 
     void InitHash();
 

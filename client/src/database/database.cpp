@@ -23,7 +23,7 @@ DatabaseConnection::DatabaseConnection(const std::filesystem::path& db_path, std
     }
     catch (std::exception& e)
     {
-        std::cout << "SQLite exception: " << e.what() << std::endl;
+        std::cerr << "SQLite exception: " << e.what() << std::endl;
         //std::exit(EXIT_FAILURE);        //TODO: Va bene uscire?
     }
 }
@@ -93,7 +93,7 @@ void DatabaseConnection::InsertDB(const std::string& path_str, const std::string
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        //std::exit(EXIT_FAILURE);
+        std::exit(EXIT_FAILURE);
     }
 }
 
@@ -135,7 +135,7 @@ void DatabaseConnection::CleanOldRows(){
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        //std::exit(EXIT_FAILURE);
+        std::exit(EXIT_FAILURE);
     }
 }
 
@@ -159,15 +159,13 @@ bool DatabaseConnection::ChangeStatusToSending(const std::string& filename) {
                 update_to_sending.bind(1, filename);
                 update_to_sending.exec();
                 return true;
-            } else {    //TODO: Per me si può togliere
-                return false;
             }
         }
     }
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        //std::exit(EXIT_FAILURE);
+        std::exit(EXIT_FAILURE);
     }
 
     return false;
@@ -192,15 +190,13 @@ bool DatabaseConnection::ChangeStatusToSent(const std::string& filename) {
                 update_to_sent.exec();
 
                 return true;
-            } else {    //TODO pER ME SI PUò TOGLIERE
-                return false;
             }
         }
     }
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        //std::exit(EXIT_FAILURE);
+        std::exit(EXIT_FAILURE);
     }
 
     return false;
@@ -228,22 +224,19 @@ bool DatabaseConnection::ChangeStatusToNew(const std::string& filename) {
                 update_to_sent.exec();
 
                 return true;
-            } else {//TODO pER ME SI PUò TOGLIERE
-                return false;
             }
         }
     }
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        //std::exit(EXIT_FAILURE);
+        std::exit(EXIT_FAILURE);
     }
 
     return false;
 }
 
 
-//TODO: A cosa serve se non ritorna nulla
 void DatabaseConnection::GetMetadata(const std::string& filename, std::string& hash, std::string& lmt){
     std::shared_lock lg(db_mutex_);
     try{
@@ -259,14 +252,12 @@ void DatabaseConnection::GetMetadata(const std::string& filename, std::string& h
             hash = hs;
             lmt = lt;
             //if(DEBUG) std::cout << "TUPLE DB READ: " << filename << " " << hash << " " << lmt << std::endl;
-
-
         }
     }
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        //std::exit(EXIT_FAILURE);
+        std::exit(EXIT_FAILURE);
     }
 }
 

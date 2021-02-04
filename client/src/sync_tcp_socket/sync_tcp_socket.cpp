@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
-//#include <boost/property_tree/ptree.hpp>
-//#include <boost/property_tree/json_parser.hpp>
+
 #include <boost/asio.hpp>
 #include <config.h>
 #include <sync_tcp_socket.h>
@@ -42,7 +41,7 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
     while (n_tries) {
         try {
 
-            //if (DEBUG)  std::cout << "\nEstablishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
+            if (DEBUG)  std::cout << "\nEstablishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
 
             sock_.connect(ep_);
             break; // Usciamo dal while perchè connessione avvenuta con successo
@@ -50,7 +49,6 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
         catch (boost::system::system_error &e) {
             n_tries--;
 
-            //TODO CONTROLLARE BENE Add a delay good for linux and windows otherwise useless
             std::this_thread::sleep_for (std::chrono::seconds (1));
             //std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::nanoseconds(1) );
 
@@ -64,8 +62,6 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
             std::exit(EXIT_FAILURE);
         }
     }
-
-    // std::cout << "Server connesso\n" << std::endl;
 }
 
 
