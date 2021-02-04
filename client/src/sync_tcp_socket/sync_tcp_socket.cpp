@@ -1,16 +1,10 @@
-//
-// Created by fede on 9/21/20.
-//
-
 #include <iostream>
 #include <string>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
+//#include <boost/property_tree/ptree.hpp>
+//#include <boost/property_tree/json_parser.hpp>
 #include <boost/asio.hpp>
-#include <control_message.h>
 #include <config.h>
-#include "authentication.h"
-#include "sync_tcp_socket.h"
+#include <sync_tcp_socket.h>
 
 /// Initialize socket, endpoint and parse the raw ip. After that opens the socket using the specified protocol, TCP.
 /// \param raw_ip_add Parsed raw ip

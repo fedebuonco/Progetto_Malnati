@@ -7,6 +7,13 @@
 #include "../../includes/database/database.h"
 #include "service.h"
 
+int FileCount(std::filesystem::path folder){
+    int count;
+    for (const auto & file : std::filesystem::directory_iterator(folder))
+        count++;
+    return count;
+}
+
 /// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and detach it
 /// \param sock TCP socket connected to the client
 void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock,std::filesystem::path serverP) {
@@ -127,10 +134,9 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                     std::filesystem::path file_path = this->serverPath / "backupFiles" / "backupROOT" / user_folder_name / file ;
                     std::error_code ec;
                     bool result = std::filesystem::remove(file_path, ec);
-
-                        //TODO: This file doesn't exist or we have error
-                        // if(!result)
-
+                    // TODO: Check if this is the last file in the folder
+                    int current_files_in_folder = FileCount(file_path.remove_filename());
+                    std::cerr << " current files in folder -> " << current_files_in_folder << std::endl;
                     //We doesn't care if the file exists or not; we try anyway to delete the row inside DB
                     db.deleteFile(user_folder_name, file, this->serverPath);
                 }

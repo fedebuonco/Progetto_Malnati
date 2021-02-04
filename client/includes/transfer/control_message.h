@@ -15,11 +15,12 @@
 /// that will be sent to the server
 class ControlMessage {
 private:
-    std::unique_ptr<boost::property_tree::ptree> json_mess_;
+    //std::unique_ptr<boost::property_tree::ptree> json_mess_;
 
 public:
     /// Type of the message, in the server we switch actions depending on this type.
     int type_;
+    boost::property_tree::ptree ptree_mess;
 
     ControlMessage(int tp);
     ControlMessage(const std::string& json_code);
