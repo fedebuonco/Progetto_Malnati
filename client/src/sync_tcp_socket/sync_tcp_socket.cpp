@@ -25,16 +25,15 @@ SyncTCPSocket::SyncTCPSocket(const std::string& raw_ip_add, unsigned short port_
 
 /// Shutdown both part(sending & reciving) and closes the socket giving back the resource to the system.
 SyncTCPSocket::~SyncTCPSocket() {
+
     boost::system::error_code ec;
-    //TODO qua magicamente va ignorato l'errore GRAVISSIMO
     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
-    std::cout<< " DISTRUTTORE SYNCTCP "<< ec<< "  " <<ec.message()<<std::endl;
+    sock_.close(ec);
     if(ec){
         std::cerr<< ec.message() <<std::endl;
         std::exit( EXIT_FAILURE );
     }
-    // Here we should read from the socket, catch the error and closing the socket
-    sock_.close();
+
 }
 
 /// Connect the socket to the server. Tries the connection for a specified number of times
