@@ -24,7 +24,7 @@ ControlMessage::ControlMessage(std::string json_code){
     //We have the request in a json formatted string, let's parse it in a request_ptree
     std::stringstream ss;
     ss << json_code;
-    boost::property_tree::read_json(ss, *this->json_mess_);
+    boost::property_tree::read_json(ss, *this->json_mess_);     //TODO: Gestire
     // And also store some infos, for faster access
     try {
         int t = json_mess_->get<int>("Type");
@@ -64,3 +64,4 @@ std::string ControlMessage::ToJSON() {
     is = ss.str();
     return is;
 }
+//TODO: Gestire

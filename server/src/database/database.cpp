@@ -2,11 +2,10 @@
 #include <string>
 #include <SQLiteCpp/Database.h>
 #include <iostream>
-#include <fstream>
 #include <filesystem>
 #include <server.h>
-#include <SQLiteCpp/Transaction.h>
 #include <sqlite3.h>
+
 std::shared_mutex Database::db_mutex_;
 bool Database::auth(std::string username, std::string attemp_hash_password, std::filesystem::path serverP) {
     std::shared_lock lg(db_mutex_);
