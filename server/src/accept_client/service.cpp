@@ -8,11 +8,12 @@
 #include "service.h"
 
 int FileCount(std::filesystem::path folder){
-    int count;
+    int count = 0;
     for (const auto & file : std::filesystem::directory_iterator(folder))
         count++;
     return count;
 }
+
 
 /// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and detach it
 /// \param sock TCP socket connected to the client
@@ -80,6 +81,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                 //Find inside the DB the name of the server's folder in which we have stored the users file.
                 std::string user_folder_name = db.getUserPath(username, this->serverPath);
 
+
                 //First we check if the program has the usersTREE folder.
                 //In this folder we create a DB for each user containing the user file's information.
                 std::filesystem::directory_entry users_tree{this->serverPath / "backupFiles" / "usersTREE"};
@@ -88,7 +90,9 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
                //Now we check if we have the user folder inside backupROOT.
                //In this folder we will store all the user's file
-                std::filesystem::directory_entry user_directory_path{this->serverPath / "backupFiles" / "backupROOT" / user_folder_name};
+
+               std::filesystem::directory_entry user_directory_path{this->serverPath / "backupFiles" / "backupROOT" / user_folder_name};
+
                 if (!user_directory_path.exists()) {
                     std::filesystem::create_directories(user_directory_path);
                     std::cout << "User doesn't have the folder. I create a new folder with name: " << user_folder_name << std::endl;
@@ -96,6 +100,8 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                     //Create DB file for the user TREE inside usersTREE folder.
                     db.createTable(user_folder_name, this->serverPath );
                 }
+
+                this->associated_user_path_ = user_directory_path;
 
                 //TODO Se si verifica un eccezione tra la creazione dello userfolder e il createTable (db utente)
                 // vediamo la directory ma non vediamo il DB. Azione da fare è RIPROVA. Questo potrebbe creare problemi, consiglio di fare nella catch una politica
@@ -135,8 +141,16 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                     std::error_code ec;
                     bool result = std::filesystem::remove(file_path, ec);
                     // TODO: Check if this is the last file in the folder
-                    int current_files_in_folder = FileCount(file_path.remove_filename());
-                    std::cerr << " current files in folder -> " << current_files_in_folder << std::endl;
+                    std::filesystem::path path_iterator = file_path.parent_path();
+                    while (FileCount(path_iterator) == 0){
+                        std::cerr << "Current Path " << path_iterator << std::endl;
+                        if (file_path == std::filesystem::path(user_folder_name)){
+                            break;
+                        }
+                        // remove this folder and go to parent folder
+                        std::filesystem::remove(path_iterator, ec);
+                        path_iterator = path_iterator.parent_path();
+                    }
                     //We doesn't care if the file exists or not; we try anyway to delete the row inside DB
                     db.deleteFile(user_folder_name, file, this->serverPath);
                 }

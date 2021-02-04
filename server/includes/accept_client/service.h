@@ -30,6 +30,7 @@ private:
     // The Destructor is made private, as the only way to delete a service
     // is by suicide (delete this) after the client is handled
     ~Service(){};
+    std::filesystem::path associated_user_path_;
     void HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock);
     ControlMessage SyncReadCM(std::shared_ptr<asio::ip::tcp::socket> sock);
     bool SyncWriteCM(std::shared_ptr<asio::ip::tcp::socket> sock, ControlMessage& cm);
