@@ -174,8 +174,21 @@ TreeT Client::RequestTree() {
 bool Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
     //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
     std::string test = cm.ToJSON();
-    boost::asio::write(stcp.sock_, boost::asio::buffer(cm.ToJSON()));
-    stcp.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+
+    boost::system::error_code ec;
+    boost::asio::write(stcp.sock_, boost::asio::buffer(cm.ToJSON()), ec);
+    if (ec){
+        //TODO Sometimes we get here. When the server shuts down
+        if(DEBUG) std::cerr<<"Error writing Control Message";
+        std::exit(EXIT_FAILURE);
+    }
+
+    stcp.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send, ec);
+    if (ec){
+        //TODO Sometimes we get here. When the server shuts down
+        if(DEBUG) std::cerr<<"Error writing Control Message";
+        std::exit(EXIT_FAILURE);
+    }
     return true;
 }
 
@@ -186,10 +199,11 @@ ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
     boost::system::error_code ec;
     boost::asio::read(stcp.sock_, response_buf, ec);
     // This checks if the client has finished writing
+
     if (ec != boost::asio::error::eof){
         //TODO Sometimes we get here. When the server shuts down
         if(DEBUG) std::cerr<<"DEBUG: NON ho ricevuto il segnale di chiusura del client";
-        throw boost::system::system_error(ec);
+        std::exit(EXIT_FAILURE);
     }
     //Read the response_buf using an iterator and store it in a string In order to store it in a ControlMessage
     // TODO might be an easier method to do this

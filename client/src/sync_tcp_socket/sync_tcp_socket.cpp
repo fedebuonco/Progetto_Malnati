@@ -19,7 +19,14 @@ SyncTCPSocket::SyncTCPSocket(const std::string& raw_ip_add, unsigned short port_
                                            sock_(ios_) ,
                                            ep_(boost::asio::ip::address::from_string(raw_ip_add), port_n) {
 
-    sock_.open(ep_.protocol());
+    boost::system::error_code errorCode;
+    sock_.open(ep_.protocol(),errorCode);
+    if (errorCode)
+    {
+        // Error - Open Socket
+        std::cerr << "Error opening the socket" << errorCode.message();
+        std::exit( EXIT_FAILURE );
+    }
 }
 
 /// Shutdown both part(sending & reciving) and closes the socket giving back the resource to the system.
@@ -27,6 +34,11 @@ SyncTCPSocket::~SyncTCPSocket() {
     boost::system::error_code ec;
     //TODO qua magicamente va ignorato l'errore GRAVISSIMO
     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+    std::cout<< " DISTRUTTORE SYNCTCP "<< ec<< "  " <<ec.message()<<std::endl;
+    if(ec){
+        std::cerr<< ec.message() <<std::endl;
+        std::exit( EXIT_FAILURE );
+    }
     // Here we should read from the socket, catch the error and closing the socket
     sock_.close();
 }
@@ -50,16 +62,13 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
             //std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::nanoseconds(1) );
 
             if(n_tries == 0){
-                //TODO vedere std::exit e cose varie
-                //
                 std::cerr << "RawEndpoint Problem - Server not responding or wrong IP address/Port (" << e.code().value() << ")" <<std::endl ;
-                std::exit(1002);
+                std::exit(EXIT_FAILURE);
             }
         }
         catch (std::exception& e) {
-            //TODO vedere std::exit e cose varie
             std::cerr << "Generic Error during server connection" << std::endl ;
-            std::exit(1001);
+            std::exit(EXIT_FAILURE);
         }
     }
 
