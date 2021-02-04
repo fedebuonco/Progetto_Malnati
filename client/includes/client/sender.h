@@ -24,13 +24,8 @@ class Sender {
 
 public:
 
-
     void Sender_Action();
-
-    bool isFlag() const;
-
     void setFlag(bool flag);
-
     std::shared_ptr<FileSipper> choosen();
 
 
