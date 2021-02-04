@@ -1,6 +1,3 @@
-//
-// Created by fede on 12/11/20.
-//
 
 #include <filesystem>
 #include "async_server.h"

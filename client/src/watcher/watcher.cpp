@@ -21,6 +21,13 @@ void Watcher::SetUpdateCallback(const std::function<void()> &updateCallback) {
     update_callback = updateCallback;
 }
 
+bool isASCII (const std::string& s)
+{
+    return !std::any_of(s.begin(), s.end(), [](char c) {
+        return static_cast<unsigned char>(c) > 127;
+    });
+}
+
 /// This is the function that will be called when a change is recorded.
 /// Prints the changes and then call the provided callback ( provided from Watcher::SetUpdateCallback() )
 /// \param events The series of events (file deleted, added, etc.) that triggered the function.
@@ -33,6 +40,11 @@ void Watcher::listenerFunction(std::vector<pfw::EventPtr> events)
         //std::cout << event->relativePath << " with the type: " << typeBits << std::endl;
 
         // We don't take action regarding the changes in the db.
+        auto result = event->relativePath.string();
+        if( !isASCII(result)){
+            std::cerr << "Non ascii" << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
         if (event->relativePath.string() == ".hash.db" && events.size() == 1)
             return;
         if (event->relativePath.string() == ".hash.db")
@@ -45,6 +57,7 @@ void Watcher::listenerFunction(std::vector<pfw::EventPtr> events)
     update_callback();
 
 }
+
 /// Start the watcher.
 /// \param path
 void Watcher::Start(std::filesystem::path path){
