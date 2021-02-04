@@ -130,7 +130,6 @@ void Config::SetConfig(int argc, char *argv[]) {
             //Then we check that the next argument has the '-' because we don't want that the user writes for example "-d debug".
             //If we have the next argument (i+1<argc) but the next argument doesn't starts with '-' we catch an exception.
             if (i + 1 < argc && (static_cast<std::string>(argv[i + 1]).rfind('-', 0) == std::string::npos)){
-                //TODO: Exception
                 throw  SyntaxError(std::string("Configuration syntax error: \"-d\" option doesn't want another argument. We found: ") + argv[i] + " " + argv[i+1]);
             }
 
@@ -153,7 +152,6 @@ void Config::SetConfig(int argc, char *argv[]) {
         //If the argument doesn't start with '-' there is a syntax problem
         //(i.e. "-c username password 127.0.0.1" instead of "-c username password -s 127.0.0.1")
         if(static_cast<std::string>(argv[i]).rfind('-', 0) == std::string::npos){
-            //TODO: Exception
             throw  SyntaxError(std::string("Configuration syntax error: \"") + argv[i] + std::string("\" is not an option. Option must starts with \"-\", digit -h for more information."));
         }
 
@@ -185,7 +183,6 @@ void Config::SetConfig(int argc, char *argv[]) {
                     Config::get_Instance()->WriteProperty("hash_password", digest);
 
                 } else {
-                    //TODO: Exception
                     throw  SyntaxError(std::string("Configuration syntax error: We didn't find 2 arguments between the -c or --credential and the next option."));
                 }
                 break;
@@ -205,7 +202,6 @@ void Config::SetConfig(int argc, char *argv[]) {
                     Config::get_Instance()->WriteProperty("path", path_string);
 
                 } else {
-                    //TODO: Exception
                     throw  SyntaxError(std::string("Configuration syntax error: We didn't find 1 valid arguments after the -f or --folder."));
                 }
                 break;
@@ -231,7 +227,6 @@ void Config::SetConfig(int argc, char *argv[]) {
                     std::regex pattern_port("\\d{1,5}");
 
                     if (!std::regex_match (ip, pattern_ip ) || !std::regex_match (port, pattern_port )) {
-                        //TODO: Exception
                         throw  SyntaxError(std::string("Wrong IPv4 address or port format"));
                     }
 
@@ -239,7 +234,6 @@ void Config::SetConfig(int argc, char *argv[]) {
                     Config::get_Instance()->WriteProperty("port", port);
 
                 } else {
-                    //TODO: Exception
                     throw  std::invalid_argument("Configuration syntax error: We didn't find 2 valid arguments after the -s or --server.");
                 }
                 break;
@@ -259,7 +253,6 @@ void Config::SetConfig(int argc, char *argv[]) {
 
             //If we arrive in the default option, it means that the option doesn't exist
             default:
-                //TODO: Exception
                 throw  SyntaxError(std::string("Configuration syntax error: \"") + argv[i] + std::string("\" option doesn't exist. Write -h or --help to see the available options."));
         }
 
@@ -312,7 +305,21 @@ RawEndpoint Config::ReadRawEndpoint() {
 
     //Take the ip and the port (covert the string to unsigned long for the port)
     std::string ip = Config::get_Instance()->ReadProperty("ip");
-    auto port = std::stoul( Config::get_Instance()->ReadProperty("port"));
+    //auto port = std::stoul( Config::get_Instance()->ReadProperty("port"));
+
+    unsigned long port;
+    try {
+        port = std::stoul(Config::get_Instance()->ReadProperty("port"));
+    }catch(const std::invalid_argument& ia){
+        //Error in conversion std::stoul
+        std::cerr << "Invalid argumen RawEndpoint: " << ia.what() << '\n';
+        std::exit(EXIT_FAILURE);
+    }catch(std::out_of_range& orr){
+        //Error in conversion std::stoul
+        std::cerr << "Out of range RawEndpoint: " << orr.what() << '\n';
+        std::exit(EXIT_FAILURE);
+
+    }
 
     return RawEndpoint{ip, port};
 }
@@ -352,15 +359,23 @@ bool Config::IsConfigStructureCorrect() {
  */
 void Config::SetDefaultConfig() {
 
+    std::error_code ec;
+
     if(DEBUG) std::cout << "Restore default configuration of config file and structure" << std::endl;
 
     //First of all we delete the structure
     std::filesystem::path config_file_folder = this->exepath / "config_file";
     std::filesystem::path config_file = this->exepath / "config_file" / "config.json";
-    std::filesystem::remove_all(config_file_folder);
+    std::filesystem::remove_all(config_file_folder,ec);
+    if(ec){
+        std::exit(EXIT_FAILURE);
+    }
 
     //Now we create the 'config_file' folder and the config.json file
-    std::filesystem::create_directories(config_file_folder);
+    std::filesystem::create_directories(config_file_folder,ec);
+    if(ec){
+        std::exit(EXIT_FAILURE);
+    }
     std::ofstream config_file_stream (config_file);
 
     //Fill the config.json file with the correct structure

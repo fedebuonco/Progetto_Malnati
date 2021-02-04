@@ -42,28 +42,42 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
         set_server.insert(item.first);
     }
 
-    // Now I have the two sets I can compute set_difference(set_client,set_server)  client - server
-    set_difference(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(added_, added_.end()));
-    // Now I have the two sets I can compute set_difference(,set_server, set_client)  server - client
-    set_difference(set_server.begin(), set_server.end(), set_client.begin(), set_client.end(), inserter(removed_, removed_.end()));
-    // Now we can find the common files
-    set_intersection(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(common_, common_.end()));
 
+    try {
+        // Now I have the two sets I can compute set_difference(set_client,set_server)  client - server
+        set_difference(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(added_, added_.end()));
+        // Now I have the two sets I can compute set_difference(,set_server, set_client)  server - client
+        set_difference(set_server.begin(), set_server.end(), set_client.begin(), set_client.end(), inserter(removed_, removed_.end()));
+        // Now we can find the common files
+        set_intersection(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(common_, common_.end()));
+
+    }catch(std::bad_alloc& badAlloc){
+        std::cerr << " Patch Allocation error: " << badAlloc.what() <<std::endl;
+        std::exit(EXIT_FAILURE);
+
+    }
 
     for (auto item : server_treet.map_tree_time_){
         if (EndsWith(item.first, "/"))
             server_treet.map_tree_time_.erase(item.first);
     }
 
-    std::set_difference(begin(client_treet.map_tree_time_), end(client_treet.map_tree_time_),
-                        begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
-                        std::back_inserter(to_be_sent_vector));
+    try{
+        std::set_difference(begin(client_treet.map_tree_time_), end(client_treet.map_tree_time_),
+                            begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
+                            std::back_inserter(to_be_sent_vector));
 
 
-    // We gen the to_be_eliminated
-    std::set_difference(begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
-                        begin(client_treet.map_tree_time_), end(client_treet.map_tree_time_),
-                        std::back_inserter(to_be_elim_vector));
+        // We gen the to_be_eliminated
+        std::set_difference(begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
+                            begin(client_treet.map_tree_time_), end(client_treet.map_tree_time_),
+                            std::back_inserter(to_be_elim_vector));
+
+    }catch(std::bad_alloc& badAlloc){
+        std::cerr << " Patch Allocation error: " << badAlloc.what() <<std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+
 }
 
 /// Takes the db files where we store the status and uses it in order to identify the file that we must dispatch.
@@ -79,7 +93,7 @@ int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::
     raw_endpoint.port_num += 10;
 
     for ( auto element : to_be_sent_vector){
-        if (db.ChangeStatusToSending(element.first)){ // THis return true only if the current status is "NEW" and changes it to "SENDING"
+        if (db.ChangeStatusToSending(element.first)){ // This return true only if the current status is "NEW" and changes it to "SENDING"
             // We retrieve the needed metadata for the file: hash and lmt
             std::string file_hash;
             std::string file_lmt;
@@ -87,18 +101,15 @@ int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::
 
             try {
                 std::filesystem::path f = folder_watched / element.first;
-                // TODO craeazione filessiper nello heap.
-                //make-hared crea nello heap, fs sarà uno shared_ptr
                 auto fs =  std::make_shared<FileSipper>(raw_endpoint, folder_watched , db_path ,credential.username_, f, element.first, file_hash, file_lmt);
-                // TODO Insert nella queue.
                 SharedQueue::get_Instance()->insert(fs);
-                //fs->Send();
+
                 counter++;
 
             } catch(std::exception& e)
             {
                 std::cerr << "Erorre" << e.what() << std::endl;
-                std::exit(123213);
+                std::exit(EXIT_FAILURE);
             }
 
         }

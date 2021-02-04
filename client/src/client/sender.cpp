@@ -2,21 +2,7 @@
 
 const unsigned int DEFAULT_THREAD_POOL_SIZE = 1;
 
-    ////
-    // Fetch the associated future<> from packaged_task<>
-    ///std::future<std::bool> result = pop.get_future();
-    // Pass the packaged_task to thread to run asynchronously
-    ////std::thread th(std::move(task), "Arg");
-
-    //TODO: why not std::packaged_task ( we're using std::queue<std::shared_ptr<FileSipper>> )
-
-    //choosen_fs->FileSipper::Start();
-    // e aggiorno db
-
 void Sender::Sender_Action(){
-
-    //TODO: is a good approach having here the working threadpool?
-
     // Launch the pool with size threads.
     unsigned int thread_pool_size = std::thread::hardware_concurrency() * 2;
     if (thread_pool_size == 0) {
@@ -25,7 +11,6 @@ void Sender::Sender_Action(){
 
 
     boost::asio::thread_pool pool(thread_pool_size);
-    //std::cout<<" THREADPOOL SIZE "<<thread_pool_size<<std::endl;
 
 
     while(flag){
