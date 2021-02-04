@@ -1,20 +1,20 @@
 #include <file_sipper.h>
 #include <string>
-#include <sync_tcp_socket.h>
 #include <iostream>
+#include <utility>
 #include <database.h>
 
-FileSipper::FileSipper(RawEndpoint re, std::filesystem::path folder_watched, std::filesystem::path db_path,  std::string username,  std::filesystem::path file_path, std::string file_string, std::string hash,
+FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path,  std::string username,  std::filesystem::path file_path, std::string file_string, std::string hash,
                        std::string lmt)  :
         sock_(ios_) ,
         ep_(boost::asio::ip::address::from_string(re.raw_ip_address), re.port_num),
-        folder_watched_(folder_watched),
-        db_path_(db_path),
-        path_(file_path),
-        hash_(hash),
-        lmt_(lmt),
-        file_string_(file_string),
-        username_(username),
+        folder_watched_(std::move(folder_watched)),
+        db_path_(std::move(db_path)),
+        path_(std::move(file_path)),
+        hash_(std::move(hash)),
+        lmt_(std::move(lmt)),
+        file_string_(std::move(file_string)),
+        username_(std::move(username)),
         sip_counter(0)
 {
     //let's build the metadata for future firstsip
@@ -131,7 +131,7 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
                 sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
                 //std::cout << "Inviato  :" << this->file_string_ << std::endl;
                 WaitOk();
-            } else { // Here if we had a different problem that made us fail! we trhrow exception
+            } else { // Here if we had a different problem that made us fail! we throw exception
                 auto msg = "Failed while reading file";
                 std::cerr << msg << std::endl;
                 throw std::fstream::failure(msg);

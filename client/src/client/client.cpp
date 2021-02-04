@@ -32,7 +32,7 @@ Client::Client(RawEndpoint re, const std::filesystem::path& folder_watched) :
 
     // We recover the sending files
     int recovered = RecoverSending();
-    if (DEBUG) std::cout << "Recovered " << recovered << " files from previous failed sendings" << std::endl;
+    if (DEBUG) std::cout << "Recovered " << recovered << " files from previous failed sending" << std::endl;
 
 
     // We start watching for further changes
@@ -49,7 +49,7 @@ void Client::StartWatching(){
 
 }
 
-/// This is the main function, create a Tree and asks for the server Tree, with those it cretes a patch and process it
+/// This is the main function, create a Tree and asks for the server Tree, with those it creates a patch and process it
 /// The processed patch is then used to fuel the SendPatch()
 void Client::Syncro(){
     // We perform the InitHash that helps us not hashing everything each time
