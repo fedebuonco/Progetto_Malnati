@@ -14,21 +14,17 @@
 
 /// Takes files from the queue and gives them to FileSippers, in order to be sent
 class Sender {
-
-    //TODO: is it ok threads here??
-    //std::vector<std::thread> threads[N];
-    int count = 0;
+    //TODO: tUTTI E TRE SI POSSONO ELIMINARE @marco
+    //int count = 0;
     //std::mutex m;
     //std::condition_variable cv;
+
     bool flag = true;
 
 public:
 
-    void Sender_Action();
+    void Sender_Action() const;
     void setFlag(bool flag);
-    std::shared_ptr<FileSipper> choosen();
-
-
 };
 
 

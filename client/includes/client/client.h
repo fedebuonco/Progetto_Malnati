@@ -1,5 +1,4 @@
-#ifndef CLIENT_CLIENT_H
-#define CLIENT_CLIENT_H
+#pragma once
 
 
 #include <config.h>
@@ -10,13 +9,10 @@
 #include <sync_tcp_socket.h>
 #include <control_message.h>
 
-/// The main class of the client.
-/// It represent an object that will connect to the server
-/// specified in the constructor and will
-/// ask to a watcher to watch a specified folder.
+/// The main class of the client. It represent an object that will connect to the server specified
+/// in the constructor and will ask to a watcher to watch a specified folder.
 class Client {
 
-private:
     RawEndpoint server_re_;
     std::filesystem::path folder_watched_;
     std::filesystem::path db_file_;
@@ -28,14 +24,15 @@ private:
     int  RecoverSending();
     void SendRemoval(Patch &update);
     TreeT RequestTree();
+
     bool SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm);
     ControlMessage SyncReadCM(SyncTCPSocket& stcp);
+    void InitHash();
+
 public:
     Client(RawEndpoint re, const std::filesystem::path& folder_watched);
-
-    void InitHash();
 
 
 };
 
-#endif //CLIENT_CLIENT_H
+

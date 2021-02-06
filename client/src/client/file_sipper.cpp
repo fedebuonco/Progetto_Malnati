@@ -17,7 +17,7 @@ FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watch
         username_(std::move(username)),
         sip_counter(0)
 {
-    //let's build the metadata for future firstsip
+    //let's build the metadata for future firstsip      //TODO: Change delimitator to hash
     metadata_ = username_ + "@" + hash_ + "@" + lmt_ + "@" + file_string_;
     //if(DEBUG) std::cout << "Creating FileSipper for file " <<  path_.string() << std::endl;
     //if(DEBUG) std::cout << "With metadata =  " << metadata_ << std::endl;

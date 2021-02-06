@@ -1,10 +1,9 @@
 #include <database.h>
-#include <config.h>
-
 #include <filesystem>
 #include <utility>
 
-std::shared_mutex DatabaseConnection::db_mutex_;
+std::shared_mutex DatabaseConnection::db_mutex_;        //TODO: What does it mean? @marco
+
 /**
  * Constructor. Takes the db_path and folder_watched and create a db connection.
  * @param db_path: db path where store the hash & time
@@ -24,7 +23,7 @@ DatabaseConnection::DatabaseConnection(const std::filesystem::path& db_path, std
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        //std::exit(EXIT_FAILURE);        //TODO: Va bene uscire?
+        std::exit(EXIT_FAILURE);
     }
 }
 
@@ -45,7 +44,7 @@ bool DatabaseConnection::AlreadyHashed(const std::string& filename, const std::s
     catch (std::exception& e)
     {
         std::cerr << "SQLite exception: " << e.what() << std::endl;
-        //std::exit(EXIT_FAILURE);
+        std::exit(EXIT_FAILURE);
     }
 
     // Here if we did not find any row. The file could be new or changed and so the lmt is different.
@@ -68,8 +67,8 @@ void DatabaseConnection::InsertDB(const std::string& path_str, const std::string
         while (query.executeStep()) {
 
             std::string     old_fn = query.getColumn(0);
-            std::string     old_hs = query.getColumn(1);    //TODO: pOSSO TOGLIERE?
-            std::string     old_lt = query.getColumn(2);    //TODO: pOSSO TOGLIERE?
+            std::string     old_hs = query.getColumn(1);
+            std::string     old_lt = query.getColumn(2);
 
             SQLite::Statement query_update(hash_db_, "UPDATE files SET filename = ?, hash = ?, lmt = ?, status = \'NEW\' WHERE filename = ?");
 
@@ -97,17 +96,26 @@ void DatabaseConnection::InsertDB(const std::string& path_str, const std::string
     }
 }
 
-/// Changes all the tuple that are in SENDING to NEW
+/**
+ * Changes all the tuple that are in SENDING to NEW
+ * @return the number of tuple that have returned to 'NEW'
+ */
 int DatabaseConnection::SetBackToNew(){
     std::unique_lock lg(db_mutex_);
-    SQLite::Statement  query(hash_db_, "UPDATE files "
-                                       "SET status = 'NEW' "
-                                       "WHERE status = 'SENDING'");
-    int cnt = 0;
-    while(query.executeStep()){
-        cnt++;
+
+    try {
+        SQLite::Statement query(hash_db_, "UPDATE files SET status = 'NEW' WHERE status = 'SENDING'");
+        int cnt = 0;
+        while (query.executeStep()) {
+            cnt++;
+        }
+        return cnt;
     }
-    return cnt;
+    catch (std::exception& e)
+    {
+        std::cerr << "SQLite exception: " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
 }
 
 
@@ -251,7 +259,7 @@ void DatabaseConnection::GetMetadata(const std::string& filename, std::string& h
             std::string     lt = query.getColumn(2);
             hash = hs;
             lmt = lt;
-            //if(DEBUG) std::cout << "TUPLE DB READ: " << filename << " " << hash << " " << lmt << std::endl;
+
         }
     }
     catch (std::exception& e)

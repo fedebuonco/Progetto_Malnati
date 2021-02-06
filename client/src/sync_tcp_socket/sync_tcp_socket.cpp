@@ -22,7 +22,7 @@ SyncTCPSocket::SyncTCPSocket(const std::string& raw_ip_add, unsigned short port_
     }
 }
 
-/// Shutdown both part(sending & reciving) and closes the socket giving back the resource to the system.
+/// Shutdown both part(sending & receiving) and closes the socket giving back the resource to the system.
 SyncTCPSocket::~SyncTCPSocket() {
 
     boost::system::error_code ec;
@@ -44,13 +44,13 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
             if (DEBUG)  std::cout << "\nEstablishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
 
             sock_.connect(ep_);
-            break; // Usciamo dal while perchè connessione avvenuta con successo
+            break; //We exit from while loop because the connection was successful
         }
         catch (boost::system::system_error &e) {
             n_tries--;
 
+            //We wait before try again
             std::this_thread::sleep_for (std::chrono::seconds (1));
-            //std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::nanoseconds(1) );
 
             if(n_tries == 0){
                 std::cerr << "RawEndpoint Problem - Server not responding or wrong IP address/Port (" << e.code().value() << ")" <<std::endl ;

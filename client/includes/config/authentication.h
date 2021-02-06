@@ -15,11 +15,11 @@ struct Credential{
 class Authentication {
 
     static Authentication* m_AuthenticationClass;
-   Authentication() = default;
+    Authentication() = default;
+
 public:
     Authentication(const Authentication&)= delete;
     Authentication& operator=(const Authentication&)=delete;
-
     static Authentication* get_Instance();
 
     Credential ReadCredential();

@@ -17,8 +17,8 @@
 #include <utility>
 
 /// Construct a Client, execute the first hashing of each file and puts it in a state ready to track any changes in the folder.
-/// \param re Endpoint to connect to.
-/// \param folder_watched folder path that we want to keep monitored.
+/// \param re :  Endpoint to connect to.
+/// \param folder_watched : folder path that we want to keep monitored.
 Client::Client(RawEndpoint re, const std::filesystem::path& folder_watched) :
     server_re_(std::move(re)),
     folder_watched_(folder_watched),
@@ -64,32 +64,30 @@ void Client::Syncro(){
     // Need to figure out which files the server doesn't have (we need to send) and the file the server have to delete.
     Patch update(client_treet, server_treet);
 
-
+    //Send to the server the list of file to remove
     SendRemoval(update);
+
     // This function identify the file that have to be sent really
     update.Dispatch(db_file_, folder_watched_);
-    // We also need to send the removal regarding the older file in the server.
 
     if (DEBUG) update.PrettyPrint();
 
-    // Send the server the information about file to add and file to remove
-    // SendRemoval(update);
-    }
+}
 
 /// Will send username and password. After that it will shutdown the send part of the socket thus providing the server a way to
 /// tell that the connection is over. After the authentication the socket is basically useless and needs to be shutdown completely.
 /// \return 'True' if Auth went ok and user has successfully logged in, 'False' if not.
 bool Client::Auth() {
-    //TODO qualche eccezione da fare il catch?
+    //TODO qualche eccezione da fare il catch? - @marco secondo me no perchè tutte quelle chiamate gestiscono internamente le eccezioni e non le ritornano
     //SyncTCPSocket for auth using raw endpoint provided at construction.
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
     //socket will retry 5 times to connect
     tcpSocket.ConnectServer(5);
-    //Try to authenticate and return true / false
 
+    //Read the credential to put inside the control message
     Credential credential = Authentication::get_Instance()->ReadCredential();
 
-    //Creation of the message with type:1 (it means an authentication request) with inside Username and Password
+    //Creation of the message with type:1 (it means an authentication request) with inside 'Username' and 'Password'
     ControlMessage auth_message{1};
     auth_message.AddElement("Username", credential.username_);
     auth_message.AddElement("HashPassword", credential.hash_password_);
@@ -121,8 +119,10 @@ bool Client::Auth() {
     return false;
 }
 
-/// Scans the db and put the failed "SENDING" to "NEW" again, they will be re-sync as soon as possible.
-/// Returns the recovered files.
+/**
+ * Scans the db and put the failed "SENDING" to "NEW" again, they will be re-sync as soon as possible.
+ * @return  Returns the recovered files.
+ */
 int Client::RecoverSending() {
 
     // We open the db once here so that we limit the overhead
@@ -144,7 +144,7 @@ TreeT Client::RequestTree() {
     //socket will retry 5 times to connect
     tcpSocket.ConnectServer(5);
 
-    // We create the message for TreeRequest (Type: 2) adding inside Username and HashPassword
+    // We create the message for TreeRequest (Type: 2) adding inside 'Username' and 'HashPassword'
     ControlMessage message_obj{2};
     message_obj.AddElement("Username", credential.username_);
     message_obj.AddElement("HashPassword", credential.hash_password_);
@@ -156,7 +156,6 @@ TreeT Client::RequestTree() {
 
     //Now we use a message control for the response
     ControlMessage response_message = SyncReadCM(tcpSocket);
-    //if(DEBUG) std::cout << "Tree received successfully from server" << std::endl;
 
     //We get the tree & time list
     std::string tree = response_message.GetElement("Tree");
@@ -170,50 +169,55 @@ TreeT Client::RequestTree() {
 
 ///
 bool Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
-    //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
-    std::string test = cm.ToJSON();
 
     boost::system::error_code ec;
     boost::asio::write(stcp.sock_, boost::asio::buffer(cm.ToJSON()), ec);
     if (ec){
         //TODO Sometimes we get here. When the server shuts down
-        if(DEBUG) std::cerr<<"Error writing Control Message";
+        if(DEBUG) std::cerr<<"Error writing Control Message; message: " << ec.message() << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
+    //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
     stcp.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send, ec);
     if (ec){
         //TODO Sometimes we get here. When the server shuts down
-        if(DEBUG) std::cerr<<"Error writing Control Message";
+        if(DEBUG) std::cerr<<"Error writing Control Message; message: " << ec.message() << std::endl;
         std::exit(EXIT_FAILURE);
     }
     return true;
 }
 
-///boost::asio::write(stcp.so
+/// We read until the eof, then we return a ControlMessage using the buffer we read
 ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
-    // We read until the eof, then we return a ControlMessage using the buffer we read.
+
     boost::asio::streambuf response_buf;
+
     boost::system::error_code ec;
     boost::asio::read(stcp.sock_, response_buf, ec);
-    // This checks if the client has finished writing
 
+    // This checks if the client has finished writing
     if (ec != boost::asio::error::eof){
         //TODO Sometimes we get here. When the server shuts down
-        if(DEBUG) std::cerr<<"DEBUG: NON ho ricevuto il segnale di chiusura del client";
+        if(DEBUG) std::cerr<<"DEBUG: NON ho ricevuto il segnale di chiusura del client; message " << ec.message() << std::endl;
         std::exit(EXIT_FAILURE);
     }
-    //Read the response_buf using an iterator and store it in a string In order to store it in a ControlMessage
+
+    //Read the response_buf using an iterator and store it in a string in order to store it in a ControlMessage
     // TODO might be an easier method to do this
     std::string response_json((std::istreambuf_iterator<char>(&response_buf)), std::istreambuf_iterator<char>() );
     ControlMessage cm{response_json};
     return cm;
 }
 
+/**
+ * It generate a list of file formatted by /n; this will be sent to the server
+ * @param vector : vector with file to be deleted
+ * @return string properly formatted to put inside a control message
+ */
 std::string genTree(const std::vector<std::string>& vector) {
     std::string tree;
-    for(const auto& element : vector)
-    {
+    for(const auto& element : vector) {
         tree.append(element + "\n");
     }
     return tree;
@@ -224,12 +228,15 @@ std::string genTree(const std::vector<std::string>& vector) {
 /// the newer files.
 /// \param update processed patch
 void Client::SendRemoval(Patch& update){
+
+    //If the list is empty we don't send the list of 'to be deleted' to the server
     if(update.removed_.empty()){
         return;
     }
+
     Credential credential_ = Authentication::get_Instance()->ReadCredential();
 
-    //Creation of the Auth ControlMessage type: 3 with inside Username, Password and the list of file to be deleted
+    //Creation of the Auth ControlMessage type: 3 with inside 'Username', 'Password' and the list of 'file to be deleted'
     ControlMessage delete_message{3};
     delete_message.AddElement("Username",credential_.username_);
     delete_message.AddElement("HashPassword",credential_.hash_password_ );
@@ -259,6 +266,7 @@ void Client::InitHash(){
         auto element_path = itEntry->path();
         std::filesystem::path relative_element_path = element_path.lexically_relative(folder_watched_);
         std::string cross_platform_rep = relative_element_path.generic_string();
+
         // We also add the "/" if it is a directory in order to diff it from non extension files.
         if (std::filesystem::is_directory(element_path))
             cross_platform_rep += "/";
@@ -293,12 +301,11 @@ void Client::InitHash(){
                     // We print the digest
                     //if(DEBUG) std::cout << "Digest is = " << digest << std::endl;
 
-                    // Here we have the hash of the file.
-                    // Now we can insert it in the DB
+                    // Here we have the hash of the file and we can insert it in the DB
                     db.InsertDB(cross_platform_rep, digest, std::to_string(mod_time));
 
                 } catch (std::exception &e) {
-
+                        //TODO: @marco secondo me bisogna catchare una più generica per non fargli fare nulla e le altre invece le gestiamo
                 }
             }
 

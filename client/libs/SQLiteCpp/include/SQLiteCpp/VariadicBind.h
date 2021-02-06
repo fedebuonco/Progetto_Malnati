@@ -22,6 +22,7 @@
 #include <utility>
 #include <initializer_list>
 
+class forward;
 namespace SQLite
 {
 /// @endcond

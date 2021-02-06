@@ -1,6 +1,8 @@
 #ifndef PFW_LISTENER_H
 #define PFW_LISTENER_H
 
+class forward;
+
 #include <algorithm>
 #include <functional>
 #include <map>

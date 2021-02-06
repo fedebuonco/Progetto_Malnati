@@ -16,6 +16,9 @@
 # endif
 #endif
 
+class IteratedHash;
+
+class AlgorithmImpl;
 NAMESPACE_BEGIN(CryptoPP)
 
 /// \brief Exception thrown when trying to hash more data than is allowed by a hash function

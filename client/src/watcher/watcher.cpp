@@ -10,6 +10,8 @@
 #include <utility>
 
 
+class _1;
+
 Watcher::Watcher(std::filesystem::path  db_file, std::filesystem::path folder_watched) :
     db_file_(std::move(db_file)),
     folder_watched_(std::move(folder_watched))
@@ -38,7 +40,6 @@ void Watcher::listenerFunction(const std::vector<pfw::EventPtr>& events)
     // we open a db connection for all the events
     DatabaseConnection db(db_file_,folder_watched_);
     for (const auto &event : events) {
-        std::bitset<16> typeBits(event->type);
         //std::cout << event->relativePath << " with the type: " << typeBits << std::endl;
 
         // We don't take action regarding the changes in the db.

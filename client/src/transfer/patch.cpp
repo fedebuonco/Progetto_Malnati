@@ -229,7 +229,6 @@ std::string Patch::PrettyPrint(){
         if (cnt == max_files_displayed) {
             std::string other = std::to_string(to_be_sent_vector.size() - 3);
             std::cout << "+ " + other + " Other files... \n" << std::endl;
-            cnt = 0;
             break;
         }
     }

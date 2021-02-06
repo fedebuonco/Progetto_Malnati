@@ -6,6 +6,10 @@
 #ifndef CRYPTOPP_SECBLOCK_H
 #define CRYPTOPP_SECBLOCK_H
 
+class forward;
+
+class forward;
+
 #include "config.h"
 #include "allocate.h"
 #include "misc.h"

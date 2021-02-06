@@ -5,6 +5,8 @@
 #include <filesystem>
 #include <memory>
 
+class _1;
+
 class Watcher
 {
   public:

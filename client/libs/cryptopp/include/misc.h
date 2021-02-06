@@ -43,7 +43,10 @@
 		#undef _interlockedbittestandset64
 		#undef _interlockedbittestandreset64
 		#define CRYPTOPP_FAST_ROTATE(x) 1
-	#elif _MSC_VER >= 1300
+
+class T;
+
+#elif _MSC_VER >= 1300
 		#define CRYPTOPP_FAST_ROTATE(x) ((x) == 32 | (x) == 64)
 	#else
 		#define CRYPTOPP_FAST_ROTATE(x) ((x) == 32)

@@ -9,25 +9,30 @@
 class SharedQueue{
 
     std::list<std::shared_ptr<FileSipper>> fs_list;
+
+    std::atomic<int> active_fs = 0;
+
+    bool flag = true;
+
     std::mutex m;
     std::condition_variable cv;
-    std::atomic<int> active_fs = 0;
+
     static SharedQueue* m_SharedQueue;
-    bool flag = true;
     SharedQueue()= default;
 
 public:
-    void setFlag(bool flag);
-    bool isFlag() const;
-    int size();
-    //Extract next FileSipper to start. Not remove from the queue!
-    std::shared_ptr<FileSipper> get_ready_FileSipper();
-    void remove_element(std::shared_ptr<FileSipper> fsipper);
-    void insert(std::shared_ptr<FileSipper> fsipper);
     SharedQueue(const SharedQueue&)= delete;
     SharedQueue& operator=(const SharedQueue&)=delete;
     static SharedQueue* get_Instance();
 
+    void setFlag(bool flag_value);
+    bool isFlag();
+    //int size();
+
+    std::shared_ptr<FileSipper> get_ready_FileSipper();
+
+    void remove_element(const std::shared_ptr<FileSipper>& file_sipper);
+    void insert(const std::shared_ptr<FileSipper>& file_sipper);
 
 };
 
