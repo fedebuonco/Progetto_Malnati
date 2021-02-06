@@ -139,12 +139,14 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                     //Delete the file
                     std::filesystem::path file_path = this->serverPath / "backupFiles" / "backupROOT" / user_folder_name / file ;
                     std::error_code ec;
-                    bool result = std::filesystem::remove(file_path, ec);
-                    // TODO: Check if this is the last file in the folder
+                    // First we remove the file
+                    std::filesystem::remove(file_path, ec);
+                    // Then we Check if it is the last file in the folder, if it is we delete it
+                    // we perform this operation recursively in order to delete all empty folders.
                     std::filesystem::path path_iterator = file_path.parent_path();
                     while (FileCount(path_iterator) == 0){
                         std::cerr << "Current Path " << path_iterator << std::endl;
-                        if (file_path == std::filesystem::path(user_folder_name)){
+                        if (path_iterator == std::filesystem::path(user_folder_name)){
                             break;
                         }
                         // remove this folder and go to parent folder
