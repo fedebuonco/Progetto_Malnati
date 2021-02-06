@@ -1,9 +1,4 @@
-//
-// Created by fede on 10/26/20.
-//
-
-#ifndef CLIENT_PATCH_H
-#define CLIENT_PATCH_H
+#pragma once
 
 
 #include <vector>
@@ -40,11 +35,9 @@ public:
     std::vector<std::pair<std::string, unsigned  long>> to_be_elim_vector;
 
     Patch(TreeT client_treet, TreeT server_treet);
-    int Dispatch(const std::filesystem::path db_path, const std::filesystem::path folder_watched);
+    int Dispatch(const std::filesystem::path& db_path, const std::filesystem::path& folder_watched);
     std::string PrettyPrint();
 
 
 };
 
-
-#endif //CLIENT_PATCH_H

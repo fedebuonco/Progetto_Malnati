@@ -62,7 +62,7 @@ ControlMessage::ControlMessage(const std::string& json_message){
        std::cerr <<"\nMessage arrived from server is bad formatted. Unable to parse the message." << std::endl;
        std::exit(EXIT_FAILURE);
    }
-};
+}
 
 /// Adds the parameter and the value to the ptree of the ControlMessage
 /// \param element Name of the propriety
@@ -112,7 +112,7 @@ std::string ControlMessage::ToJSON() {
     std::string string_to_json;
     try{
 
-        //Fill the stream ss with the prtree message
+        //Fill the stream ss with the ptree message
         //Now we inside the stream the message
         boost::property_tree::write_json(ss, this->ptree_mess);
 

@@ -13,7 +13,6 @@
 /// We populate the to_be_sent_vector and the to_be_eliminated_vector
 /// \param client_treet
 /// \param server_treet
-
 bool EndsWith (std::string const &fullString, std::string const &ending) {
     if (fullString.length() >= ending.length()) {
         return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
@@ -33,8 +32,7 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
     // We remove the hash.db from the set, it will not be considered in the dispatch
     set_client.erase(".hash.db");
     // We also remove all the folders, we only compute diff on files
-    // we can easily remove all direcotries if we just delete all the element with "/"
-
+    // we can easily remove all directories if we just delete all the element with "/"
 
     std::set<std::string> set_server;
     for(const auto& item : server_treet.map_tree_time_) {
@@ -52,12 +50,12 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
         set_intersection(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(common_, common_.end()));
 
     }catch(std::bad_alloc& badAlloc){
-        std::cerr << " Patch Allocation error: " << badAlloc.what() <<std::endl;
+        std::cerr << "Patch Allocation error: " << badAlloc.what() <<std::endl;
         std::exit(EXIT_FAILURE);
 
     }
 
-    for (auto item : server_treet.map_tree_time_){
+    for (const auto& item : server_treet.map_tree_time_){
         if (EndsWith(item.first, "/"))
             server_treet.map_tree_time_.erase(item.first);
     }
@@ -74,7 +72,7 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
                             std::back_inserter(to_be_elim_vector));
 
     }catch(std::bad_alloc& badAlloc){
-        std::cerr << " Patch Allocation error: " << badAlloc.what() <<std::endl;
+        std::cerr << "Patch Allocation error: " << badAlloc.what() <<std::endl;
         std::exit(EXIT_FAILURE);
     }
 
@@ -83,18 +81,24 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
 /// Takes the db files where we store the status and uses it in order to identify the file that we must dispatch.
 /// \param db_path
 /// \return int number of dispatched file.
-int Patch::Dispatch(const std::filesystem::path db_path, const std::filesystem::path folder_watched){
-    int counter = 0;
+int Patch::Dispatch(const std::filesystem::path& db_path, const std::filesystem::path& folder_watched){
+
     DatabaseConnection db(db_path, folder_watched);
-    // Here we retrieve the metadata that is common to every filesipper: endpoint and usernmae
-    // we also add 10 to the port.
+
+    int counter = 0;
+
+    //We retrieve the metadata that is common to every fileSipper: endpoint and username
     Credential credential = Authentication::get_Instance()->ReadCredential();
     RawEndpoint raw_endpoint = Config::get_Instance()->ReadRawEndpoint();
+
+    // we also add 10 to the port.
     raw_endpoint.port_num += 10;
 
-    for ( auto element : to_be_sent_vector){
-        if (db.ChangeStatusToSending(element.first)){ // This return true only if the current status is "NEW" and changes it to "SENDING"
-            // We retrieve the needed metadata for the file: hash and lmt
+    for (const auto& element : to_be_sent_vector){
+        if (db.ChangeStatusToSending(element.first)){
+            //We found a file to be sending (with status 'NEW') and we change to "SENDING" because we are handle it.
+
+            //We retrieve the needed metadata for the file: hash and lmt
             std::string file_hash;
             std::string file_lmt;
             db.GetMetadata(element.first, file_hash, file_lmt);

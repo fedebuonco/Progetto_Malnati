@@ -9,14 +9,16 @@
 class ControlMessage {
 
     /// Type of the message, in the server we switch actions depending on this type.
-    int type_;
     boost::property_tree::ptree ptree_mess;
 
 public:
+    int type_;  //TODO: Make it private and create a method to access it @marco
 
-    ControlMessage(int tp);
-    ControlMessage(const std::string& json_code);
+    explicit ControlMessage(int tp);
+    explicit ControlMessage(const std::string& json_code);
+
     std::string ToJSON();
+
     void AddElement(const std::string& element,const std::string& value);
     std::string GetElement(const std::string& element);
 };
