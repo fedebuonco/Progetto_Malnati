@@ -29,7 +29,7 @@ SyncTCPSocket::~SyncTCPSocket() {
     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
     sock_.close(ec);
     if(ec){
-        std::cerr<< ec.message() <<std::endl;
+        std::cerr<< "Error during shutdown " <<  ec.message() <<std::endl;
         std::exit( EXIT_FAILURE );
     }
 

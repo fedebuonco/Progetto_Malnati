@@ -14,12 +14,21 @@ void Sender::Sender_Action() const{
     while(flag){
 
         //Choose a ready fileSipper to be sent. If no one is available it waits on a condition variable.
-        std::shared_ptr<FileSipper> chosen_fs = SharedQueue::get_Instance()->get_ready_FileSipper();    //TODO: The function returns a nullptr @marco
+        std::shared_ptr<FileSipper> chosen_fs = SharedQueue::get_Instance()->get_ready_FileSipper();
+
+        if(chosen_fs==nullptr){
+            //If we are here, it means that we woke up the thread waiting on cv in order to terminate the program.
+            //Continue because in the next iteration the while condition will be false
+            continue;
+        }
 
         //We take a thread from the pool and assign it the previously chosen fileSipper
         boost::asio::post(pool,[chosen_fs](){
-                            chosen_fs->Send();
-                            SharedQueue::get_Instance()->remove_element(chosen_fs);
+
+                  chosen_fs->Send();
+
+                  //Quello che vogliamo è che questa remove sia fatta come callback della send
+                  SharedQueue::get_Instance()->remove_element(chosen_fs);
         });
 
     }

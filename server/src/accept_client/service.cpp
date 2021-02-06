@@ -137,20 +137,28 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                 std::istringstream stream_tbd{list_to_be_deleted};
                 while(std::getline(stream_tbd, file)){
                     //Delete the file
+                    std::filesystem::path user_folder_path = this->serverPath / "backupFiles" / "backupROOT" / user_folder_name;
                     std::filesystem::path file_path = this->serverPath / "backupFiles" / "backupROOT" / user_folder_name / file ;
                     std::error_code ec;
                     // First we remove the file
                     std::filesystem::remove(file_path, ec);
-                    // Then we Check if it is the last file in the folder, if it is we delete it
+                    if(ec){
+                        //TODO:
+                    }
+                    // Then we check if it is the last file in the folder, if it is we delete it
                     // we perform this operation recursively in order to delete all empty folders.
                     std::filesystem::path path_iterator = file_path.parent_path();
                     while (FileCount(path_iterator) == 0){
-                        std::cerr << "Current Path " << path_iterator << std::endl;
-                        if (path_iterator == std::filesystem::path(user_folder_name)){
+                        //std::cerr << "Current Path " << path_iterator << std::endl;
+                        if (path_iterator == user_folder_path){
                             break;
                         }
                         // remove this folder and go to parent folder
                         std::filesystem::remove(path_iterator, ec);
+                        if(ec){
+                            //TODO:
+                        }
+
                         path_iterator = path_iterator.parent_path();
                     }
                     //We doesn't care if the file exists or not; we try anyway to delete the row inside DB

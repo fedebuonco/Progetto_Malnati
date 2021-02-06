@@ -14,10 +14,6 @@
 
 /// Takes files from the queue and gives them to FileSippers, in order to be sent
 class Sender {
-    //TODO: tUTTI E TRE SI POSSONO ELIMINARE @marco
-    //int count = 0;
-    //std::mutex m;
-    //std::condition_variable cv;
 
     bool flag = true;
 

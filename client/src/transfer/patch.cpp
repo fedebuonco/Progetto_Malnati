@@ -13,7 +13,6 @@
 /// We populate the to_be_sent_vector and the to_be_eliminated_vector
 /// \param client_treet
 /// \param server_treet
-//TODO: Clang gives a strange error
 bool EndsWith (std::string const &fullString, std::string const &ending) {
     if (fullString.length() >= ending.length()) {
         return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
@@ -92,7 +91,7 @@ int Patch::Dispatch(const std::filesystem::path& db_path, const std::filesystem:
     Credential credential = Authentication::get_Instance()->ReadCredential();
     RawEndpoint raw_endpoint = Config::get_Instance()->ReadRawEndpoint();
 
-    // we also add 10 to the port.
+    //Send files through socket with port+=10.
     raw_endpoint.port_num += 10;
 
     for (const auto& element : to_be_sent_vector){

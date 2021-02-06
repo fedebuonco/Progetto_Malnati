@@ -2,7 +2,7 @@
 #include <filesystem>
 #include <utility>
 
-std::shared_mutex DatabaseConnection::db_mutex_;        //TODO: What does it mean? @marco
+std::shared_mutex DatabaseConnection::db_mutex_;
 
 /**
  * Constructor. Takes the db_path and folder_watched and create a db connection.

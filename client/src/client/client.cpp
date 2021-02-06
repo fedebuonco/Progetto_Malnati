@@ -78,7 +78,7 @@ void Client::Syncro(){
 /// tell that the connection is over. After the authentication the socket is basically useless and needs to be shutdown completely.
 /// \return 'True' if Auth went ok and user has successfully logged in, 'False' if not.
 bool Client::Auth() {
-    //TODO qualche eccezione da fare il catch? - @marco secondo me no perchè tutte quelle chiamate gestiscono internamente le eccezioni e non le ritornano
+
     //SyncTCPSocket for auth using raw endpoint provided at construction.
     SyncTCPSocket tcpSocket(server_re_.raw_ip_address, server_re_.port_num);
     //socket will retry 5 times to connect
@@ -198,13 +198,12 @@ ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
 
     // This checks if the client has finished writing
     if (ec != boost::asio::error::eof){
-        //TODO Sometimes we get here. When the server shuts down
-        if(DEBUG) std::cerr<<"DEBUG: NON ho ricevuto il segnale di chiusura del client; message " << ec.message() << std::endl;
+
+        if(DEBUG) std::cerr<<"The server is not responding, try later. Message " << ec.message() << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
     //Read the response_buf using an iterator and store it in a string in order to store it in a ControlMessage
-    // TODO might be an easier method to do this
     std::string response_json((std::istreambuf_iterator<char>(&response_buf)), std::istreambuf_iterator<char>() );
     ControlMessage cm{response_json};
     return cm;
@@ -286,12 +285,16 @@ void Client::InitHash(){
         // If we had, then we take the hash from the db, without hashing a second time the same file.
 
         // If it is not a dir
-        if(!db.AlreadyHashed(cross_platform_rep, std::to_string(mod_time))){
+        if(!db.AlreadyHashed(cross_platform_rep, std::to_string(mod_time))) {
             //Here only if the tuple ( cross_platform_rep , mod_time ) is not present, so we need to hash and then update the db.
             CryptoPP::SHA256 hash;
             std::string digest;
 
-            try {
+            int n_attemps = 20;
+
+            while (n_attemps > 0) { //We try to hash the file 20 times
+
+                try {
                     CryptoPP::FileSource f(
                             element_path.generic_string().c_str(),
                             true,
@@ -303,13 +306,33 @@ void Client::InitHash(){
 
                     // Here we have the hash of the file and we can insert it in the DB
                     db.InsertDB(cross_platform_rep, digest, std::to_string(mod_time));
-
-                } catch (std::exception &e) {
-                        //TODO: @marco secondo me bisogna catchare una più generica per non fargli fare nulla e le altre invece le gestiamo
+                    break;
                 }
-            }
+                catch (CryptoPP::FileStore::Err &e) {
+                    //Here because CryptoPP can't open the file because we are copying the file into the folder, we try again
+                    std::this_thread::sleep_for(std::chrono::seconds(1));
+                    n_attemps--;
 
+                    std::cerr << "---------------------ATTEMPT " << n_attemps << std::endl;     //TODO: Sistemare
+
+                    if (n_attemps == 0) {
+                        std::cout << "CryptoPP can't hash the file because is busy. Next watcher event will hash it again." << e.what() << std::endl;
+                        break;
+                    }
+                }
+                catch (CryptoPP::Exception &e) {
+                    std::cout << "Error CryptoPP " << e.what() << std::endl;
+                    std::exit(EXIT_FAILURE);
+                }
+                catch (std::exception &e) {
+                    std::cout << "Error during hash" << e.what() << std::endl;
+                    std::exit(EXIT_FAILURE);
+                }
+
+            }
         }
+
+    }
 
     // Now we clean the db for files that are not anymore in the folder.
     db.CleanOldRows();

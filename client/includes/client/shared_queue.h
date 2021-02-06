@@ -10,12 +10,12 @@ class SharedQueue{
 
     std::list<std::shared_ptr<FileSipper>> fs_list;
 
-    std::atomic<int> active_fs = 0;
-
-    bool flag = true;
-
     std::mutex m;
     std::condition_variable cv;
+
+    std::atomic<int> active_fs = 0;
+
+    std::atomic<bool> flag = true;
 
     static SharedQueue* m_SharedQueue;
     SharedQueue()= default;
@@ -26,8 +26,8 @@ public:
     static SharedQueue* get_Instance();
 
     void setFlag(bool flag_value);
-    bool isFlag();
-    //int size();
+
+    int list_size();
 
     std::shared_ptr<FileSipper> get_ready_FileSipper();
 
