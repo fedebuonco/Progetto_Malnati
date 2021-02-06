@@ -13,6 +13,7 @@
 /// We populate the to_be_sent_vector and the to_be_eliminated_vector
 /// \param client_treet
 /// \param server_treet
+//TODO: Clang gives a strange error
 bool EndsWith (std::string const &fullString, std::string const &ending) {
     if (fullString.length() >= ending.length()) {
         return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
@@ -85,7 +86,7 @@ int Patch::Dispatch(const std::filesystem::path& db_path, const std::filesystem:
 
     DatabaseConnection db(db_path, folder_watched);
 
-    int counter = 0;
+    int counter = 0;        //Counter for the number of dispatched file.
 
     //We retrieve the metadata that is common to every fileSipper: endpoint and username
     Credential credential = Authentication::get_Instance()->ReadCredential();
@@ -105,14 +106,16 @@ int Patch::Dispatch(const std::filesystem::path& db_path, const std::filesystem:
 
             try {
                 std::filesystem::path f = folder_watched / element.first;
+
+                //We create a fileSipper for this file and we insert it inside the SharedQueue
                 auto fs =  std::make_shared<FileSipper>(raw_endpoint, folder_watched , db_path ,credential.username_, f, element.first, file_hash, file_lmt);
                 SharedQueue::get_Instance()->insert(fs);
 
-                counter++;
+                counter++;  //Increment the number of dispatched file.
 
             } catch(std::exception& e)
             {
-                std::cerr << "Erorre" << e.what() << std::endl;
+                std::cerr << "Error: " << e.what() << std::endl;
                 std::exit(EXIT_FAILURE);
             }
 
@@ -123,12 +126,14 @@ int Patch::Dispatch(const std::filesystem::path& db_path, const std::filesystem:
 
 /// Pretty Prints the changes contained in the patch
 /// \return A string summing up the current client-server file situation.
+
+//TODO: For me the problem of random number is here
 std::string Patch::PrettyPrint(){
     int max_files_displayed = 3;
     std::string pretty;
     pretty.append(":::::::: Changes ::::::::\n");
     int cnt =0;
-    for (auto file : added_){
+    for (const auto& file : added_){
         pretty.append("+ " + file +"\n");
         cnt++;
         if (cnt == max_files_displayed) {
@@ -138,7 +143,7 @@ std::string Patch::PrettyPrint(){
             break;
         }
     }
-    for (auto file : removed_){
+    for (const auto& file : removed_){
         pretty.append("- " + file +"\n");
         cnt++;
         if (cnt == max_files_displayed) {
@@ -148,7 +153,7 @@ std::string Patch::PrettyPrint(){
             break;
         }
     }
-    for (auto file : common_){
+    for (const auto& file : common_){
         pretty.append("= " + file +"\n");
         cnt++;
         if (cnt == max_files_displayed) {
@@ -159,7 +164,7 @@ std::string Patch::PrettyPrint(){
         }
     }
     pretty.append( ":::::::: Files that will be deleted or overwritten on the server ( Because older or deleted ) - Last Modified Time ::::::::\n");
-    for (auto file : to_be_elim_vector){
+    for (const auto& file : to_be_elim_vector){
         pretty.append(file.first + " - ");
         pretty.append(std::to_string(file.second) + "\n");
         cnt++;
@@ -171,7 +176,7 @@ std::string Patch::PrettyPrint(){
         }
     }
     pretty.append(":::::::: Files that will be Sent or are in sending (New files or newer files) - Last Modified Time ::::::::\n" );
-    for (auto file : to_be_sent_vector ){
+    for (const auto& file : to_be_sent_vector ){
         pretty.append(file.first + " - ");
         pretty.append(std::to_string(file.second) + "\n");
         cnt++;
@@ -184,7 +189,7 @@ std::string Patch::PrettyPrint(){
     }
 
     std::cout << ":::::::: Changes ::::::::" << std::endl;
-    for (auto file : added_){
+    for (const auto& file : added_){
         std::cout <<"+ "<<file << std::endl;
         cnt++;
         if (cnt == max_files_displayed) {
@@ -194,7 +199,7 @@ std::string Patch::PrettyPrint(){
             break;
         }
     }
-    for (auto file : removed_){
+    for (const auto& file : removed_){
         std::cout <<"- " << file << std::endl;
         cnt++;
         if (cnt == max_files_displayed) {
@@ -204,7 +209,7 @@ std::string Patch::PrettyPrint(){
             break;
         }
     }
-    for (auto file : common_){
+    for (const auto& file : common_){
         std::cout <<"= " << file << std::endl;
         cnt++;
         if (cnt == max_files_displayed) {
@@ -216,7 +221,7 @@ std::string Patch::PrettyPrint(){
     }
 
     std::cout << ":::::::: Files that will be deleted or overwritten on the server ( Because older or deleted ) - Last Modified Time ::::::::" << std::endl;
-    for (auto file : to_be_elim_vector){
+    for (const auto& file : to_be_elim_vector){
         std::cout << file.first + " - " << file.second << std::endl;
         cnt++;
         if (cnt == max_files_displayed) {
@@ -227,7 +232,7 @@ std::string Patch::PrettyPrint(){
         }
     }
     std::cout << ":::::::: Files that will be Sent or are in sending (New files or newer files) - Last Modified Time ::::::::" << std::endl;
-    for (auto file : to_be_sent_vector){
+    for (const auto& file : to_be_sent_vector){
         std::cout << file.first + " - " << file.second << std::endl;
         cnt++;
         if (cnt == max_files_displayed) {

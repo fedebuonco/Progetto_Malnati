@@ -3,14 +3,12 @@
 #include <base64.h>
 #include <sha.h>
 #include <hex.h>
-#include <config.h>
+#include <config.h>     //TODO: Si possono togliere? @marco
 #include <file_sipper.h>
 #include <database.h>
 
 #include <utility>
 
-
-class _1;
 
 Watcher::Watcher(std::filesystem::path  db_file, std::filesystem::path folder_watched) :
     db_file_(std::move(db_file)),

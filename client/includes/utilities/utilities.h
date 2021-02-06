@@ -1,7 +1,3 @@
-//
-// Created by fede on 9/21/20.
-//
-
 #pragma once
 
 #include <string>
@@ -12,7 +8,7 @@ constexpr unsigned int str2int(const char* str, int h = 0)
     return !str[h] ? 5381 : (str2int(str, h+1) * 33) ^ str[h];
 }
 
-static void show_usage(std::string program_name)
+static void show_usage(const std::string& program_name)
 {
     std::cout << "\n\nHELP\n"
               <<"Usage: " << program_name << " <option(s)> SOURCES\n"
