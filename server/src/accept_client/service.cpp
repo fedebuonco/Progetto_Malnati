@@ -7,7 +7,7 @@
 #include "../../includes/database/database.h"
 #include "service.h"
 
-int FileCount(std::filesystem::path folder){
+int FileCount(const std::filesystem::path& folder){
     int count = 0;
     for (const auto & file : std::filesystem::directory_iterator(folder))
         count++;
@@ -17,36 +17,41 @@ int FileCount(std::filesystem::path folder){
 
 /// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and detach it
 /// \param sock TCP socket connected to the client
-void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock,std::filesystem::path serverP) {
+void Service::ReadRequest(const std::shared_ptr<asio::ip::tcp::socket>& sock, const std::filesystem::path& serverP) {
     this->serverPath=serverP;
-    std::thread th(([this, sock] () {HandleClient(sock);}));
+
+    //Spawns a thread that handle the request
+    std::thread th(([this, sock] () {
+             HandleClient(sock);
+    }));
+
+    //Detach this thread
     th.detach();
 }
 
 /// Real handling starts here. Should distinguish auth requests and tree requests
-void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
-    // Here we read the request
-    // parse it in a ptree,
-    // use the ptree to build the ControlMessage
-    // we then check that the message is authenticated
-    // and then we switch case in order to correctly handle it.
-
+/***
+ * This function handle the client request. First check if the message is authenticated and then
+ * handle the request according to the message type
+ * @param sock
+ */
+void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
     //Now we parsed the request and we use the ptree object in order to create the corresponding ControlMessage
 
     try{
         //We parse the incoming request into a request message
-        //TODO: Eccezione
+        //TODO: This launch an exception we need to catch            @marco
         ControlMessage request_message = SyncReadCM(sock);
 
-
+        //A message with type 5 means that we are shutting down the server
         if(request_message.type_==5){
-            std::cout << "ENTRATI" << std::endl;
             return;
         }
 
         //We check that the message is authenticated
         if (!CheckAuthenticity(request_message)){
+
             //The request is not accepted because the message is not authenticated
             //Return to the client a control message with 'type:51' and 'auth:false'
             ControlMessage check_result{51};
@@ -103,11 +108,6 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
                 this->associated_user_path_ = user_directory_path;
 
-                //TODO Se si verifica un eccezione tra la creazione dello userfolder e il createTable (db utente)
-                // vediamo la directory ma non vediamo il DB. Azione da fare è RIPROVA. Questo potrebbe creare problemi, consiglio di fare nella catch una politica
-                // che cancella sia la cartella principale (tanto in questo punto è vuota) ed il db. Ricordo comunque che nel caso in cui
-                // il db esiste quando entriamo sulla createTable droppo comunque la tabella e la ricreo.
-
                 //We create the TREE & TIME and put this information inside the response message
                 TreeT server_treet(user_directory_path, this->serverPath);
                 treet_result.AddElement("Tree", server_treet.genTree());
@@ -140,11 +140,14 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                     std::filesystem::path user_folder_path = this->serverPath / "backupFiles" / "backupROOT" / user_folder_name;
                     std::filesystem::path file_path = this->serverPath / "backupFiles" / "backupROOT" / user_folder_name / file ;
                     std::error_code ec;
+
                     // First we remove the file
                     std::filesystem::remove(file_path, ec);
                     if(ec){
                         //TODO:
+                        std::cerr << "Error remove service.cpp "<< ec << std::endl;
                     }
+
                     // Then we check if it is the last file in the folder, if it is we delete it
                     // we perform this operation recursively in order to delete all empty folders.
                     std::filesystem::path path_iterator = file_path.parent_path();
@@ -157,6 +160,7 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                         std::filesystem::remove(path_iterator, ec);
                         if(ec){
                             //TODO:
+                            std::cerr << "Error remove service.cpp "<< ec << std::endl;
                         }
 
                         path_iterator = path_iterator.parent_path();
@@ -231,6 +235,5 @@ ControlMessage Service::SyncReadCM(std::shared_ptr<asio::ip::tcp::socket> sock){
     catch(std::exception& e){
         std::cerr<<"Error" << e.what()  << std::endl;
     }
-
-
+    return ControlMessage(0);       //TODO: Dovuto aggiungere per linux @marco
 }

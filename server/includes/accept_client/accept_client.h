@@ -1,6 +1,3 @@
-//
-// Created by fede on 9/21/20.
-//
 #pragma once
 
 #include <boost/asio.hpp>
@@ -14,6 +11,7 @@
 #define BACKLOG_SIZE 10
 
 extern volatile sig_atomic_t flag;
+
 /// Represents an high level acceptor. Accepts and instantiate a Service.
 /// When constructed it instantiates an acceptor socket and starts listening on it.
 ///

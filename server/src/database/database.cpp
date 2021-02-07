@@ -7,246 +7,234 @@
 #include <sqlite3.h>
 
 std::shared_mutex Database::db_mutex_;
-bool Database::auth(std::string username, std::string attemp_hash_password, std::filesystem::path serverP) {
+
+/**
+ * Verify if the hash of the password sent from the client is the same of the hash password store inside db.
+ * @param username : user username
+ * @param attempt_hash_password : hash password arrived from client
+ * @param serverP
+ * @return true or false depending on whether the password hash is correct or not
+ */
+bool Database::auth(const std::string& username, const std::string& attempt_hash_password, const std::filesystem::path& serverP) {
+
     std::shared_lock lg(db_mutex_);
+
     try {
-        // Open a database file
         std::filesystem::path db_path = serverP / "backupFiles" / "authDB.db" ;
         SQLite::Database    db(db_path.string());
 
-        // Compile a SQL query, containing one parameter (index 1)
         SQLite::Statement   query(db, "SELECT * FROM user WHERE username = ?");
-
-        // Bind the integer value 6 to the first parameter of the SQL query
         query.bind(1, username);
 
-        // Loop to execute the query step by step, to get rows of result
-        while (query.executeStep())
-        {
-            // Demonstrate how to get some typed column value
-            int             id          = query.getColumn(0);
-            std::string     username    = query.getColumn(1);
-            std::string     hashpass    = query.getColumn(2);
-            std::string     folderName  = query.getColumn(3);
+        while (query.executeStep()) {
+            //Retrieve the hash password stored inside the auth db
+            std::string     hash_pass_DB    = query.getColumn(2);
 
-            std::cout << "AUTH DB READ  row: " << id << ", " << username << ", " << hashpass << ", " << folderName << std::endl;
-
-            if(hashpass==attemp_hash_password){
-                return true;
-            }
-
+            if(hash_pass_DB == attempt_hash_password) return true;
+            else return false;
         }
 
     }
     catch (std::exception& e)
     {
-        std::cerr << "exception: " << e.what() << std::endl;
-        //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
+        std::cerr << "SQLite exception: " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
     }
-
 
     return false;
 }
 
-std::string Database::getUserPath(std::string username, std::filesystem::path serverP) {
+/**
+ * Return the folder name of the user
+ * @param username : username of the user
+ * @param serverP : location of the server folder
+ * @return folder of the user
+ */
+std::string Database::getUserPath(const std::string& username, const std::filesystem::path& serverP) {
     std::shared_lock lg(db_mutex_);
+
     try {
-        // Open a database file
+        //Open the authDB where is stored the user folder
         std::filesystem::path db_path = serverP / "backupFiles" / "authDB.db" ;
         SQLite::Database    db(db_path.string());
 
-        // Compile a SQL query, containing one parameter (index 1)
         SQLite::Statement   query(db, "SELECT folderName FROM user WHERE username = ?");
-
-        // Bind the integer value 6 to the first parameter of the SQL query
         query.bind(1, username);
 
-        // Loop to execute the query step by step, to get rows of result
-        while (query.executeStep())
-        {
-            // Demonstrate how to get some typed column value
-            std::string   folder          = query.getColumn(0);
-
+        while (query.executeStep()) {
+            //Username is unique so we have only a result; we take the first result anyway
+            std::string folder = query.getColumn(0);
             return folder;
-
         }
 
     }
     catch (std::exception& e)
     {
-        std::cerr << "exception: " << e.what() << std::endl;
-        //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
+        std::cerr << "SQLite exception: " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 
     return "";
 }
 
-void Database::createTable(std::string foldername, std::filesystem::path serverP) {
+/**
+ * Create a db to store the path and time of the user files
+ * @param folderName : name of the server folder in which we store the user file
+ * @param serverP
+ */
+void Database::createTable(const std::string& folderName, const std::filesystem::path& serverP) {
     std::unique_lock lg(db_mutex_);
-    try {
-        // Open a database file in create/write mode
-        std::string folderext = foldername+".db";
-        std::filesystem::path db_path = serverP / "backupFiles" / "usersTREE" / folderext ;
-        SQLite::Database    db(db_path.string(), SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
-        //std::cout << "SQLite database file '" << db.getFilename().c_str() << "' opened successfully\n";
 
-        // Create a new table with an explicit "id" column aliasing the underlying rowid
+    try {
+        //Find the path of the user db
+        std::string user_db_name = folderName + ".db";
+        std::filesystem::path db_path = serverP / "backupFiles" / "usersTREE" / user_db_name ;
+
+        SQLite::Database    db(db_path.string(), SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
+
+        //Drop existing table and create a new one; this because a user can have only one backup folder per time
         db.exec("DROP TABLE IF EXISTS UserTree");
         db.exec("CREATE TABLE UserTree (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, path TEXT, time TEXT)");
 
-        // first row
-        //int nb = db.exec("INSERT INTO UserTree VALUES (NULL, \"PROVA\", \"1155\")");
-
     }
     catch (std::exception& e)
     {
-        std::cerr << "exception: " << e.what() << std::endl;
-        //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
+        std::cerr << "SQLite exception: " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 
 }
 
-std::string Database::getTimefromPath(std::string foldername, std::string path, std::filesystem::path serverP) {
+/**
+ * Get the time stored in the user db of a given filepath
+ * @param folderName : name of the server folder in which we store the user file
+ * @param path : path to retrieve the time
+ * @param serverP : program folder path
+ * @return time store in the db of the filepath passed as argument
+ */
+std::string Database::getTimeFromPath(const std::string& folderName, const std::string& path, const std::filesystem::path& serverP) {
     std::shared_lock lg(db_mutex_);
 
     try {
-        // Open a database file
-        std::string folderext = foldername+".db";
-        std::filesystem::path db_path = serverP / "backupFiles" / "usersTREE" / folderext ;
+        //Find the path of the user db
+        std::string user_db_name = folderName + ".db";
+        std::filesystem::path db_path = serverP / "backupFiles" / "usersTREE" / user_db_name ;
+
         SQLite::Database    db(db_path.string());
 
-        // Compile a SQL query, containing one parameter (index 1)
+        //Find the time of a specific path
         SQLite::Statement   query(db, "SELECT time FROM UserTree WHERE path= ?");
-
-        // Bind the integer value 6 to the first parameter of the SQL query
         query.bind(1, path);
 
-        // Loop to execute the query step by step, to get rows of result
-        while (query.executeStep())
-        {
-            // Demonstrate how to get some typed column value
+        while (query.executeStep()) {
             std::string   time     = query.getColumn(0);
             return time;
         }
-        //Se non trova nulla ritorna 1
-        return std::to_string(1);
 
     }
     catch (std::exception& e)
     {
-        std::cerr << "exception: " << e.what() << std::endl;
-        //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
+        std::cerr << "SQLite exception: " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 
-    //Se non trova nulla ritorna 1
+    //If we don't find the path in the DB we return 1; this means that the client will send the file anyway
     return std::to_string(1);
-
 }
 
-void Database::deleteFile(std::string foldername, std::string path, std::filesystem::path serverP) {
+/**
+ * Delete the file passed from the user db
+ * @param folderName : name of the server folder in which we store the user file
+ * @param path : file to delete inside the db
+ * @param serverP
+ */
+void Database::deleteFile(const std::string& folderName, const std::string& path, const std::filesystem::path& serverP) {
     std::unique_lock lg(db_mutex_);
-    try{
-        std::string folderext = foldername+".db";
-        std::filesystem::path db_path = serverP / "backupFiles" / "usersTREE" / folderext ;
-        SQLite::Database    db(db_path.string(), SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
 
-        // Compile a SQL query, containing one parameter (index 1)
-        SQLite::Statement   query(db, "DELETE FROM UserTree WHERE path= ?");
+    try {
+        //Find the path of the user db
+        std::string user_db_name = folderName + ".db";
+        std::filesystem::path db_path = serverP / "backupFiles" / "usersTREE" / user_db_name;
 
-        // Bind the integer value 6 to the first parameter of the SQL query
+        SQLite::Database db(db_path.string(), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+
+        SQLite::Statement query(db, "DELETE FROM UserTree WHERE path= ?");
         query.bind(1, path);
 
-        // Loop to execute the query step by step, to get rows of result
-        while (query.executeStep())
-        {
-            // Demonstrate how to get some typed column value
-            if(DEBUG) std::cout << "Deleted ROW" << std::endl;
+        while (query.executeStep()) {
+            if (DEBUG) std::cout << "Deleted ROW" << std::endl;
         }
+
         //If the filename doesn't exist, we don't do nothing
+
     }
-    catch (std::exception& e) {
-        std::cerr << "exception: " << e.what() << std::endl;
-        //TODO Controllare come rimandare indietro errore; sicuramente non dobbiamo terminare.
+    catch (std::exception &e) {
+        std::cerr << "SQLite exception: " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
     }
-
-
-
 }
 
-void Database::insertFile(std::string userName, std::string pathName, std::string hash, std::string lmt, std::filesystem::path serverP) {
+/**
+ * Insert a file path and time into the user db. If the file is already present, update only the time
+ * @param userName : user username
+ * @param pathName : path of the file to insert in the db
+ * @param lmt      : last modified time of the file to insert in the db
+ * @param serverP
+ */
+void Database::insertFile(const std::string& userName, const std::string& pathName, const std::string& lmt, const std::filesystem::path& serverP) {
     std::unique_lock lg(db_mutex_);
-    int remainingWriteAttempts = 10;
 
-    while(remainingWriteAttempts > 0) {
+    try {
+        std::filesystem::path db_path = serverP / "backupFiles" / "authDB.db";
+        SQLite::Database db(db_path.string());
 
-        try {
-            std::filesystem::path db_path = serverP / "backupFiles" / "authDB.db";
-            SQLite::Database db(db_path.string());
+        //First we fine the folderName of the given Username
 
-            // Compile a SQL query, containing one parameter (index 1)
-            SQLite::Statement query(db, "SELECT folderName FROM user WHERE username = ?");
+        SQLite::Statement query(db, "SELECT folderName FROM user WHERE username = ?");
+        query.bind(1, userName);
 
-            // Bind the integer value 6 to the first parameter of the SQL query
-            query.bind(1, userName);
+        std::string folder;
 
-            std::string folder;
-
-            // Loop to execute the query step by step, to get rows of result
-            while (query.executeStep()) {
-                // Demonstrate how to get some typed column value
-                std::string folderLocale = query.getColumn(0);
-                folder = folderLocale;
-            }
-
-            std::string folderext = folder + ".db";
-            std::filesystem::path db_path1 = serverP / "backupFiles" / "usersTREE" / folderext;
-            SQLite::Database db1(db_path1.string(), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-
-            //Now we look if the file is already present in the db
-            // Compile a SQL query, containing 1 parameters
-            SQLite::Statement query_ifpresent(db1, "SELECT * FROM UserTree WHERE path = ?");
-
-            // Bind to ? of the query
-            query_ifpresent.bind(1, pathName);
-            // Loop to execute the query step by step, to get rows of result
-            while (query_ifpresent.executeStep()) {
-                // Demonstrate how to get some typed column value
-                std::string id = query_ifpresent.getColumn(0);
-                // Begin transaction
-
-
-                std::string sql_update = "UPDATE UserTree "
-                                         " SET time = \"" + lmt +
-                                         "\" WHERE id =  \"" + id + "\"";
-
-                int result_update = db1.exec(sql_update);
-                return;
-            }
-
-            if (DEBUG) std::cout << "SQLite database file '" << db1.getFilename().c_str() << "' opened successfully\n";
-
-            // Compile a SQL query, containing one parameter (index 1)
-            SQLite::Statement query1(db1, "INSERT INTO UserTree(path, time) VALUES (?,?)");
-
-            query1.bind(1, pathName);
-            query1.bind(2, lmt);
-
-            query1.exec();
-
+        while (query.executeStep()) {
+            std::string folderLocale = query.getColumn(0);
+            folder = folderLocale;
         }
-        catch (SQLite::Exception &e) {
-            /* Suppress SQLITE_BUSY errors if write attempts remain */
-            if (remainingWriteAttempts && e.getErrorCode() == SQLITE_BUSY) {
-                --remainingWriteAttempts;
-                std::cerr << "Retry del insert file " << pathName << std::endl;
-                continue;
-            }
-            std::cerr << "Errore sqlite " << e.getErrorStr() << std::endl;
-        }
-        catch (std::exception &e) {
-            std::cerr << "exception: " << e.what() << std::endl;
 
+        //Now we search if the pathname is already present inside the DB (i.e. we have already an old version with an old time).
+
+        std::string user_db_name = folder + ".db";
+        std::filesystem::path db_path1 = serverP / "backupFiles" / "usersTREE" / user_db_name;
+        SQLite::Database db1(db_path1.string(), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+
+        SQLite::Statement query_if_present(db1, "SELECT * FROM UserTree WHERE path = ?");
+        query_if_present.bind(1, pathName);
+
+        while (query_if_present.executeStep()) {
+
+            //We found the pathname so we update the time.
+
+            std::string id = query_if_present.getColumn(0);
+
+            SQLite::Statement sql_update(db1, "UPDATE UserTree SET time = ? WHERE id = ?");
+            sql_update.bind(1, lmt);
+            sql_update.bind(2, id);
+
+            sql_update.exec();
+            return;
         }
+
+        //We didn't find the pathname (i.e. is a new file) and we insert the new tuple
+
+        SQLite::Statement query1(db1, "INSERT INTO UserTree(path, time) VALUES (?,?)");
+        query1.bind(1, pathName);
+        query1.bind(2, lmt);
+
+        query1.exec();
+
     }
-
+    catch (std::exception& e)
+    {
+        std::cerr << "SQLite exception: " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
 }

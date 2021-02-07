@@ -1,10 +1,4 @@
-//
-// Created by fede on 10/4/20.
-//
-
-#ifndef SERVER_SERVER_H
-#define SERVER_SERVER_H
-
+#pragma once
 
 #include <thread>
 #include <atomic>
@@ -16,23 +10,20 @@ extern bool DEBUG;
 
 /// Creates a server that listen on a specific port.
 class Server {
-private:
-    std::unique_ptr<std::thread> thread_;
-public:
-    const std::unique_ptr<std::thread> &getThread() const;
 
-private:
+    std::unique_ptr<std::thread> thread_;
     boost::asio::io_service ios_;
+
     std::atomic<bool> stop_;
     std::filesystem::path serverPath;
+
+    void Run(unsigned short port_num);
+
 public:
-    Server(std::filesystem::path serverPath);
+
+    explicit Server(std::filesystem::path serverPath);
     void Start(unsigned short port_num);
     void Stop();
-private:
-    void Run(unsigned short port_num);
 
 };
 
-
-#endif //SERVER_SERVER_H
