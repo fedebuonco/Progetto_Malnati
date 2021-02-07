@@ -25,7 +25,7 @@ class Client {
     void SendRemoval(Patch &update);
     TreeT RequestTree();
 
-    bool SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm);
+    void SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm);
     ControlMessage SyncReadCM(SyncTCPSocket& stcp);
     void InitHash();
 

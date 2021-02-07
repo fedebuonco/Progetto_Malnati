@@ -5,8 +5,6 @@
 #include <filesystem>
 #include <utility>
 
-volatile sig_atomic_t flag=0;
-
 AcceptClient::AcceptClient(asio::io_service& ios, unsigned short port_num,std::filesystem::path serverPath) :
         ios_(ios),
         acceptor_(ios_,boost::asio::ip::tcp::endpoint(boost::asio::ip::address_v4::any(),port_num)),

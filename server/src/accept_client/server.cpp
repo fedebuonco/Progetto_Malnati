@@ -49,45 +49,33 @@ void Server::Stop() {
     stop_.store(true);
 
     try {
-        // We send a fake message in order to close the server.
+        // We send a terminate message in order to close the server.
 
-        // We have a race condition where the last service handling this message could or could not be spawned
+        // We have a race condition where the last service handling this message could or could not be spawned      //TODO No race condition anymore @marco
         // so we send it but an exception telling us that the service is not present could arise.
         // In order to manage that we just save the exception in ec, without ever looking at it.
-        boost::system::error_code ec;
         boost::asio::ip::tcp::socket sock(ios_);
         boost::asio::ip::tcp::endpoint ep_(boost::asio::ip::address::from_string("127.0.0.1"), 3333);
-        sock.open(ep_.protocol(), ec);
-        sock.connect(ep_,ec);
+        sock.open(ep_.protocol());
+        sock.connect(ep_);
 
-        if(ec){
-            std::cerr << "Ecc:" << ec << std::endl;     //TODO: I never print the error so we can keep it
-        }
-
-        //std::cout << "Starting to shutdown Synchronous Server..." << std::endl;
+        //Create the termination message and send to ourself to terminate the detached thread (detach in service.cpp)
         ControlMessage check_result{5};
+        boost::asio::write(sock, boost::asio::buffer(check_result.ToJSON()));
 
-        boost::asio::write(sock, boost::asio::buffer(check_result.ToJSON()),ec);
-        sock.shutdown(boost::asio::ip::tcp::socket::shutdown_both,ec);
-
-        if(ec){
-            std::cerr << "Ecc:" << ec << std::endl;     //TODO: I never print the error so we can keep it
-        }
-
+        //Shutdown the socket in both way because we don't need an answer
+        sock.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
         sock.close();
 
         // This closes the server by joining the main. It kill also the accept_client.
-        // If the accept client has already spawned the last service then
-        // the main closes the last service during its switch case.
+        // If the accept client has already spawned the last service then the main closes the last service during its switch case.
         // In order to not do that we stop the spawn of the last service by checking the global var.
-
         thread_->join();
-        //std::cout<<"Successfully to shutdown Synchronous Server..."<<std::endl;
     }
     catch (std::exception &e) {
         //The interrupt should occur from another thread
-        std::cerr<<"Thread not joined "<<  e.what() << std::endl;
-        std::exit(0);
+        std::cerr<<"Error during termination "<<  e.what() << std::endl;
+        std::exit(EXIT_SUCCESS);
     }
 
 }

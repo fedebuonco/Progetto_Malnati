@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <mutex>
 #include <shared_mutex>
+
 class Database {
 
     static std::shared_mutex db_mutex_;
