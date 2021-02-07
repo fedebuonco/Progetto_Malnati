@@ -142,7 +142,9 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
         }
     } else {
         std::cerr <<"Error "<< t_ec.value() << " -- "<< t_ec.message() <<std::endl;
-        //TODO Here error in the sending WriteBuffer
+        //TODO Here error in the sending WriteBuffer   FEDE HELP US VA BENE USCIRE ?
+        std::exit(EXIT_FAILURE);
+
     }
 }
 
