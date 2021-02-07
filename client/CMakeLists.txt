@@ -20,7 +20,7 @@ include_directories(includes/database)
 # Thus we can use it by adding it with the add_subdirectory()
 add_subdirectory(libs/panoptes)
 include_directories(libs/panoptes/include)
-
+include_directories(libs/rapidjson)
 # We include the SQLiteCpp as a lib ( thanks god it has it's own already made CMakelist.txt)
 # Thus we can use it by adding it with the add_subdirectory()
 add_subdirectory(libs/SQLiteCpp)
