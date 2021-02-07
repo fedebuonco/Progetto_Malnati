@@ -8,7 +8,36 @@
 
 #include "../../includes/database/database.h"
 
+void AsyncService::ParseMetadata(std ::string metadata){
 
+    // Now on metadata_  i will parse everything
+    // metadata_ = hash_ + hashed_pass + lmt + hashed_pass + username_ + hashed_pass + file_string_;
+
+    //first we get the hashed_pass knowing that hash_ has a fixed size.
+
+    received_hpass_ = metadata.substr(64,64);
+
+
+    std::size_t current, previous = 0;
+
+    current = metadata.find(received_hpass_,previous);
+    received_hash_ = metadata.substr(previous, current - previous);
+    previous = current + 64;
+
+    current = metadata.find(received_hpass_,previous);
+    received_lmt_ = metadata.substr(previous, current - previous);
+    previous = current + 64;
+
+    current = metadata.find(received_hpass_,previous);
+    received_user_ = metadata.substr(previous, current - previous);
+    previous = current + 64;
+
+    current = metadata.find(received_hpass_,previous);
+    received_file_string_ = metadata.substr(previous, current - previous);
+    previous = current + 64;
+
+
+}
 
 AsyncService::AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock, std::filesystem::path server_path) :
 server_path_(server_path),
@@ -47,26 +76,14 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
     //We check if this is the first sip, if it is it contains metadata, and we must parse it.
     if(first_sip_){
 
-        metadata_ = m_buf.data();
+        ParseMetadata(m_buf.data());
+        // we now check that we have a valid user.
+        Database authentication;
 
-        //Now on metadata_ i have the USER@HASH@LMT@FILENAME, i will parse everything
-        std::size_t current, previous = 0;
-
-        current = metadata_.find("@",previous);
-        received_user_ = metadata_.substr(previous, current - previous);
-        previous = current + 1;
-
-        current = metadata_.find("@",previous);
-        received_hash_ = metadata_.substr(previous, current - previous);
-        previous = current + 1;
-
-        current = metadata_.find("@",previous);
-        received_lmt_ = metadata_.substr(previous, current - previous);
-        previous = current + 1;
-
-        current = metadata_.find("@",previous);
-        received_file_string_ = metadata_.substr(previous, current - previous);
-        previous = current + 1;
+        if (!authentication.auth(received_user_, received_hpass_, server_path_)){
+            // Here if we dont find a user
+            //TODO: Decidere cosa fare se user non è presente (praticamente mai si verificherà);
+        }
 
         first_sip_ = false;
         // We check if the folder does exist by querying the db.

@@ -4,7 +4,7 @@
 #include <utility>
 #include <database.h>
 
-FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path,  std::string username,  std::filesystem::path file_path, std::string file_string, std::string hash,
+FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path,  std::string username, std::string hashed_pass,   std::filesystem::path file_path, std::string file_string, std::string hash,
                        std::string lmt)  :
         sock_(ios_) ,
         ep_(boost::asio::ip::address::from_string(re.raw_ip_address), re.port_num),
@@ -18,7 +18,7 @@ FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watch
         sip_counter(0)
 {
     //let's build the metadata for future firstsip      //TODO: Change delimitator to hash
-    metadata_ = username_ + "@" + hash_ + "@" + lmt_ + "@" + file_string_;
+    metadata_ = hash_ + hashed_pass + lmt_ + hashed_pass + username_ + hashed_pass + file_string_;
     //if(DEBUG) std::cout << "Creating FileSipper for file " <<  path_.string() << std::endl;
     //if(DEBUG) std::cout << "With metadata =  " << metadata_ << std::endl;
     sock_.open(ep_.protocol());

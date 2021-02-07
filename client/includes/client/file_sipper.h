@@ -44,7 +44,7 @@ class FileSipper {
     bool ready;
 
 public:
-    FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
+    FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, std::string hashed_pass,  std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
     void Send();
 
     std::string file_string_;
