@@ -251,90 +251,116 @@ void Client::SendRemoval(Patch& update){
 /// hash performed.
 void Client::InitHash(){
 
-    // We open the db once here so that we limit the overhead
-    DatabaseConnection db(db_file_,folder_watched_);
+    try {
 
-    // For each file in the folder we look in the db using the relative filename and the last modified time.
-    for(auto itEntry = std::filesystem::recursive_directory_iterator(folder_watched_);
-        itEntry != std::filesystem::recursive_directory_iterator();
-        ++itEntry )
-    {
-        // We take the current element path, make it relative to the path specified and then we make it
-        // in a cross platform format (cross_platform_relative_element_path = cross_platform_rep)
-        auto element_path = itEntry->path();
-        std::filesystem::path relative_element_path = element_path.lexically_relative(folder_watched_);
-        std::string cross_platform_rep = relative_element_path.generic_string();
+        // We open the db once here so that we limit the overhead
+        DatabaseConnection db(db_file_, folder_watched_);
 
-        // We also add the "/" if it is a directory in order to diff it from non extension files.
-        if (std::filesystem::is_directory(element_path))
-            cross_platform_rep += "/";
+        // For each file in the folder we look in the db using the relative filename and the last modified time.
+        for (auto itEntry = std::filesystem::recursive_directory_iterator(folder_watched_, std::filesystem::directory_options::skip_permission_denied);
+             itEntry != std::filesystem::recursive_directory_iterator();
+             ++itEntry) {
+            // We take the current element path, make it relative to the path specified and then we make it
+            // in a cross platform format (cross_platform_relative_element_path = cross_platform_rep)
+            auto element_path = itEntry->path();
+            std::filesystem::path relative_element_path = element_path.lexically_relative(folder_watched_);
+            std::string cross_platform_rep = relative_element_path.generic_string();
 
-        // Now if the current element is a dir or the db or its a temporary file we can go to the next iteration
-        if (std::filesystem::is_directory(element_path) || cross_platform_rep == ".hash.db" || boost::algorithm::ends_with(cross_platform_rep, "~") )
-            continue;
+            // We also add the "/" if it is a directory in order to diff it from non extension files.
+            if (std::filesystem::is_directory(element_path))
+                cross_platform_rep += "/";
 
-        // We now need to retrieve the last modified time.
-        struct stat temp_stat;
-        // Put inside our struct temp_state the metadata like last modified time
-        stat(element_path.generic_string().c_str(), &temp_stat);
-        unsigned long mod_time = temp_stat.st_mtime;
+            // Now if the current element is a dir or the db or its a temporary file we can go to the next iteration
+            if (std::filesystem::is_directory(element_path) || cross_platform_rep == ".hash.db" ||
+                boost::algorithm::ends_with(cross_platform_rep, "~"))
+                continue;
 
-        // Now we have the tuple ( cross_platform_rep , mod_time )
-        // We use this tuple to see if we already hashed that version of the file.
-        // If we had, then we take the hash from the db, without hashing a second time the same file.
+            // We now need to retrieve the last modified time.
+            struct stat temp_stat;
+            // Put inside our struct temp_state the metadata like last modified time
+            stat(element_path.generic_string().c_str(), &temp_stat);
+            unsigned long mod_time = temp_stat.st_mtime;
 
-        // If it is not a dir
-        if(!db.AlreadyHashed(cross_platform_rep, std::to_string(mod_time))) {
-            //Here only if the tuple ( cross_platform_rep , mod_time ) is not present, so we need to hash and then update the db.
-            CryptoPP::SHA256 hash;
-            std::string digest;
+            // Now we have the tuple ( cross_platform_rep , mod_time )
+            // We use this tuple to see if we already hashed that version of the file.
+            // If we had, then we take the hash from the db, without hashing a second time the same file.
 
-            int n_attemps = 20;
+            // If it is not a dir
+            if (!db.AlreadyHashed(cross_platform_rep, std::to_string(mod_time))) {
+                //Here only if the tuple ( cross_platform_rep , mod_time ) is not present, so we need to hash and then update the db.
 
-            while (n_attemps > 0) { //We try to hash the file 20 times
+                //Hash the file and return the digest to insert in the DB
+                std::string digest = HashFile(element_path);
 
-                try {
-                    CryptoPP::FileSource f(
-                            element_path.generic_string().c_str(),
-                            true,
-                            new CryptoPP::HashFilter(hash,
-                                                     new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
 
-                    // We print the digest
-                    //if(DEBUG) std::cout << "Digest is = " << digest << std::endl;
-
-                    // Here we have the hash of the file and we can insert it in the DB
-                    db.InsertDB(cross_platform_rep, digest, std::to_string(mod_time));
-                    break;
-                }
-                catch (CryptoPP::FileStore::Err &e) {
-                    //Here because CryptoPP can't open the file because we are copying the file into the folder, we try again
-                    std::this_thread::sleep_for(std::chrono::seconds(1));
-                    n_attemps--;
-
-                    std::cerr << "---------------------ATTEMPT " << n_attemps << std::endl;     //TODO: Sistemare
-
-                    if (n_attemps == 0) {
-                        std::cout << "CryptoPP can't hash the file because is busy. Next watcher event will hash it again." << e.what() << std::endl;
-                        break;
-                    }
-                }
-                catch (CryptoPP::Exception &e) {
-                    std::cout << "Error CryptoPP " << e.what() << std::endl;
-                    std::exit(EXIT_FAILURE);
-                }
-                catch (std::exception &e) {
-                    std::cout << "Error during hash" << e.what() << std::endl;
-                    std::exit(EXIT_FAILURE);
-                }
-
+                // Here we have the hash of the file and we can insert it in the DB
+                db.InsertDB(cross_platform_rep, digest, std::to_string(mod_time));
             }
+
         }
 
+        // Now we clean the db for files that are not anymore in the folder.
+        db.CleanOldRows();
+
+        // We now have the DB and client folder aligned.
+    }
+    catch (std::filesystem::filesystem_error &e) {              //TODO: Da capire: (1) due eccezioni si lanciano questa e quella sotto con gli attempt
+                                                                // (2) direi di non fare nulla, uscire meglio di no  (3) ma se catcho a metà del for e esco da init hash perhè dopo continua a cancellarmi i file?
+        std::cout << "Filesystem error: " << e.what() << std::endl;
+        //std::exit(EXIT_FAILURE);
+    }
+    catch (std::exception &e) {
+        std::cout << "Error during hash" << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+}
+
+std::string Client::HashFile(const std::filesystem::path& element_path) {
+    CryptoPP::SHA256 hash;
+    std::string digest;
+
+    int n_attemps = 10;
+
+    while (n_attemps > 0) { //We try to hash the file 20 times
+
+        try {
+            CryptoPP::FileSource f(
+                    element_path.generic_string().c_str(),
+                    true,
+                    new CryptoPP::HashFilter(hash,
+                                             new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
+
+            //Exit from while because we hash the file without exception
+            break;
+        }
+        catch (CryptoPP::FileStore::Err &e) {
+            //Here because CryptoPP can't open the file because we are copying the file into the folder, we try again
+            if(!std::filesystem::exists(element_path)){
+                const std::error_code error;
+                throw std::filesystem::filesystem_error(e.what(), error);
+            }
+
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            n_attemps--;
+
+            std::cerr << "---------------------ATTEMPT " << n_attemps << std::endl;     //TODO: Sistemare
+
+            if (n_attemps == 0) {
+                std::cout << "CryptoPP can't hash the file because is busy. Next watcher event will hash it again."
+                          << e.what() << std::endl;
+                const std::error_code error;
+                throw std::filesystem::filesystem_error(e.what(), error);
+            }
+        }
+        catch (CryptoPP::Exception &e) {
+            std::cout << "Error CryptoPP " << e.what() << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
+        catch (std::exception &e) {
+            std::cout << "Error during hash" << e.what() << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
     }
 
-    // Now we clean the db for files that are not anymore in the folder.
-    db.CleanOldRows();
-
-    // We now have the DB and client folder aligned.
+    return digest;
 }

@@ -31,7 +31,7 @@ void FileSipper::Send(){
     // We make the status true, so that we know the filesipper has been sent.
     status.store(true);
     Connect();
-    ios_.run();
+    ios_.run();     //GIVE ME AN EXCEPTION HERE @MARCO
 }
 
 //TODO iterator endpoint not single...

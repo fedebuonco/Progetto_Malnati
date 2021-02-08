@@ -42,7 +42,7 @@ ControlMessage::ControlMessage(const std::string& json_message){
    try{
        // We parse the json
        this->document_.Parse(json_message.c_str());
-       std::cerr << this->ToJSON() << std::endl;
+       //std::cerr << this->ToJSON() << std::endl;
        //Take the 'Type' of the message, we do this for faster check. The other data will be extracted only when needed.
        rapidjson::Value& val = document_["Type"];
        std::string t = val.GetString();
