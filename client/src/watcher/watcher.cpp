@@ -42,10 +42,10 @@ void Watcher::listenerFunction(const std::vector<pfw::EventPtr>& events)
 
         // We don't take action regarding the changes in the db.
         auto result = event->relativePath.string();
-        if( !isASCII(result)){
+        /*if( !isASCII(result)){
             std::cerr << "Non ascii" << std::endl;
             std::exit(EXIT_FAILURE);
-        }
+        }*/
         if (event->relativePath.string() == ".hash.db" && events.size() == 1)
             return;
         if (event->relativePath.string() == ".hash.db")

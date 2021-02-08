@@ -10,6 +10,8 @@ include_directories(includes/utilities)
 include_directories(includes/watcher)
 include_directories(includes/sqlite)
 
+include_directories(libs/rapidjson)
+
 # We include the SQLiteCpp as a lib ( thanks god it has it's own already made CMakelist.txt)
 # Thus we can use it by adding it with the add_subdirectory()
 add_subdirectory(libs/SQLiteCpp)

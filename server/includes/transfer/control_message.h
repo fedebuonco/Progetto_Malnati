@@ -8,19 +8,21 @@
 #include <string>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <document.h>     // rapidjson's DOM-style API
+#include <prettywriter.h> // for stringify JSON
 
 /// Encapsulates a control message. A control message is either an auth or a tree message. It has various attributes and
 /// a "to_json" method that will generate a result that will be sent to the server
 class ControlMessage {
 private:
-    std::unique_ptr<boost::property_tree::ptree> json_mess_;
-
+    //std::unique_ptr<boost::property_tree::ptree> json_mess_;
+    rapidjson::Document document_;
 public:
     int type_;
     std::string username_;
     std::string hashkey_;
     ControlMessage(int tp);
-    ControlMessage(std::string json_code);
+    ControlMessage(std::string json_message);
     std::string ToJSON();
     void AddElement(std::string element, std::string value);
     std::string GetElement(std::string element);

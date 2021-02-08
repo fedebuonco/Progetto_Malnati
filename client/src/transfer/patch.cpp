@@ -107,7 +107,7 @@ int Patch::Dispatch(const std::filesystem::path& db_path, const std::filesystem:
                 std::filesystem::path f = folder_watched / element.first;
 
                 //We create a fileSipper for this file and we insert it inside the SharedQueue
-                auto fs =  std::make_shared<FileSipper>(raw_endpoint, folder_watched , db_path ,credential.username_, f, element.first, file_hash, file_lmt);
+                auto fs =  std::make_shared<FileSipper>(raw_endpoint, folder_watched , db_path ,credential.username_, credential.hash_password_, f, element.first, file_hash, file_lmt);
                 SharedQueue::get_Instance()->insert(fs);
 
                 counter++;  //Increment the number of dispatched file.
