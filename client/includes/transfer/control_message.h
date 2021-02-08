@@ -5,6 +5,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <document.h>     // rapidjson's DOM-style API
 #include <prettywriter.h> // for stringify JSON
+
 /// Encapsulates a control message. A control message is either an auth or a treet message.
 /// It has various attributes and a "to_json" method that will generate a result that will be sent to the server
 class ControlMessage {

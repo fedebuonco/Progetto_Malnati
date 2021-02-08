@@ -17,7 +17,7 @@ SyncTCPSocket::SyncTCPSocket(const std::string& raw_ip_add, unsigned short port_
     if (errorCode)
     {
         // Error - Open Socket
-        std::cerr << "Error opening the socket" << errorCode.message();
+        std::cerr << "Error opening the socket " << errorCode.message();
         std::exit( EXIT_FAILURE );
     }
 }
@@ -41,13 +41,12 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
     while (n_tries) {
         try {
 
-            if (DEBUG)  std::cout << "\nEstablishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
-
             sock_.connect(ep_);
             break; //We exit from while loop because the connection was successful
         }
         catch (boost::system::system_error &e) {
             n_tries--;
+            if (DEBUG)  std::cout << "\nEstablishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
 
             //We wait before try again
             std::this_thread::sleep_for (std::chrono::seconds (1));
@@ -58,7 +57,7 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
             }
         }
         catch (std::exception& e) {
-            std::cerr << "Generic Error during server connection" << std::endl ;
+            std::cerr << "Generic Error during server connection " << e.what() <<  std::endl ;
             std::exit(EXIT_FAILURE);
         }
     }

@@ -32,7 +32,7 @@ Client::Client(RawEndpoint re, const std::filesystem::path& folder_watched) :
 
     // We recover the sending files
     int recovered = RecoverSending();
-    if (DEBUG) std::cout << "Recovered " << recovered << " files from previous failed sending" << std::endl;
+    if (DEBUG && recovered>0) std::cout << "\nRecovered " << recovered << " files from previous failed sending" << std::endl;
 
 
     // We start watching for further changes
@@ -109,7 +109,7 @@ bool Client::Auth() {
 
         if(auth_response=="true") {
             //The user is authenticated so we return true
-            if(DEBUG) std::cout << "\n\nUser " << Config::get_Instance()->ReadProperty("username") << " successfully authenticated." << std::endl;
+            if(DEBUG) std::cout << "\nUser \"" << Config::get_Instance()->ReadProperty("username") << "\" successfully authenticated." << std::endl;
             return true;
         }
     }
@@ -228,9 +228,9 @@ std::string genTree(const std::vector<std::string>& vector) {
 void Client::SendRemoval(Patch& update){
 
     //If the list is empty we don't send the list of 'to be deleted' to the server
-    if(update.removed_.empty()){
-        return;
-    }
+    if(update.removed_.empty())  return;
+
+    //The list is not empty, so we have some file to send. We prepare the message type:3
 
     Credential credential_ = Authentication::get_Instance()->ReadCredential();
 
@@ -250,91 +250,103 @@ void Client::SendRemoval(Patch& update){
 /// Test each file to see if already present in the hash db, and acts accordingly in order to keep a database of each
 /// hash performed.
 void Client::InitHash(){
+    std::error_code ec;
 
-    // We open the db once here so that we limit the overhead
-    DatabaseConnection db(db_file_,folder_watched_);
+    try {
+        // We open the db once here so that we limit the overhead
+        DatabaseConnection db(db_file_, folder_watched_);
 
-    // For each file in the folder we look in the db using the relative filename and the last modified time.
-    for(auto itEntry = std::filesystem::recursive_directory_iterator(folder_watched_);
-        itEntry != std::filesystem::recursive_directory_iterator();
-        ++itEntry )
-    {
-        // We take the current element path, make it relative to the path specified and then we make it
-        // in a cross platform format (cross_platform_relative_element_path = cross_platform_rep)
-        auto element_path = itEntry->path();
-        std::filesystem::path relative_element_path = element_path.lexically_relative(folder_watched_);
-        std::string cross_platform_rep = relative_element_path.generic_string();
+        // For each file in the folder we look in the db using the relative filename and the last modified time.
+        for (auto itEntry = std::filesystem::recursive_directory_iterator(folder_watched_, ec);     //TODO , std::filesystem::directory_options::skip_permission_denied
+             itEntry != std::filesystem::recursive_directory_iterator();
+             ++itEntry) {
 
-        // We also add the "/" if it is a directory in order to diff it from non extension files.
-        if (std::filesystem::is_directory(element_path))
-            cross_platform_rep += "/";
+            if(ec){
+               std::cerr << "Error Recursive directory (InitHash): " << ec << std::endl;
+               continue;
+            }
 
-        // Now if the current element is a dir or the db or its a temporary file we can go to the next iteration
-        if (std::filesystem::is_directory(element_path) || cross_platform_rep == ".hash.db" || boost::algorithm::ends_with(cross_platform_rep, "~") )
-            continue;
+            // We take the current element path, make it relative to the path specified and then we make it
+            // in a cross platform format (cross_platform_relative_element_path = cross_platform_rep)
+            auto element_path = itEntry->path();
+            std::filesystem::path relative_element_path = element_path.lexically_relative(folder_watched_);
+            std::string cross_platform_rep = relative_element_path.generic_string();
 
-        // We now need to retrieve the last modified time.
-        struct stat temp_stat;
-        // Put inside our struct temp_state the metadata like last modified time
-        stat(element_path.generic_string().c_str(), &temp_stat);
-        unsigned long mod_time = temp_stat.st_mtime;
+            // We also add the "/" if it is a directory in order to diff it from non extension files.
+            if (std::filesystem::is_directory(element_path))        //TODO: We need this? Because we don't send folder anymore @marco
+                cross_platform_rep += "/";
 
-        // Now we have the tuple ( cross_platform_rep , mod_time )
-        // We use this tuple to see if we already hashed that version of the file.
-        // If we had, then we take the hash from the db, without hashing a second time the same file.
+            // Now if the current element is a dir or the db or its a temporary file we can go to the next iteration
+            if (std::filesystem::is_directory(element_path) || cross_platform_rep == ".hash.db" ||
+                boost::algorithm::ends_with(cross_platform_rep, "~"))
+                continue;
 
-        // If it is not a dir
-        if(!db.AlreadyHashed(cross_platform_rep, std::to_string(mod_time))) {
-            //Here only if the tuple ( cross_platform_rep , mod_time ) is not present, so we need to hash and then update the db.
-            CryptoPP::SHA256 hash;
-            std::string digest;
+            // We now need to retrieve the last modified time.
+            struct stat temp_stat;
+            // Put inside our struct temp_state the metadata like last modified time
+            stat(element_path.generic_string().c_str(), &temp_stat);
+            unsigned long mod_time = temp_stat.st_mtime;
 
-            int n_attemps = 20;
+            // Now we have the tuple ( cross_platform_rep , mod_time )
+            // We use this tuple to see if we already hashed that version of the file.
+            // If we had, then we take the hash from the db, without hashing a second time the same file.
 
-            while (n_attemps > 0) { //We try to hash the file 20 times
+            if (!db.AlreadyHashed(cross_platform_rep, std::to_string(mod_time))) {
+                //Here only if the tuple ( cross_platform_rep , mod_time ) is not present inside DB, so we need to hash and then update the db.
 
-                try {
-                    CryptoPP::FileSource f(
-                            element_path.generic_string().c_str(),
-                            true,
-                            new CryptoPP::HashFilter(hash,
-                                                     new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
+                //Hash the file and return the digest to insert in the DB
+                std::string digest = HashFile(element_path);
 
-                    // We print the digest
-                    //if(DEBUG) std::cout << "Digest is = " << digest << std::endl;
-
-                    // Here we have the hash of the file and we can insert it in the DB
-                    db.InsertDB(cross_platform_rep, digest, std::to_string(mod_time));
-                    break;
-                }
-                catch (CryptoPP::FileStore::Err &e) {
-                    //Here because CryptoPP can't open the file because we are copying the file into the folder, we try again
-                    std::this_thread::sleep_for(std::chrono::seconds(1));
-                    n_attemps--;
-
-                    std::cerr << "---------------------ATTEMPT " << n_attemps << std::endl;     //TODO: Sistemare
-
-                    if (n_attemps == 0) {
-                        std::cout << "CryptoPP can't hash the file because is busy. Next watcher event will hash it again." << e.what() << std::endl;
-                        break;
-                    }
-                }
-                catch (CryptoPP::Exception &e) {
-                    std::cout << "Error CryptoPP " << e.what() << std::endl;
-                    std::exit(EXIT_FAILURE);
-                }
-                catch (std::exception &e) {
-                    std::cout << "Error during hash" << e.what() << std::endl;
-                    std::exit(EXIT_FAILURE);
-                }
-
+                //We have the hash of the file and we can insert it in the DB
+                db.InsertDB(cross_platform_rep, digest, std::to_string(mod_time));
             }
         }
 
+        // Now we clean the db for files that are not anymore in the folder.
+        db.CleanOldRows();
+
+        // We now have the DB and client folder aligned.
+    }
+    catch (std::filesystem::filesystem_error &e) {              //TODO: Policy? @marco
+        std::cerr << "Error Filesystem (InitHash): " << e.what() << std::endl;
+        //std::exit(EXIT_FAILURE);
+    }
+    catch (std::exception &e) {
+        std::cerr << "Error generic (InitHash) " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+}
+
+std::string Client::HashFile(const std::filesystem::path& element_path) {
+    CryptoPP::SHA256 hash;
+    std::string digest;
+
+    try {
+        CryptoPP::FileSource f(
+                element_path.generic_string().c_str(),
+                true,
+                new CryptoPP::HashFilter(hash,
+                                         new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
+    }
+    catch (CryptoPP::FileStore::Err &e) {
+        //Here because CryptoPP can't open the file because we are copying the file into the folder
+        //Another possibility is that the file doesn't exist anymore.
+        //In both ways we recover from this exception.
+
+        if(!std::filesystem::exists(element_path)){     //TODO: What do we do here? We can't exit because CryptoPP recover from this error alone
+            //TODO: I have left this things in case we want to differentiate the problem to print in console    @marco
+        }
+
+    }
+    catch (CryptoPP::Exception &e) {
+        std::cout << "Error CryptoPP (HashFile) " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+    catch (std::exception &e) {
+        std::cout << "Error generic (HashFile) " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 
-    // Now we clean the db for files that are not anymore in the folder.
-    db.CleanOldRows();
 
-    // We now have the DB and client folder aligned.
+    return digest;
 }

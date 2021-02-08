@@ -142,7 +142,7 @@ TEST_CASE("prettyPrint") {
         client.ProcessRemoved(patch);
         client.ProcessNew(patch);
         client.ProcessCommon(patch,server_th);
-        REQUIRE( patch.PrettyPrint() == ":::::::: Changes ::::::::\n"
+        REQUIRE( patch.PrettyPrint() == "\n:::::::: Changes ::::::::\n"
                                         "- ce\n"
                                         "- dede/\n"
                                         "- dede/c.txt\n"

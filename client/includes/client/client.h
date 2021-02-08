@@ -8,6 +8,7 @@
 #include <watcher.h>
 #include <sync_tcp_socket.h>
 #include <control_message.h>
+#include <database.h>
 
 /// The main class of the client. It represent an object that will connect to the server specified
 /// in the constructor and will ask to a watcher to watch a specified folder.
@@ -28,6 +29,7 @@ class Client {
     void SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm);
     ControlMessage SyncReadCM(SyncTCPSocket& stcp);
     void InitHash();
+    std::string HashFile(const std::filesystem::path& path);
 
 public:
     Client(RawEndpoint re, const std::filesystem::path& folder_watched);

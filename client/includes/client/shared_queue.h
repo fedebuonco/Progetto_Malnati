@@ -27,8 +27,6 @@ public:
 
     void setFlag(bool flag_value);
 
-    int list_size();
-
     std::shared_ptr<FileSipper> get_ready_FileSipper();
 
     void remove_element(const std::shared_ptr<FileSipper>& file_sipper);

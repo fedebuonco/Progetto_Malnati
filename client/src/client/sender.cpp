@@ -1,4 +1,4 @@
-#include "sender.h"
+#include <sender.h>
 
 const unsigned int DEFAULT_THREAD_POOL_SIZE = 1;
 
@@ -18,16 +18,24 @@ void Sender::Sender_Action() const{
 
         if(chosen_fs==nullptr){
             //If we are here, it means that we woke up the thread waiting on cv in order to terminate the program.
-            //Continue because in the next iteration the while condition will be false
+            //Continue because in the next iteration we exit from the while (condition will be false) and join the threads.
             continue;
         }
 
         //We take a thread from the pool and assign it the previously chosen fileSipper
         boost::asio::post(pool,[chosen_fs](){
 
-                  chosen_fs->Send();
+                try {
+                    chosen_fs->Send();
 
-                  SharedQueue::get_Instance()->remove_element(chosen_fs);
+                    SharedQueue::get_Instance()->remove_element(chosen_fs);
+                }
+                catch (std::exception &e){
+                    //Here we have the exception that have been throw while creating and sending files
+                    //TODO: I have a lot of prints with cerr; for me we can remove the cerr. @marco
+                    std::cerr << "Error Unable to send a file; maybe was deleted thread " << e.what() << std::endl;
+                    return;
+                }
         });
 
     }
