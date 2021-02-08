@@ -1,5 +1,5 @@
-#ifndef CLIENT_FILE_SIPPER_H
-#define CLIENT_FILE_SIPPER_H
+#pragma once
+
 
 #include <boost/asio/io_service.hpp>
 #include <string>
@@ -12,8 +12,7 @@
 
 /// Encapsulates a file+hash that need to be sent to a server.
 /// The file is sent in small "sips" and after each sending we call a callback.
-/// Offers a callback that, after performing some checks, calls for another
-/// sip, thus creating a chain of sent sips.
+/// Offers a callback that, after performing some checks, calls for another sip, thus creating a chain of sent sips.
 class FileSipper {
     //FileSipper is made of path_ and hash_
     std::filesystem::path path_;
@@ -33,18 +32,19 @@ class FileSipper {
     //The file will be sent in small portions of this size
     enum { MessageSize = 1024 };
 
-    std::array<char, MessageSize> buf_array_;
-    std::array<char, MessageSize> buf_metadata;
+    std::array<char, MessageSize> buf_array_{};
+    std::array<char, MessageSize> buf_metadata{};
 
     //Dimension of the file to send
-    int file_size_;
+    int file_size_{};     //TODO: Remove? @marco
+
     //Number of sip (i.e. block) in which the file is split
     int sip_counter;
 
-    bool ready;
+    bool ready{};
 
 public:
-    FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, std::string hashed_pass,  std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
+    FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, const std::string& hashed_pass,  std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
     void Send();
 
     std::string file_string_;
@@ -77,6 +77,3 @@ private:
 
 
 };
-
-
-#endif //CLIENT_FILE_SIPPER_H

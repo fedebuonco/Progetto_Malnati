@@ -125,18 +125,16 @@ int Patch::Dispatch(const std::filesystem::path& db_path, const std::filesystem:
 
 /// Pretty Prints the changes contained in the patch
 /// \return A string summing up the current client-server file situation.
-
-//TODO: For me the problem of random number is here
 std::string Patch::PrettyPrint(){
     int max_files_displayed = 3;
     std::string pretty;
-    pretty.append(":::::::: Changes ::::::::\n");
+    pretty.append("\n:::::::: Changes ::::::::\n");
     int cnt =0;
     for (const auto& file : added_){
         pretty.append("+ " + file +"\n");
         cnt++;
         if (cnt == max_files_displayed) {
-            std::string other = std::to_string(added_.size() - 3);
+            std::string other = std::to_string(added_.size() - 3);  //TODO: For me the problem of random number is here @marco
             pretty.append("+ " + other + " Other files... \n");
             cnt = 0;
             break;
@@ -174,7 +172,7 @@ std::string Patch::PrettyPrint(){
             break;
         }
     }
-    pretty.append(":::::::: Files that will be Sent or are in sending (New files or newer files) - Last Modified Time ::::::::\n" );
+    if(!to_be_sent_vector.empty() ) pretty.append(":::::::: Files that will be Sent or are in sending (New files or newer files) - Last Modified Time ::::::::\n" );
     for (const auto& file : to_be_sent_vector ){
         pretty.append(file.first + " - ");
         pretty.append(std::to_string(file.second) + "\n");
@@ -187,7 +185,7 @@ std::string Patch::PrettyPrint(){
         }
     }
 
-    std::cout << ":::::::: Changes ::::::::" << std::endl;
+    if(!added_.empty() ) std::cout << "\n:::::::: Changes ::::::::" << std::endl;
     for (const auto& file : added_){
         std::cout <<"+ "<<file << std::endl;
         cnt++;
@@ -219,7 +217,7 @@ std::string Patch::PrettyPrint(){
         }
     }
 
-    std::cout << ":::::::: Files that will be deleted or overwritten on the server ( Because older or deleted ) - Last Modified Time ::::::::" << std::endl;
+    if(!to_be_elim_vector.empty() ) std::cout << ":::::::: Files that will be deleted or overwritten on the server ( Because older or deleted ) - Last Modified Time ::::" << std::endl;
     for (const auto& file : to_be_elim_vector){
         std::cout << file.first + " - " << file.second << std::endl;
         cnt++;
@@ -230,7 +228,8 @@ std::string Patch::PrettyPrint(){
             break;
         }
     }
-    std::cout << ":::::::: Files that will be Sent or are in sending (New files or newer files) - Last Modified Time ::::::::" << std::endl;
+
+    if(!to_be_sent_vector.empty() )  std::cout << ":::::::: Files that will be Sent or are in sending (New files or newer files) - Last Modified Time ::::::::" << std::endl;
     for (const auto& file : to_be_sent_vector){
         std::cout << file.first + " - " << file.second << std::endl;
         cnt++;
@@ -240,7 +239,7 @@ std::string Patch::PrettyPrint(){
             break;
         }
     }
-    std::cout << ":::::::: Recap : new files (" << added_.size() << ")   ::::::::" << std::endl;
+    std::cout << "\n\n:::::::: Recap : new files (" << added_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : removed files (" << removed_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : common files (" << common_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : Files that will be sent or are in sending (" << to_be_sent_vector.size() << ")   ::::::::" << std::endl;

@@ -53,33 +53,44 @@ TreeT::TreeT(const std::string& tree, const std::string& time) {
 TreeT::TreeT(const std::filesystem::path& path){
     std::error_code ec;
 
-    for(auto itEntry = std::filesystem::recursive_directory_iterator(path,ec);
-        itEntry != std::filesystem::recursive_directory_iterator();
-        ++itEntry )
-    {
-        if(ec){
-            std::exit(EXIT_FAILURE);
+    try{
+
+        for(auto itEntry = std::filesystem::recursive_directory_iterator(path,ec);
+            itEntry != std::filesystem::recursive_directory_iterator();
+            ++itEntry )
+        {
+            if(ec){
+                std::cerr << "Error Recursive directory (TreeT): " << ec << std::endl;
+                std::exit(EXIT_FAILURE);
+            }
+            // We take the current element path, make it relative to the path specified and then we make it
+            // in a cross platform format (cross_platform_relative_element_path = cross_platform_rep)
+            auto element_path = itEntry->path();
+            std::filesystem::path relative_element_path = element_path.lexically_relative(path);
+            std::string cross_platform_rep = relative_element_path.generic_string();
+
+            //We don't insert folder, so we go to the next for iteration
+            if (std::filesystem::is_directory(element_path)) continue;
+
+            // We don't insert the hash.db
+            if (cross_platform_rep == ".hash.db")
+                continue;
+
+            //we now need to retrieve the last modified time.
+            struct stat temp_stat;
+            stat(element_path.generic_string().c_str(), &temp_stat);
+            unsigned long mod_time = temp_stat.st_mtime;
+            map_tree_time_.insert({cross_platform_rep, mod_time});
         }
-        // We take the current element path, make it relative to the path specified and then we make it
-        // in a cross platform format (cross_platform_relative_element_path = cross_platform_rep)
-        auto element_path = itEntry->path();
-        std::filesystem::path relative_element_path = element_path.lexically_relative(path);
-        std::string cross_platform_rep = relative_element_path.generic_string();
 
-        // We also add the "/" if it is a directory in order to differentiate it from non extension files.
-        if (std::filesystem::is_directory(element_path))
-            continue;
-            //cross_platform_rep += "/";
-
-        // We don't insert the hash.db
-        if (cross_platform_rep == ".hash.db")
-            continue;
-
-        //we now need to retrieve the last modified time.
-        struct stat temp_stat;
-        stat(element_path.generic_string().c_str(), &temp_stat);
-        unsigned long mod_time = temp_stat.st_mtime;
-        map_tree_time_.insert({cross_platform_rep, mod_time});
+    }
+    catch (std::filesystem::filesystem_error &e) {              //TODO: Policy? @marco
+        std::cerr << "Error Filesystem (TreeT): " << e.what() << std::endl;
+        //std::exit(EXIT_FAILURE);
+    }
+    catch (std::exception &e) {
+        std::cerr << "Error generic (TreeT) " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 }
 

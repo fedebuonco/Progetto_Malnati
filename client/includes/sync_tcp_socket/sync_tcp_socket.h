@@ -14,7 +14,7 @@ public:
     SyncTCPSocket(const std::string& raw_ip_add, unsigned short port);
     ~SyncTCPSocket();
     void ConnectServer(int n_tries);
-    //TODO: Implement the three rules
+    //TODO: Implement the three rules   @marco
 
     /// Boost socket
     boost::asio::ip::tcp::socket sock_;

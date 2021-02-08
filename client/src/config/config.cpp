@@ -55,7 +55,7 @@ void Config::WriteProperty(const std::string& key, const std::string& value) {
     try {
         //Read the file and put the content inside root. If the file is wrong formatted, generate a pt::json_parser::json_parser_error.
         //If we don't do this all the information inside json file will be deleted
-        std::filesystem::path config_file = this->exepath / "config_file" / "config.json";
+        std::filesystem::path config_file = this->exe_path / "config_file" / "config.json";
         boost::property_tree::read_json(config_file.string(), root);
 
         //Create a node key, value
@@ -87,7 +87,7 @@ std::string Config::ReadProperty(const std::string &key) {
 
     try {
         //Read the file and put the content inside root. If the file is wrong formatted, generate a pt::json_parser::json_parser_error.
-        std::filesystem::path config_file = this->exepath / "config_file" / "config.json";
+        std::filesystem::path config_file = this->exe_path / "config_file" / "config.json";
         boost::property_tree::read_json(config_file.string(), root);
 
         //We get the value, if the key is not present, get() method will throw a pt::ptree_bad_path exception.
@@ -135,7 +135,7 @@ void Config::SetConfig(int argc, char *argv[]) {
 
             //We activate the debug prints and check with a print
             DEBUG = true;
-            if(DEBUG) std::cout << "DEBUG activated correctly" << std::endl;
+            //if(DEBUG) std::cout << "DEBUG activated correctly" << std::endl;
         }
 
     }
@@ -176,7 +176,7 @@ void Config::SetConfig(int argc, char *argv[]) {
                     CryptoPP::StringSource s(password, true, new CryptoPP::HashFilter(
                             hash, new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
 
-                    if(DEBUG) std::cout << "\nUser send the password: " << password << " and hash: " << digest << std::endl;
+                    //if(DEBUG) std::cout << "\nUser send the password: " << password << " and hash: " << digest << std::endl;
 
 
                     Config::get_Instance()->WriteProperty("username", username);
@@ -293,9 +293,9 @@ void Config::SetPath(const std::string& your_path) {
     std::filesystem::path bin_path_abs = executable_path_abs.remove_filename();
     std::filesystem::path master_path_abs = bin_path_abs.parent_path().parent_path();
 
-    std::cout << "Path \"" << your_path << "\" converted into \"" << master_path_abs.string() << "\"." << std::endl;
+    //std::cout << "Path \"" << your_path << "\" converted into \"" << master_path_abs.string() << "\"." << std::endl;
 
-    this->exepath = master_path_abs;
+    this->exe_path = master_path_abs;
 }
 
 
@@ -331,8 +331,8 @@ RawEndpoint Config::ReadRawEndpoint() {
  */
 bool Config::IsConfigStructureCorrect() {
 
-    std::filesystem::path config_file_folder = this->exepath / "config_file";
-    std::filesystem::path config_file_path = this->exepath / "config_file" / "config.json";
+    std::filesystem::path config_file_folder = this->exe_path / "config_file";
+    std::filesystem::path config_file_path = this->exe_path / "config_file" / "config.json";
     std::filesystem::directory_entry config_directory_path{config_file_folder};
 
     //Function exists check if the given file path corresponds to an existing file or directory.
@@ -364,8 +364,8 @@ void Config::SetDefaultConfig() {
     if(DEBUG) std::cout << "Restore default configuration of config file and structure" << std::endl;
 
     //First of all we delete the structure
-    std::filesystem::path config_file_folder = this->exepath / "config_file";
-    std::filesystem::path config_file = this->exepath / "config_file" / "config.json";
+    std::filesystem::path config_file_folder = this->exe_path / "config_file";
+    std::filesystem::path config_file = this->exe_path / "config_file" / "config.json";
     std::filesystem::remove_all(config_file_folder,ec);
     if(ec){
         std::exit(EXIT_FAILURE);

@@ -19,11 +19,11 @@ struct RawEndpoint{
 
 
 
-///
+///Class that handle the configuration phase
 class Config {
     Config()= default;
     static Config* m_ConfigClass;
-    std::filesystem::path exepath;
+    std::filesystem::path exe_path;
 
 public:
     //Singleton, eliminate copy and assignment

@@ -4,8 +4,9 @@
 #include <utility>
 #include <database.h>
 
-FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path,  std::string username, std::string hashed_pass,   std::filesystem::path file_path, std::string file_string, std::string hash,
-                       std::string lmt)  :
+FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path,
+                       std::string username, const std::string& hashed_pass,   std::filesystem::path file_path,
+                       std::string file_string, std::string hash, std::string lmt)  :
         sock_(ios_) ,
         ep_(boost::asio::ip::address::from_string(re.raw_ip_address), re.port_num),
         folder_watched_(std::move(folder_watched)),
@@ -17,21 +18,20 @@ FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watch
         username_(std::move(username)),
         sip_counter(0)
 {
-    //let's build the metadata for future firstsip      //TODO: Change delimitator to hash
+    //We build the metadata to put into the first sipper of the fileSipper (metadata are separated with the user hashed password)
     metadata_ = hash_ + hashed_pass + lmt_ + hashed_pass + username_ + hashed_pass + file_string_;
     //if(DEBUG) std::cout << "Creating FileSipper for file " <<  path_.string() << std::endl;
     //if(DEBUG) std::cout << "With metadata =  " << metadata_ << std::endl;
     sock_.open(ep_.protocol());
-
 }
 
 
 /// Methods that starts the sending of the File.
 void FileSipper::Send(){
-    // We make the status true, so that we know the filesipper has been sent.
+    //We change the fileSipper status to true, to indicate that we handle the fileSipper
     status.store(true);
     Connect();
-    ios_.run();     //GIVE ME AN EXCEPTION HERE @MARCO
+    ios_.run();
 }
 
 //TODO iterator endpoint not single...
@@ -42,25 +42,27 @@ void FileSipper::Connect() {
     sock_.async_connect(ep_, [this](boost::system::error_code ec) {
         //if(DEBUG) std::cout << "Currently in the async_connect callback " << std::endl;
         //TODO check if we still want to send the file. In teoria non serve perchè fatto in patch
-        //TODO Handle exception
         OpenFile();
         FirstSip(ec_);
+
     });
 }
 
-// Opens a file
+/// Opens a file and prepare things for the FirstSip
 void FileSipper::OpenFile() {
-    //std::cout << "Opening File  " << this->file_string_ << std::endl;
+
+    //We open the file
     files_stream_.open(path_.c_str(), std::ios_base::binary);
     if (files_stream_.fail())
         throw std::fstream::failure("Failed while opening file " + path_.string());
 
-    //retrieve the byte size
+    //Retrieve the byte size
     files_stream_.seekg(0, files_stream_.end);
     auto fileSize = files_stream_.tellg();
     this->file_size_ = fileSize;
     //std::cout << "File Opened, Size : " << file_size_ << std::endl;
-    //reset the stream;
+
+    //Reset the stream;
     files_stream_.seekg(0, files_stream_.beg);
 }
 
@@ -84,12 +86,12 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
         writeBuffer(buf);
     }
     else{
-        // Here we are if failbit or badbit are set to 1.
-        // The failbit could have been set by the eof, so we check it
+        // Here we are if fail bit or bad bit are set to 1.
+        // The fail bit could have been set by the eof, so we check it
         if (files_stream_.eof()){
             //std::cout << "EOF Reached!" << std::endl;
 
-        } else { // Here if we had a different problem that made us fail! we trhrow exception
+        } else { // Here if we had a different problem that made us fail! we throw exception
             auto msg = "Failed while reading file";
             std::cerr << msg << std::endl;
             throw std::fstream::failure(msg);
@@ -99,17 +101,17 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
     }
 }
 
-// Takes a sip of a file and sends it.
+/// Takes a sip of a file and sends it.
 void FileSipper::Sip(const boost::system::error_code& t_ec){
     if (!t_ec) {
-        // These checks for failbit or badbit(hardware & software fail)
+        // These checks for fail bit or bad bit (hardware & software fail)
         if (files_stream_) {
             // We try to read the stream into the buf_array
             files_stream_.read(buf_array_.data(), buf_array_.size());
             // Here we check if the read was successful
-            // If we read but the file was EOF then the failbit will be triggered
+            // If we read but the file was EOF then the fail bit will be triggered
             // Also the oef will be triggered, So here we check for another error
-            // That could have triggered the failbit apart from the eof.
+            // That could have triggered the fail bit apart from the eof.
             if (files_stream_.fail() && !files_stream_.eof()) {
                 auto msg = "Failed while reading file";
                 std::cerr << msg << std::endl;
@@ -122,22 +124,22 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
             writeBuffer(buf);
         }
         else{
-            // Here we are if failbit or badbit are set to 1.
-            // The failbit could have been set by the eof, so we check it
+            // Here we are if fail bit or bad bit are set to 1.
+            // The fail bit could have been set by the eof, so we check it
             if (files_stream_.eof()){
                 //std::cout << "EOF Reached!" << std::endl;
                 // We can call WaitOk where we wait for the ok from the server;
                 files_stream_.close();
                 sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
-                //std::cout << "Inviato  :" << this->file_string_ << std::endl;
+                //std::cout << "Send  :" << this->file_string_ << std::endl;
                 WaitOk();
-            } else { // Here if we had a different problem that made us fail! we throw exception
+            } else { // Here if we had a different problem that made us fail, we throw exception
                 auto msg = "Failed while reading file";
                 std::cerr << msg << std::endl;
                 throw std::fstream::failure(msg);
             }
             ios_.stop();
-            //SharedQueue::get_Instance()->remove_element(this);
+
             return;
         }
     } else {
@@ -151,7 +153,7 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
 void FileSipper::WaitOk(){
     buf_metadata.fill('\000');
     sock_.read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()));
-    //std::cout << "Risultato di checksum di " << this->file_string_ << " --> "<< buf_metadata[0]  <<std::endl;
+
     // Here based on the checksum result we modify the database.
     int checksum_ok = buf_metadata[0] -'0';
     DatabaseConnection db(db_path_, folder_watched_);
@@ -164,12 +166,13 @@ void FileSipper::WaitOk(){
         }
         //TODO se vogliamo farlo rifare a lui devo fare puntatore a socket per poi ditruggerlo e ricrearlo.
         //this->Send();
-    } else { // here if the server has recevied the correct file.
+    } else { // here if the server has received the correct file.
         try {
             db.ChangeStatusToSent(file_string_);
 
-        status.store(false);
-        }catch(...){
+            status.store(false);
+
+        }catch(...){ //TODO: Check this thing
             //std::cout<<" WaitOk "<<std::endl;
         }
     }
