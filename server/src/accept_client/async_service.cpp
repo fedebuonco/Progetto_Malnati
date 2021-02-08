@@ -134,7 +134,7 @@ void AsyncService::onFinish() {
     if(received_hash_==digest) {
         //TODO if ok insert it in the db with the received_file_string_ , received_hash_ and received_lmt_
         Database db;
-        db.insertFile(received_user_, received_file_string_, received_hash_, received_lmt_, server_path_);
+        db.insertFile(received_user_, received_file_string_, received_lmt_, server_path_);
         isOkay=true;
     }
     else {

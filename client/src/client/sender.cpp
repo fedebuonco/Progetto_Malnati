@@ -27,7 +27,6 @@ void Sender::Sender_Action() const{
 
                   chosen_fs->Send();
 
-                  //Quello che vogliamo è che questa remove sia fatta come callback della send
                   SharedQueue::get_Instance()->remove_element(chosen_fs);
         });
 

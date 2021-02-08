@@ -1,9 +1,4 @@
-//
-// Created by fede on 12/11/20.
-//
-
-#ifndef SERVER_ASYNC_SERVICE_H
-#define SERVER_ASYNC_SERVICE_H
+#pragma once
 
 #include <boost/asio.hpp>
 #include <iostream>
@@ -45,4 +40,4 @@ private:
     std::filesystem::path created_file_path_;
 };
 
-#endif //SERVER_ASYNC_SERVICE_H
+

@@ -168,7 +168,7 @@ TreeT Client::RequestTree() {
 }
 
 ///
-bool Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
+void Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
 
     boost::system::error_code ec;
     boost::asio::write(stcp.sock_, boost::asio::buffer(cm.ToJSON()), ec);
@@ -185,7 +185,6 @@ bool Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
         if(DEBUG) std::cerr<<"Error writing Control Message; message: " << ec.message() << std::endl;
         std::exit(EXIT_FAILURE);
     }
-    return true;
 }
 
 /// We read until the eof, then we return a ControlMessage using the buffer we read

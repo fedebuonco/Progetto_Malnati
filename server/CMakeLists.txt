@@ -28,8 +28,6 @@ if (UNIX)
             src/main.cpp
             src/accept_client/accept_client.cpp
             includes/accept_client/accept_client.h
-            src/watcher/watcher.cpp
-            includes/watcher/watcher.h
             src/accept_client/service.cpp
             includes/accept_client/service.h
             src/accept_client/server.cpp
@@ -83,8 +81,6 @@ if (WIN32)
                 src/main.cpp
                 src/accept_client/accept_client.cpp
                 includes/accept_client/accept_client.h
-                src/watcher/watcher.cpp
-                includes/watcher/watcher.h
                 src/accept_client/service.cpp
                 includes/accept_client/service.h
                 src/accept_client/server.cpp

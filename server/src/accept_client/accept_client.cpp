@@ -1,21 +1,14 @@
-//
-// Created by fede on 9/21/20.
-//
-
 #include <iostream>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 #include <boost/asio.hpp>
-#include "service.h"
-#include "accept_client.h"
+#include <service.h>
+#include <accept_client.h>
 #include <filesystem>
-
-volatile sig_atomic_t flag=0;
+#include <utility>
 
 AcceptClient::AcceptClient(asio::io_service& ios, unsigned short port_num,std::filesystem::path serverPath) :
         ios_(ios),
         acceptor_(ios_,boost::asio::ip::tcp::endpoint(boost::asio::ip::address_v4::any(),port_num)),
-        serverPath(serverPath)
+        serverPath(std::move(serverPath))
 {
     acceptor_.listen();
 }
@@ -26,7 +19,9 @@ AcceptClient::AcceptClient(asio::io_service& ios, unsigned short port_num,std::f
 void AcceptClient::SpawnSession(const std::atomic<bool>& stop) {
 
     std::shared_ptr<boost::asio::ip::tcp::socket> sock(new boost::asio::ip::tcp::socket(ios_));
-    acceptor_.accept(*sock.get());
+    acceptor_.accept(*sock);
+
+    //Until stop is false we handle client requests
     if(!stop.load())
         (new Service)->ReadRequest(sock, this->serverPath);
 }

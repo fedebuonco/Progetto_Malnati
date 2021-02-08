@@ -1,15 +1,14 @@
 #include <sstream>
 #include "tree_t.h"
 #include "../../includes/database/database.h"
-#include <stdlib.h>     /* strtoul */
+#include <stdlib.h>     //TODO: Remove this header or need for Linux @marco
 #include <vector>
 #include <algorithm>
 #include <sys/stat.h>
 
-/// Starting from the ordered string sent by the server, it computes A mapping between the files present in te server and their
-/// Hashes
+/// Starting from the ordered string sent by the server, it computes A mapping between the files present in te server and their hashes
 /// \param tree Directory tree if the server
-/// \param time timw of the files present in the server following the same order of the tree
+/// \param time time of the files present in the server following the same order of the tree
 TreeT::TreeT(const std::string& tree, const std::string& time) {
     //Now we fill the map using the two string we got
     std::istringstream stream_tree{tree};
@@ -26,10 +25,16 @@ TreeT::TreeT(const std::string& tree, const std::string& time) {
     }
 }
 
-TreeT::TreeT(const std::filesystem::path& path, std::filesystem::path serverP){
+/**
+ * //TODO: Help me federico @marco
+ * @param path
+ * @param serverP
+ */
+TreeT::TreeT(const std::filesystem::path& path, const std::filesystem::path& serverP){
 
     this->serverPath = serverP;
     this->folder_path_ = path;
+
 
     std::filesystem::path folder_name = path.lexically_relative(this->serverPath / "backupFiles" / "backupROOT");
     std::string folder_name_string = folder_name.generic_string();
@@ -43,38 +48,46 @@ TreeT::TreeT(const std::filesystem::path& path, std::filesystem::path serverP){
         auto element_path = itEntry->path();
         std::filesystem::path relative_element_path = element_path.lexically_relative(path);
         std::string cross_platform_rep = relative_element_path.generic_string();
-        // We also add the "/" if it is a direcotry in order t diff it from non extension files.
-        if (std::filesystem::is_directory(element_path))
-            continue;
-            //cross_platform_rep += "/";
 
-        // // // // // // // // //
-        // TODO retrieve the last modified time from the db and then uncomment this part and delete the otehr call in the block
+        // If is a directory we don't insert the tuple path-lmt. The list will only contain files.
+        if (std::filesystem::is_directory(element_path)) continue;
 
+        //Read the lmt (last modified time) of the given path
         Database db;
-        std::string time_str = db.getTimefromPath(folder_name_string, cross_platform_rep, this->serverPath);
-        // I assume that i have the std::string time_str;
+        std::string time_str = db.getTimeFromPath(folder_name_string, cross_platform_rep, this->serverPath);
 
+        //Convert the time from string to unsigned long
         unsigned long mod_time = std::stoul(time_str, nullptr, 0);
-        map_tree_time_.insert({cross_platform_rep, mod_time});
 
+        //Insert into the map the couple path-lmt
+        map_tree_time_.insert({cross_platform_rep, mod_time});
     }
 }
 
+/**
+ * Generate the list of path of the file available in the user server folder
+ * @return list of path separated by '/n'
+ */
 std::string TreeT::genTree(){
     std::string tree;
-    for(const auto& element : map_tree_time_)
-    {
+
+    for(const auto& element : map_tree_time_) {
         tree.append(element.first + "\n");
     }
+
     return tree;
 }
 
+/**
+ * Generate the list of times of the file available in the user server folder
+ * @return list of time separated by '/n'
+ */
 std::string TreeT::genTimes(){
     std::string times;
-    for(const auto& element : map_tree_time_)
-    {
+
+    for(const auto& element : map_tree_time_) {
         times.append(std::to_string(element.second) + "\n");
     }
+
     return times;
 }

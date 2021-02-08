@@ -4,10 +4,10 @@
 #include <filesystem>
 #include <tree_t.h>
 #include <server.h>
-#include "../../includes/database/database.h"
-#include "service.h"
+#include <../../includes/database/database.h>
+#include <service.h>
 
-int FileCount(std::filesystem::path folder){
+int FileCount(const std::filesystem::path& folder){
     int count = 0;
     for (const auto & file : std::filesystem::directory_iterator(folder))
         count++;
@@ -17,36 +17,42 @@ int FileCount(std::filesystem::path folder){
 
 /// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and detach it
 /// \param sock TCP socket connected to the client
-void Service::ReadRequest(std::shared_ptr<asio::ip::tcp::socket> sock,std::filesystem::path serverP) {
+void Service::ReadRequest(const std::shared_ptr<asio::ip::tcp::socket>& sock, const std::filesystem::path& serverP) {
     this->serverPath=serverP;
-    std::thread th(([this, sock] () {HandleClient(sock);}));
+
+    //Spawns a thread that handle the request
+    std::thread th(([this, sock] () {
+             HandleClient(sock);
+    }));
+
+    //Detach this thread
     th.detach();
 }
 
 /// Real handling starts here. Should distinguish auth requests and tree requests
-void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
-    // Here we read the request
-    // parse it in a ptree,
-    // use the ptree to build the ControlMessage
-    // we then check that the message is authenticated
-    // and then we switch case in order to correctly handle it.
-
+/***
+ * This function handle the client request. First check if the message is authenticated and then
+ * handle the request according to the message type
+ * @param sock
+ */
+void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
     //Now we parsed the request and we use the ptree object in order to create the corresponding ControlMessage
 
     try{
         //We parse the incoming request into a request message
-        //TODO: Eccezione
+        //TODO: This launch an exception we need to catch            @marco
         ControlMessage request_message = SyncReadCM(sock);
 
-
+        //A message with type 5 means that we are shutting down the server
         if(request_message.type_==5){
-            std::cout << "ENTRATI" << std::endl;
+            //The detach thread will be kill when read this message
             return;
         }
 
         //We check that the message is authenticated
         if (!CheckAuthenticity(request_message)){
+
             //The request is not accepted because the message is not authenticated
             //Return to the client a control message with 'type:51' and 'auth:false'
             ControlMessage check_result{51};
@@ -103,11 +109,6 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
 
                 this->associated_user_path_ = user_directory_path;
 
-                //TODO Se si verifica un eccezione tra la creazione dello userfolder e il createTable (db utente)
-                // vediamo la directory ma non vediamo il DB. Azione da fare è RIPROVA. Questo potrebbe creare problemi, consiglio di fare nella catch una politica
-                // che cancella sia la cartella principale (tanto in questo punto è vuota) ed il db. Ricordo comunque che nel caso in cui
-                // il db esiste quando entriamo sulla createTable droppo comunque la tabella e la ricreo.
-
                 //We create the TREE & TIME and put this information inside the response message
                 TreeT server_treet(user_directory_path, this->serverPath);
                 treet_result.AddElement("Tree", server_treet.genTree());
@@ -140,16 +141,20 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                     std::filesystem::path user_folder_path = this->serverPath / "backupFiles" / "backupROOT" / user_folder_name;
                     std::filesystem::path file_path = this->serverPath / "backupFiles" / "backupROOT" / user_folder_name / file ;
                     std::error_code ec;
+
                     // First we remove the file
                     std::filesystem::remove(file_path, ec);
                     if(ec){
-                        //TODO:
+                        //TODO: It's right to say return @marco
+                        std::cerr << "Error remove service.cpp "<< ec << std::endl;
+                        return;
                     }
+
                     // Then we check if it is the last file in the folder, if it is we delete it
                     // we perform this operation recursively in order to delete all empty folders.
                     std::filesystem::path path_iterator = file_path.parent_path();
                     while (FileCount(path_iterator) == 0){
-                        //std::cerr << "Current Path " << path_iterator << std::endl;
+
                         if (path_iterator == user_folder_path){
                             break;
                         }
@@ -157,6 +162,8 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
                         std::filesystem::remove(path_iterator, ec);
                         if(ec){
                             //TODO:
+                            std::cerr << "Error remove service.cpp "<< ec << std::endl;
+                            return;
                         }
 
                         path_iterator = path_iterator.parent_path();
@@ -175,23 +182,21 @@ void Service::HandleClient(std::shared_ptr<asio::ip::tcp::socket> sock) {
         }
 
     }
-    catch (std::invalid_argument& e){
-        std::cerr<<"CIAO !" << e.what()  << std::endl;
-        //TODO: Qui andiamo quando terminiamo con ctrl e anche quando c'è un eccezione
+    catch (boost::system::system_error& e){
+        std::cerr<<"Boost system error" << e.what()  << std::endl;
         delete this;
         return;
+        //Now this thread will die because is detached
     }
     catch(std::exception& e){
         std::cerr<<"Error handling request message" << e.what()  << std::endl;
-        //TODO: Il thread ha una detach, con return dovrebbe terminate il thread perchè non c'è niente sopra. è corretto?
         delete this;
         return;
         //Now this thread will die because is detached
     }
 
-
     // Now the service class was instantiated in the heap &
-    // As the service class has finished it's work we are gonna delete it here
+    // As the service class has finished it's work, we are gonna delete it here
     // "delete this" is known to be bad code, but if we follow some security
     // advices we can use it.
     delete this;
@@ -202,35 +207,45 @@ bool Service::CheckAuthenticity(const ControlMessage& cm){
     return authentication.auth(cm.username_, cm.hashkey_, this->serverPath);
 }
 
-bool Service::SyncWriteCM(std::shared_ptr<asio::ip::tcp::socket> sock, ControlMessage& cm){
+//TODO: SyncWriteCM return bool but we never check
+void Service::SyncWriteCM(const std::shared_ptr<asio::ip::tcp::socket>& sock, ControlMessage& cm){
+
+    boost::system::error_code ec;
+
     //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
-    boost::asio::write(*sock, boost::asio::buffer(cm.ToJSON()));
-    sock->shutdown(boost::asio::ip::tcp::socket::shutdown_send);
-    return true;
+    boost::asio::write(*sock, boost::asio::buffer(cm.ToJSON()), ec);
+
+    if (ec){
+        //TODO Sometimes we get here. When the server shuts down
+        if(DEBUG) std::cerr<<"Error writing Control Message; message: " << ec.message() << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+
+    sock->shutdown(boost::asio::ip::tcp::socket::shutdown_send, ec);
+
+    if (ec){
+        //TODO Sometimes we get here. When the server shuts down
+        if(DEBUG) std::cerr<<"Error writing Control Message; message: " << ec.message() << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
 }
 
-ControlMessage Service::SyncReadCM(std::shared_ptr<asio::ip::tcp::socket> sock){
+ControlMessage Service::SyncReadCM(const std::shared_ptr<asio::ip::tcp::socket>& sock){
     // We read until the eof, then we return a ControlMessage using the buffer we read.
     boost::asio::streambuf request_buf;
+
     boost::system::error_code ec;
     boost::asio::read(*sock, request_buf, ec);
 
     // This checks if the client has finished writing
     if (ec != boost::asio::error::eof){
-        std::cerr<<"DEBUG: NON SONO" << ec << std::endl;
-        throw boost::system::system_error(ec);
+       if(DEBUG) std::cerr<<"The server is not responding, try later. Message " << ec.message() << std::endl;
+       throw boost::system::system_error(ec);
     }
     //Read the response_buf using an iterator and store it in a string In order to store it in a ControlMessage
-    // TODO might be an easier method to do this
     std::string response_json((std::istreambuf_iterator<char>(&request_buf)), std::istreambuf_iterator<char>() );
-    if(DEBUG) std::cout << "Ho letto  " << response_json << std::endl;
 
-    try {
-        ControlMessage cm{response_json};
-        return cm;}
-    catch(std::exception& e){
-        std::cerr<<"Error" << e.what()  << std::endl;
-    }
-
-
+    //Create a control message with the response
+    ControlMessage cm{response_json};
+    return cm;
 }
