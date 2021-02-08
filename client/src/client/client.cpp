@@ -250,14 +250,14 @@ void Client::SendRemoval(Patch& update){
 /// Test each file to see if already present in the hash db, and acts accordingly in order to keep a database of each
 /// hash performed.
 void Client::InitHash(){
-    std::error_code ec
+    std::error_code ec;
 
     try {
         // We open the db once here so that we limit the overhead
         DatabaseConnection db(db_file_, folder_watched_);
 
         // For each file in the folder we look in the db using the relative filename and the last modified time.
-        for (auto itEntry = std::filesystem::recursive_directory_iterator(folder_watched_, ec, std::filesystem::directory_options::skip_permission_denied);
+        for (auto itEntry = std::filesystem::recursive_directory_iterator(folder_watched_, ec);     //TODO , std::filesystem::directory_options::skip_permission_denied
              itEntry != std::filesystem::recursive_directory_iterator();
              ++itEntry) {
 
