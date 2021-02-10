@@ -7,13 +7,6 @@
 #include <../../includes/database/database.h>
 #include <service.h>
 
-int FileCount(const std::filesystem::path& folder){
-    int count = 0;
-    for (const auto & file : std::filesystem::directory_iterator(folder))
-        count++;
-    return count;
-}
-
 
 /// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and detach it
 /// \param sock TCP socket connected to the client
@@ -153,7 +146,7 @@ void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
                     // Then we check if it is the last file in the folder, if it is we delete it
                     // we perform this operation recursively in order to delete all empty folders.
                     std::filesystem::path path_iterator = file_path.parent_path();
-                    while (FileCount(path_iterator) == 0){
+                    while (std::filesystem::is_empty(path_iterator)){
 
                         if (path_iterator == user_folder_path){
                             break;

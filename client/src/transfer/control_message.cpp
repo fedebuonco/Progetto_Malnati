@@ -28,16 +28,18 @@ ControlMessage::ControlMessage(int tp) {
  * @param json_message : Message form server formatted in JSON
  */
 ControlMessage::ControlMessage(const std::string& json_message){
-
    try{
-       // We parse the json
-       this->document_.Parse(json_message.c_str());
-       //std::cerr << this->ToJSON() << std::endl;
-
+       rapidjson::ParseResult ok = this->document_.Parse(json_message.c_str());
+       if (!ok) {
+        std::cerr << "error parse" << std::endl;
+        }
        //Take the 'Type' of the message, we do this for faster check. The other data will be extracted only when needed.
        rapidjson::Value& val = document_["Type"];
        std::string t = val.GetString();
        this->type_ = std::stoi(t);
+
+
+
    }
    catch (std::exception &e){
        if(DEBUG) std::cerr << e.what() << std::endl;
@@ -50,14 +52,16 @@ ControlMessage::ControlMessage(const std::string& json_message){
 /// \param element Name of the propriety
 /// \param value  Value of the propriety
 void ControlMessage::AddElement( std::string element, std::string value){       //// NOLINT Do not change in const&; ignore the clang warning
-
+    std::cerr << "AddElement" << std::endl;
     try{
 
-        rapidjson::Value j_key;
-        j_key.SetString(element.c_str(), element.length(), document_.GetAllocator());
-        rapidjson::Value j_val;
-        j_val.SetString(value.c_str(), value.length(), document_.GetAllocator());
-        document_.AddMember(j_key, j_val, document_.GetAllocator());
+        rapidjson::Document::AllocatorType& alloc = document_.GetAllocator();
+        rapidjson::Value key(element.c_str(), alloc);
+        rapidjson::Value val(value.c_str(), alloc);
+        document_.AddMember(key, val, alloc);
+
+
+
     }
     catch (std::exception &e){
         if(DEBUG) std::cerr << e.what() << std::endl;
@@ -85,7 +89,6 @@ std::string ControlMessage::GetElement(const std::string& element) {
 /// This will convert the ControlMessage into a suitable JSON string (One that follows our protocol).
 /// \return Json string of our control message.
 std::string ControlMessage::ToJSON() {
-    std::stringstream ss;
     std::string string_to_json;
     try{
 
