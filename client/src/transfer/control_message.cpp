@@ -52,7 +52,6 @@ ControlMessage::ControlMessage(const std::string& json_message){
 /// \param element Name of the propriety
 /// \param value  Value of the propriety
 void ControlMessage::AddElement( std::string element, std::string value){       //// NOLINT Do not change in const&; ignore the clang warning
-    std::cerr << "AddElement" << std::endl;
     try{
 
         rapidjson::Document::AllocatorType& alloc = document_.GetAllocator();
