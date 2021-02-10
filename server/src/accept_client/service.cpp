@@ -139,14 +139,16 @@ void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
                     std::filesystem::remove(file_path, ec);
                     if(ec){
                         //TODO: It's right to say return @marco
+                        //TODO Why? se non riusciamo ad eliminare un file io direi di continuare comunque ad eliminare gli altri
+                        // , ma non di ritornare
                         std::cerr << "Error remove service.cpp "<< ec << std::endl;
-                        return;
+                        continue;
                     }
 
                     // Then we check if it is the last file in the folder, if it is we delete it
                     // we perform this operation recursively in order to delete all empty folders.
                     std::filesystem::path path_iterator = file_path.parent_path();
-                    while (std::filesystem::is_empty(path_iterator)){
+                    while (std::filesystem::exists(path_iterator) && std::filesystem::is_empty(path_iterator)){
 
                         if (path_iterator == user_folder_path){
                             break;
@@ -156,12 +158,12 @@ void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
                         if(ec){
                             //TODO:
                             std::cerr << "Error remove service.cpp "<< ec << std::endl;
-                            return;
+                            continue;
                         }
 
                         path_iterator = path_iterator.parent_path();
                     }
-                    //We doesn't care if the file exists or not; we try anyway to delete the row inside DB
+                    //We don't care if the file exists or not; we try anyway to delete the row inside DB
                     db.deleteFile(user_folder_name, file, this->serverPath);
                 }
 
