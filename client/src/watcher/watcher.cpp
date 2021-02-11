@@ -35,15 +35,11 @@ void Watcher::listenerFunction(const std::vector<pfw::EventPtr>& events)
     for (const auto &event : events) {
         //std::cout << event->relativePath << " with the type: " << typeBits << std::endl;
 
-        //If the only event we have is the DB
-        if (event->relativePath.string() == ".hash.db" && events.size() == 1)       //TODO: The two condition are the same, if we do continue is the last iteration anyway
-            return;
-
         //We don't take action regarding the changes in the db
         if (event->relativePath.string() == ".hash.db")
             continue;
 
-    }   //TODO: What does it means? the callback is outside the for
+    }
 
     update_callback();
 
@@ -53,7 +49,7 @@ void Watcher::listenerFunction(const std::vector<pfw::EventPtr>& events)
 /// \param path
 void Watcher::Start(const std::filesystem::path& path){
     _watcher = std::make_unique<pfw::FileSystemWatcher>(
-            path, std::chrono::milliseconds(1),  //TODO: Can we change the milliseconds?
+            path, std::chrono::milliseconds(1000),  //TODO: Can we change the milliseconds?
             std::bind(&Watcher::listenerFunction, this,
                       std::placeholders::_1));
 }

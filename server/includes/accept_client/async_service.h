@@ -15,7 +15,7 @@ private:
     void onRequestReceived(const boost::system::error_code& ec, std::size_t bytes_transferred);
     void onFinish();
     void createFile();
-    void ParseMetadata(std ::string metadata);
+    void ParseMetadata(const std ::string& metadata);
 
 private:
     std::filesystem::path server_path_;

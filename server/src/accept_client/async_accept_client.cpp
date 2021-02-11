@@ -32,6 +32,7 @@ void AsyncAcceptClient::InitAccept() {
                                     const boost::system::error_code& error)
                             {
                                onAccept(error, sock);
+                               //TODO: ggestire err
                             });
 }
 

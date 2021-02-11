@@ -33,6 +33,7 @@ void Sender::Sender_Action() const{
                 catch (std::exception &e){
                     //Here we have the exception that have been throw while creating and sending files
                     //TODO: I have a lot of prints with cerr; for me we can remove the cerr. @marco
+                    SharedQueue::get_Instance()->remove_element(chosen_fs);
                     std::cerr << "Error Unable to send a file; maybe was deleted thread " << e.what() << std::endl;
                     return;
                 }

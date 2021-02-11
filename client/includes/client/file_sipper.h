@@ -35,9 +35,6 @@ class FileSipper {
     std::array<char, MessageSize> buf_array_{};
     std::array<char, MessageSize> buf_metadata{};
 
-    //Dimension of the file to send
-    int file_size_{};     //TODO: Remove? @marco
-
     //Number of sip (i.e. block) in which the file is split
     int sip_counter;
 
@@ -66,19 +63,16 @@ private:
                                  t_buffer,
                                  [this](boost::system::error_code ec, std::size_t size)
                                  {
-
                                      //Check errori
                                      if (ec) {
-                                         // TODO SIMULARE LASTSIP
-                                         // and then we
-                                         // we simulate a bad sent file, (checksum result == 0 )
+                                         // We can call WaitOk where we wait for the ok from the server;
+                                         files_stream_.close();
+                                         sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
                                          UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
-                                         std::cerr << "USCIRE" << std::endl;
-                                         //TODO EXIT
+                                         throw std::exception("Sip interrupted. The file is set back to NEW.");
                                      }
 
                                      //Let's see the status of the sip, in order to see if this is the last one.
-                                     //TODO: Gestire errori qua e non passarli a sip? è uguale alla fine.
                                      Sip(ec);
 
                                  });

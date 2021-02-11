@@ -43,8 +43,7 @@ void FileSipper::Connect() {
         //Here if we can't connect we simply exit, but we make sure to change the status of the file back to new in the DB
         if (ec) { // we simulate a bad sent file, (checksum result == 0 )
             UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
-            std::cerr << "USCIRE" << std::endl;
-            //TODO EXIT
+            throw std::exception("Could Not Connect to File Server");
         }
         // Here if the connection was successful
         OpenFile();
@@ -62,18 +61,16 @@ void FileSipper::OpenFile() {
         if(std::filesystem::exists(path_)){ //we had some problem opening the file, but it still exists.
                                             // We exit but change the status back to NEW
             UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
-            std::cerr << "USCIRE" << std::endl;
-            //TODO EXIT
+            throw std::exception("File couldn't be opened. It will set back to NEW");
 
-        }else{ //File doesn't even exists anymore, we can exit safely;
-            std::cerr << "USCIRE" << std::endl;
-            //TODO EXIT
+        }
+        else{ //File doesn't even exists anymore, we can exit safely;
+            throw std::exception("File couldn't be opened. It does not exist anymore.");
         }
     }
     //Retrieve the byte size
     files_stream_.seekg(0, files_stream_.end);
     auto fileSize = files_stream_.tellg();
-    this->file_size_ = fileSize;
     //std::cout << "File Opened, Size : " << file_size_ << std::endl;
 
     //Reset the stream;
@@ -103,12 +100,10 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
         if(std::filesystem::exists(path_)){ //we had some problem opening the file, but it still exists.
             // We exit but change the status back to NEW
             UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
-            std::cerr << "USCIRE" << std::endl;
-            //TODO EXIT
+            throw std::exception("File couldn't be opened. It will set back to NEW");
 
         }else{ //File doesn't even exists anymore, we can exit safely;
-            std::cerr << "USCIRE" << std::endl;
-            //TODO EXIT
+            throw std::exception("File couldn't be opened. It does not exist anymore.");
         }
     }
 }
@@ -172,13 +167,11 @@ void FileSipper::WaitOk() {
                    if (ec){ // We must simulate worst scenario, so we act like the checksum was not ok
 
                        UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
-                       ios_.stop(); // THIS STOPS further async calls for this socket.
 
                    } else { //Here if we got no error while reading
 
                        int checksum_ok = buf_metadata[0] - '0';
                        UpdateFileStatus(db_path_, folder_watched_, file_string_, checksum_ok);
-                       ios_.stop();
 
                    }
 

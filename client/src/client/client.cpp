@@ -173,7 +173,6 @@ void Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
     boost::system::error_code ec;
     boost::asio::write(stcp.sock_, boost::asio::buffer(cm.ToJSON()), ec);
     if (ec){
-        //TODO Sometimes we get here. When the server shuts down
         if(DEBUG) std::cerr<<"Error writing Control Message; message: " << ec.message() << std::endl;
         std::exit(EXIT_FAILURE);
     }
@@ -181,7 +180,6 @@ void Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
     //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
     stcp.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send, ec);
     if (ec){
-        //TODO Sometimes we get here. When the server shuts down
         if(DEBUG) std::cerr<<"Error writing Control Message; message: " << ec.message() << std::endl;
         std::exit(EXIT_FAILURE);
     }
@@ -250,70 +248,71 @@ void Client::SendRemoval(Patch& update){
 /// Test each file to see if already present in the hash db, and acts accordingly in order to keep a database of each
 /// hash performed.
 void Client::InitHash(){
-    std::error_code ec;
+    int n_attempts = 10;
+    while(n_attempts > 0) {
+        try {
+            // We open the db once here so that we limit the overhead
+            DatabaseConnection db(db_file_, folder_watched_);
 
-    try {
-        // We open the db once here so that we limit the overhead
-        DatabaseConnection db(db_file_, folder_watched_);
 
-        // For each file in the folder we look in the db using the relative filename and the last modified time.
-        for (auto itEntry = std::filesystem::recursive_directory_iterator(folder_watched_, ec);     //TODO , std::filesystem::directory_options::skip_permission_denied
-             itEntry != std::filesystem::recursive_directory_iterator();
-             ++itEntry) {
 
-            if(ec){
-               std::cerr << "Error Recursive directory (InitHash): " << ec << std::endl;
-               continue;
+            // For each file in the folder we look in the db using the relative filename and the last modified time.
+            for (auto itEntry = std::filesystem::recursive_directory_iterator(folder_watched_,
+                                                                              std::filesystem::directory_options::skip_permission_denied);
+                 itEntry != std::filesystem::recursive_directory_iterator();
+                 ++itEntry) {
+
+                // We take the current element path, make it relative to the path specified and then we make it
+                // in a cross platform format (cross_platform_relative_element_path = cross_platform_rep)
+                auto element_path = itEntry->path();
+                std::filesystem::path relative_element_path = element_path.lexically_relative(folder_watched_);
+                std::string cross_platform_rep = relative_element_path.generic_string();
+
+                // We also add the "/" if it is a directory in order to diff it from non extension files.
+                if (std::filesystem::is_directory(element_path))
+                    cross_platform_rep += "/";
+
+                // Now if the current element is a dir or the db or its a temporary file we can go to the next iteration
+                if (std::filesystem::is_directory(element_path) || cross_platform_rep == ".hash.db" ||
+                    boost::algorithm::ends_with(cross_platform_rep, "~"))
+                    continue;
+
+                // We now need to retrieve the last modified time.
+                struct stat temp_stat;
+                // Put inside our struct temp_state the metadata like last modified time
+                stat(element_path.generic_string().c_str(), &temp_stat);
+                unsigned long mod_time = temp_stat.st_mtime;
+
+                // Now we have the tuple ( cross_platform_rep , mod_time )
+                // We use this tuple to see if we already hashed that version of the file.
+                // If we had, then we take the hash from the db, without hashing a second time the same file.
+
+                if (!db.AlreadyHashed(cross_platform_rep, std::to_string(mod_time))) {
+                    //Here only if the tuple ( cross_platform_rep , mod_time ) is not present inside DB, so we need to hash and then update the db.
+
+                    //Hash the file and return the digest to insert in the DB
+                    std::string digest = HashFile(element_path);
+
+                    //We have the hash of the file and we can insert it in the DB
+                    db.InsertDB(cross_platform_rep, digest, std::to_string(mod_time));
+                }
             }
 
-            // We take the current element path, make it relative to the path specified and then we make it
-            // in a cross platform format (cross_platform_relative_element_path = cross_platform_rep)
-            auto element_path = itEntry->path();
-            std::filesystem::path relative_element_path = element_path.lexically_relative(folder_watched_);
-            std::string cross_platform_rep = relative_element_path.generic_string();
+            // Now we clean the db for files that are not anymore in the folder.
+            db.CleanOldRows();
 
-            // We also add the "/" if it is a directory in order to diff it from non extension files.
-            if (std::filesystem::is_directory(element_path))        //TODO: We need this? Because we don't send folder anymore @marco
-                cross_platform_rep += "/";
-
-            // Now if the current element is a dir or the db or its a temporary file we can go to the next iteration
-            if (std::filesystem::is_directory(element_path) || cross_platform_rep == ".hash.db" ||
-                boost::algorithm::ends_with(cross_platform_rep, "~"))
-                continue;
-
-            // We now need to retrieve the last modified time.
-            struct stat temp_stat;
-            // Put inside our struct temp_state the metadata like last modified time
-            stat(element_path.generic_string().c_str(), &temp_stat);
-            unsigned long mod_time = temp_stat.st_mtime;
-
-            // Now we have the tuple ( cross_platform_rep , mod_time )
-            // We use this tuple to see if we already hashed that version of the file.
-            // If we had, then we take the hash from the db, without hashing a second time the same file.
-
-            if (!db.AlreadyHashed(cross_platform_rep, std::to_string(mod_time))) {
-                //Here only if the tuple ( cross_platform_rep , mod_time ) is not present inside DB, so we need to hash and then update the db.
-
-                //Hash the file and return the digest to insert in the DB
-                std::string digest = HashFile(element_path);
-
-                //We have the hash of the file and we can insert it in the DB
-                db.InsertDB(cross_platform_rep, digest, std::to_string(mod_time));
-            }
+            // We now have the DB and client folder aligned.
+            return;
         }
+        catch (std::filesystem::filesystem_error &e) {              //TODO: Policy? @marco
 
-        // Now we clean the db for files that are not anymore in the folder.
-        db.CleanOldRows();
-
-        // We now have the DB and client folder aligned.
-    }
-    catch (std::filesystem::filesystem_error &e) {              //TODO: Policy? @marco
-        std::cerr << "Error Filesystem (InitHash): " << e.what() << std::endl;
-        //std::exit(EXIT_FAILURE);
-    }
-    catch (std::exception &e) {
-        std::cerr << "Error generic (InitHash) " << e.what() << std::endl;
-        std::exit(EXIT_FAILURE);
+            std::cerr << "Error Filesystem (InitHash): " << n_attempts << e.what() << std::endl;
+            n_attempts--;
+        }
+        catch (std::exception &e) {
+            std::cerr << "Error generic (InitHash) " << e.what() << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
     }
 }
 
