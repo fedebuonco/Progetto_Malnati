@@ -66,8 +66,19 @@ private:
                                  t_buffer,
                                  [this](boost::system::error_code ec, std::size_t size)
                                  {
+
+                                     //Check errori
+                                     if (ec) {
+                                         // TODO SIMULARE LASTSIP
+                                         // and then we
+                                         // we simulate a bad sent file, (checksum result == 0 )
+                                         UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
+                                         std::cerr << "USCIRE" << std::endl;
+                                         //TODO EXIT
+                                     }
+
                                      //Let's see the status of the sip, in order to see if this is the last one.
-                                     //std::cout << "STATUS async write: " << ec.value() << " written " << size << std::endl;
+                                     //TODO: Gestire errori qua e non passarli a sip? è uguale alla fine.
                                      Sip(ec);
 
                                  });
