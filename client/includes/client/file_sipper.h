@@ -75,5 +75,6 @@ private:
     }
 
 
-
+    void UpdateFileStatus(std::filesystem::path db_path, std::filesystem::path folder_watched, std::string file_string,
+                          int check);
 };

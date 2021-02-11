@@ -138,7 +138,7 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
                 std::cerr << msg << std::endl;
                 throw std::fstream::failure(msg);
             }
-            ios_.stop();
+            //ios_.stop();
 
             return;
         }
@@ -150,16 +150,25 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
     }
 }
 
-void FileSipper::WaitOk(){
+void FileSipper::WaitOk() {
     buf_metadata.fill('\000');
-    sock_.read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()));
+    //sock_.read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()));
 
-    // Here based on the checksum result we modify the database.
-    int checksum_ok = buf_metadata[0] -'0';
-    DatabaseConnection db(db_path_, folder_watched_);
-    if (!checksum_ok){ // we need to retry sending the file has the server did not receive the file in a correct way
+    async_read(sock_, boost::asio::buffer(buf_metadata.data(), buf_metadata.size()),
+               [this](boost::system::error_code ec, size_t bytes) {
+                   // Here based on the checksum result we modify the database.
+                   int checksum_ok = buf_metadata[0] - '0';
+                   UpdateFileStatus(db_path_, folder_watched_, file_string_, checksum_ok);
+                   ios_.stop();
+               });
+
+};
+
+void FileSipper::UpdateFileStatus(std::filesystem::path db_path ,std::filesystem::path folder_watched,std::string file_string, int check) {
+    DatabaseConnection db(db_path, folder_watched);
+    if (!check){ // we need to retry sending the file has the server did not receive the file in a correct way
         try {
-            db.ChangeStatusToNew(file_string_);
+            db.ChangeStatusToNew(file_string);
             status.store(false);
         } catch (...) {
             //std::cout<<" WaitOk "<<std::endl;
@@ -168,10 +177,9 @@ void FileSipper::WaitOk(){
         //this->Send();
     } else { // here if the server has received the correct file.
         try {
-            db.ChangeStatusToSent(file_string_);
+            db.ChangeStatusToSent(file_string);
 
             status.store(false);
-
         }catch(...){ //TODO: Check this thing
             //std::cout<<" WaitOk "<<std::endl;
         }
