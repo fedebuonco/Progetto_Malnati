@@ -1,10 +1,8 @@
 #include <sstream>
 #include "tree_t.h"
 #include "../../includes/database/database.h"
-#include <stdlib.h>     //TODO: Remove this header or need for Linux @marco
-#include <vector>
+#include <vector>   //For Linux
 #include <algorithm>
-#include <sys/stat.h>
 #include <iostream>
 
 /// Starting from the ordered string sent by the server, it computes A mapping between the files present in te server and their hashes
@@ -27,9 +25,9 @@ TreeT::TreeT(const std::string& tree, const std::string& time) {
 }
 
 /**
- * //TODO: Help me federico @marco
- * @param path
- * @param serverP
+ * This function create the tree & time from a given path relatively to the path of the user Server folder
+ * @param path : user backup folder in Server
+ * @param serverP : location of the Server program
  */
 TreeT::TreeT(const std::filesystem::path& path, const std::filesystem::path& serverP){
 

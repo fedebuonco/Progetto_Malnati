@@ -202,7 +202,24 @@ ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
 
     //Read the response_buf using an iterator and store it in a string in order to store it in a ControlMessage
     std::string response_json((std::istreambuf_iterator<char>(&response_buf)), std::istreambuf_iterator<char>() );
+
     ControlMessage cm{response_json};
+
+    //We are expecting a message with an auth response (type:51)
+    if(cm.type_ == 51) {
+        //The answer is inherent with the request, so we read the reply message.
+
+        //We retrieve the auth information inside the response message.
+        std::string auth_response = cm.GetElement("auth");
+
+        if (auth_response == "false") {
+            //The user is authenticated so we return true
+            if (DEBUG)
+                std::cout << "\nUser \"" << Config::get_Instance()->ReadProperty("username")
+                          << "\" successfully authenticated." << std::endl;
+        }
+    }
+
     return cm;
 }
 

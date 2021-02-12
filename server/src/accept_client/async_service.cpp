@@ -51,8 +51,9 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
         Database authentication;
 
         if (!authentication.auth(received_user_, received_hpass_, server_path_)){
+            //The sip is not authenticated, we discard the file
             std::cerr << "Error on user name " << received_user_ << std::endl;
-            //TODO gestire
+            return;
         }
 
         first_sip_ = false;
@@ -66,7 +67,6 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
         std::filesystem::create_directories(filepath2.remove_filename());
 
         m_outputFile.open(created_file_path_, std::ios_base::binary);
-
 
     } else {
 

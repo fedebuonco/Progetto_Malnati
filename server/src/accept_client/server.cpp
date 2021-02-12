@@ -51,8 +51,6 @@ void Server::Stop() {
     try {
         // We send a terminate message in order to close the server.
 
-        // We have a race condition where the last service handling this message could or could not be spawned      //TODO No race condition anymore @marco
-        // so we send it but an exception telling us that the service is not present could arise.
         // In order to manage that we just save the exception in ec, without ever looking at it.
         boost::asio::ip::tcp::socket sock(ios_);
         boost::asio::ip::tcp::endpoint ep_(boost::asio::ip::address::from_string("127.0.0.1"), 3333);
