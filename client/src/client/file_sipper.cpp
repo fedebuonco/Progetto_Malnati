@@ -3,6 +3,7 @@
 #include <iostream>
 #include <utility>
 #include <database.h>
+#include <shared_queue.h>
 
 FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path,
                        std::string username, const std::string& hashed_pass,   std::filesystem::path file_path,
@@ -27,8 +28,9 @@ FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watch
 
 
 /// Methods that starts the sending of the File.
-void FileSipper::Send(){
+void FileSipper::Send(std::function<void()> rem_call){
     //We change the fileSipper status to true, to indicate that we handle the fileSipper
+    remove_callback_ = rem_call;
     status.store(true);
     Connect();
     ios_.run();
@@ -175,7 +177,10 @@ void FileSipper::WaitOk() {
 
                    }
 
+
                    ios_.stop();  // THIS STOPS further async calls for this socket.
+
+                   remove_callback_();
 
                });
 

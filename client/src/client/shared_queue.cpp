@@ -57,6 +57,7 @@ void SharedQueue::remove_element(const std::shared_ptr<FileSipper>& file_sipper)
 
     //We remove the file_sipper from the list because it finished correctly his work and decrement the active_fs counter.
     fs_list.remove(file_sipper);
+    std::cerr << "Current active filesipper -> " << active_fs << std::endl;
     active_fs.fetch_sub(1);
 
     //After we remove the element, we check if the list is NOT empty and if we are some to handle (i.e. the size is less that active)
