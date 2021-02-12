@@ -19,6 +19,7 @@ void Sender::Sender_Action() const{
         if(chosen_fs==nullptr){
             //If we are here, it means that we woke up the thread waiting on cv in order to terminate the program.
             //Continue because in the next iteration we exit from the while (condition will be false) and join the threads.
+            std::cout<<"NULLPTR"<<std::endl;
             continue;
         }
 
