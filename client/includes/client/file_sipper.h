@@ -63,13 +63,12 @@ private:
                                  t_buffer,
                                  [this](boost::system::error_code ec, std::size_t size)
                                  {
-                                     //Check errori
                                      if (ec) {
                                          // We can call WaitOk where we wait for the ok from the server;
                                          files_stream_.close();
                                          sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
                                          UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
-                                         throw std::exception("Sip interrupted. The file is set back to NEW.");
+                                         throw std::runtime_error("Sip interrupted. The file is set back to NEW.");
                                      }
 
                                      //Let's see the status of the sip, in order to see if this is the last one.
@@ -80,7 +79,7 @@ private:
     }
 
 
-    void UpdateFileStatus(std::filesystem::path db_path, std::filesystem::path folder_watched, std::string file_string,
+    void UpdateFileStatus(const std::filesystem::path& db_path, const std::filesystem::path& folder_watched, const std::string& file_string,
                           int check);
 
 

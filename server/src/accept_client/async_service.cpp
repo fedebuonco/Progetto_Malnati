@@ -84,7 +84,7 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
 }
 
 void AsyncService::onFinish() {
-    //We close the file and compute its hash in order to comapre it with the provided one.
+    //We close the file and compute its hash in order to compare it with the provided one.
     m_outputFile.close();
     //Compute hash and compare it to hash_ to see if the file is corrupted
     CryptoPP::SHA256 hash;
@@ -125,7 +125,7 @@ void AsyncService::onFinish() {
     m_sock->async_write_some(boost::asio::buffer(m_buf.data(), m_buf.size()),
                                   [this](boost::system::error_code ec, size_t bytes){
                                       if (!ec.value()) {
-                                          std::cout << "File " << this->received_file_string_ << " successfully received and saved" << std::endl;
+                                          std::cout << "\n[INSERT] File " << this->received_file_string_ << " successfully received and saved" << std::endl;
                                           delete this;
                                       }
                                   });

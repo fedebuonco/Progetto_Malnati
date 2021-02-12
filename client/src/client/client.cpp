@@ -254,8 +254,6 @@ void Client::InitHash(){
             // We open the db once here so that we limit the overhead
             DatabaseConnection db(db_file_, folder_watched_);
 
-
-
             // For each file in the folder we look in the db using the relative filename and the last modified time.
             for (auto itEntry = std::filesystem::recursive_directory_iterator(folder_watched_,
                                                                               std::filesystem::directory_options::skip_permission_denied);
@@ -304,10 +302,14 @@ void Client::InitHash(){
             // We now have the DB and client folder aligned.
             return;
         }
-        catch (std::filesystem::filesystem_error &e) {              //TODO: Policy? @marco
-
+        catch (std::filesystem::filesystem_error &e) {
             std::cerr << "Error Filesystem (InitHash): " << n_attempts << e.what() << std::endl;
             n_attempts--;
+
+            if(n_attempts==0){
+                std::exit(EXIT_FAILURE);
+            }
+
         }
         catch (std::exception &e) {
             std::cerr << "Error generic (InitHash) " << e.what() << std::endl;
@@ -331,11 +333,6 @@ std::string Client::HashFile(const std::filesystem::path& element_path) {
         //Here because CryptoPP can't open the file because we are copying the file into the folder
         //Another possibility is that the file doesn't exist anymore.
         //In both ways we recover from this exception.
-
-        if(!std::filesystem::exists(element_path)){     //TODO: What do we do here? We can't exit because CryptoPP recover from this error alone
-            //TODO: I have left this things in case we want to differentiate the problem to print in console    @marco
-        }
-
     }
     catch (CryptoPP::Exception &e) {
         std::cout << "Error CryptoPP (HashFile) " << e.what() << std::endl;

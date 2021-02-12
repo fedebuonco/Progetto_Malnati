@@ -1,12 +1,6 @@
 #include "watcher.h"
 #include <files.h>
-#include <base64.h>
-#include <sha.h>
-#include <hex.h>
-#include <config.h>     //TODO: Remove this? @marco
-#include <file_sipper.h>
 #include <database.h>
-
 #include <utility>
 
 
@@ -35,10 +29,8 @@ void Watcher::listenerFunction(const std::vector<pfw::EventPtr>& events)
     for (const auto &event : events) {
         //std::cout << event->relativePath << " with the type: " << typeBits << std::endl;
 
-        //We don't take action regarding the changes in the db
-        if (event->relativePath.string() == ".hash.db")
-            continue;
-
+        if (event->relativePath.string() == ".hash.db" && events.size() == 1)
+            return;
     }
 
     update_callback();
@@ -49,7 +41,7 @@ void Watcher::listenerFunction(const std::vector<pfw::EventPtr>& events)
 /// \param path
 void Watcher::Start(const std::filesystem::path& path){
     _watcher = std::make_unique<pfw::FileSystemWatcher>(
-            path, std::chrono::milliseconds(1000),  //TODO: Can we change the milliseconds?
+            path, std::chrono::milliseconds(1000),
             std::bind(&Watcher::listenerFunction, this,
                       std::placeholders::_1));
 }

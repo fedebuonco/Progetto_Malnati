@@ -125,67 +125,13 @@ int Patch::Dispatch(const std::filesystem::path& db_path, const std::filesystem:
 
 /// Pretty Prints the changes contained in the patch
 /// \return A string summing up the current client-server file situation.
-std::string Patch::PrettyPrint(){
+void Patch::PrettyPrint(){
     int max_files_displayed = 3;
-    std::string pretty;
-    pretty.append("\n:::::::: Changes ::::::::\n");
-    int cnt =0;
-    for (const auto& file : added_){
-        pretty.append("+ " + file +"\n");
-        cnt++;
-        if (cnt == max_files_displayed) {
-            std::string other = std::to_string(added_.size() - 3);  //TODO: For me the problem of random number is here @marco
-            pretty.append("+ " + other + " Other files... \n");
-            cnt = 0;
-            break;
-        }
-    }
-    for (const auto& file : removed_){
-        pretty.append("- " + file +"\n");
-        cnt++;
-        if (cnt == max_files_displayed) {
-            std::string other = std::to_string(removed_.size() - 3);
-            pretty.append("- " + other + " Other files... \n");
-            cnt = 0;
-            break;
-        }
-    }
-    for (const auto& file : common_){
-        pretty.append("= " + file +"\n");
-        cnt++;
-        if (cnt == max_files_displayed) {
-            std::string other = std::to_string(common_.size() - 3);
-            pretty.append("= " + other + " Other files... \n");
-            cnt = 0;
-            break;
-        }
-    }
-    pretty.append( ":::::::: Files that will be deleted or overwritten on the server ( Because older or deleted ) - Last Modified Time ::::::::\n");
-    for (const auto& file : to_be_elim_vector){
-        pretty.append(file.first + " - ");
-        pretty.append(std::to_string(file.second) + "\n");
-        cnt++;
-        if (cnt == max_files_displayed) {
-            std::string other = std::to_string(to_be_elim_vector.size() - 3);
-            pretty.append("+ " + other + " Other files... \n");
-            cnt = 0;
-            break;
-        }
-    }
-    if(!to_be_sent_vector.empty() ) pretty.append(":::::::: Files that will be Sent or are in sending (New files or newer files) - Last Modified Time ::::::::\n" );
-    for (const auto& file : to_be_sent_vector ){
-        pretty.append(file.first + " - ");
-        pretty.append(std::to_string(file.second) + "\n");
-        cnt++;
-        if (cnt == max_files_displayed) {
-            std::string other = std::to_string(to_be_sent_vector.size() - 3);
-            pretty.append("+ " + other + " Other files... \n");
-            cnt = 0;
-            break;
-        }
-    }
+    int cnt=0;
 
-    if(!added_.empty() ) std::cout << "\n:::::::: Changes ::::::::" << std::endl;
+    std::cout << "\n:::::::: Changes ::::::::" << std::endl;
+    if(added_.empty() && removed_.empty() ) std::cout << "\n   No changes detected. All files are in sync " << std::endl;
+
     for (const auto& file : added_){
         std::cout <<"+ "<<file << std::endl;
         cnt++;
@@ -196,6 +142,7 @@ std::string Patch::PrettyPrint(){
             break;
         }
     }
+
     for (const auto& file : removed_){
         std::cout <<"- " << file << std::endl;
         cnt++;
@@ -206,7 +153,8 @@ std::string Patch::PrettyPrint(){
             break;
         }
     }
-    for (const auto& file : common_){
+
+    /*for (const auto& file : common_){
         std::cout <<"= " << file << std::endl;
         cnt++;
         if (cnt == max_files_displayed) {
@@ -215,7 +163,7 @@ std::string Patch::PrettyPrint(){
             cnt = 0;
             break;
         }
-    }
+    }*/
 
     if(!to_be_elim_vector.empty() ) std::cout << ":::::::: Files that will be deleted or overwritten on the server ( Because older or deleted ) - Last Modified Time ::::" << std::endl;
     for (const auto& file : to_be_elim_vector){
@@ -239,12 +187,13 @@ std::string Patch::PrettyPrint(){
             break;
         }
     }
+
+
     std::cout << "\n\n:::::::: Recap : new files (" << added_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : removed files (" << removed_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : common files (" << common_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : Files that will be sent or are in sending (" << to_be_sent_vector.size() << ")   ::::::::" << std::endl;
 
-    return pretty;
 }
 
 

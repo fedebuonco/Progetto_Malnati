@@ -137,6 +137,9 @@ void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
 
                     // First we remove the file
                     std::filesystem::remove(file_path, ec);
+
+                    std::cout << "\n[DELETE] "<<  file << " successfully deleted" << std::endl;
+
                     if(ec){
                         //TODO: It's right to say return @marco
                         //TODO Why? se non riusciamo ad eliminare un file io direi di continuare comunque ad eliminare gli altri
