@@ -192,7 +192,7 @@ void Patch::PrettyPrint(){
     std::cout << "\n\n:::::::: Recap : new files (" << added_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : removed files (" << removed_.size() << ")   ::::::::" << std::endl;
     std::cout << ":::::::: Recap : common files (" << common_.size() << ")   ::::::::" << std::endl;
-    std::cout << ":::::::: Recap : Files that will be sent or are in sending (" << to_be_sent_vector.size() << ")   ::::::::" << std::endl;
+    //std::cout << ":::::::: Recap : Files that will be sent or are in sending (" << to_be_sent_vector.size() << ")   ::::::::" << std::endl;
 
 }
 

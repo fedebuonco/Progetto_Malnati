@@ -9,7 +9,7 @@
 class AsyncService {
 public:
     AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock, std::filesystem::path server_path);
-    void StartHandling();
+    void StartHandling(const boost::system::error_code& ec);
 
 private:
     void onRequestReceived(const boost::system::error_code& ec, std::size_t bytes_transferred);

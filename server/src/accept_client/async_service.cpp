@@ -15,7 +15,12 @@ m_sock(sock)
             first_sip_ = true;
         }
 
-void AsyncService::StartHandling() {
+void AsyncService::StartHandling(const boost::system::error_code& ec) {
+
+    if (ec){
+        //If we have an error, we dont waste time handling the service and just return.
+        return;
+    }
 
     m_sock->async_read_some(boost::asio::buffer(m_buf.data(), m_buf.size()),
                                   [this](boost::system::error_code ec, size_t bytes)
@@ -80,7 +85,7 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
         m_buf.fill('\000');
     }
     // We go on to the next read.
-    StartHandling();
+    StartHandling(ec);
 }
 
 void AsyncService::onFinish() {

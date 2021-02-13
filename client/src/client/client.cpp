@@ -32,7 +32,7 @@ Client::Client(RawEndpoint re, const std::filesystem::path& folder_watched) :
 
     // We recover the sending files
     int recovered = RecoverSending();
-    if (DEBUG && recovered>0) std::cout << "\nRecovered " << recovered << " files from previous failed sending" << std::endl;
+    std::cout << "\nRecovered " << recovered << " files from previous failed sending" << std::endl;
 
 
     // We start watching for further changes
@@ -64,7 +64,11 @@ void Client::Syncro(){
     // Need to figure out which files the server doesn't have (we need to send) and the file the server have to delete.
     Patch update(client_treet, server_treet);
 
-    //Send to the server the list of file to remove
+    // We align the DB updating the status
+    DatabaseConnection db{db_file_, folder_watched_};
+    db.AlignStatus(update.common_);
+
+    // Send to the server the list of file to remove
     SendRemoval(update);
 
     // This function identify the file that have to be sent really

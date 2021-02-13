@@ -37,11 +37,7 @@ void AsyncAcceptClient::InitAccept() {
 void AsyncAcceptClient::onAccept(const boost::system::error_code& ec, const std::shared_ptr<boost::asio::ip::tcp::socket>& sock)
 {
 
-    if(ec){
-        return; //TODO: Check
-    }
-
-    (new AsyncService(sock, server_path_))->StartHandling();
+    (new AsyncService(sock, server_path_))->StartHandling(ec);
 
     // Init next async accept operation if acceptor has not been stopped yet.
     if (!m_isStopped.load()) {
