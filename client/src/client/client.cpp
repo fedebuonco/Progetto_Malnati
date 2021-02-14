@@ -16,6 +16,11 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <utility>
 
+void ClearScreen()
+{
+    std::cout << std::string( 100, '\n' );
+}
+
 /// Construct a Client, execute the first hashing of each file and puts it in a state ready to track any changes in the folder.
 /// \param re :  Endpoint to connect to.
 /// \param folder_watched : folder path that we want to keep monitored.
@@ -74,7 +79,10 @@ void Client::Syncro(){
     // This function identify the file that have to be sent really
     update.Dispatch(db_file_, folder_watched_);
 
-    if (DEBUG) update.PrettyPrint();
+    if (DEBUG) {
+        ClearScreen();
+        update.PrettyPrint();
+    }
 
 }
 

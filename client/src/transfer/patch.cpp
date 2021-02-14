@@ -129,7 +129,7 @@ void Patch::PrettyPrint(){
     int max_files_displayed = 3;
     int cnt=0;
 
-    std::cout << "\n:::::::: Changes ::::::::" << std::endl;
+    std::cout << "\n ________ ________ Changes ________ ________ " << std::endl;
     if(added_.empty() && removed_.empty() ) std::cout << "\n   No changes detected. All files are in sync " << std::endl;
 
     for (const auto& file : added_){
@@ -167,7 +167,7 @@ void Patch::PrettyPrint(){
 
     if(!to_be_elim_vector.empty() ) std::cout << ":::::::: Files that will be deleted or overwritten on the server ( Because older or deleted ) - Last Modified Time ::::" << std::endl;
     for (const auto& file : to_be_elim_vector){
-        std::cout << file.first + " - " << file.second << std::endl;
+        std::cout << file.first << std::endl;
         cnt++;
         if (cnt == max_files_displayed) {
             std::string other = std::to_string(to_be_elim_vector.size() - 3);
@@ -189,9 +189,11 @@ void Patch::PrettyPrint(){
     }
 
 
-    std::cout << "\n\n:::::::: Recap : new files (" << added_.size() << ")   ::::::::" << std::endl;
-    std::cout << ":::::::: Recap : removed files (" << removed_.size() << ")   ::::::::" << std::endl;
-    std::cout << ":::::::: Recap : common files (" << common_.size() << ")   ::::::::" << std::endl;
+    std::cout << "\n\n:::::::: Recap : new     files (" << added_.size() << ")   ::::::::" << std::endl;
+    std::cout <<     ":::::::: Recap : removed files (" << removed_.size() << ")   ::::::::" << std::endl;
+    std::cout <<     ":::::::: Recap : common  files (" << common_.size() << ")   ::::::::" << std::endl;
+    std::cout <<     ":::::::::::::::::::::::::::::::::::::::::::::" << std::endl;
+
     //std::cout << ":::::::: Recap : Files that will be sent or are in sending (" << to_be_sent_vector.size() << ")   ::::::::" << std::endl;
 
 }
