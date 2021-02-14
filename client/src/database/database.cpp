@@ -105,10 +105,7 @@ int DatabaseConnection::SetBackToNew(){
 
     try {
         SQLite::Statement query(hash_db_, "UPDATE files SET status = 'NEW' WHERE status = 'SENDING'");
-        int cnt = 0;
-        while (query.executeStep()) {
-            cnt++;
-        }
+        int cnt = query.exec();
         return cnt;
     }
     catch (std::exception& e)
@@ -227,12 +224,13 @@ bool DatabaseConnection::ChangeStatusToNew(const std::string& filename) {
 
             if (current_status == "SENDING") {
 
-                SQLite::Statement update_to_sent(hash_db_, " UPDATE files SET status = \'NEW\' WHERE filename =  ?");
-                update_to_sent.bind(1, filename);
-                update_to_sent.exec();
+                SQLite::Statement update_to_new(hash_db_, " UPDATE files SET status = \'NEW\' WHERE filename =  ?");
+                update_to_new.bind(1, filename);
+                update_to_new.exec();
 
                 return true;
             }
+
         }
     }
     catch (std::exception& e)
@@ -267,5 +265,25 @@ void DatabaseConnection::GetMetadata(const std::string& filename, std::string& h
         std::cerr << "SQLite exception: " << e.what() << std::endl;
         std::exit(EXIT_FAILURE);
     }
+}
+
+
+bool DatabaseConnection::AlignStatus(const std::vector<std::string>& common){
+    std::shared_lock lg(db_mutex_);
+    for (const auto& element : common){
+        try{
+
+            SQLite::Statement update_to_sent(hash_db_, " UPDATE files SET status = \'SENT\' WHERE filename =  ?");
+            update_to_sent.bind(1, element);
+            update_to_sent.exec();
+
+        }
+        catch (std::exception& e)
+        {
+            std::cerr << "SQLite exception: " << e.what() << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
+    }
+
 }
 

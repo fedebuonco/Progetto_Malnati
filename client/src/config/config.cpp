@@ -10,7 +10,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-//Include for CRYTPO.CPP
+//Include for CRYPTO.CPP
 #include "cryptlib.h"
 #include <sha.h>
 #include <filters.h>
@@ -312,7 +312,7 @@ RawEndpoint Config::ReadRawEndpoint() {
         port = std::stoul(Config::get_Instance()->ReadProperty("port"));
     }catch(const std::invalid_argument& ia){
         //Error in conversion std::stoul
-        std::cerr << "Invalid argumen RawEndpoint: " << ia.what() << '\n';
+        std::cerr << "Invalid argument RawEndpoint: " << ia.what() << '\n';
         std::exit(EXIT_FAILURE);
     }catch(std::out_of_range& orr){
         //Error in conversion std::stoul

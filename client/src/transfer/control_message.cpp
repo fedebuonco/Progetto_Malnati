@@ -6,7 +6,7 @@
  * Create a control message object with a given type tp (argument)
  * @param tp : Type of the message (1 for auth, 2 for tree, 3 for deleted)
  */
-ControlMessage::ControlMessage(int tp) {
+ControlMessage::ControlMessage(int tp) : type_(tp) {
 
     //Define the document as an object rather than an array
     document_.SetObject();

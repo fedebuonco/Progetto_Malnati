@@ -3,12 +3,12 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <iostream>
-//Necesario per linux
+//For linux
 #include <sys/stat.h>
 
 
 /// Starting from the ordered string sent by the server, it computes a mapping between the files present in the server and their hashes
-/// \param tree: Directory tree if the servern files (0)   ::::::::i
+/// \param tree: Directory tree if the server files (0)   ::::::::i
 /// \param time: Time of the files present in the server following the same order of the tree
 TreeT::TreeT(const std::string& tree, const std::string& time) {
     //Now we fill the map using the two string we got
@@ -84,9 +84,9 @@ TreeT::TreeT(const std::filesystem::path& path){
         }
 
     }
-    catch (std::filesystem::filesystem_error &e) {              //TODO: Policy? @marco
+    catch (std::filesystem::filesystem_error &e) {
         std::cerr << "Error Filesystem (TreeT): " << e.what() << std::endl;
-        //std::exit(EXIT_FAILURE);
+        std::exit(EXIT_FAILURE);
     }
     catch (std::exception &e) {
         std::cerr << "Error generic (TreeT) " << e.what() << std::endl;

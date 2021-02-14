@@ -35,9 +35,6 @@ class FileSipper {
     std::array<char, MessageSize> buf_array_{};
     std::array<char, MessageSize> buf_metadata{};
 
-    //Dimension of the file to send
-    int file_size_{};     //TODO: Remove? @marco
-
     //Number of sip (i.e. block) in which the file is split
     int sip_counter;
 
@@ -45,10 +42,10 @@ class FileSipper {
 
 public:
     FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, const std::string& hashed_pass,  std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
-    void Send();
+    void Send(std::function<void()> rem_call);
 
     std::string file_string_;
-
+    std::function<void()> remove_callback_;
     std::atomic<bool> status = false;
 private:
     void OpenFile();
@@ -66,14 +63,24 @@ private:
                                  t_buffer,
                                  [this](boost::system::error_code ec, std::size_t size)
                                  {
+                                     if (ec) {
+                                         // We can call WaitOk where we wait for the ok from the server;
+                                         files_stream_.close();
+                                         sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+                                         UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
+                                         throw std::runtime_error("Sip interrupted. The file is set back to NEW.");
+                                     }
+
                                      //Let's see the status of the sip, in order to see if this is the last one.
-                                     //std::cout << "STATUS async write: " << ec.value() << " written " << size << std::endl;
                                      Sip(ec);
 
                                  });
 
     }
 
+
+    void UpdateFileStatus(const std::filesystem::path& db_path, const std::filesystem::path& folder_watched, const std::string& file_string,
+                          int check);
 
 
 };

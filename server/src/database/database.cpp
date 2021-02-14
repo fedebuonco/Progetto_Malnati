@@ -234,7 +234,7 @@ void Database::insertFile(const std::string& userName, const std::string& pathNa
     }
     catch (std::exception& e)
     {
-        std::cerr << "SQLite exception: " << e.what() << std::endl;
+        std::cerr << "SQLite exception: INSERT " << e.what() << std::endl;
         std::exit(EXIT_FAILURE);
     }
 }

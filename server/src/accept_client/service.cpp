@@ -34,10 +34,9 @@ void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
 
     try{
         //We parse the incoming request into a request message
-        //TODO: This launch an exception we need to catch            @marco
         ControlMessage request_message = SyncReadCM(sock);
 
-        //A message with type 5 means that we are shutting down the server
+        //A message with type 5 means that we don't want to handle the message (like we are shutting down the server)
         if(request_message.type_==5){
             //The detach thread will be kill when read this message
             return;
@@ -137,13 +136,8 @@ void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
 
                     // First we remove the file
                     std::filesystem::remove(file_path, ec);
-                    if(ec){
-                        //TODO: It's right to say return @marco
-                        //TODO Why? se non riusciamo ad eliminare un file io direi di continuare comunque ad eliminare gli altri
-                        // , ma non di ritornare
-                        std::cerr << "Error remove service.cpp "<< ec << std::endl;
-                        continue;
-                    }
+
+                    std::cout << "\n[DELETE] "<<  file << " successfully deleted" << std::endl;
 
                     // Then we check if it is the last file in the folder, if it is we delete it
                     // we perform this operation recursively in order to delete all empty folders.
@@ -155,11 +149,6 @@ void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
                         }
                         // remove this folder and go to parent folder
                         std::filesystem::remove(path_iterator, ec);
-                        if(ec){
-                            //TODO:
-                            std::cerr << "Error remove service.cpp "<< ec << std::endl;
-                            continue;
-                        }
 
                         path_iterator = path_iterator.parent_path();
                     }
@@ -202,7 +191,6 @@ bool Service::CheckAuthenticity(const ControlMessage& cm){
     return authentication.auth(cm.username_, cm.hashkey_, this->serverPath);
 }
 
-//TODO: SyncWriteCM return bool but we never check
 void Service::SyncWriteCM(const std::shared_ptr<asio::ip::tcp::socket>& sock, ControlMessage& cm){
 
     boost::system::error_code ec;
@@ -211,7 +199,6 @@ void Service::SyncWriteCM(const std::shared_ptr<asio::ip::tcp::socket>& sock, Co
     boost::asio::write(*sock, boost::asio::buffer(cm.ToJSON()), ec);
 
     if (ec){
-        //TODO Sometimes we get here. When the server shuts down
         if(DEBUG) std::cerr<<"Error writing Control Message; message: " << ec.message() << std::endl;
         std::exit(EXIT_FAILURE);
     }
@@ -219,8 +206,7 @@ void Service::SyncWriteCM(const std::shared_ptr<asio::ip::tcp::socket>& sock, Co
     sock->shutdown(boost::asio::ip::tcp::socket::shutdown_send, ec);
 
     if (ec){
-        //TODO Sometimes we get here. When the server shuts down
-        if(DEBUG) std::cerr<<"Error writing Control Message; message: " << ec.message() << std::endl;
+       if(DEBUG) std::cerr<<"Error writing Control Message; message: " << ec.message() << std::endl;
         std::exit(EXIT_FAILURE);
     }
 }
@@ -234,8 +220,10 @@ ControlMessage Service::SyncReadCM(const std::shared_ptr<asio::ip::tcp::socket>&
 
     // This checks if the client has finished writing
     if (ec != boost::asio::error::eof){
-       if(DEBUG) std::cerr<<"The server is not responding, try later. Message " << ec.message() << std::endl;
-       throw boost::system::system_error(ec);
+       if(DEBUG) std::cerr<<"Unable to read the control message arrived from client." << ec.message() << std::endl;
+       //5 means that the server doesn't handle the message
+       ControlMessage cm{5};
+       return cm;
     }
     //Read the response_buf using an iterator and store it in a string In order to store it in a ControlMessage
     std::string response_json((std::istreambuf_iterator<char>(&request_buf)), std::istreambuf_iterator<char>() );

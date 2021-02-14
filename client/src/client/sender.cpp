@@ -26,14 +26,13 @@ void Sender::Sender_Action() const{
         boost::asio::post(pool,[chosen_fs](){
 
                 try {
-                    chosen_fs->Send();
-
-                    SharedQueue::get_Instance()->remove_element(chosen_fs);
+                    chosen_fs->Send([chosen_fs](){SharedQueue::get_Instance()->remove_element(chosen_fs);});
+                    //SharedQueue::get_Instance()->remove_element(chosen_fs);
                 }
                 catch (std::exception &e){
                     //Here we have the exception that have been throw while creating and sending files
-                    //TODO: I have a lot of prints with cerr; for me we can remove the cerr. @marco
-                    std::cerr << "Error Unable to send a file; maybe was deleted thread " << e.what() << std::endl;
+                    SharedQueue::get_Instance()->remove_element(chosen_fs);
+                    if(DEBUG) std::cerr << "Error Unable to send a file; maybe was deleted thread " << e.what() << std::endl;
                     return;
                 }
         });

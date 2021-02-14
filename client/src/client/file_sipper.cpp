@@ -27,21 +27,25 @@ FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watch
 
 
 /// Methods that starts the sending of the File.
-void FileSipper::Send(){
+void FileSipper::Send(std::function<void()> rem_call){
     //We change the fileSipper status to true, to indicate that we handle the fileSipper
+    remove_callback_ = std::move(rem_call);
     status.store(true);
     Connect();
     ios_.run();
 }
 
-//TODO iterator endpoint not single...
 /// We async connect to the specified server.
 void FileSipper::Connect() {
     //if(DEBUG) std::cout << "Connecting to "<<  ep_.address() <<" for file " <<  path_.string() << std::endl;
 
     sock_.async_connect(ep_, [this](boost::system::error_code ec) {
-        //if(DEBUG) std::cout << "Currently in the async_connect callback " << std::endl;
-        //TODO check if we still want to send the file. In teoria non serve perchè fatto in patch
+        //Here if we can't connect we simply exit, but we make sure to change the status of the file back to new in the DB
+        if (ec) { // we simulate a bad sent file, (checksum result == 0 )
+            UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
+            throw std::runtime_error("Could Not Connect to File Server");
+        }
+        // Here if the connection was successful
         OpenFile();
         FirstSip(ec_);
 
@@ -53,17 +57,18 @@ void FileSipper::OpenFile() {
 
     //We open the file
     files_stream_.open(path_.c_str(), std::ios_base::binary);
-    if (files_stream_.fail())
-        throw std::fstream::failure("Failed while opening file " + path_.string());
+    if (files_stream_.fail()) { // We couldn't open the file, we check its existence.
+        if(std::filesystem::exists(path_)){ //we had some problem opening the file, but it still exists.
+                                            // We exit but change the status back to NEW
+            UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
+            throw std::runtime_error("File couldn't be opened. It will set back to NEW");
 
-    //Retrieve the byte size
-    files_stream_.seekg(0, files_stream_.end);
-    auto fileSize = files_stream_.tellg();
-    this->file_size_ = fileSize;
-    //std::cout << "File Opened, Size : " << file_size_ << std::endl;
+        }
+        else{ //File doesn't even exists anymore, we can exit safely;
+            throw std::runtime_error("File couldn't be opened. It does not exist anymore.");
+        }
+    }
 
-    //Reset the stream;
-    files_stream_.seekg(0, files_stream_.beg);
 }
 
 /// Takes the file and send its metadata to the server.
@@ -86,18 +91,14 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
         writeBuffer(buf);
     }
     else{
-        // Here we are if fail bit or bad bit are set to 1.
-        // The fail bit could have been set by the eof, so we check it
-        if (files_stream_.eof()){
-            //std::cout << "EOF Reached!" << std::endl;
+        if(std::filesystem::exists(path_)){ //we had some problem opening the file, but it still exists.
+            // We exit but change the status back to NEW
+            UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
+            throw std::runtime_error("File couldn't be opened. It will set back to NEW");
 
-        } else { // Here if we had a different problem that made us fail! we throw exception
-            auto msg = "Failed while reading file";
-            std::cerr << msg << std::endl;
-            throw std::fstream::failure(msg);
+        }else{ //File doesn't even exists anymore, we can exit safely;
+            throw std::runtime_error("File couldn't be opened. It does not exist anymore.");
         }
-        ios_.stop();
-        return;
     }
 }
 
@@ -138,46 +139,50 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
                 std::cerr << msg << std::endl;
                 throw std::fstream::failure(msg);
             }
-            ios_.stop();
+            //ios_.stop();
 
             return;
         }
     } else {
-        std::cerr <<"Error "<< t_ec.value() << " -- "<< t_ec.message() <<std::endl;
-        //TODO Here error in the sending WriteBuffer   FEDE HELP US VA BENE USCIRE ?
-        std::exit(EXIT_FAILURE);
-
+        if(DEBUG) std::cerr <<"Error "<< t_ec.value() << " -- "<< t_ec.message() <<std::endl;
+        files_stream_.close();
+        sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+        UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
+        throw std::runtime_error("Sip interrupted. The file is set back to NEW.");
     }
 }
 
-void FileSipper::WaitOk(){
+void FileSipper::WaitOk() {
     buf_metadata.fill('\000');
-    sock_.read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()));
+    //sock_.read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()));
 
-    // Here based on the checksum result we modify the database.
-    int checksum_ok = buf_metadata[0] -'0';
-    DatabaseConnection db(db_path_, folder_watched_);
-    if (!checksum_ok){ // we need to retry sending the file has the server did not receive the file in a correct way
-        try {
-            db.ChangeStatusToNew(file_string_);
-            status.store(false);
-        } catch (...) {
-            //std::cout<<" WaitOk "<<std::endl;
-        }
-        //TODO se vogliamo farlo rifare a lui devo fare puntatore a socket per poi ditruggerlo e ricrearlo.
-        //this->Send();
-    } else { // here if the server has received the correct file.
-        try {
-            db.ChangeStatusToSent(file_string_);
+    async_read(sock_, boost::asio::buffer(buf_metadata.data(), buf_metadata.size()),
+               [this](boost::system::error_code ec, size_t bytes) {
 
-            status.store(false);
+                   if (ec){ // We must simulate worst scenario, so we act like the checksum was not ok
 
-        }catch(...){ //TODO: Check this thing
-            //std::cout<<" WaitOk "<<std::endl;
-        }
-    }
+                       UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
 
+                   } else { //Here if we got no error while reading
 
+                       int checksum_ok = buf_metadata[0] - '0';
+                       UpdateFileStatus(db_path_, folder_watched_, file_string_, checksum_ok);
+
+                   }
+
+                   ios_.stop();  // THIS STOPS further async calls for this socket.
+
+                   remove_callback_();
+
+               });
+}
+
+void FileSipper::UpdateFileStatus(const std::filesystem::path& db_path , const std::filesystem::path& folder_watched, const std::string& file_string, int check) {
+    DatabaseConnection db(db_path, folder_watched);
+    if (check)
+        db.ChangeStatusToSent(file_string);
+    else
+        db.ChangeStatusToNew(file_string);
 }
 
 

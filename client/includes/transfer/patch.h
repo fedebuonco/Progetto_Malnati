@@ -36,7 +36,7 @@ public:
 
     Patch(TreeT client_treet, TreeT server_treet);
     int Dispatch(const std::filesystem::path& db_path, const std::filesystem::path& folder_watched);
-    std::string PrettyPrint();
+    void PrettyPrint();
 
 
 };

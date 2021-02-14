@@ -18,8 +18,7 @@ int main(int argc, char *argv[]){
 
     //Find the absolute path that points to server folder
     std::filesystem::path server_path = std::filesystem::absolute(std::filesystem::path( argv[0] ) ).remove_filename().parent_path().parent_path();
-    if(DEBUG) std::cout << "Server path: " << server_path.string() << std::endl;
-
+    if(DEBUG) std::cout << "\nServer path: " << server_path.string() << std::endl;
 
     try{
         //Synchronous server that handle the request from clients

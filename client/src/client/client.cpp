@@ -16,6 +16,11 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <utility>
 
+void ClearScreen()
+{
+    std::cout << std::string( 100, '\n' );
+}
+
 /// Construct a Client, execute the first hashing of each file and puts it in a state ready to track any changes in the folder.
 /// \param re :  Endpoint to connect to.
 /// \param folder_watched : folder path that we want to keep monitored.
@@ -32,7 +37,7 @@ Client::Client(RawEndpoint re, const std::filesystem::path& folder_watched) :
 
     // We recover the sending files
     int recovered = RecoverSending();
-    if (DEBUG && recovered>0) std::cout << "\nRecovered " << recovered << " files from previous failed sending" << std::endl;
+    std::cout << "\nRecovered " << recovered << " files from previous failed sending" << std::endl;
 
 
     // We start watching for further changes
@@ -64,13 +69,20 @@ void Client::Syncro(){
     // Need to figure out which files the server doesn't have (we need to send) and the file the server have to delete.
     Patch update(client_treet, server_treet);
 
-    //Send to the server the list of file to remove
+    // We align the DB updating the status
+    DatabaseConnection db{db_file_, folder_watched_};
+    db.AlignStatus(update.common_);
+
+    // Send to the server the list of file to remove
     SendRemoval(update);
 
     // This function identify the file that have to be sent really
     update.Dispatch(db_file_, folder_watched_);
 
-    if (DEBUG) update.PrettyPrint();
+    if (DEBUG) {
+        ClearScreen();
+        update.PrettyPrint();
+    }
 
 }
 
@@ -173,7 +185,6 @@ void Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
     boost::system::error_code ec;
     boost::asio::write(stcp.sock_, boost::asio::buffer(cm.ToJSON()), ec);
     if (ec){
-        //TODO Sometimes we get here. When the server shuts down
         if(DEBUG) std::cerr<<"Error writing Control Message; message: " << ec.message() << std::endl;
         std::exit(EXIT_FAILURE);
     }
@@ -181,7 +192,6 @@ void Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
     //We write and close the send part of the SyncTCPSocket, in order to tell the server that we have finished writing
     stcp.sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send, ec);
     if (ec){
-        //TODO Sometimes we get here. When the server shuts down
         if(DEBUG) std::cerr<<"Error writing Control Message; message: " << ec.message() << std::endl;
         std::exit(EXIT_FAILURE);
     }
@@ -204,7 +214,24 @@ ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
 
     //Read the response_buf using an iterator and store it in a string in order to store it in a ControlMessage
     std::string response_json((std::istreambuf_iterator<char>(&response_buf)), std::istreambuf_iterator<char>() );
+
     ControlMessage cm{response_json};
+
+    //We are expecting a message with an auth response (type:51)
+    if(cm.type_ == 51) {
+        //The answer is inherent with the request, so we read the reply message.
+
+        //We retrieve the auth information inside the response message.
+        std::string auth_response = cm.GetElement("auth");
+
+        if (auth_response == "false") {
+            //The user is authenticated so we return true
+            if (DEBUG)
+                std::cout << "\nUser \"" << Config::get_Instance()->ReadProperty("username")
+                          << "\" successfully authenticated." << std::endl;
+        }
+    }
+
     return cm;
 }
 
@@ -250,70 +277,73 @@ void Client::SendRemoval(Patch& update){
 /// Test each file to see if already present in the hash db, and acts accordingly in order to keep a database of each
 /// hash performed.
 void Client::InitHash(){
-    std::error_code ec;
+    int n_attempts = 10;
+    while(n_attempts > 0) {
+        try {
+            // We open the db once here so that we limit the overhead
+            DatabaseConnection db(db_file_, folder_watched_);
 
-    try {
-        // We open the db once here so that we limit the overhead
-        DatabaseConnection db(db_file_, folder_watched_);
+            // For each file in the folder we look in the db using the relative filename and the last modified time.
+            for (auto itEntry = std::filesystem::recursive_directory_iterator(folder_watched_,
+                                                                              std::filesystem::directory_options::skip_permission_denied);
+                 itEntry != std::filesystem::recursive_directory_iterator();
+                 ++itEntry) {
 
-        // For each file in the folder we look in the db using the relative filename and the last modified time.
-        for (auto itEntry = std::filesystem::recursive_directory_iterator(folder_watched_, ec);     //TODO , std::filesystem::directory_options::skip_permission_denied
-             itEntry != std::filesystem::recursive_directory_iterator();
-             ++itEntry) {
+                // We take the current element path, make it relative to the path specified and then we make it
+                // in a cross platform format (cross_platform_relative_element_path = cross_platform_rep)
+                auto element_path = itEntry->path();
+                std::filesystem::path relative_element_path = element_path.lexically_relative(folder_watched_);
+                std::string cross_platform_rep = relative_element_path.generic_string();
 
-            if(ec){
-               std::cerr << "Error Recursive directory (InitHash): " << ec << std::endl;
-               continue;
+                // We also add the "/" if it is a directory in order to diff it from non extension files.
+                if (std::filesystem::is_directory(element_path))
+                    cross_platform_rep += "/";
+
+                // Now if the current element is a dir or the db or its a temporary file we can go to the next iteration
+                if (std::filesystem::is_directory(element_path) || cross_platform_rep == ".hash.db" ||
+                    boost::algorithm::ends_with(cross_platform_rep, "~"))
+                    continue;
+
+                // We now need to retrieve the last modified time.
+                struct stat temp_stat;
+                // Put inside our struct temp_state the metadata like last modified time
+                stat(element_path.generic_string().c_str(), &temp_stat);
+                unsigned long mod_time = temp_stat.st_mtime;
+
+                // Now we have the tuple ( cross_platform_rep , mod_time )
+                // We use this tuple to see if we already hashed that version of the file.
+                // If we had, then we take the hash from the db, without hashing a second time the same file.
+
+                if (!db.AlreadyHashed(cross_platform_rep, std::to_string(mod_time))) {
+                    //Here only if the tuple ( cross_platform_rep , mod_time ) is not present inside DB, so we need to hash and then update the db.
+
+                    //Hash the file and return the digest to insert in the DB
+                    std::string digest = HashFile(element_path);
+
+                    //We have the hash of the file and we can insert it in the DB
+                    db.InsertDB(cross_platform_rep, digest, std::to_string(mod_time));
+                }
             }
 
-            // We take the current element path, make it relative to the path specified and then we make it
-            // in a cross platform format (cross_platform_relative_element_path = cross_platform_rep)
-            auto element_path = itEntry->path();
-            std::filesystem::path relative_element_path = element_path.lexically_relative(folder_watched_);
-            std::string cross_platform_rep = relative_element_path.generic_string();
+            // Now we clean the db for files that are not anymore in the folder.
+            db.CleanOldRows();
 
-            // We also add the "/" if it is a directory in order to diff it from non extension files.
-            if (std::filesystem::is_directory(element_path))        //TODO: We need this? Because we don't send folder anymore @marco
-                cross_platform_rep += "/";
-
-            // Now if the current element is a dir or the db or its a temporary file we can go to the next iteration
-            if (std::filesystem::is_directory(element_path) || cross_platform_rep == ".hash.db" ||
-                boost::algorithm::ends_with(cross_platform_rep, "~"))
-                continue;
-
-            // We now need to retrieve the last modified time.
-            struct stat temp_stat;
-            // Put inside our struct temp_state the metadata like last modified time
-            stat(element_path.generic_string().c_str(), &temp_stat);
-            unsigned long mod_time = temp_stat.st_mtime;
-
-            // Now we have the tuple ( cross_platform_rep , mod_time )
-            // We use this tuple to see if we already hashed that version of the file.
-            // If we had, then we take the hash from the db, without hashing a second time the same file.
-
-            if (!db.AlreadyHashed(cross_platform_rep, std::to_string(mod_time))) {
-                //Here only if the tuple ( cross_platform_rep , mod_time ) is not present inside DB, so we need to hash and then update the db.
-
-                //Hash the file and return the digest to insert in the DB
-                std::string digest = HashFile(element_path);
-
-                //We have the hash of the file and we can insert it in the DB
-                db.InsertDB(cross_platform_rep, digest, std::to_string(mod_time));
-            }
+            // We now have the DB and client folder aligned.
+            return;
         }
+        catch (std::filesystem::filesystem_error &e) {
+            std::cerr << "Error Filesystem (InitHash): " << n_attempts << e.what() << std::endl;
+            n_attempts--;
 
-        // Now we clean the db for files that are not anymore in the folder.
-        db.CleanOldRows();
+            if(n_attempts==0){
+                std::exit(EXIT_FAILURE);
+            }
 
-        // We now have the DB and client folder aligned.
-    }
-    catch (std::filesystem::filesystem_error &e) {              //TODO: Policy? @marco
-        std::cerr << "Error Filesystem (InitHash): " << e.what() << std::endl;
-        //std::exit(EXIT_FAILURE);
-    }
-    catch (std::exception &e) {
-        std::cerr << "Error generic (InitHash) " << e.what() << std::endl;
-        std::exit(EXIT_FAILURE);
+        }
+        catch (std::exception &e) {
+            std::cerr << "Error generic (InitHash) " << e.what() << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
     }
 }
 
@@ -332,11 +362,6 @@ std::string Client::HashFile(const std::filesystem::path& element_path) {
         //Here because CryptoPP can't open the file because we are copying the file into the folder
         //Another possibility is that the file doesn't exist anymore.
         //In both ways we recover from this exception.
-
-        if(!std::filesystem::exists(element_path)){     //TODO: What do we do here? We can't exit because CryptoPP recover from this error alone
-            //TODO: I have left this things in case we want to differentiate the problem to print in console    @marco
-        }
-
     }
     catch (CryptoPP::Exception &e) {
         std::cout << "Error CryptoPP (HashFile) " << e.what() << std::endl;
