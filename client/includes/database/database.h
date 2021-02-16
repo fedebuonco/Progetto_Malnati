@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <mutex>
 #include <shared_mutex>
+#include <vector>
 
 class DatabaseConnection{
     std::filesystem::path folder_watched_;
