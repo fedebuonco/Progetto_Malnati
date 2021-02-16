@@ -71,7 +71,7 @@ void Client::Syncro(){
 
     // We align the DB updating the status
     DatabaseConnection db{db_file_, folder_watched_};
-    db.AlignStatus(update.common_);
+    db.AlignStatus(update.same_file_same_lmt_vector);
 
     // Send to the server the list of file to remove
     SendRemoval(update);

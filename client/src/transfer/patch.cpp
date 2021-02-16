@@ -41,6 +41,8 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
     }
 
 
+
+
     try {
         // Now I have the two sets I can compute set_difference(set_client,set_server)  client - server
         set_difference(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(added_, added_.end()));
@@ -65,6 +67,9 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
                             begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
                             std::back_inserter(to_be_sent_vector));
 
+        std::set_intersection(begin(client_treet.map_tree_time_), end(client_treet.map_tree_time_),
+                              begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
+                              std::back_inserter(same_file_same_lmt_vector));
 
         // We gen the to_be_eliminated
         std::set_difference(begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),

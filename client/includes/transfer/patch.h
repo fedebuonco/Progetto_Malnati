@@ -29,6 +29,11 @@ public:
     /// to the server ( could be a new file or a file newer that one in the server).
     std::vector<std::pair<std::string, unsigned  long>> to_be_sent_vector;
 
+    /// This vector holds all the pairs element_path&last-modified-time of every element that is present both in the server and
+    /// both in the clinet. Is different than common_ that only base the difference on names
+    ///
+    std::vector<std::pair<std::string, unsigned  long>> same_file_same_lmt_vector;
+
     /// This vector holds all the pairs element_path&last-modified-time of every element that will be deleted
     /// (or replaced) in the server ( could be a deleted file or a file older that one in the client and that we are
     /// currently sending).

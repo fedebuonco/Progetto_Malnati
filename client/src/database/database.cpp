@@ -268,13 +268,14 @@ void DatabaseConnection::GetMetadata(const std::string& filename, std::string& h
 }
 
 
-bool DatabaseConnection::AlignStatus(const std::vector<std::string>& common){
-    std::shared_lock lg(db_mutex_);
-    for (const auto& element : common){
+bool DatabaseConnection::AlignStatus(const std::vector<std::pair<std::string, unsigned  long>>& sfileslmt){
+    std::unique_lock lg(db_mutex_);
+    for (const auto& element : sfileslmt){
         try{
 
-            SQLite::Statement update_to_sent(hash_db_, " UPDATE files SET status = \'SENT\' WHERE filename =  ?");
-            update_to_sent.bind(1, element);
+            SQLite::Statement update_to_sent(hash_db_, " UPDATE files SET status = \'SENT\' WHERE filename =  ? AND lmt = ?");
+            update_to_sent.bind(1, element.first);
+            update_to_sent.bind(2, std::to_string(element.second));
             update_to_sent.exec();
 
         }

@@ -26,6 +26,6 @@ public:
     bool ChangeStatusToSending(const std::string& filename);
     bool ChangeStatusToSent(const std::string& filename);
     bool ChangeStatusToNew(const std::string& filename);
-    bool AlignStatus(const std::vector<std::string>& common);
+    bool AlignStatus(const std::vector<std::pair<std::string, unsigned  long>>& sfileslmt);
 };
 
