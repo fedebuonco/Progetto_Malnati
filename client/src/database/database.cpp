@@ -30,7 +30,7 @@ DatabaseConnection::DatabaseConnection(const std::filesystem::path& db_path, std
 /// Checks if a row is present in the db by scanning using tuple filename - lastModTime
 /// \return bool true if present, false if not
 bool DatabaseConnection::AlreadyHashed(const std::string& filename, const std::string& lmt){
-    std::shared_lock lg(db_mutex_);
+    std::unique_lock lg(db_mutex_);
     try {
         SQLite::Statement query(hash_db_, "SELECT * FROM files WHERE filename = ? AND lmt = ?");
         query.bind(1, filename);
@@ -278,7 +278,7 @@ bool DatabaseConnection::ChangeStatusToNotSent(const std::string& filename) {
 
 
 void DatabaseConnection::GetMetadata(const std::string& filename, std::string& hash, std::string& lmt){
-    std::shared_lock lg(db_mutex_);
+    std::unique_lock lg(db_mutex_);
     try{
 
         SQLite::Statement query(hash_db_, "SELECT * FROM files WHERE filename = ?");
