@@ -8,6 +8,18 @@
 
 #include "../../includes/database/database.h"
 
+// _WIN32 = we're in windows
+#ifdef _WIN32
+// Windows
+#define MAX_LENGTH 260
+
+#else
+// Not windows
+#define MAX_LENGTH 4096
+#endif
+
+
+
 AsyncService::AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock, std::filesystem::path server_path) :
 server_path_(server_path),
 m_sock(sock)
@@ -50,39 +62,64 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
     // Process the request.
 
     //We check if this is the first sip, if it is it contains metadata, and we must parse it.
-    if(first_sip_){
-        ParseMetadata(m_buf.data());
-        // we now check that we have a valid user.
-        Database authentication;
+    if(continue_writing) {
 
-        if (!authentication.auth(received_user_, received_hpass_, server_path_)){
-            //The sip is not authenticated, we discard the file
-            std::cerr << "Error on user name " << received_user_ << std::endl;
-            return;
+        if (first_sip_) {
+            ParseMetadata(m_buf.data());
+            // we now check that we have a valid user.
+            Database authentication;
+
+            if (!authentication.auth(received_user_, received_hpass_, server_path_)) {
+                //The sip is not authenticated, we discard the file
+                std::cerr << "Error on user name " << received_user_ << std::endl;
+                return;
+            }
+
+            first_sip_ = false;
+            // We check if the folder does exist by querying the db.
+            Database db;
+            std::string user_path_str = db.getUserPath(received_user_, server_path_);
+            std::filesystem::path user_path = std::filesystem::path(user_path_str);
+            created_file_path_ = server_path_ / "backupFiles" / "backupROOT" / user_path / received_file_string_;
+
+            std::filesystem::path filepath2 =
+                    server_path_ / "backupFiles" / "backupROOT" / user_path / received_file_string_;
+
+            std::error_code ec2;
+            bool created = std::filesystem::create_directories(filepath2.remove_filename(), ec2);
+            if (ec2) {
+                //If the parent folder of the files over 260 character
+                //In a real server the 260 character limit will be lifted
+                std::cerr << "Error path reached over 260 character" << ec2 << " " << created << std::endl;
+                continue_writing=false;
+                return;
+            }
+
+            m_outputFile.open(created_file_path_, std::ios_base::binary);
+            if (m_outputFile.fail()) {
+                //Reach the limit of character for Linux or Windows
+                if (created_file_path_.string().size() >= MAX_LENGTH) {
+                    std::cerr << "File reached max length for the OS" << std::endl;
+                    continue_writing=false;
+                }
+
+                //Generic error during open, try again
+
+                //return;
+            }
+
+
+        } else {
+
+            m_outputFile.write(m_buf.data(), bytes_transferred);
+            if (m_outputFile.fail()) { // We couldn't write the file
+                std::cerr << "While writing, the stream failed" << std::endl;
+                continue_writing=false;
+                //return;
+            }
+            //we clear the array for the next call
+            m_buf.fill('\000');
         }
-
-        first_sip_ = false;
-        // We check if the folder does exist by querying the db.
-        Database db;
-        std::string user_path_str = db.getUserPath(received_user_, server_path_);
-        std::filesystem::path user_path = std::filesystem::path(user_path_str);
-        created_file_path_ = server_path_ / "backupFiles" / "backupROOT" / user_path / received_file_string_;
-
-        std::filesystem::path filepath2 = server_path_ / "backupFiles" / "backupROOT" / user_path / received_file_string_;
-        std::filesystem::create_directories(filepath2.remove_filename());
-
-        m_outputFile.open(created_file_path_, std::ios_base::binary);
-
-    } else {
-
-        m_outputFile.write(m_buf.data(), bytes_transferred);
-        if (m_outputFile.fail()) { // We couldn't write the file
-            std::cerr << "While writing, the stream failed" << std::endl;
-            onFinish();
-            return;
-        }
-        //we clear the array for the next call
-        m_buf.fill('\000');
     }
     // We go on to the next read.
     StartHandling(ec);
@@ -94,6 +131,11 @@ void AsyncService::onFinish() {
     //Compute hash and compare it to hash_ to see if the file is corrupted
     CryptoPP::SHA256 hash;
     std::string digest;
+
+    if(!continue_writing){
+        onAbort();
+        return;
+    }
 
 
     try {
@@ -128,12 +170,29 @@ void AsyncService::onFinish() {
     else m_buf[0] = '0';
 
     m_sock->async_write_some(boost::asio::buffer(m_buf.data(), m_buf.size()),
-                                  [this](boost::system::error_code ec, size_t bytes){
+                                  [this, isOkay](boost::system::error_code ec, size_t bytes){
                                       if (!ec.value()) {
-                                          std::cout << "\n[INSERT] File " << this->received_file_string_ << " successfully received and saved" << std::endl;
+                                          if(isOkay) std::cout << "\n[INSERT] File " << this->received_file_string_ << " successfully received and saved" << std::endl;
                                           delete this;
                                       }
                                   });
+
+}
+
+
+void AsyncService::onAbort() {
+
+    m_buf.fill('\000');
+    m_buf[0] = '2';
+
+    m_sock->async_write_some(boost::asio::buffer(m_buf.data(), m_buf.size()),
+                             [this](boost::system::error_code ec, size_t bytes){
+                                 if (!ec.value()) {
+                                    delete this;
+                                 }
+                             });
+
+
 
 }
 

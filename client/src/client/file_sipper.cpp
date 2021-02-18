@@ -88,6 +88,7 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
         buf_metadata[i] = '\000';
         // And send it
         auto buf = boost::asio::buffer(buf_metadata.data(),1024);
+
         writeBuffer(buf);
     }
     else{
@@ -166,8 +167,8 @@ void FileSipper::WaitOk() {
                    } else { //Here if we got no error while reading
 
                        int checksum_ok = buf_metadata[0] - '0';
-                       UpdateFileStatus(db_path_, folder_watched_, file_string_, checksum_ok);
 
+                       UpdateFileStatus(db_path_, folder_watched_, file_string_, checksum_ok);
                    }
 
                    ios_.stop();  // THIS STOPS further async calls for this socket.
@@ -179,10 +180,14 @@ void FileSipper::WaitOk() {
 
 void FileSipper::UpdateFileStatus(const std::filesystem::path& db_path , const std::filesystem::path& folder_watched, const std::string& file_string, int check) {
     DatabaseConnection db(db_path, folder_watched);
-    if (check)
+    if (check==1)//1
         db.ChangeStatusToSent(file_string);
-    else
+    else if(check==0) //0
         db.ChangeStatusToNew(file_string);
+    else {  //2
+        std::cerr << "Unable to save the \"" << file_string << "\" in the cloud" << std::endl;
+        db.ChangeStatusToNotSent(file_string);
+    }
 }
 
 

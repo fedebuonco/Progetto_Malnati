@@ -242,6 +242,40 @@ bool DatabaseConnection::ChangeStatusToNew(const std::string& filename) {
     return false;
 }
 
+/// Goes in the db and changes the status to "NEW" but does it only if the current status is "SENDING"
+/// \param filename of the file that we want to put in as NEW
+/// \return true if we successfully switched the status to "SENDING" to "NEW"
+bool DatabaseConnection::ChangeStatusToNotSent(const std::string& filename) {
+    std::unique_lock lg(db_mutex_);
+    try {
+
+        SQLite::Statement query(hash_db_, "SELECT * FROM files WHERE filename = ?");
+        query.bind(1, filename);
+
+        while (query.executeStep()) {
+
+            std::string current_status = query.getColumn(3);
+
+            if (current_status == "SENDING") {
+
+                SQLite::Statement update_to_new(hash_db_, " UPDATE files SET status = \'NOTSENT\' WHERE filename =  ?");
+                update_to_new.bind(1, filename);
+                update_to_new.exec();
+
+                return true;
+            }
+
+        }
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "SQLite exception: " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+
+    return false;
+}
+
 
 void DatabaseConnection::GetMetadata(const std::string& filename, std::string& hash, std::string& lmt){
     std::shared_lock lg(db_mutex_);
