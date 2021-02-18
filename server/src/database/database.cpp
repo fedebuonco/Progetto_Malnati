@@ -17,7 +17,7 @@ std::shared_mutex Database::db_mutex_;
  */
 bool Database::auth(const std::string& username, const std::string& attempt_hash_password, const std::filesystem::path& serverP) {
 
-    std::shared_lock lg(db_mutex_);
+    std::unique_lock lg(db_mutex_);
 
     try {
         std::filesystem::path db_path = serverP / "backupFiles" / "authDB.db" ;
@@ -51,7 +51,7 @@ bool Database::auth(const std::string& username, const std::string& attempt_hash
  * @return folder of the user
  */
 std::string Database::getUserPath(const std::string& username, const std::filesystem::path& serverP) {
-    std::shared_lock lg(db_mutex_);
+    std::unique_lock lg(db_mutex_);
 
     try {
         //Open the authDB where is stored the user folder
@@ -113,7 +113,7 @@ void Database::createTable(const std::string& folderName, const std::filesystem:
  * @return time store in the db of the filepath passed as argument
  */
 std::string Database::getTimeFromPath(const std::string& folderName, const std::string& path, const std::filesystem::path& serverP) {
-    std::shared_lock lg(db_mutex_);
+    std::unique_lock lg(db_mutex_);
 
     try {
         //Find the path of the user db
