@@ -3,6 +3,7 @@
 #include <iostream>
 #include <utility>
 #include <database.h>
+#include <client.h>
 
 FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path,
                        std::string username, const std::string& hashed_pass,   std::filesystem::path file_path,
@@ -188,6 +189,18 @@ void FileSipper::UpdateFileStatus(const std::filesystem::path& db_path , const s
         std::cerr << "Unable to save the \"" << file_string << "\" in the cloud" << std::endl;
         db.ChangeStatusToNotSent(file_string);
     }
+
+    auto all_sent = db.AllSent();
+
+    if(all_sent) {
+
+        std::filesystem::path folder_path = folder_watched / "XAW";
+        std::filesystem::create_directory(folder_path);
+        std::filesystem::remove(folder_path);
+
+        std::cerr << "FOLDER " << folder_watched << std::endl;
+    }
+
 }
 
 

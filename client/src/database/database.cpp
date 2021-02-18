@@ -322,3 +322,31 @@ bool DatabaseConnection::AlignStatus(const std::vector<std::pair<std::string, un
 
 }
 
+bool DatabaseConnection::AllSent() {
+
+    std::unique_lock lg(db_mutex_);
+
+    int c=0;
+    try{
+
+
+        SQLite::Statement query(hash_db_, "SELECT * FROM files WHERE status='SENDING' OR status='NEW'");
+
+        while (query.executeStep())
+        {
+            // Retrieve filename fn, hash hs, and last modified time lt.
+            c++;
+        }
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "SQLite exception: " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+
+
+    if(c==0) return true;
+
+    return false;
+}
+

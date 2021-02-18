@@ -30,5 +30,6 @@ public:
     bool ChangeStatusToNotSent(const std::string& filename);
 
     bool AlignStatus(const std::vector<std::pair<std::string, unsigned  long>>& sfileslmt);
+    bool AllSent();
 };
 
