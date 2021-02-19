@@ -319,9 +319,10 @@ void Client::InitHash(){
 
                     //Hash the file and return the digest to insert in the DB
                     std::string digest = HashFile(element_path);
-
-                    //We have the hash of the file and we can insert it in the DB
-                    db.InsertDB(cross_platform_rep, digest, std::to_string(mod_time));
+                    if(!digest.empty()){
+                        //We have the hash of the file and we can insert it in the DB
+                        db.InsertDB(cross_platform_rep, digest, std::to_string(mod_time));
+                    }
                 }
             }
 
