@@ -109,6 +109,9 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
             }
 
 
+            //File has first_sip valid, we start recieving it.
+            std::cout << "\n[INSERT STARTED]["<< received_user_ <<"] File " << this->received_file_string_ << " uploading" << std::endl;
+
         } else {
 
             m_outputFile.write(m_buf.data(), bytes_transferred);
@@ -172,7 +175,7 @@ void AsyncService::onFinish() {
     m_sock->async_write_some(boost::asio::buffer(m_buf.data(), m_buf.size()),
                                   [this, isOkay](boost::system::error_code ec, size_t bytes){
                                       if (!ec.value()) {
-                                          if(isOkay) std::cout << "\n[INSERT] File " << this->received_file_string_ << " successfully received and saved" << std::endl;
+                                          if(isOkay) std::cout << "\n[INSERT COMPLETED]["<< received_user_ <<"] File " << this->received_file_string_ << " successfully received and saved" << std::endl;
                                           delete this;
                                       }
                                   });
@@ -217,10 +220,14 @@ void AsyncService::ParseMetadata(const std::string& metadata){
     received_user_ = metadata.substr(previous, current - previous);
     previous = current + 64;
 
+    if (received_user_.length() < 2)
+        std::cout << "RROR" << std::endl;
+
     current = metadata.find(received_hpass_,previous);
     received_file_string_ = metadata.substr(previous, current - previous);
     previous = current + 64;
 
-
+    if (received_user_.length() < 2)
+        std::cout << "RROR" << std::endl;
 }
 

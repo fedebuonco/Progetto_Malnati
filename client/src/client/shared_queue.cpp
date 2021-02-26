@@ -22,7 +22,7 @@ std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
     //Check also the Shared Queue status flag; if true we need to wakeup to close the program
     //std::cerr << "get ready active_fs-> " << active_fs.load() << "get ready fslist size-> " << fs_list.size()<< std::endl;
 
-    cv.wait(l, [this]() { return !( (fs_list.empty() || (fs_list.size() <= active_fs.load()) || (30 <= active_fs.load())) && flag.load() ); });
+    cv.wait(l, [this]() { return !( (fs_list.empty() || (fs_list.size() <= active_fs.load()) || (5 <= active_fs.load())) && flag.load() ); });
     //std::cerr << "get ready active_fs-> " << active_fs.load() << "get ready fslist size-> " << fs_list.size()<<"inside "<< std::endl;
     if( !flag.load() ){
        //We request to terminate the program

@@ -198,7 +198,6 @@ void FileSipper::UpdateFileStatus(const std::filesystem::path& db_path , const s
         std::filesystem::create_directory(folder_path);
         std::filesystem::remove(folder_path);
 
-        std::cerr << "FOLDER " << folder_watched << std::endl;
     }
 
 }

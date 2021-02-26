@@ -137,8 +137,8 @@ void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
                     // First we remove the file
                     auto results = std::filesystem::remove(file_path, ec);
 
-                    if(results) std::cout << "\n[DELETE] "<<  file << " successfully deleted" << std::endl;
-                    else std::cerr << "FILE NON TROVATO " << file << " NOT DELETED" << std::endl;
+                    if(results) std::cout << "\n[DELETE]["<< username <<"] "<<  file << " successfully deleted" << std::endl;
+
 
                     // Then we check if it is the last file in the folder, if it is we delete it
                     // we perform this operation recursively in order to delete all empty folders.
