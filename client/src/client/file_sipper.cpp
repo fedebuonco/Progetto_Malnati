@@ -202,4 +202,9 @@ void FileSipper::UpdateFileStatus(const std::filesystem::path& db_path , const s
 
 }
 
+FileSipper::~FileSipper() {
+    std::cout << "Fs DEstoryed" << std::endl;
+
+}
+
 

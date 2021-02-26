@@ -30,7 +30,7 @@ public:
     std::shared_ptr<FileSipper> get_ready_FileSipper();
 
     void remove_element(const std::shared_ptr<FileSipper>& file_sipper);
-    void insert(const std::shared_ptr<FileSipper>& file_sipper);
+    void insert(std::shared_ptr<FileSipper> file_sipper); // This one MUST like this, not const reference.
 
 };
 

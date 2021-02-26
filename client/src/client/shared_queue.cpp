@@ -57,7 +57,11 @@ void SharedQueue::remove_element(const std::shared_ptr<FileSipper>& file_sipper)
     std::lock_guard<std::mutex> l(m);
 
     //We remove the file_sipper from the list because it finished correctly his work and decrement the active_fs counter.
+    //In order for this to work we should have ref count == 2 before the remove from the list
+    std::cerr << "Pre remove from the list == " << file_sipper.use_count() << std::endl;
     fs_list.remove(file_sipper);
+    //And then we should have ref count == 1 that will be deleted when exiting the scope of the caller function of this remove.
+    std::cerr << "After remove from the list == " << file_sipper.use_count() << std::endl;
     //std::cerr << "Current active fileSipper -> " << active_fs.load() << std::endl;
     active_fs.fetch_sub(1);
 
@@ -69,7 +73,7 @@ void SharedQueue::remove_element(const std::shared_ptr<FileSipper>& file_sipper)
  * Add a new ptrFileSipper in the SharedQueue
  * @param file_sipper to be added
  */
-void SharedQueue::insert(const std::shared_ptr<FileSipper>& file_sipper){
+void SharedQueue::insert(std::shared_ptr<FileSipper> file_sipper){ // This one MUST like this, not const reference.
 
     //Take the lock and insider the file_sipper inside the list
     std::lock_guard<std::mutex> l(m);

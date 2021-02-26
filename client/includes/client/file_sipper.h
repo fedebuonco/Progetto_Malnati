@@ -44,6 +44,8 @@ public:
     FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, const std::string& hashed_pass,  std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
     void Send(std::function<void()> rem_call);
 
+    virtual ~FileSipper();
+
     std::string file_string_;
     std::function<void()> remove_callback_;
     std::atomic<bool> status = false;
