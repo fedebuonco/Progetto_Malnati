@@ -1,23 +1,19 @@
 #include <async_service.h>
 #include <filesystem>
 #include <server.h>
-
 #include <sha.h>
 #include <hex.h>
 #include <files.h>
-
-#include "../../includes/database/database.h"
+#include "../../includes/database/database.h" //TODO FIX this
 
 // _WIN32 = we're in windows
 #ifdef _WIN32
 // Windows
 #define MAX_LENGTH 260
-
 #else
 // Not windows
 #define MAX_LENGTH 4096
 #endif
-
 
 
 AsyncService::AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock, std::filesystem::path server_path) :
@@ -92,6 +88,7 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
                 //In a real server the 260 character limit will be lifted
                 std::cerr << "Error path reached over 260 character" << ec2 << " " << created << std::endl;
                 continue_writing=false;
+                filename_too_long = true;
                 return;
             }
 
@@ -101,6 +98,7 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
                 if (created_file_path_.string().size() >= MAX_LENGTH) {
                     std::cerr << "File reached max length for the OS" << std::endl;
                     continue_writing=false;
+                    filename_too_long = true;
                 }
 
                 //Generic error during open, try again
@@ -118,6 +116,7 @@ void AsyncService::onRequestReceived(const boost::system::error_code& ec, std::s
             if (m_outputFile.fail()) { // We couldn't write the file
                 std::cerr << "While writing, the stream failed" << std::endl;
                 continue_writing=false;
+
                 //return;
             }
             //we clear the array for the next call
@@ -135,11 +134,10 @@ void AsyncService::onFinish() {
     CryptoPP::SHA256 hash;
     std::string digest;
 
-    if(!continue_writing){
+    if(!continue_writing && filename_too_long){
         onAbort();
         return;
     }
-
 
     try {
         CryptoPP::FileSource f(
@@ -157,13 +155,20 @@ void AsyncService::onFinish() {
 
     if(received_hash_== digest) {
         Database db;
-        db.insertFile(received_user_, received_file_string_, received_lmt_, server_path_);
-        isOkay=true;
+        //If in the meantime we receive a delete request we check again that the files still exists
+        if(std::filesystem::exists(created_file_path_)){
+            db.insertFile(received_user_, received_file_string_, received_lmt_, server_path_);
+            isOkay=true;
+        }
     }
     else {
         //File was corrupted so we delete the file
         std::error_code ec;
-        std::filesystem::remove( created_file_path_, ec );
+        auto result = std::filesystem::remove( created_file_path_, ec );
+        if (result) {
+            std::cout << "\n[REMOVE OF CORRUPT FILE]["<< received_user_ <<"] File " << this->received_file_string_ << std::endl;
+        }
+
     }
 
     //We send the OK, but we flush the buffer before.
@@ -176,17 +181,20 @@ void AsyncService::onFinish() {
                                   [this, isOkay](boost::system::error_code ec, size_t bytes){
                                       if (!ec.value()) {
                                           if(isOkay) std::cout << "\n[INSERT COMPLETED]["<< received_user_ <<"] File " << this->received_file_string_ << " successfully received and saved" << std::endl;
+                                          else       std::cout << "\n[INSERT NOT COMPLETED]["<< received_user_ <<"] File " << this->received_file_string_ << " was not saved and the client was notified" << std::endl;
                                           delete this;
                                       }
                                   });
 
 }
 
-
 void AsyncService::onAbort() {
 
     m_buf.fill('\000');
     m_buf[0] = '2';
+
+    // We send to the client the request to change the status to NOTSENT, as the file can't be sent using our app,
+    // as the filename is too long.
 
     m_sock->async_write_some(boost::asio::buffer(m_buf.data(), m_buf.size()),
                              [this](boost::system::error_code ec, size_t bytes){

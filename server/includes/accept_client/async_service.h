@@ -37,13 +37,13 @@ class AsyncService {
     void createFile();
     void ParseMetadata(const std ::string& metadata);
     void onAbort();
-    void ConsumeSipper();
 
 public:
     AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock, std::filesystem::path server_path);
     void StartHandling(const boost::system::error_code& ec);
 
 
+    bool filename_too_long  = false;
 };
 
 
