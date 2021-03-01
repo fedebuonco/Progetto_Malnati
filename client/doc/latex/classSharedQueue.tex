@@ -1,0 +1,86 @@
+\hypertarget{classSharedQueue}{}\doxysection{Shared\+Queue Class Reference}
+\label{classSharedQueue}\index{SharedQueue@{SharedQueue}}
+
+
+This is the shared queue. Each \mbox{\hyperlink{classFileSipper}{File\+Sipper}} is demanded to send a file. The \mbox{\hyperlink{classSender}{Sender}} decides who starts sending.  
+
+
+
+
+{\ttfamily \#include $<$shared\+\_\+queue.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classSharedQueue_a063cbf927b958681fc7b38854f9c0fe6}\label{classSharedQueue_a063cbf927b958681fc7b38854f9c0fe6}} 
+{\bfseries Shared\+Queue} (const \mbox{\hyperlink{classSharedQueue}{Shared\+Queue}} \&)=delete
+\item 
+\mbox{\Hypertarget{classSharedQueue_a76c38a2b23a56d2340d910bcc1ea1cd7}\label{classSharedQueue_a76c38a2b23a56d2340d910bcc1ea1cd7}} 
+\mbox{\hyperlink{classSharedQueue}{Shared\+Queue}} \& {\bfseries operator=} (const \mbox{\hyperlink{classSharedQueue}{Shared\+Queue}} \&)=delete
+\item 
+\mbox{\Hypertarget{classSharedQueue_a00f207e695c81cc031d0b1b2d551b5c6}\label{classSharedQueue_a00f207e695c81cc031d0b1b2d551b5c6}} 
+void {\bfseries set\+Flag} (bool flag\+\_\+value)
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classFileSipper}{File\+Sipper}} $>$ \mbox{\hyperlink{classSharedQueue_ad45eb5d6394b2aaad80b7c85b7f56404}{get\+\_\+ready\+\_\+\+File\+Sipper}} ()
+\begin{DoxyCompactList}\small\item\em Choose a \mbox{\hyperlink{classFileSipper}{File\+Sipper}} from the queue that is ready to send a file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classSharedQueue_a0844701624f2f3efc31a94c3f256dcfe}\label{classSharedQueue_a0844701624f2f3efc31a94c3f256dcfe}} 
+void {\bfseries remove\+\_\+element} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classFileSipper}{File\+Sipper}} $>$ \&file\+\_\+sipper)
+\item 
+\mbox{\Hypertarget{classSharedQueue_a6f73bdb6748280fb66f0ec17127b7b6d}\label{classSharedQueue_a6f73bdb6748280fb66f0ec17127b7b6d}} 
+void {\bfseries insert} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classFileSipper}{File\+Sipper}} $>$ file\+\_\+sipper)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classSharedQueue_acd3b0485590cdcd76b1e79fb0079e426}\label{classSharedQueue_acd3b0485590cdcd76b1e79fb0079e426}} 
+static \mbox{\hyperlink{classSharedQueue}{Shared\+Queue}} $\ast$ {\bfseries get\+\_\+\+Instance} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classSharedQueue_ada82bb150ec958df0b78b85da2947200}\label{classSharedQueue_ada82bb150ec958df0b78b85da2947200}} 
+std\+::list$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classFileSipper}{File\+Sipper}} $>$ $>$ {\bfseries fs\+\_\+list}
+\item 
+\mbox{\Hypertarget{classSharedQueue_a906257eb3c2a9be5f86823468f6af7ea}\label{classSharedQueue_a906257eb3c2a9be5f86823468f6af7ea}} 
+std\+::mutex {\bfseries m}
+\item 
+\mbox{\Hypertarget{classSharedQueue_a30b2e6b8ffc83627f8f8296748de520f}\label{classSharedQueue_a30b2e6b8ffc83627f8f8296748de520f}} 
+std\+::condition\+\_\+variable {\bfseries cv}
+\item 
+\mbox{\Hypertarget{classSharedQueue_a00fed154691598d2dea8c4f6e7e0e5cf}\label{classSharedQueue_a00fed154691598d2dea8c4f6e7e0e5cf}} 
+std\+::atomic$<$ int $>$ {\bfseries active\+\_\+fs} = 0
+\item 
+\mbox{\Hypertarget{classSharedQueue_ae697c571d6de8b0989c1091e561a74d0}\label{classSharedQueue_ae697c571d6de8b0989c1091e561a74d0}} 
+std\+::atomic$<$ bool $>$ {\bfseries flag} = true
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classSharedQueue_ac88fc77603cef320269404282bb95a95}\label{classSharedQueue_ac88fc77603cef320269404282bb95a95}} 
+static \mbox{\hyperlink{classSharedQueue}{Shared\+Queue}} $\ast$ {\bfseries m\+\_\+\+Shared\+Queue} = nullptr
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This is the shared queue. Each \mbox{\hyperlink{classFileSipper}{File\+Sipper}} is demanded to send a file. The \mbox{\hyperlink{classSender}{Sender}} decides who starts sending. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classSharedQueue_ad45eb5d6394b2aaad80b7c85b7f56404}\label{classSharedQueue_ad45eb5d6394b2aaad80b7c85b7f56404}} 
+\index{SharedQueue@{SharedQueue}!get\_ready\_FileSipper@{get\_ready\_FileSipper}}
+\index{get\_ready\_FileSipper@{get\_ready\_FileSipper}!SharedQueue@{SharedQueue}}
+\doxysubsubsection{\texorpdfstring{get\_ready\_FileSipper()}{get\_ready\_FileSipper()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classFileSipper}{File\+Sipper}} $>$ Shared\+Queue\+::get\+\_\+ready\+\_\+\+File\+Sipper (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Choose a \mbox{\hyperlink{classFileSipper}{File\+Sipper}} from the queue that is ready to send a file. 
+
+If queue is empty or all \mbox{\hyperlink{classFileSipper}{File\+Sipper}} are already started, \mbox{\hyperlink{classSender}{Sender}} will be waiting. \begin{DoxyReturn}{Returns}
+std\+::shared\+\_\+ptr$<$\+File\+Sipper$>$ 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/client/shared\+\_\+queue.\+h\item 
+src/client/shared\+\_\+queue.\+cpp\end{DoxyCompactItemize}

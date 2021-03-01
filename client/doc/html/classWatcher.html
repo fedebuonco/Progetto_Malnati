@@ -63,6 +63,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classWatcher-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Watcher Class Reference</div>  </div>
@@ -77,17 +78,38 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a72ba0076d0a2e31127790fec0917c36f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWatcher.html#a72ba0076d0a2e31127790fec0917c36f">SetUpdateCallback</a> (const std::function&lt; void()&gt; &amp;updateCallback)</td></tr>
+<tr class="memdesc:a72ba0076d0a2e31127790fec0917c36f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method will assign the callback called in the <a class="el" href="classWatcher.html#a49ed7c77d110e960312d94e5a273de4f" title="This is the function that will be called when a change is recorded.">Watcher::listenerFunction()</a> to the provided function.  <a href="classWatcher.html#a72ba0076d0a2e31127790fec0917c36f">More...</a><br /></td></tr>
 <tr class="separator:a72ba0076d0a2e31127790fec0917c36f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf7e9381e7dbd850c9ebb8f121a6fe16"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWatcher.html#acf7e9381e7dbd850c9ebb8f121a6fe16">listenerFunction</a> (std::vector&lt; pfw::EventPtr &gt; events)</td></tr>
-<tr class="separator:acf7e9381e7dbd850c9ebb8f121a6fe16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a609f12f64094bed602ae048114183847"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWatcher.html#a609f12f64094bed602ae048114183847">Start</a> (std::filesystem::path path)</td></tr>
-<tr class="separator:a609f12f64094bed602ae048114183847"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49ed7c77d110e960312d94e5a273de4f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWatcher.html#a49ed7c77d110e960312d94e5a273de4f">listenerFunction</a> (const std::vector&lt; pfw::EventPtr &gt; &amp;events)</td></tr>
+<tr class="memdesc:a49ed7c77d110e960312d94e5a273de4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the function that will be called when a change is recorded.  <a href="classWatcher.html#a49ed7c77d110e960312d94e5a273de4f">More...</a><br /></td></tr>
+<tr class="separator:a49ed7c77d110e960312d94e5a273de4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2146a455e2d9542430e3f983484a5ace"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWatcher.html#a2146a455e2d9542430e3f983484a5ace">Start</a> (const std::filesystem::path &amp;path)</td></tr>
+<tr class="memdesc:a2146a455e2d9542430e3f983484a5ace"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start the watcher.  <a href="classWatcher.html#a2146a455e2d9542430e3f983484a5ace">More...</a><br /></td></tr>
+<tr class="separator:a2146a455e2d9542430e3f983484a5ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a346ecde216bc7549ced7163b19be7f50"><td class="memItemLeft" align="right" valign="top"><a id="a346ecde216bc7549ced7163b19be7f50"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Watcher</b> (std::filesystem::path db_file, std::filesystem::path folder_watched)</td></tr>
+<tr class="separator:a346ecde216bc7549ced7163b19be7f50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a781e765743a94da6554c384566a702bc"><td class="memItemLeft" align="right" valign="top"><a id="a781e765743a94da6554c384566a702bc"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>db_file_</b></td></tr>
+<tr class="separator:a781e765743a94da6554c384566a702bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0acb4f01c9a3f0b43e5cbe604f11e804"><td class="memItemLeft" align="right" valign="top"><a id="a0acb4f01c9a3f0b43e5cbe604f11e804"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>folder_watched_</b></td></tr>
+<tr class="separator:a0acb4f01c9a3f0b43e5cbe604f11e804"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf0e486059213e94611f9bfcce24df36"><td class="memItemLeft" align="right" valign="top"><a id="acf0e486059213e94611f9bfcce24df36"></a>
+std::unique_ptr&lt; pfw::FileSystemWatcher &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_watcher</b></td></tr>
+<tr class="separator:acf0e486059213e94611f9bfcce24df36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c74f3b25f2635dafba13eb064f78d16"><td class="memItemLeft" align="right" valign="top"><a id="a8c74f3b25f2635dafba13eb064f78d16"></a>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>update_callback</b></td></tr>
+<tr class="separator:a8c74f3b25f2635dafba13eb064f78d16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The watcher is a wrapper for panoptes watcher library, will take a folder and will check for changes in the file structure. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="acf7e9381e7dbd850c9ebb8f121a6fe16"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf7e9381e7dbd850c9ebb8f121a6fe16">&#9670;&nbsp;</a></span>listenerFunction()</h2>
+<a id="a49ed7c77d110e960312d94e5a273de4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49ed7c77d110e960312d94e5a273de4f">&#9670;&nbsp;</a></span>listenerFunction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -95,13 +117,15 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Watcher::listenerFunction </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; pfw::EventPtr &gt;&#160;</td>
+          <td class="paramtype">const std::vector&lt; pfw::EventPtr &gt; &amp;&#160;</td>
           <td class="paramname"><em>events</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This is the function that will be called when a change is recorded. Prints the changes and then call the provided callback ( provided from <a class="el" href="classWatcher.html#a72ba0076d0a2e31127790fec0917c36f">Watcher::SetUpdateCallback()</a> ) </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>This is the function that will be called when a change is recorded. </p>
+<p>Prints the changes and then call the provided callback ( provided from <a class="el" href="classWatcher.html#a72ba0076d0a2e31127790fec0917c36f" title="This method will assign the callback called in the Watcher::listenerFunction() to the provided functi...">Watcher::SetUpdateCallback()</a> ) </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">events</td><td>The series of events (file deleted, added, etc.) that triggered the function. </td></tr>
   </table>
@@ -125,7 +149,9 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This method will assign the callback called in the <a class="el" href="classWatcher.html#acf7e9381e7dbd850c9ebb8f121a6fe16">Watcher::listenerFunction()</a> to the provided function. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>This method will assign the callback called in the <a class="el" href="classWatcher.html#a49ed7c77d110e960312d94e5a273de4f" title="This is the function that will be called when a change is recorded.">Watcher::listenerFunction()</a> to the provided function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">updateCallback</td><td>The function that will be called as the callback. </td></tr>
   </table>
@@ -134,8 +160,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a609f12f64094bed602ae048114183847"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a609f12f64094bed602ae048114183847">&#9670;&nbsp;</a></span>Start()</h2>
+<a id="a2146a455e2d9542430e3f983484a5ace"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2146a455e2d9542430e3f983484a5ace">&#9670;&nbsp;</a></span>Start()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -143,13 +169,15 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Watcher::Start </td>
           <td>(</td>
-          <td class="paramtype">std::filesystem::path&#160;</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
           <td class="paramname"><em>path</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Start the watcher. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Start the watcher. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td></td></tr>
   </table>

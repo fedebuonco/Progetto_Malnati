@@ -64,11 +64,15 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="classAuthentication-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Authentication Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class that handle the user authentication.  
+ <a href="classAuthentication.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="authentication_8h_source.html">authentication.h</a>&gt;</code></p>
 <table class="memberdecls">
@@ -81,6 +85,7 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="classAuthentication.html">Authentication</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classAuthentication.html">Authentication</a> &amp;)=delete</td></tr>
 <tr class="separator:a472196234f5cde67ab8abce9efde2de6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0dda96b95aca0c4034bd5f5e1a1eb437"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCredential.html">Credential</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAuthentication.html#a0dda96b95aca0c4034bd5f5e1a1eb437">ReadCredential</a> ()</td></tr>
+<tr class="memdesc:a0dda96b95aca0c4034bd5f5e1a1eb437"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function read the username and hash_password stored inside config.json.  <a href="classAuthentication.html#a0dda96b95aca0c4034bd5f5e1a1eb437">More...</a><br /></td></tr>
 <tr class="separator:a0dda96b95aca0c4034bd5f5e1a1eb437"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
@@ -88,9 +93,15 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a3c5a0c8df7ea1638e1721477dbf914ec"><td class="memItemLeft" align="right" valign="top"><a id="a3c5a0c8df7ea1638e1721477dbf914ec"></a>
 static <a class="el" href="classAuthentication.html">Authentication</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_Instance</b> ()</td></tr>
 <tr class="separator:a3c5a0c8df7ea1638e1721477dbf914ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:a5d666e96f059a994afc523a2dd1e7d4d"><td class="memItemLeft" align="right" valign="top"><a id="a5d666e96f059a994afc523a2dd1e7d4d"></a>
+static <a class="el" href="classAuthentication.html">Authentication</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>m_AuthenticationClass</b> = nullptr</td></tr>
+<tr class="separator:a5d666e96f059a994afc523a2dd1e7d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Class that handle the user authentication </p>
+<div class="textblock"><p>Class that handle the user authentication. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a0dda96b95aca0c4034bd5f5e1a1eb437"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0dda96b95aca0c4034bd5f5e1a1eb437">&#9670;&nbsp;</a></span>ReadCredential()</h2>
@@ -106,7 +117,9 @@ static <a class="el" href="classAuthentication.html">Authentication</a> *&#160;<
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This function read the username and hash_password stored inside config.json </p><dl class="section return"><dt>Returns</dt><dd><a class="el" href="structCredential.html">Credential</a> (a struct with username and password) </dd></dl>
+
+<p>This function read the username and hash_password stored inside config.json. </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structCredential.html">Credential</a> (a struct with username and password) </dd></dl>
 
 </div>
 </div>

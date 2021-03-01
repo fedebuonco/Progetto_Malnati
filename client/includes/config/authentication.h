@@ -20,6 +20,8 @@ class Authentication {
 public:
     Authentication(const Authentication&)= delete;
     Authentication& operator=(const Authentication&)=delete;
+
+    // Used for getting the static instance of the Authentication class, part of the singleton pattern.
     static Authentication* get_Instance();
 
     Credential ReadCredential();

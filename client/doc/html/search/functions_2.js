@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['get_5finstance_50',['get_Instance',['../classConfig.html#a5434be705a93f9a083dd3937a11ff085',1,'Config']]],
-  ['getelement_51',['GetElement',['../classControlMessage.html#a608ec034f181fd17569eaf2c4dafa8e1',1,'ControlMessage']]]
+  ['databaseconnection_100',['DatabaseConnection',['../classDatabaseConnection.html#a05a846cb8c9f96b481d90debe72c6536',1,'DatabaseConnection']]],
+  ['dispatch_101',['Dispatch',['../classPatch.html#a89a3b1626a3220d1bd7b17d8e797adcf',1,'Patch']]]
 ];

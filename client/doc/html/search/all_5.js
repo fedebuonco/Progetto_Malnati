@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['patch_13',['Patch',['../classPatch.html',1,'Patch'],['../classPatch.html#afd18d33f468590fe3cec1483a6f8e4c2',1,'Patch::Patch()']]],
-  ['port_5fnum_14',['port_num',['../structRawEndpoint.html#a36cea1781288c658a57f68418c6f824a',1,'RawEndpoint']]],
-  ['prettyprint_15',['PrettyPrint',['../classPatch.html#a662ca51ef4c115013ed5a96702b30e5b',1,'Patch']]],
-  ['printconfiguration_16',['PrintConfiguration',['../classConfig.html#a3f4f916ad790860ca689dc2c87f639af',1,'Config']]]
+  ['inithash_28',['InitHash',['../classClient.html#a0a3d64b24a3386ebceb76825953b4bdb',1,'Client']]],
+  ['insertdb_29',['InsertDB',['../classDatabaseConnection.html#a99557617b9daf63daf4593f2160b4268',1,'DatabaseConnection']]],
+  ['isconfigstructurecorrect_30',['IsConfigStructureCorrect',['../classConfig.html#aabc417126648e9182a46cfdd97e8cf60',1,'Config']]]
 ];

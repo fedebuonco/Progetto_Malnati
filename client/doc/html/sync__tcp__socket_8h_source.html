@@ -69,38 +69,33 @@ $(function() {
 <div class="title">sync_tcp_socket.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// Created by fede on 9/21/20.</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">//</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;boost/asio.hpp&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifndef CLIENT_SYNC_TCP_SOCKET_H</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#define CLIENT_SYNC_TCP_SOCKET_H</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;boost/asio.hpp&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classSyncTCPSocket.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSyncTCPSocket.html">SyncTCPSocket</a> {</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="comment">// ordine di queste 3 istruzioni deve essere cosi.</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="comment">//TODO scoprire come mai?</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    boost::asio::io_service ios_;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    boost::asio::ip::tcp::endpoint ep_;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classSyncTCPSocket.html#ac5bfe87712bf4a1d9d80d1173b3155a2">SyncTCPSocket</a>(<span class="keyword">const</span> std::string&amp; raw_ip_add, <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> port);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classSyncTCPSocket.html#a9e14fa078f01ea83d69b0d4a0b263e11">~SyncTCPSocket</a>();</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classSyncTCPSocket.html#ace71a547ca906bf82fa9e2209ec945dd">ConnectServer</a>(<span class="keywordtype">int</span> n_tries);</div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="classSyncTCPSocket.html">    7</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSyncTCPSocket.html">SyncTCPSocket</a> {</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="comment">//Do not invert the order of this two instruction</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    boost::asio::io_service ios_;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    boost::asio::ip::tcp::endpoint ep_;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="classSyncTCPSocket.html">SyncTCPSocket</a>(<span class="keyword">const</span> <a class="code" href="classSyncTCPSocket.html">SyncTCPSocket</a>&amp;)= <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classSyncTCPSocket.html">SyncTCPSocket</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classSyncTCPSocket.html">SyncTCPSocket</a>&amp;)=<span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classSyncTCPSocket.html">SyncTCPSocket</a>(<span class="keyword">const</span> std::string&amp; raw_ip_add, <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> port);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="classSyncTCPSocket.html#a9e14fa078f01ea83d69b0d4a0b263e11">~SyncTCPSocket</a>();</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classSyncTCPSocket.html#aea45cde3fd7172a96dd4ed2c7cb97160">   23</a></span>&#160;    boost::asio::ip::tcp::socket <a class="code" href="classSyncTCPSocket.html#aea45cde3fd7172a96dd4ed2c7cb97160">sock_</a>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classSyncTCPSocket.html#ace71a547ca906bf82fa9e2209ec945dd">ConnectServer</a>(<span class="keywordtype">int</span> n_tries);</div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classSyncTCPSocket.html#aea45cde3fd7172a96dd4ed2c7cb97160">   24</a></span>&#160;    boost::asio::ip::tcp::socket <a class="code" href="classSyncTCPSocket.html#aea45cde3fd7172a96dd4ed2c7cb97160">sock_</a>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;};</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//CLIENT_SYNC_TCP_SOCKET_H</span></div>
-<div class="ttc" id="aclassSyncTCPSocket_html"><div class="ttname"><a href="classSyncTCPSocket.html">SyncTCPSocket</a></div><div class="ttdef"><b>Definition:</b> sync_tcp_socket.h:11</div></div>
-<div class="ttc" id="aclassSyncTCPSocket_html_a9e14fa078f01ea83d69b0d4a0b263e11"><div class="ttname"><a href="classSyncTCPSocket.html#a9e14fa078f01ea83d69b0d4a0b263e11">SyncTCPSocket::~SyncTCPSocket</a></div><div class="ttdeci">~SyncTCPSocket()</div><div class="ttdoc">Shutdown both part(sending &amp; reciving) and closes the socket giving back the resource to the system.</div><div class="ttdef"><b>Definition:</b> sync_tcp_socket.cpp:26</div></div>
-<div class="ttc" id="aclassSyncTCPSocket_html_ac5bfe87712bf4a1d9d80d1173b3155a2"><div class="ttname"><a href="classSyncTCPSocket.html#ac5bfe87712bf4a1d9d80d1173b3155a2">SyncTCPSocket::SyncTCPSocket</a></div><div class="ttdeci">SyncTCPSocket(const std::string &amp;raw_ip_add, unsigned short port)</div><div class="ttdef"><b>Definition:</b> sync_tcp_socket.cpp:18</div></div>
-<div class="ttc" id="aclassSyncTCPSocket_html_ace71a547ca906bf82fa9e2209ec945dd"><div class="ttname"><a href="classSyncTCPSocket.html#ace71a547ca906bf82fa9e2209ec945dd">SyncTCPSocket::ConnectServer</a></div><div class="ttdeci">void ConnectServer(int n_tries)</div><div class="ttdef"><b>Definition:</b> sync_tcp_socket.cpp:36</div></div>
-<div class="ttc" id="aclassSyncTCPSocket_html_aea45cde3fd7172a96dd4ed2c7cb97160"><div class="ttname"><a href="classSyncTCPSocket.html#aea45cde3fd7172a96dd4ed2c7cb97160">SyncTCPSocket::sock_</a></div><div class="ttdeci">boost::asio::ip::tcp::socket sock_</div><div class="ttdoc">Boost socket.</div><div class="ttdef"><b>Definition:</b> sync_tcp_socket.h:23</div></div>
+<div class="ttc" id="aclassSyncTCPSocket_html"><div class="ttname"><a href="classSyncTCPSocket.html">SyncTCPSocket</a></div><div class="ttdoc">Wrapper of a synchronous tcp socket.</div><div class="ttdef"><b>Definition:</b> sync_tcp_socket.h:7</div></div>
+<div class="ttc" id="aclassSyncTCPSocket_html_a9e14fa078f01ea83d69b0d4a0b263e11"><div class="ttname"><a href="classSyncTCPSocket.html#a9e14fa078f01ea83d69b0d4a0b263e11">SyncTCPSocket::~SyncTCPSocket</a></div><div class="ttdeci">~SyncTCPSocket()</div><div class="ttdoc">Shutdown both part(sending &amp; receiving) and closes the socket giving back the resource to the system.</div><div class="ttdef"><b>Definition:</b> sync_tcp_socket.cpp:26</div></div>
+<div class="ttc" id="aclassSyncTCPSocket_html_ace71a547ca906bf82fa9e2209ec945dd"><div class="ttname"><a href="classSyncTCPSocket.html#ace71a547ca906bf82fa9e2209ec945dd">SyncTCPSocket::ConnectServer</a></div><div class="ttdeci">void ConnectServer(int n_tries)</div><div class="ttdoc">Connect the socket to the server.</div><div class="ttdef"><b>Definition:</b> sync_tcp_socket.cpp:40</div></div>
+<div class="ttc" id="aclassSyncTCPSocket_html_aea45cde3fd7172a96dd4ed2c7cb97160"><div class="ttname"><a href="classSyncTCPSocket.html#aea45cde3fd7172a96dd4ed2c7cb97160">SyncTCPSocket::sock_</a></div><div class="ttdeci">boost::asio::ip::tcp::socket sock_</div><div class="ttdoc">Boost socket.</div><div class="ttdef"><b>Definition:</b> sync_tcp_socket.h:24</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

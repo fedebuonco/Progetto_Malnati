@@ -28,9 +28,13 @@ DatabaseConnection::DatabaseConnection(const std::filesystem::path& db_path, std
 }
 
 /// Checks if a row is present in the db by scanning using tuple filename - lastModTime
+/// \param filename we will check that this filename is already present on the db
+/// \param lmt we will check that that this filename with this lmt is already present
 /// \return bool true if present, false if not
 bool DatabaseConnection::AlreadyHashed(const std::string& filename, const std::string& lmt){
-    std::unique_lock lg(db_mutex_);
+    std::unique_lock lg(db_mutex_);///
+///
+
     try {
         SQLite::Statement query(hash_db_, "SELECT * FROM files WHERE filename = ? AND lmt = ?");
         query.bind(1, filename);
@@ -276,7 +280,10 @@ bool DatabaseConnection::ChangeStatusToNotSent(const std::string& filename) {
     return false;
 }
 
-
+/// Gather the metadata of the file, in order to generate the first sip that will be sent to the server.
+/// \param filename filename of the element we want to gather metadata of.
+/// \param hash string of the hash, will be filled with the hash.
+/// \param lmt string of the lmt, will be filled with the lmt (last modified time).
 void DatabaseConnection::GetMetadata(const std::string& filename, std::string& hash, std::string& lmt){
     std::unique_lock lg(db_mutex_);
     try{
@@ -301,7 +308,9 @@ void DatabaseConnection::GetMetadata(const std::string& filename, std::string& h
     }
 }
 
-
+///  TODO che faceva??
+/// \param sfileslmt
+/// \return
 bool DatabaseConnection::AlignStatus(const std::vector<std::pair<std::string, unsigned  long>>& sfileslmt){
     std::unique_lock lg(db_mutex_);
     for (const auto& element : sfileslmt){
@@ -321,7 +330,8 @@ bool DatabaseConnection::AlignStatus(const std::vector<std::pair<std::string, un
     }
 
 }
-
+/// TODO COMMENTARE MARCO
+/// \return
 bool DatabaseConnection::AllSent() {
 
     std::unique_lock lg(db_mutex_);

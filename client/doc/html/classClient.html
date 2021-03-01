@@ -63,24 +63,82 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classClient-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Client Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
+<p>The main class of the client.  
+ <a href="classClient.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="client_8h_source.html">client.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7ff17edb7bc64aa18ae701bc1ded3079"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#a7ff17edb7bc64aa18ae701bc1ded3079">Client</a> (<a class="el" href="structRawEndpoint.html">RawEndpoint</a> re, std::filesystem::path folder_watched)</td></tr>
-<tr class="separator:a7ff17edb7bc64aa18ae701bc1ded3079"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa792d298cd82815d2948720b2040a09c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#aa792d298cd82815d2948720b2040a09c">Client</a> (<a class="el" href="structRawEndpoint.html">RawEndpoint</a> re, const std::filesystem::path &amp;folder_watched)</td></tr>
+<tr class="memdesc:aa792d298cd82815d2948720b2040a09c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="classClient.html" title="The main class of the client.">Client</a>, execute the first hashing of each file and puts it in a state ready to track any changes in the folder.  <a href="classClient.html#aa792d298cd82815d2948720b2040a09c">More...</a><br /></td></tr>
+<tr class="separator:aa792d298cd82815d2948720b2040a09c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:aacf5a8b812843bf6bb8a5ab633bbdc36"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#aacf5a8b812843bf6bb8a5ab633bbdc36">Auth</a> ()</td></tr>
+<tr class="memdesc:aacf5a8b812843bf6bb8a5ab633bbdc36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Will send username and password.  <a href="classClient.html#aacf5a8b812843bf6bb8a5ab633bbdc36">More...</a><br /></td></tr>
+<tr class="separator:aacf5a8b812843bf6bb8a5ab633bbdc36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dfef137cb0546024619921d6dabdf3b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#a3dfef137cb0546024619921d6dabdf3b">StartWatching</a> ()</td></tr>
+<tr class="memdesc:a3dfef137cb0546024619921d6dabdf3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">We set the callback and ask to the watcher to start tracking any changes on the watched folder.  <a href="classClient.html#a3dfef137cb0546024619921d6dabdf3b">More...</a><br /></td></tr>
+<tr class="separator:a3dfef137cb0546024619921d6dabdf3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5997dbbeee7953b784ac0537def159a9"><td class="memItemLeft" align="right" valign="top"><a id="a5997dbbeee7953b784ac0537def159a9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#a5997dbbeee7953b784ac0537def159a9">Syncro</a> ()</td></tr>
+<tr class="memdesc:a5997dbbeee7953b784ac0537def159a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the main function, create a Tree and asks for the server Tree, with those it creates a patch and process it The processed patch is then used to fuel the SendPatch() <br /></td></tr>
+<tr class="separator:a5997dbbeee7953b784ac0537def159a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96f9d57927506de3f90c28b7ebf70109"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#a96f9d57927506de3f90c28b7ebf70109">RecoverSending</a> ()</td></tr>
+<tr class="memdesc:a96f9d57927506de3f90c28b7ebf70109"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scans the db and put the failed "SENDING" to "NEW" again, they will be re-sync as soon as possible.  <a href="classClient.html#a96f9d57927506de3f90c28b7ebf70109">More...</a><br /></td></tr>
+<tr class="separator:a96f9d57927506de3f90c28b7ebf70109"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad90c29a5ac034afb4d04aae5d58dd60c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#ad90c29a5ac034afb4d04aae5d58dd60c">SendRemoval</a> (<a class="el" href="classPatch.html">Patch</a> &amp;update)</td></tr>
+<tr class="memdesc:ad90c29a5ac034afb4d04aae5d58dd60c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Here we firstly send a <a class="el" href="classControlMessage.html" title="Encapsulates a control message.">ControlMessage</a> that will tell what to delete in the server.  <a href="classClient.html#ad90c29a5ac034afb4d04aae5d58dd60c">More...</a><br /></td></tr>
+<tr class="separator:ad90c29a5ac034afb4d04aae5d58dd60c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7f38334b1a236b748a06e306936838b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classTreeT.html">TreeT</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#ad7f38334b1a236b748a06e306936838b">RequestTree</a> ()</td></tr>
+<tr class="memdesc:ad7f38334b1a236b748a06e306936838b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request current tree and times of the cloud dir stored in the server.  <a href="classClient.html#ad7f38334b1a236b748a06e306936838b">More...</a><br /></td></tr>
+<tr class="separator:ad7f38334b1a236b748a06e306936838b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33c8b03d66e4b4a461cbaa9ed18a2c8c"><td class="memItemLeft" align="right" valign="top"><a id="a33c8b03d66e4b4a461cbaa9ed18a2c8c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SyncWriteCM</b> (<a class="el" href="classSyncTCPSocket.html">SyncTCPSocket</a> &amp;stcp, <a class="el" href="classControlMessage.html">ControlMessage</a> &amp;cm)</td></tr>
+<tr class="separator:a33c8b03d66e4b4a461cbaa9ed18a2c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7c88ef1283a8b6dd0d1fe9cc81f8e29"><td class="memItemLeft" align="right" valign="top"><a id="aa7c88ef1283a8b6dd0d1fe9cc81f8e29"></a>
+<a class="el" href="classControlMessage.html">ControlMessage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#aa7c88ef1283a8b6dd0d1fe9cc81f8e29">SyncReadCM</a> (<a class="el" href="classSyncTCPSocket.html">SyncTCPSocket</a> &amp;stcp)</td></tr>
+<tr class="memdesc:aa7c88ef1283a8b6dd0d1fe9cc81f8e29"><td class="mdescLeft">&#160;</td><td class="mdescRight">We read until the eof, then we return a <a class="el" href="classControlMessage.html" title="Encapsulates a control message.">ControlMessage</a> using the buffer we read. <br /></td></tr>
+<tr class="separator:aa7c88ef1283a8b6dd0d1fe9cc81f8e29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a3d64b24a3386ebceb76825953b4bdb"><td class="memItemLeft" align="right" valign="top"><a id="a0a3d64b24a3386ebceb76825953b4bdb"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#a0a3d64b24a3386ebceb76825953b4bdb">InitHash</a> ()</td></tr>
+<tr class="memdesc:a0a3d64b24a3386ebceb76825953b4bdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test each file to see if already present in the hash db, and acts accordingly in order to keep a database of each hash performed. <br /></td></tr>
+<tr class="separator:a0a3d64b24a3386ebceb76825953b4bdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a535e378b54dfcdf796ea385ee3006374"><td class="memItemLeft" align="right" valign="top"><a id="a535e378b54dfcdf796ea385ee3006374"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>HashFile</b> (const std::filesystem::path &amp;path)</td></tr>
+<tr class="separator:a535e378b54dfcdf796ea385ee3006374"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a62057fdee3003fb49da48c46b50015be"><td class="memItemLeft" align="right" valign="top"><a id="a62057fdee3003fb49da48c46b50015be"></a>
+<a class="el" href="structRawEndpoint.html">RawEndpoint</a>&#160;</td><td class="memItemRight" valign="bottom"><b>server_re_</b></td></tr>
+<tr class="separator:a62057fdee3003fb49da48c46b50015be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a082f49dec300d7b4f332a5292dc603b7"><td class="memItemLeft" align="right" valign="top"><a id="a082f49dec300d7b4f332a5292dc603b7"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>folder_watched_</b></td></tr>
+<tr class="separator:a082f49dec300d7b4f332a5292dc603b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61bb6f6dda38b1907422bad27c1b10c7"><td class="memItemLeft" align="right" valign="top"><a id="a61bb6f6dda38b1907422bad27c1b10c7"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>db_file_</b></td></tr>
+<tr class="separator:a61bb6f6dda38b1907422bad27c1b10c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ad1cb6ffa3fe3e25a4966be282d8df4"><td class="memItemLeft" align="right" valign="top"><a id="a6ad1cb6ffa3fe3e25a4966be282d8df4"></a>
+<a class="el" href="classWatcher.html">Watcher</a>&#160;</td><td class="memItemRight" valign="bottom"><b>watcher_</b></td></tr>
+<tr class="separator:a6ad1cb6ffa3fe3e25a4966be282d8df4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The main class of the client. It represent an object that will connect to the server specified in the constructor and will ask to a watcher to whatch a specified folder. </p>
+<div class="textblock"><p>The main class of the client. </p>
+<p>It represent an object that will connect to the server specified in the constructor and will ask to a watcher to watch a specified folder. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a7ff17edb7bc64aa18ae701bc1ded3079"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ff17edb7bc64aa18ae701bc1ded3079">&#9670;&nbsp;</a></span>Client()</h2>
+<a id="aa792d298cd82815d2948720b2040a09c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa792d298cd82815d2948720b2040a09c">&#9670;&nbsp;</a></span>Client()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -94,7 +152,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::filesystem::path&#160;</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
           <td class="paramname"><em>folder_watched</em>&#160;</td>
         </tr>
         <tr>
@@ -104,13 +162,162 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Construct a <a class="el" href="classClient.html">Client</a> and puts it in a state ready to track any changes in the folder. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Construct a <a class="el" href="classClient.html" title="The main class of the client.">Client</a>, execute the first hashing of each file and puts it in a state ready to track any changes in the folder. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">re</td><td>Endpoint to connect to. </td></tr>
-    <tr><td class="paramname">folder_watched</td><td>folder path that we want to keep monitored. </td></tr>
+    <tr><td class="paramname">re</td><td>: Endpoint to connect to. </td></tr>
+    <tr><td class="paramname">folder_watched</td><td>: folder path that we want to keep monitored. </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aacf5a8b812843bf6bb8a5ab633bbdc36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacf5a8b812843bf6bb8a5ab633bbdc36">&#9670;&nbsp;</a></span>Auth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Client::Auth </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Will send username and password. </p>
+<p>After that it will shutdown the send part of the socket thus providing the server a way to tell that the connection is over. After the authentication the socket is basically useless and needs to be shutdown completely. </p><dl class="section return"><dt>Returns</dt><dd>'True' if Auth went ok and user has successfully logged in, 'False' if not. </dd></dl>
+
+</div>
+</div>
+<a id="a96f9d57927506de3f90c28b7ebf70109"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96f9d57927506de3f90c28b7ebf70109">&#9670;&nbsp;</a></span>RecoverSending()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Client::RecoverSending </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Scans the db and put the failed "SENDING" to "NEW" again, they will be re-sync as soon as possible. </p>
+<dl class="section return"><dt>Returns</dt><dd>Returns the recovered files. </dd></dl>
+
+</div>
+</div>
+<a id="ad7f38334b1a236b748a06e306936838b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7f38334b1a236b748a06e306936838b">&#9670;&nbsp;</a></span>RequestTree()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classTreeT.html">TreeT</a> Client::RequestTree </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Request current tree and times of the cloud dir stored in the server. </p>
+<p>Handles the result by starting the diff computation. </p>
+
+</div>
+</div>
+<a id="ad90c29a5ac034afb4d04aae5d58dd60c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad90c29a5ac034afb4d04aae5d58dd60c">&#9670;&nbsp;</a></span>SendRemoval()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Client::SendRemoval </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classPatch.html">Patch</a> &amp;&#160;</td>
+          <td class="paramname"><em>update</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Here we firstly send a <a class="el" href="classControlMessage.html" title="Encapsulates a control message.">ControlMessage</a> that will tell what to delete in the server. </p>
+<p>After that we will start sending the newer files. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">update</td><td>processed patch </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3dfef137cb0546024619921d6dabdf3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dfef137cb0546024619921d6dabdf3b">&#9670;&nbsp;</a></span>StartWatching()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Client::StartWatching </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>We set the callback and ask to the watcher to start tracking any changes on the watched folder. </p>
+<p>We bind to the callback this, to that when called from the watcher, "this" is defined. <a href="https://stackoverflow.com/questions/14189440/c-callback-using-class-member/14189561">https://stackoverflow.com/questions/14189440/c-callback-using-class-member/14189561</a> </p>
 
 </div>
 </div>

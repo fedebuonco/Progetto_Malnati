@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['watcher_45',['Watcher',['../classWatcher.html',1,'']]]
+  ['sender_80',['Sender',['../classSender.html',1,'']]],
+  ['sharedqueue_81',['SharedQueue',['../classSharedQueue.html',1,'']]],
+  ['synctcpsocket_82',['SyncTCPSocket',['../classSyncTCPSocket.html',1,'']]],
+  ['syntaxerror_83',['SyntaxError',['../classSyntaxError.html',1,'']]]
 ];

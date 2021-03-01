@@ -69,39 +69,37 @@ $(function() {
 <div class="title">control_message.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// Created by fede on 10/7/20.</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifndef CLIENT_CONTROL_MESSAGE_H</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#define CLIENT_CONTROL_MESSAGE_H</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;boost/property_tree/ptree.hpp&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;boost/property_tree/json_parser.hpp&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classControlMessage.html">   16</a></span>&#160;<span class="keyword">class </span><a class="code" href="classControlMessage.html">ControlMessage</a> {</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    std::unique_ptr&lt;boost::property_tree::ptree&gt; json_mess_;</div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;boost/property_tree/ptree.hpp&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;boost/property_tree/json_parser.hpp&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;document.h&gt;</span>     <span class="comment">// rapidjson&#39;s DOM-style API</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;prettywriter.h&gt;</span> <span class="comment">// for stringify JSON</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classControlMessage.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classControlMessage.html">ControlMessage</a> {</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="classControlMessage.html#a837ac39ba7962a6e0b38c4c1648e4f02">   14</a></span>&#160;    rapidjson::Document <a class="code" href="classControlMessage.html#a837ac39ba7962a6e0b38c4c1648e4f02">document_</a>;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="comment">// Type, identifies the message, get parsed first in order to correctly parse the rest of the message.</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">int</span> type_;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classControlMessage.html#a1e04929d89399d9b3e9a3b4a3c5e1a78">   22</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classControlMessage.html#a1e04929d89399d9b3e9a3b4a3c5e1a78">type_</a>;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <a class="code" href="classControlMessage.html#a843d7a136a10b4d69f7dffe3812ef757">ControlMessage</a>(<span class="keywordtype">int</span> tp);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="classControlMessage.html#a843d7a136a10b4d69f7dffe3812ef757">ControlMessage</a>(<span class="keyword">const</span> std::string&amp; json_code);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    std::string <a class="code" href="classControlMessage.html#ae306167fefa11ba8fd3d7bdf4b5f6d56">ToJSON</a>();</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classControlMessage.html#a91b4d203be4972dfb4a4773ac59f9456">AddElement</a>(<span class="keyword">const</span> std::string&amp; element,<span class="keyword">const</span> std::string&amp; value);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    std::string <a class="code" href="classControlMessage.html#a608ec034f181fd17569eaf2c4dafa8e1">GetElement</a>(<span class="keyword">const</span> std::string&amp; element);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;};</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//CLIENT_CONTROL_MESSAGE_H</span></div>
-<div class="ttc" id="aclassControlMessage_html"><div class="ttname"><a href="classControlMessage.html">ControlMessage</a></div><div class="ttdef"><b>Definition:</b> control_message.h:16</div></div>
-<div class="ttc" id="aclassControlMessage_html_a1e04929d89399d9b3e9a3b4a3c5e1a78"><div class="ttname"><a href="classControlMessage.html#a1e04929d89399d9b3e9a3b4a3c5e1a78">ControlMessage::type_</a></div><div class="ttdeci">int type_</div><div class="ttdoc">Type of the message, in the server we switch actions depending on this type.</div><div class="ttdef"><b>Definition:</b> control_message.h:22</div></div>
-<div class="ttc" id="aclassControlMessage_html_a608ec034f181fd17569eaf2c4dafa8e1"><div class="ttname"><a href="classControlMessage.html#a608ec034f181fd17569eaf2c4dafa8e1">ControlMessage::GetElement</a></div><div class="ttdeci">std::string GetElement(const std::string &amp;element)</div><div class="ttdef"><b>Definition:</b> control_message.cpp:38</div></div>
-<div class="ttc" id="aclassControlMessage_html_a843d7a136a10b4d69f7dffe3812ef757"><div class="ttname"><a href="classControlMessage.html#a843d7a136a10b4d69f7dffe3812ef757">ControlMessage::ControlMessage</a></div><div class="ttdeci">ControlMessage(int tp)</div><div class="ttdef"><b>Definition:</b> control_message.cpp:6</div></div>
-<div class="ttc" id="aclassControlMessage_html_a91b4d203be4972dfb4a4773ac59f9456"><div class="ttname"><a href="classControlMessage.html#a91b4d203be4972dfb4a4773ac59f9456">ControlMessage::AddElement</a></div><div class="ttdeci">void AddElement(const std::string &amp;element, const std::string &amp;value)</div><div class="ttdef"><b>Definition:</b> control_message.cpp:31</div></div>
-<div class="ttc" id="aclassControlMessage_html_ae306167fefa11ba8fd3d7bdf4b5f6d56"><div class="ttname"><a href="classControlMessage.html#ae306167fefa11ba8fd3d7bdf4b5f6d56">ControlMessage::ToJSON</a></div><div class="ttdeci">std::string ToJSON()</div><div class="ttdef"><b>Definition:</b> control_message.cpp:45</div></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classControlMessage.html#a843d7a136a10b4d69f7dffe3812ef757">ControlMessage</a>(<span class="keywordtype">int</span> tp);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classControlMessage.html#a843d7a136a10b4d69f7dffe3812ef757">ControlMessage</a>(<span class="keyword">const</span> std::string&amp; json_code);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    std::string <a class="code" href="classControlMessage.html#ae306167fefa11ba8fd3d7bdf4b5f6d56">ToJSON</a>();</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classControlMessage.html#ae2a16975c22c1e2ed0cabe628912cc97">AddElement</a>(std::string element, std::string value);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    std::string <a class="code" href="classControlMessage.html#a608ec034f181fd17569eaf2c4dafa8e1">GetElement</a>(<span class="keyword">const</span> std::string&amp; element);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;};</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="ttc" id="aclassControlMessage_html"><div class="ttname"><a href="classControlMessage.html">ControlMessage</a></div><div class="ttdoc">Encapsulates a control message.</div><div class="ttdef"><b>Definition:</b> control_message.h:11</div></div>
+<div class="ttc" id="aclassControlMessage_html_a608ec034f181fd17569eaf2c4dafa8e1"><div class="ttname"><a href="classControlMessage.html#a608ec034f181fd17569eaf2c4dafa8e1">ControlMessage::GetElement</a></div><div class="ttdeci">std::string GetElement(const std::string &amp;element)</div><div class="ttdoc">Get an element from the message.</div><div class="ttdef"><b>Definition:</b> control_message.cpp:75</div></div>
+<div class="ttc" id="aclassControlMessage_html_a837ac39ba7962a6e0b38c4c1648e4f02"><div class="ttname"><a href="classControlMessage.html#a837ac39ba7962a6e0b38c4c1648e4f02">ControlMessage::document_</a></div><div class="ttdeci">rapidjson::Document document_</div><div class="ttdoc">Type of the message, in the server we switch actions depending on this type.</div><div class="ttdef"><b>Definition:</b> control_message.h:14</div></div>
+<div class="ttc" id="aclassControlMessage_html_a843d7a136a10b4d69f7dffe3812ef757"><div class="ttname"><a href="classControlMessage.html#a843d7a136a10b4d69f7dffe3812ef757">ControlMessage::ControlMessage</a></div><div class="ttdeci">ControlMessage(int tp)</div><div class="ttdoc">ControlMessage constructor (overload 1).</div><div class="ttdef"><b>Definition:</b> control_message.cpp:9</div></div>
+<div class="ttc" id="aclassControlMessage_html_ae2a16975c22c1e2ed0cabe628912cc97"><div class="ttname"><a href="classControlMessage.html#ae2a16975c22c1e2ed0cabe628912cc97">ControlMessage::AddElement</a></div><div class="ttdeci">void AddElement(std::string element, std::string value)</div><div class="ttdoc">Adds the parameter and the value to the ptree of the ControlMessage.</div><div class="ttdef"><b>Definition:</b> control_message.cpp:54</div></div>
+<div class="ttc" id="aclassControlMessage_html_ae306167fefa11ba8fd3d7bdf4b5f6d56"><div class="ttname"><a href="classControlMessage.html#ae306167fefa11ba8fd3d7bdf4b5f6d56">ControlMessage::ToJSON</a></div><div class="ttdeci">std::string ToJSON()</div><div class="ttdoc">This will convert the ControlMessage into a suitable JSON string (One that follows our protocol).</div><div class="ttdef"><b>Definition:</b> control_message.cpp:90</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

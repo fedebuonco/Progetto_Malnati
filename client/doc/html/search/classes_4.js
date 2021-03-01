@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['synctcpsocket_43',['SyncTCPSocket',['../classSyncTCPSocket.html',1,'']]]
+  ['patch_78',['Patch',['../classPatch.html',1,'']]]
 ];
