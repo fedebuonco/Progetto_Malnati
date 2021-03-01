@@ -1,0 +1,100 @@
+\hypertarget{classTreeT}{}\doxysection{TreeT Class Reference}
+\label{classTreeT}\index{TreeT@{TreeT}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classTreeT_ac405e340525bd1b830e1a528838043df}{TreeT}} (const std\+::filesystem\+::path \&path, const std\+::filesystem\+::path \&serverP)
+\begin{DoxyCompactList}\small\item\em This function create the tree \& time from a given path relatively to the path of the user \mbox{\hyperlink{classServer}{Server}} folder. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classTreeT_a9e2d5f32b138ada497e0504c62fa586a}{TreeT}} (const std\+::string \&tree, const std\+::string \&time)
+\begin{DoxyCompactList}\small\item\em Starting from the ordered string sent by the server, it computes A mapping between the files present in te server and their hashes. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classTreeT_a5630acff06fac0a890c2c6060d5909d7}{gen\+Tree}} ()
+\begin{DoxyCompactList}\small\item\em Generate the list of path of the file available in the user server folder. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classTreeT_a2f260a7c373507266ca901bf4284a557}{gen\+Times}} ()
+\begin{DoxyCompactList}\small\item\em Generate the list of times of the file available in the user server folder. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classTreeT_a7af1a730df929ae35d290898865710ba}\label{classTreeT_a7af1a730df929ae35d290898865710ba}} 
+std\+::string {\bfseries tree\+\_\+}
+\item 
+\mbox{\Hypertarget{classTreeT_ad8383aa7ab0690723a221791049d454d}\label{classTreeT_ad8383aa7ab0690723a221791049d454d}} 
+std\+::filesystem\+::path {\bfseries folder\+\_\+path\+\_\+}
+\item 
+\mbox{\Hypertarget{classTreeT_ac354fa2794d2d1e15ce3d103dc8c0090}\label{classTreeT_ac354fa2794d2d1e15ce3d103dc8c0090}} 
+std\+::map$<$ std\+::string, unsigned long $>$ {\bfseries map\+\_\+tree\+\_\+time\+\_\+}
+\item 
+\mbox{\Hypertarget{classTreeT_acc520fb194f657789d16179f4f986fe1}\label{classTreeT_acc520fb194f657789d16179f4f986fe1}} 
+std\+::filesystem\+::path {\bfseries server\+Path}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classTreeT_ac405e340525bd1b830e1a528838043df}\label{classTreeT_ac405e340525bd1b830e1a528838043df}} 
+\index{TreeT@{TreeT}!TreeT@{TreeT}}
+\index{TreeT@{TreeT}!TreeT@{TreeT}}
+\doxysubsubsection{\texorpdfstring{TreeT()}{TreeT()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Tree\+T\+::\+TreeT (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{path,  }\item[{const std\+::filesystem\+::path \&}]{serverP }\end{DoxyParamCaption})}
+
+
+
+This function create the tree \& time from a given path relatively to the path of the user \mbox{\hyperlink{classServer}{Server}} folder. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & \+: user backup folder in \mbox{\hyperlink{classServer}{Server}} \\
+\hline
+{\em serverP} & \+: location of the \mbox{\hyperlink{classServer}{Server}} program \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classTreeT_a9e2d5f32b138ada497e0504c62fa586a}\label{classTreeT_a9e2d5f32b138ada497e0504c62fa586a}} 
+\index{TreeT@{TreeT}!TreeT@{TreeT}}
+\index{TreeT@{TreeT}!TreeT@{TreeT}}
+\doxysubsubsection{\texorpdfstring{TreeT()}{TreeT()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Tree\+T\+::\+TreeT (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{tree,  }\item[{const std\+::string \&}]{time }\end{DoxyParamCaption})}
+
+
+
+Starting from the ordered string sent by the server, it computes A mapping between the files present in te server and their hashes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tree} & Directory tree if the server \\
+\hline
+{\em time} & time of the files present in the server following the same order of the tree \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classTreeT_a2f260a7c373507266ca901bf4284a557}\label{classTreeT_a2f260a7c373507266ca901bf4284a557}} 
+\index{TreeT@{TreeT}!genTimes@{genTimes}}
+\index{genTimes@{genTimes}!TreeT@{TreeT}}
+\doxysubsubsection{\texorpdfstring{genTimes()}{genTimes()}}
+{\footnotesize\ttfamily std\+::string Tree\+T\+::gen\+Times (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Generate the list of times of the file available in the user server folder. 
+
+\begin{DoxyReturn}{Returns}
+list of time separated by \textquotesingle{}/n\textquotesingle{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classTreeT_a5630acff06fac0a890c2c6060d5909d7}\label{classTreeT_a5630acff06fac0a890c2c6060d5909d7}} 
+\index{TreeT@{TreeT}!genTree@{genTree}}
+\index{genTree@{genTree}!TreeT@{TreeT}}
+\doxysubsubsection{\texorpdfstring{genTree()}{genTree()}}
+{\footnotesize\ttfamily std\+::string Tree\+T\+::gen\+Tree (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Generate the list of path of the file available in the user server folder. 
+
+\begin{DoxyReturn}{Returns}
+list of path separated by \textquotesingle{}/n\textquotesingle{} 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/transfer/tree\+\_\+t.\+h\item 
+src/transfer/tree\+\_\+t.\+cpp\end{DoxyCompactItemize}

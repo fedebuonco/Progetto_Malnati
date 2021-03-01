@@ -1,0 +1,35 @@
+\hypertarget{classAsyncServer}{}\doxysection{Async\+Server Class Reference}
+\label{classAsyncServer}\index{AsyncServer@{AsyncServer}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classAsyncServer_ac3a505d90ca53a9278b827adc9390f34}\label{classAsyncServer_ac3a505d90ca53a9278b827adc9390f34}} 
+{\bfseries Async\+Server} (std\+::filesystem\+::path server\+\_\+path)
+\item 
+\mbox{\Hypertarget{classAsyncServer_a9381e91c18a4bbd7821015328e052e51}\label{classAsyncServer_a9381e91c18a4bbd7821015328e052e51}} 
+void {\bfseries Start} (unsigned short port\+\_\+num, unsigned int thread\+\_\+pool\+\_\+size)
+\item 
+\mbox{\Hypertarget{classAsyncServer_af0370de109ab48a227eb0a79683df167}\label{classAsyncServer_af0370de109ab48a227eb0a79683df167}} 
+void {\bfseries Stop} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classAsyncServer_a60b78c10d0d196af97e986e25dde5ec5}\label{classAsyncServer_a60b78c10d0d196af97e986e25dde5ec5}} 
+std\+::filesystem\+::path {\bfseries server\+\_\+path\+\_\+}
+\item 
+\mbox{\Hypertarget{classAsyncServer_ae60a282d686246c55d92c42eda12a32c}\label{classAsyncServer_ae60a282d686246c55d92c42eda12a32c}} 
+boost\+::asio\+::io\+\_\+service {\bfseries m\+\_\+ios}
+\item 
+\mbox{\Hypertarget{classAsyncServer_a106ac930e393d5f7c128d4c143917252}\label{classAsyncServer_a106ac930e393d5f7c128d4c143917252}} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classAsyncAcceptClient}{Async\+Accept\+Client}} $>$ {\bfseries acc}
+\item 
+\mbox{\Hypertarget{classAsyncServer_aee2c08c495d24bf4e92ffb9647ca0b3b}\label{classAsyncServer_aee2c08c495d24bf4e92ffb9647ca0b3b}} 
+std\+::vector$<$ std\+::unique\+\_\+ptr$<$ std\+::thread $>$ $>$ {\bfseries m\+\_\+thread\+\_\+pool}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/accept\+\_\+client/async\+\_\+server.\+h\item 
+src/accept\+\_\+client/async\+\_\+server.\+cpp\end{DoxyCompactItemize}

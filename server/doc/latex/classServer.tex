@@ -1,0 +1,101 @@
+\hypertarget{classServer}{}\doxysection{Server Class Reference}
+\label{classServer}\index{Server@{Server}}
+
+
+Creates a server that listen on a specific port.  
+
+
+
+
+{\ttfamily \#include $<$server.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classServer_ab2fa1bed5e422e9a823617cac64078db}{Server}} (std\+::filesystem\+::path server\+Path)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServer_a177bcf8516d1332f38acd249192a04a8}{Start}} (unsigned short port\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Starts the server by taking control of the thread\+\_\+ smart pointer. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classServer_ae8e1a31c647c9bfc9e1e6fd794b820fc}\label{classServer_ae8e1a31c647c9bfc9e1e6fd794b820fc}} 
+void \mbox{\hyperlink{classServer_ae8e1a31c647c9bfc9e1e6fd794b820fc}{Stop}} ()
+\begin{DoxyCompactList}\small\item\em Stops the server by waiting for the join of the thread spawned on the Start. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classServer_a88e7836543bd7a88a9e32fc2bba9c5d4}{Run}} (unsigned short port\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Creates the \mbox{\hyperlink{classAcceptClient}{Accept\+Client}} and enters a loop, in the loop we call the \mbox{\hyperlink{classAcceptClient}{Accept\+Client}} Spawn\+Session until the server is stopped. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classServer_a5ce04dd1f52f711a3b2e449979e4cc15}\label{classServer_a5ce04dd1f52f711a3b2e449979e4cc15}} 
+std\+::unique\+\_\+ptr$<$ std\+::thread $>$ {\bfseries thread\+\_\+}
+\item 
+\mbox{\Hypertarget{classServer_a6c52bdeb9a9278640587efad4699e9d1}\label{classServer_a6c52bdeb9a9278640587efad4699e9d1}} 
+boost\+::asio\+::io\+\_\+service {\bfseries ios\+\_\+}
+\item 
+\mbox{\Hypertarget{classServer_a9d267e6fb226d7395cf2c2908a7260c7}\label{classServer_a9d267e6fb226d7395cf2c2908a7260c7}} 
+std\+::atomic$<$ bool $>$ {\bfseries stop\+\_\+}
+\item 
+\mbox{\Hypertarget{classServer_ab5ec6c2a5e8f3aa83028553146e8ce41}\label{classServer_ab5ec6c2a5e8f3aa83028553146e8ce41}} 
+std\+::filesystem\+::path {\bfseries server\+Path}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Creates a server that listen on a specific port. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classServer_ab2fa1bed5e422e9a823617cac64078db}\label{classServer_ab2fa1bed5e422e9a823617cac64078db}} 
+\index{Server@{Server}!Server@{Server}}
+\index{Server@{Server}!Server@{Server}}
+\doxysubsubsection{\texorpdfstring{Server()}{Server()}}
+{\footnotesize\ttfamily Server\+::\+Server (\begin{DoxyParamCaption}\item[{std\+::filesystem\+::path}]{server\+Path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em server\+Path} & \+: path of the server folder \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classServer_a88e7836543bd7a88a9e32fc2bba9c5d4}\label{classServer_a88e7836543bd7a88a9e32fc2bba9c5d4}} 
+\index{Server@{Server}!Run@{Run}}
+\index{Run@{Run}!Server@{Server}}
+\doxysubsubsection{\texorpdfstring{Run()}{Run()}}
+{\footnotesize\ttfamily void Server\+::\+Run (\begin{DoxyParamCaption}\item[{unsigned short}]{port\+\_\+num }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Creates the \mbox{\hyperlink{classAcceptClient}{Accept\+Client}} and enters a loop, in the loop we call the \mbox{\hyperlink{classAcceptClient}{Accept\+Client}} Spawn\+Session until the server is stopped. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port\+\_\+num} & Port number where the server should listen \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServer_a177bcf8516d1332f38acd249192a04a8}\label{classServer_a177bcf8516d1332f38acd249192a04a8}} 
+\index{Server@{Server}!Start@{Start}}
+\index{Start@{Start}!Server@{Server}}
+\doxysubsubsection{\texorpdfstring{Start()}{Start()}}
+{\footnotesize\ttfamily void Server\+::\+Start (\begin{DoxyParamCaption}\item[{unsigned short}]{port\+\_\+num }\end{DoxyParamCaption})}
+
+
+
+Starts the server by taking control of the thread\+\_\+ smart pointer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port\+\_\+num} & of the server \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/accept\+\_\+client/server.\+h\item 
+src/accept\+\_\+client/server.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,105 @@
+\hypertarget{classAsyncService}{}\doxysection{Async\+Service Class Reference}
+\label{classAsyncService}\index{AsyncService@{AsyncService}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classAsyncService_a2af0be54c4fa33ee670bc68e22709415}\label{classAsyncService_a2af0be54c4fa33ee670bc68e22709415}} 
+{\bfseries Async\+Service} (std\+::shared\+\_\+ptr$<$ boost\+::asio\+::ip\+::tcp\+::socket $>$ sock, std\+::filesystem\+::path server\+\_\+path)
+\item 
+\mbox{\Hypertarget{classAsyncService_a5c0cce228eef1487b50a5f1259f81684}\label{classAsyncService_a5c0cce228eef1487b50a5f1259f81684}} 
+void {\bfseries Start\+Handling} (const boost\+::system\+::error\+\_\+code \&ec)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classAsyncService_a47eb4b3716afec8a3c6a084c2f8af396}\label{classAsyncService_a47eb4b3716afec8a3c6a084c2f8af396}} 
+bool {\bfseries filename\+\_\+too\+\_\+long} = false
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classAsyncService_a5778fc80d2cc18d044a86d0ec00443f2}\label{classAsyncService_a5778fc80d2cc18d044a86d0ec00443f2}} 
+enum \{ {\bfseries Max\+Length} = 1024
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classAsyncService_a7703e7135c0fadb9166ceb9b5deb0f97}\label{classAsyncService_a7703e7135c0fadb9166ceb9b5deb0f97}} 
+void {\bfseries on\+Request\+Received} (const boost\+::system\+::error\+\_\+code \&ec, std\+::size\+\_\+t bytes\+\_\+transferred)
+\item 
+\mbox{\Hypertarget{classAsyncService_a22ebe6fa15203727fcd3a2c90ee8b61e}\label{classAsyncService_a22ebe6fa15203727fcd3a2c90ee8b61e}} 
+void {\bfseries on\+Finish} ()
+\item 
+\mbox{\Hypertarget{classAsyncService_a0e899a3e7b235b564db7462d85a3f5a9}\label{classAsyncService_a0e899a3e7b235b564db7462d85a3f5a9}} 
+void {\bfseries create\+File} ()
+\item 
+\mbox{\Hypertarget{classAsyncService_a08ddf7fb6b3c311acc60ef5afdc701e9}\label{classAsyncService_a08ddf7fb6b3c311acc60ef5afdc701e9}} 
+void {\bfseries Parse\+Metadata} (const std \+::string \&metadata)
+\item 
+\mbox{\Hypertarget{classAsyncService_a911d26a394d584f4361ddb0a4e1e6364}\label{classAsyncService_a911d26a394d584f4361ddb0a4e1e6364}} 
+void {\bfseries on\+Abort} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classAsyncService_adf54de1dd0f019743c77466468f8558c}\label{classAsyncService_adf54de1dd0f019743c77466468f8558c}} 
+std\+::filesystem\+::path {\bfseries server\+\_\+path\+\_\+}
+\item 
+\mbox{\Hypertarget{classAsyncService_a93b521bee4a2c25f3a9b0705177964f7}\label{classAsyncService_a93b521bee4a2c25f3a9b0705177964f7}} 
+std\+::shared\+\_\+ptr$<$ boost\+::asio\+::ip\+::tcp\+::socket $>$ {\bfseries m\+\_\+sock}
+\item 
+\mbox{\Hypertarget{classAsyncService_a4f21bf8084e14bc49fd5f96f0ac1e33e}\label{classAsyncService_a4f21bf8084e14bc49fd5f96f0ac1e33e}} 
+std\+::string {\bfseries m\+\_\+response}
+\item 
+\mbox{\Hypertarget{classAsyncService_af6e7a3a20f30586784c76313ab4be027}\label{classAsyncService_af6e7a3a20f30586784c76313ab4be027}} 
+boost\+::asio\+::streambuf {\bfseries m\+\_\+request}
+\item 
+\mbox{\Hypertarget{classAsyncService_a54556369d47090a0045aed799ae48e9a}\label{classAsyncService_a54556369d47090a0045aed799ae48e9a}} 
+std\+::array$<$ char, Max\+Length $>$ {\bfseries m\+\_\+buf}
+\item 
+\mbox{\Hypertarget{classAsyncService_aae12be2780110f924e710117c64fb8af}\label{classAsyncService_aae12be2780110f924e710117c64fb8af}} 
+boost\+::asio\+::streambuf {\bfseries m\+\_\+request\+Buf\+\_\+}
+\item 
+\mbox{\Hypertarget{classAsyncService_aa9a9561e070bdc832839345d81933132}\label{classAsyncService_aa9a9561e070bdc832839345d81933132}} 
+std\+::ofstream {\bfseries m\+\_\+output\+File}
+\item 
+\mbox{\Hypertarget{classAsyncService_aa132cdf9ddc5e37bfb95f53f81140ef9}\label{classAsyncService_aa132cdf9ddc5e37bfb95f53f81140ef9}} 
+size\+\_\+t {\bfseries m\+\_\+file\+Size}
+\item 
+\mbox{\Hypertarget{classAsyncService_a7aa8ab33073a42c77ffafcd390c62121}\label{classAsyncService_a7aa8ab33073a42c77ffafcd390c62121}} 
+int {\bfseries read\+\_\+counter}
+\item 
+\mbox{\Hypertarget{classAsyncService_a5ab0ae91fcc16d809788999073aa59b9}\label{classAsyncService_a5ab0ae91fcc16d809788999073aa59b9}} 
+bool {\bfseries first\+\_\+sip\+\_\+}
+\item 
+\mbox{\Hypertarget{classAsyncService_aa55079b05291a9126752c40031747001}\label{classAsyncService_aa55079b05291a9126752c40031747001}} 
+std\+::string {\bfseries metadata\+\_\+}
+\item 
+\mbox{\Hypertarget{classAsyncService_ad0f227cce4137193067440a360125f1e}\label{classAsyncService_ad0f227cce4137193067440a360125f1e}} 
+std\+::string {\bfseries received\+\_\+hash\+\_\+}
+\item 
+\mbox{\Hypertarget{classAsyncService_aa13bb1c4fcd27fecb9e8933944ac8836}\label{classAsyncService_aa13bb1c4fcd27fecb9e8933944ac8836}} 
+std\+::string {\bfseries received\+\_\+user\+\_\+}
+\item 
+\mbox{\Hypertarget{classAsyncService_a995fa7846016aeeafc6ec355ef4da1c1}\label{classAsyncService_a995fa7846016aeeafc6ec355ef4da1c1}} 
+std\+::string {\bfseries received\+\_\+hpass\+\_\+}
+\item 
+\mbox{\Hypertarget{classAsyncService_afd276d347e4ab4a88487eacddf077a01}\label{classAsyncService_afd276d347e4ab4a88487eacddf077a01}} 
+std\+::string {\bfseries received\+\_\+lmt\+\_\+}
+\item 
+\mbox{\Hypertarget{classAsyncService_a0db2bb3f980df2e7a28dcc826a5a68af}\label{classAsyncService_a0db2bb3f980df2e7a28dcc826a5a68af}} 
+std\+::string {\bfseries received\+\_\+file\+\_\+string\+\_\+}
+\item 
+\mbox{\Hypertarget{classAsyncService_a845517fcf528d314e4ee8bbcdfa8387e}\label{classAsyncService_a845517fcf528d314e4ee8bbcdfa8387e}} 
+std\+::filesystem\+::path {\bfseries created\+\_\+file\+\_\+path\+\_\+}
+\item 
+\mbox{\Hypertarget{classAsyncService_a8f4c8415321379412b3dcd91f989970c}\label{classAsyncService_a8f4c8415321379412b3dcd91f989970c}} 
+bool {\bfseries continue\+\_\+writing} = true
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/accept\+\_\+client/async\+\_\+service.\+h\item 
+src/accept\+\_\+client/async\+\_\+service.\+cpp\end{DoxyCompactItemize}
