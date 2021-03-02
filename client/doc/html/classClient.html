@@ -103,12 +103,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:ad7f38334b1a236b748a06e306936838b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classTreeT.html">TreeT</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#ad7f38334b1a236b748a06e306936838b">RequestTree</a> ()</td></tr>
 <tr class="memdesc:ad7f38334b1a236b748a06e306936838b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request current tree and times of the cloud dir stored in the server.  <a href="classClient.html#ad7f38334b1a236b748a06e306936838b">More...</a><br /></td></tr>
 <tr class="separator:ad7f38334b1a236b748a06e306936838b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33c8b03d66e4b4a461cbaa9ed18a2c8c"><td class="memItemLeft" align="right" valign="top"><a id="a33c8b03d66e4b4a461cbaa9ed18a2c8c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SyncWriteCM</b> (<a class="el" href="classSyncTCPSocket.html">SyncTCPSocket</a> &amp;stcp, <a class="el" href="classControlMessage.html">ControlMessage</a> &amp;cm)</td></tr>
+<tr class="memitem:a33c8b03d66e4b4a461cbaa9ed18a2c8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#a33c8b03d66e4b4a461cbaa9ed18a2c8c">SyncWriteCM</a> (<a class="el" href="classSyncTCPSocket.html">SyncTCPSocket</a> &amp;stcp, <a class="el" href="classControlMessage.html">ControlMessage</a> &amp;cm)</td></tr>
+<tr class="memdesc:a33c8b03d66e4b4a461cbaa9ed18a2c8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to write the Control Message in a syncronous way.  <a href="classClient.html#a33c8b03d66e4b4a461cbaa9ed18a2c8c">More...</a><br /></td></tr>
 <tr class="separator:a33c8b03d66e4b4a461cbaa9ed18a2c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7c88ef1283a8b6dd0d1fe9cc81f8e29"><td class="memItemLeft" align="right" valign="top"><a id="aa7c88ef1283a8b6dd0d1fe9cc81f8e29"></a>
-<a class="el" href="classControlMessage.html">ControlMessage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#aa7c88ef1283a8b6dd0d1fe9cc81f8e29">SyncReadCM</a> (<a class="el" href="classSyncTCPSocket.html">SyncTCPSocket</a> &amp;stcp)</td></tr>
-<tr class="memdesc:aa7c88ef1283a8b6dd0d1fe9cc81f8e29"><td class="mdescLeft">&#160;</td><td class="mdescRight">We read until the eof, then we return a <a class="el" href="classControlMessage.html" title="Encapsulates a control message.">ControlMessage</a> using the buffer we read. <br /></td></tr>
+<tr class="memitem:aa7c88ef1283a8b6dd0d1fe9cc81f8e29"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classControlMessage.html">ControlMessage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#aa7c88ef1283a8b6dd0d1fe9cc81f8e29">SyncReadCM</a> (<a class="el" href="classSyncTCPSocket.html">SyncTCPSocket</a> &amp;stcp)</td></tr>
+<tr class="memdesc:aa7c88ef1283a8b6dd0d1fe9cc81f8e29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for reading until the EOF on a given socket, then we return a <a class="el" href="classControlMessage.html" title="Encapsulates a control message.">ControlMessage</a> using the buffer we read.  <a href="classClient.html#aa7c88ef1283a8b6dd0d1fe9cc81f8e29">More...</a><br /></td></tr>
 <tr class="separator:aa7c88ef1283a8b6dd0d1fe9cc81f8e29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a3d64b24a3386ebceb76825953b4bdb"><td class="memItemLeft" align="right" valign="top"><a id="a0a3d64b24a3386ebceb76825953b4bdb"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#a0a3d64b24a3386ebceb76825953b4bdb">InitHash</a> ()</td></tr>
@@ -318,6 +317,86 @@ std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>db_f
 
 <p>We set the callback and ask to the watcher to start tracking any changes on the watched folder. </p>
 <p>We bind to the callback this, to that when called from the watcher, "this" is defined. <a href="https://stackoverflow.com/questions/14189440/c-callback-using-class-member/14189561">https://stackoverflow.com/questions/14189440/c-callback-using-class-member/14189561</a> </p>
+
+</div>
+</div>
+<a id="aa7c88ef1283a8b6dd0d1fe9cc81f8e29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7c88ef1283a8b6dd0d1fe9cc81f8e29">&#9670;&nbsp;</a></span>SyncReadCM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classControlMessage.html">ControlMessage</a> Client::SyncReadCM </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSyncTCPSocket.html">SyncTCPSocket</a> &amp;&#160;</td>
+          <td class="paramname"><em>stcp</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used for reading until the EOF on a given socket, then we return a <a class="el" href="classControlMessage.html" title="Encapsulates a control message.">ControlMessage</a> using the buffer we read. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stcp</td><td>The socket we are reading on. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The Control Message that we read. </dd></dl>
+
+</div>
+</div>
+<a id="a33c8b03d66e4b4a461cbaa9ed18a2c8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33c8b03d66e4b4a461cbaa9ed18a2c8c">&#9670;&nbsp;</a></span>SyncWriteCM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Client::SyncWriteCM </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSyncTCPSocket.html">SyncTCPSocket</a> &amp;&#160;</td>
+          <td class="paramname"><em>stcp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classControlMessage.html">ControlMessage</a> &amp;&#160;</td>
+          <td class="paramname"><em>cm</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used to write the Control Message in a syncronous way. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stcp</td><td>The socket I'm writing the Control Message to. </td></tr>
+    <tr><td class="paramname">cm</td><td>The control message to be written. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

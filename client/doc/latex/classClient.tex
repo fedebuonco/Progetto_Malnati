@@ -30,12 +30,10 @@ void \mbox{\hyperlink{classClient_ad90c29a5ac034afb4d04aae5d58dd60c}{Send\+Remov
 \begin{DoxyCompactList}\small\item\em Here we firstly send a \mbox{\hyperlink{classControlMessage}{Control\+Message}} that will tell what to delete in the server. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classTreeT}{TreeT}} \mbox{\hyperlink{classClient_ad7f38334b1a236b748a06e306936838b}{Request\+Tree}} ()
 \begin{DoxyCompactList}\small\item\em Request current tree and times of the cloud dir stored in the server. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classClient_a33c8b03d66e4b4a461cbaa9ed18a2c8c}\label{classClient_a33c8b03d66e4b4a461cbaa9ed18a2c8c}} 
-void {\bfseries Sync\+Write\+CM} (\mbox{\hyperlink{classSyncTCPSocket}{Sync\+TCPSocket}} \&stcp, \mbox{\hyperlink{classControlMessage}{Control\+Message}} \&cm)
-\item 
-\mbox{\Hypertarget{classClient_aa7c88ef1283a8b6dd0d1fe9cc81f8e29}\label{classClient_aa7c88ef1283a8b6dd0d1fe9cc81f8e29}} 
+void \mbox{\hyperlink{classClient_a33c8b03d66e4b4a461cbaa9ed18a2c8c}{Sync\+Write\+CM}} (\mbox{\hyperlink{classSyncTCPSocket}{Sync\+TCPSocket}} \&stcp, \mbox{\hyperlink{classControlMessage}{Control\+Message}} \&cm)
+\begin{DoxyCompactList}\small\item\em Used to write the Control Message in a syncronous way. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classControlMessage}{Control\+Message}} \mbox{\hyperlink{classClient_aa7c88ef1283a8b6dd0d1fe9cc81f8e29}{Sync\+Read\+CM}} (\mbox{\hyperlink{classSyncTCPSocket}{Sync\+TCPSocket}} \&stcp)
-\begin{DoxyCompactList}\small\item\em We read until the eof, then we return a \mbox{\hyperlink{classControlMessage}{Control\+Message}} using the buffer we read. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Used for reading until the EOF on a given socket, then we return a \mbox{\hyperlink{classControlMessage}{Control\+Message}} using the buffer we read. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classClient_a0a3d64b24a3386ebceb76825953b4bdb}\label{classClient_a0a3d64b24a3386ebceb76825953b4bdb}} 
 void \mbox{\hyperlink{classClient_a0a3d64b24a3386ebceb76825953b4bdb}{Init\+Hash}} ()
 \begin{DoxyCompactList}\small\item\em Test each file to see if already present in the hash db, and acts accordingly in order to keep a database of each hash performed. \end{DoxyCompactList}\item 
@@ -146,7 +144,42 @@ After that we will start sending the newer files.
 
 We set the callback and ask to the watcher to start tracking any changes on the watched folder. 
 
-We bind to the callback this, to that when called from the watcher, \char`\"{}this\char`\"{} is defined. \href{https://stackoverflow.com/questions/14189440/c-callback-using-class-member/14189561}{\texttt{ https\+://stackoverflow.\+com/questions/14189440/c-\/callback-\/using-\/class-\/member/14189561}} 
+We bind to the callback this, to that when called from the watcher, \char`\"{}this\char`\"{} is defined. \href{https://stackoverflow.com/questions/14189440/c-callback-using-class-member/14189561}{\texttt{ https\+://stackoverflow.\+com/questions/14189440/c-\/callback-\/using-\/class-\/member/14189561}} \mbox{\Hypertarget{classClient_aa7c88ef1283a8b6dd0d1fe9cc81f8e29}\label{classClient_aa7c88ef1283a8b6dd0d1fe9cc81f8e29}} 
+\index{Client@{Client}!SyncReadCM@{SyncReadCM}}
+\index{SyncReadCM@{SyncReadCM}!Client@{Client}}
+\doxysubsubsection{\texorpdfstring{SyncReadCM()}{SyncReadCM()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classControlMessage}{Control\+Message}} Client\+::\+Sync\+Read\+CM (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classSyncTCPSocket}{Sync\+TCPSocket}} \&}]{stcp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Used for reading until the EOF on a given socket, then we return a \mbox{\hyperlink{classControlMessage}{Control\+Message}} using the buffer we read. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em stcp} & The socket we are reading on. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The Control Message that we read. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classClient_a33c8b03d66e4b4a461cbaa9ed18a2c8c}\label{classClient_a33c8b03d66e4b4a461cbaa9ed18a2c8c}} 
+\index{Client@{Client}!SyncWriteCM@{SyncWriteCM}}
+\index{SyncWriteCM@{SyncWriteCM}!Client@{Client}}
+\doxysubsubsection{\texorpdfstring{SyncWriteCM()}{SyncWriteCM()}}
+{\footnotesize\ttfamily void Client\+::\+Sync\+Write\+CM (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classSyncTCPSocket}{Sync\+TCPSocket}} \&}]{stcp,  }\item[{\mbox{\hyperlink{classControlMessage}{Control\+Message}} \&}]{cm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Used to write the Control Message in a syncronous way. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em stcp} & The socket I\textquotesingle{}m writing the Control Message to. \\
+\hline
+{\em cm} & The control message to be written. \\
+\hline
+\end{DoxyParams}
+
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
