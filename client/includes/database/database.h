@@ -8,15 +8,18 @@
 #include <shared_mutex>
 #include <vector>
 
+/**
+ * Class that manage the connection and operation with the DB
+ */
 class DatabaseConnection{
 
-    //The user's folder to be monitored
+    ///The user's folder to be monitored
     std::filesystem::path folder_watched_;
 
-    //Database object used for connection
+    ///Database object used for connection
     SQLite::Database hash_db_;
 
-    //Mutex that protected the access to DB in order to handle mutual exclusion
+    ///Mutex that protected the access to DB in order to handle mutual exclusion
     static std::shared_mutex db_mutex_;
 
 
