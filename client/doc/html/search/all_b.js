@@ -17,5 +17,6 @@ var searchData=
   ['syncreadcm_60',['SyncReadCM',['../classClient.html#aa7c88ef1283a8b6dd0d1fe9cc81f8e29',1,'Client']]],
   ['syncro_61',['Syncro',['../classClient.html#a5997dbbeee7953b784ac0537def159a9',1,'Client']]],
   ['synctcpsocket_62',['SyncTCPSocket',['../classSyncTCPSocket.html',1,'SyncTCPSocket'],['../classSyncTCPSocket.html#ac5bfe87712bf4a1d9d80d1173b3155a2',1,'SyncTCPSocket::SyncTCPSocket()']]],
-  ['syntaxerror_63',['SyntaxError',['../classSyntaxError.html',1,'']]]
+  ['syncwritecm_63',['SyncWriteCM',['../classClient.html#a33c8b03d66e4b4a461cbaa9ed18a2c8c',1,'Client']]],
+  ['syntaxerror_64',['SyntaxError',['../classSyntaxError.html',1,'']]]
 ];

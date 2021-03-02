@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['patch_78',['Patch',['../classPatch.html',1,'']]]
+  ['patch_79',['Patch',['../classPatch.html',1,'']]]
 ];

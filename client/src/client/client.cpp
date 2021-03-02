@@ -179,7 +179,9 @@ TreeT Client::RequestTree() {
     return result;
 }
 
-///
+/// Used to write the Control Message in a syncronous way.
+/// \param stcp The socket I'm writing the Control Message to.
+/// \param cm The control message to be written.
 void Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
 
     boost::system::error_code ec;
@@ -197,7 +199,11 @@ void Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
     }
 }
 
-/// We read until the eof, then we return a ControlMessage using the buffer we read
+//We read until the eof, then we return a ControlMessage using the buffer we read
+
+/// Used for reading until the EOF on a given socket, then we return a ControlMessage using the buffer we read
+/// \param stcp The socket we are reading on.
+/// \return The Control Message that we read.
 ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
 
     boost::asio::streambuf response_buf;
@@ -348,6 +354,9 @@ void Client::InitHash(){
     }
 }
 
+/// Hash the file using SHA-256, if it can't hash it then the next watcher trigger will take care of it.
+/// \param element_path Path of the element that will be hashed.
+/// \return The digest of the hashed file or a blank string if it can't be hashed.
 std::string Client::HashFile(const std::filesystem::path& element_path) {
     CryptoPP::SHA256 hash;
     std::string digest;
