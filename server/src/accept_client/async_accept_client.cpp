@@ -2,6 +2,12 @@
 #include <filesystem>
 #include <utility>
 
+/**
+ * Async accept client constructor
+ * @param ios : Used for setting up the asynchronous callbacks
+ * @param port_num : Port number
+ * @param server_path : Path of the user's server exe
+ */
 AsyncAcceptClient::AsyncAcceptClient(boost::asio::io_service& ios, unsigned short port_num, std::filesystem::path server_path) :
 server_path_(std::move(server_path)),
 m_ios(ios),
@@ -12,19 +18,26 @@ m_acceptor(m_ios,
 m_isStopped(false)
 {}
 
+/**
+ * Starts the asynchronous server
+ */
 void AsyncAcceptClient::Start() {
     m_acceptor.listen();
     InitAccept();
 }
 
-// Stop accepting incoming connection requests.
+/**
+ * Stop accepting incoming connection requests.
+ */
 void AsyncAcceptClient::Stop() {
     m_isStopped.store(true);
 }
 
+/**
+ * Setup for incoming request using the callback when the request arrived
+ */
 void AsyncAcceptClient::InitAccept() {
-    std::shared_ptr<boost::asio::ip::tcp::socket>
-            sock(new boost::asio::ip::tcp::socket(m_ios));
+    std::shared_ptr<boost::asio::ip::tcp::socket> sock = std::make_shared<boost::asio::ip::tcp::socket>(m_ios);
 
     m_acceptor.async_accept(*sock,
                             [this, sock](
@@ -34,6 +47,11 @@ void AsyncAcceptClient::InitAccept() {
                             });
 }
 
+/**
+ * Takes the request and spawn an AsyncService that will start handling it
+ * @param ec : error code provided by InitAccept
+ * @param sock : active socket for handling client messages
+ */
 void AsyncAcceptClient::onAccept(const boost::system::error_code& ec, const std::shared_ptr<boost::asio::ip::tcp::socket>& sock)
 {
 

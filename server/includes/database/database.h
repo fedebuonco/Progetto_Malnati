@@ -5,8 +5,12 @@
 #include <mutex>
 #include <shared_mutex>
 
+/**
+ * Class that manage the connection and operation with the DBs
+ */
 class Database {
 
+    ///Mutex that protected the access to DBs in order to handle mutual exclusion
     static std::shared_mutex db_mutex_;
 
 public:
