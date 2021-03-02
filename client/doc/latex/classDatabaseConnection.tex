@@ -1,0 +1,248 @@
+\hypertarget{classDatabaseConnection}{}\doxysection{Database\+Connection Class Reference}
+\label{classDatabaseConnection}\index{DatabaseConnection@{DatabaseConnection}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classDatabaseConnection_a05a846cb8c9f96b481d90debe72c6536}{Database\+Connection}} (const std\+::filesystem\+::path \&db\+\_\+path, std\+::filesystem\+::path folder\+\_\+watched)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabaseConnection_a792bb86324ec671529b1f90eab13011c}{Already\+Hashed}} (const std\+::string \&filename, const std\+::string \&lmt)
+\begin{DoxyCompactList}\small\item\em Checks if a row is present in the db by scanning using tuple filename -\/ last\+Mod\+Time. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classDatabaseConnection_a99557617b9daf63daf4593f2160b4268}{Insert\+DB}} (const std\+::string \&path\+\_\+str, const std\+::string \&hash, const std\+::string \&lmt\+\_\+str)
+\begin{DoxyCompactList}\small\item\em Insert a row in the db. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classDatabaseConnection_a973dc133e4b618838e06f53951cb7aeb}{Get\+Metadata}} (const std\+::string \&filename, std\+::string \&hash, std\+::string \&lmt)
+\begin{DoxyCompactList}\small\item\em Gather the metadata of the file, in order to generate the first sip that will be sent to the server. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classDatabaseConnection_afcd167fffe5179a296d143e1832a7429}\label{classDatabaseConnection_afcd167fffe5179a296d143e1832a7429}} 
+void \mbox{\hyperlink{classDatabaseConnection_afcd167fffe5179a296d143e1832a7429}{Clean\+Old\+Rows}} ()
+\begin{DoxyCompactList}\small\item\em We check the db against the file in the folder, if a row doesn\textquotesingle{}t have the counterpart in the folder is removed. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classDatabaseConnection_a429c3b3f01ffe23e0344905e1a7c0b5f}{Set\+Back\+To\+New}} ()
+\begin{DoxyCompactList}\small\item\em Changes all the tuple that are in SENDING to NEW. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabaseConnection_a7c5998aa2e389d662ffd6e193c206a6f}{Change\+Status\+To\+Sending}} (const std\+::string \&filename)
+\begin{DoxyCompactList}\small\item\em Goes in the db and changes the status to \char`\"{}\+SENDING\char`\"{} but does it only if the current status is \char`\"{}\+NEW\char`\"{}. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabaseConnection_ac547f573c1b5a1378b7e78dde2178e6d}{Change\+Status\+To\+Sent}} (const std\+::string \&filename)
+\begin{DoxyCompactList}\small\item\em Goes in the db and changes the status to \char`\"{}\+SENT\char`\"{} but does it only if the current status is \char`\"{}\+SENDING\char`\"{}. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabaseConnection_a8b8b11598759648bcc2790c68ede2f0d}{Change\+Status\+To\+New}} (const std\+::string \&filename)
+\begin{DoxyCompactList}\small\item\em Goes in the db and changes the status to \char`\"{}\+NEW\char`\"{} but does it only if the current status is \char`\"{}\+SENDING\char`\"{}. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabaseConnection_ab40b81196532c88f1900f0c6a3046f94}{Change\+Status\+To\+Not\+Sent}} (const std\+::string \&filename)
+\begin{DoxyCompactList}\small\item\em Goes in the db and changes the status to \char`\"{}\+NEW\char`\"{} but does it only if the current status is \char`\"{}\+SENDING\char`\"{}. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabaseConnection_a96f0127b7398af8e1d3326435bf486ee}{Align\+Status}} (const std\+::vector$<$ std\+::pair$<$ std\+::string, unsigned long $>$$>$ \&sfileslmt)
+\begin{DoxyCompactList}\small\item\em TODO che faceva?? \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabaseConnection_a3740213380441dbb5ca718c068085032}{All\+Sent}} ()
+\begin{DoxyCompactList}\small\item\em TODO COMMENTARE MARCO. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classDatabaseConnection_aac1aad2c39d9daa489b99d2aa6ed28cf}\label{classDatabaseConnection_aac1aad2c39d9daa489b99d2aa6ed28cf}} 
+std\+::filesystem\+::path {\bfseries folder\+\_\+watched\+\_\+}
+\item 
+\mbox{\Hypertarget{classDatabaseConnection_ab2432390c967c4ea94d51901721d6140}\label{classDatabaseConnection_ab2432390c967c4ea94d51901721d6140}} 
+SQLite\+::\+Database {\bfseries hash\+\_\+db\+\_\+}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classDatabaseConnection_ae23a1b73d5bebd3d6c209c4b6c53a53a}\label{classDatabaseConnection_ae23a1b73d5bebd3d6c209c4b6c53a53a}} 
+static std\+::shared\+\_\+mutex {\bfseries db\+\_\+mutex\+\_\+}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classDatabaseConnection_a05a846cb8c9f96b481d90debe72c6536}\label{classDatabaseConnection_a05a846cb8c9f96b481d90debe72c6536}} 
+\index{DatabaseConnection@{DatabaseConnection}!DatabaseConnection@{DatabaseConnection}}
+\index{DatabaseConnection@{DatabaseConnection}!DatabaseConnection@{DatabaseConnection}}
+\doxysubsubsection{\texorpdfstring{DatabaseConnection()}{DatabaseConnection()}}
+{\footnotesize\ttfamily Database\+Connection\+::\+Database\+Connection (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{db\+\_\+path,  }\item[{std\+::filesystem\+::path}]{folder\+\_\+watched }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+Takes the db\+\_\+path and folder\+\_\+watched and create a db connection. 
+\begin{DoxyParams}{Parameters}
+{\em db\+\_\+path} & db path where store the hash \& time \\
+\hline
+{\em folder\+\_\+watched} & folder path to watched changes \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classDatabaseConnection_a96f0127b7398af8e1d3326435bf486ee}\label{classDatabaseConnection_a96f0127b7398af8e1d3326435bf486ee}} 
+\index{DatabaseConnection@{DatabaseConnection}!AlignStatus@{AlignStatus}}
+\index{AlignStatus@{AlignStatus}!DatabaseConnection@{DatabaseConnection}}
+\doxysubsubsection{\texorpdfstring{AlignStatus()}{AlignStatus()}}
+{\footnotesize\ttfamily bool Database\+Connection\+::\+Align\+Status (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::pair$<$ std\+::string, unsigned long $>$$>$ \&}]{sfileslmt }\end{DoxyParamCaption})}
+
+
+
+TODO che faceva?? 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sfileslmt} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabaseConnection_a3740213380441dbb5ca718c068085032}\label{classDatabaseConnection_a3740213380441dbb5ca718c068085032}} 
+\index{DatabaseConnection@{DatabaseConnection}!AllSent@{AllSent}}
+\index{AllSent@{AllSent}!DatabaseConnection@{DatabaseConnection}}
+\doxysubsubsection{\texorpdfstring{AllSent()}{AllSent()}}
+{\footnotesize\ttfamily bool Database\+Connection\+::\+All\+Sent (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+TODO COMMENTARE MARCO. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabaseConnection_a792bb86324ec671529b1f90eab13011c}\label{classDatabaseConnection_a792bb86324ec671529b1f90eab13011c}} 
+\index{DatabaseConnection@{DatabaseConnection}!AlreadyHashed@{AlreadyHashed}}
+\index{AlreadyHashed@{AlreadyHashed}!DatabaseConnection@{DatabaseConnection}}
+\doxysubsubsection{\texorpdfstring{AlreadyHashed()}{AlreadyHashed()}}
+{\footnotesize\ttfamily bool Database\+Connection\+::\+Already\+Hashed (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename,  }\item[{const std\+::string \&}]{lmt }\end{DoxyParamCaption})}
+
+
+
+Checks if a row is present in the db by scanning using tuple filename -\/ last\+Mod\+Time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & we will check that this filename is already present on the db \\
+\hline
+{\em lmt} & we will check that that this filename with this lmt is already present \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool true if present, false if not 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabaseConnection_a8b8b11598759648bcc2790c68ede2f0d}\label{classDatabaseConnection_a8b8b11598759648bcc2790c68ede2f0d}} 
+\index{DatabaseConnection@{DatabaseConnection}!ChangeStatusToNew@{ChangeStatusToNew}}
+\index{ChangeStatusToNew@{ChangeStatusToNew}!DatabaseConnection@{DatabaseConnection}}
+\doxysubsubsection{\texorpdfstring{ChangeStatusToNew()}{ChangeStatusToNew()}}
+{\footnotesize\ttfamily bool Database\+Connection\+::\+Change\+Status\+To\+New (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename }\end{DoxyParamCaption})}
+
+
+
+Goes in the db and changes the status to \char`\"{}\+NEW\char`\"{} but does it only if the current status is \char`\"{}\+SENDING\char`\"{}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & of the file that we want to put in as NEW \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if we successfully switched the status to \char`\"{}\+SENDING\char`\"{} to \char`\"{}\+NEW\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabaseConnection_ab40b81196532c88f1900f0c6a3046f94}\label{classDatabaseConnection_ab40b81196532c88f1900f0c6a3046f94}} 
+\index{DatabaseConnection@{DatabaseConnection}!ChangeStatusToNotSent@{ChangeStatusToNotSent}}
+\index{ChangeStatusToNotSent@{ChangeStatusToNotSent}!DatabaseConnection@{DatabaseConnection}}
+\doxysubsubsection{\texorpdfstring{ChangeStatusToNotSent()}{ChangeStatusToNotSent()}}
+{\footnotesize\ttfamily bool Database\+Connection\+::\+Change\+Status\+To\+Not\+Sent (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename }\end{DoxyParamCaption})}
+
+
+
+Goes in the db and changes the status to \char`\"{}\+NEW\char`\"{} but does it only if the current status is \char`\"{}\+SENDING\char`\"{}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & of the file that we want to put in as NEW \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if we successfully switched the status to \char`\"{}\+SENDING\char`\"{} to \char`\"{}\+NEW\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabaseConnection_a7c5998aa2e389d662ffd6e193c206a6f}\label{classDatabaseConnection_a7c5998aa2e389d662ffd6e193c206a6f}} 
+\index{DatabaseConnection@{DatabaseConnection}!ChangeStatusToSending@{ChangeStatusToSending}}
+\index{ChangeStatusToSending@{ChangeStatusToSending}!DatabaseConnection@{DatabaseConnection}}
+\doxysubsubsection{\texorpdfstring{ChangeStatusToSending()}{ChangeStatusToSending()}}
+{\footnotesize\ttfamily bool Database\+Connection\+::\+Change\+Status\+To\+Sending (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename }\end{DoxyParamCaption})}
+
+
+
+Goes in the db and changes the status to \char`\"{}\+SENDING\char`\"{} but does it only if the current status is \char`\"{}\+NEW\char`\"{}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & of the file that we want to put in sending \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if we successfully switched the status to \char`\"{}\+NEW\char`\"{} to \char`\"{}\+SENDING\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabaseConnection_ac547f573c1b5a1378b7e78dde2178e6d}\label{classDatabaseConnection_ac547f573c1b5a1378b7e78dde2178e6d}} 
+\index{DatabaseConnection@{DatabaseConnection}!ChangeStatusToSent@{ChangeStatusToSent}}
+\index{ChangeStatusToSent@{ChangeStatusToSent}!DatabaseConnection@{DatabaseConnection}}
+\doxysubsubsection{\texorpdfstring{ChangeStatusToSent()}{ChangeStatusToSent()}}
+{\footnotesize\ttfamily bool Database\+Connection\+::\+Change\+Status\+To\+Sent (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename }\end{DoxyParamCaption})}
+
+
+
+Goes in the db and changes the status to \char`\"{}\+SENT\char`\"{} but does it only if the current status is \char`\"{}\+SENDING\char`\"{}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & of the file that we want to put in as SENT \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if we successfully switched the status to \char`\"{}\+SENDING\char`\"{} to \char`\"{}\+SENT\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabaseConnection_a973dc133e4b618838e06f53951cb7aeb}\label{classDatabaseConnection_a973dc133e4b618838e06f53951cb7aeb}} 
+\index{DatabaseConnection@{DatabaseConnection}!GetMetadata@{GetMetadata}}
+\index{GetMetadata@{GetMetadata}!DatabaseConnection@{DatabaseConnection}}
+\doxysubsubsection{\texorpdfstring{GetMetadata()}{GetMetadata()}}
+{\footnotesize\ttfamily void Database\+Connection\+::\+Get\+Metadata (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename,  }\item[{std\+::string \&}]{hash,  }\item[{std\+::string \&}]{lmt }\end{DoxyParamCaption})}
+
+
+
+Gather the metadata of the file, in order to generate the first sip that will be sent to the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & filename of the element we want to gather metadata of. \\
+\hline
+{\em hash} & string of the hash, will be filled with the hash. \\
+\hline
+{\em lmt} & string of the lmt, will be filled with the lmt (last modified time). \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabaseConnection_a99557617b9daf63daf4593f2160b4268}\label{classDatabaseConnection_a99557617b9daf63daf4593f2160b4268}} 
+\index{DatabaseConnection@{DatabaseConnection}!InsertDB@{InsertDB}}
+\index{InsertDB@{InsertDB}!DatabaseConnection@{DatabaseConnection}}
+\doxysubsubsection{\texorpdfstring{InsertDB()}{InsertDB()}}
+{\footnotesize\ttfamily void Database\+Connection\+::\+Insert\+DB (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{path\+\_\+str,  }\item[{const std\+::string \&}]{hash,  }\item[{const std\+::string \&}]{lmt\+\_\+str }\end{DoxyParamCaption})}
+
+
+
+Insert a row in the db. 
+
+If the db contains a tuple path\+\_\+str -\/ lmt\+\_\+str then that row is updated with the new hash, otherwise we simply add a new row to the db. 
+\begin{DoxyParams}{Parameters}
+{\em path\+\_\+str} & The filename path we are inserting \\
+\hline
+{\em hash} & The hash of the file we are inserting \\
+\hline
+{\em lmt\+\_\+str} & The last modified time of the version of the file we are inserting. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabaseConnection_a429c3b3f01ffe23e0344905e1a7c0b5f}\label{classDatabaseConnection_a429c3b3f01ffe23e0344905e1a7c0b5f}} 
+\index{DatabaseConnection@{DatabaseConnection}!SetBackToNew@{SetBackToNew}}
+\index{SetBackToNew@{SetBackToNew}!DatabaseConnection@{DatabaseConnection}}
+\doxysubsubsection{\texorpdfstring{SetBackToNew()}{SetBackToNew()}}
+{\footnotesize\ttfamily int Database\+Connection\+::\+Set\+Back\+To\+New (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Changes all the tuple that are in SENDING to NEW. 
+
+\begin{DoxyReturn}{Returns}
+the number of tuple that have returned to \textquotesingle{}NEW\textquotesingle{} 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/database/database.\+h\item 
+src/database/database.\+cpp\end{DoxyCompactItemize}

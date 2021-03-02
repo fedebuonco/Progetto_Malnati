@@ -1,0 +1,156 @@
+\hypertarget{classDatabase}{}\doxysection{Database Class Reference}
+\label{classDatabase}\index{Database@{Database}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{classDatabase_acc9498df8dca32bf7042c909ed4cbf38}{auth}} (const std\+::string \&username, const std\+::string \&attempt\+\_\+hash\+\_\+password, const std\+::filesystem\+::path \&serverP)
+\begin{DoxyCompactList}\small\item\em Verify if the hash of the password sent from the client is the same of the hash password store inside db. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classDatabase_a3adcab3d4d3ff45a1d5ffee422c44985}{get\+User\+Path}} (const std\+::string \&username, const std\+::filesystem\+::path \&serverP)
+\begin{DoxyCompactList}\small\item\em Return the folder name of the user. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classDatabase_aec3eed269205f6ec81081fcce7c31ead}{create\+Table}} (const std\+::string \&folder\+Name, const std\+::filesystem\+::path \&serverP)
+\begin{DoxyCompactList}\small\item\em Create a db to store the path and time of the user files. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classDatabase_a8ab00766b369aa542d36b066a80dd460}{get\+Time\+From\+Path}} (const std\+::string \&folder\+Name, const std\+::string \&path, const std\+::filesystem\+::path \&serverP)
+\begin{DoxyCompactList}\small\item\em Get the time stored in the user db of a given filepath. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classDatabase_ac8816e0a0a98c95213a70c11bac64723}{delete\+File}} (const std\+::string \&folder\+Name, const std\+::string \&path, const std\+::filesystem\+::path \&serverP)
+\begin{DoxyCompactList}\small\item\em Delete the file passed from the user db. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{classDatabase_a3f19ed8234adba5c4d25015030923986}{insert\+File}} (const std\+::string \&user\+Name, const std\+::string \&path\+Name, const std\+::string \&lmt, const std\+::filesystem\+::path \&serverP)
+\begin{DoxyCompactList}\small\item\em Insert a file path and time into the user db. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classDatabase_a71ab46860b4836ba8e1094e215a5b830}\label{classDatabase_a71ab46860b4836ba8e1094e215a5b830}} 
+static std\+::shared\+\_\+mutex {\bfseries db\+\_\+mutex\+\_\+}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classDatabase_acc9498df8dca32bf7042c909ed4cbf38}\label{classDatabase_acc9498df8dca32bf7042c909ed4cbf38}} 
+\index{Database@{Database}!auth@{auth}}
+\index{auth@{auth}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{auth()}{auth()}}
+{\footnotesize\ttfamily bool Database\+::auth (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{username,  }\item[{const std\+::string \&}]{attempt\+\_\+hash\+\_\+password,  }\item[{const std\+::filesystem\+::path \&}]{serverP }\end{DoxyParamCaption})}
+
+
+
+Verify if the hash of the password sent from the client is the same of the hash password store inside db. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em username} & \+: user username \\
+\hline
+{\em attempt\+\_\+hash\+\_\+password} & \+: hash password arrived from client \\
+\hline
+{\em serverP} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true or false depending on whether the password hash is correct or not 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_aec3eed269205f6ec81081fcce7c31ead}\label{classDatabase_aec3eed269205f6ec81081fcce7c31ead}} 
+\index{Database@{Database}!createTable@{createTable}}
+\index{createTable@{createTable}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{createTable()}{createTable()}}
+{\footnotesize\ttfamily void Database\+::create\+Table (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{folder\+Name,  }\item[{const std\+::filesystem\+::path \&}]{serverP }\end{DoxyParamCaption})}
+
+
+
+Create a db to store the path and time of the user files. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em folder\+Name} & \+: name of the server folder in which we store the user file \\
+\hline
+{\em serverP} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_ac8816e0a0a98c95213a70c11bac64723}\label{classDatabase_ac8816e0a0a98c95213a70c11bac64723}} 
+\index{Database@{Database}!deleteFile@{deleteFile}}
+\index{deleteFile@{deleteFile}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{deleteFile()}{deleteFile()}}
+{\footnotesize\ttfamily void Database\+::delete\+File (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{folder\+Name,  }\item[{const std\+::string \&}]{path,  }\item[{const std\+::filesystem\+::path \&}]{serverP }\end{DoxyParamCaption})}
+
+
+
+Delete the file passed from the user db. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em folder\+Name} & \+: name of the server folder in which we store the user file \\
+\hline
+{\em path} & \+: file to delete inside the db \\
+\hline
+{\em serverP} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_a8ab00766b369aa542d36b066a80dd460}\label{classDatabase_a8ab00766b369aa542d36b066a80dd460}} 
+\index{Database@{Database}!getTimeFromPath@{getTimeFromPath}}
+\index{getTimeFromPath@{getTimeFromPath}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{getTimeFromPath()}{getTimeFromPath()}}
+{\footnotesize\ttfamily std\+::string Database\+::get\+Time\+From\+Path (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{folder\+Name,  }\item[{const std\+::string \&}]{path,  }\item[{const std\+::filesystem\+::path \&}]{serverP }\end{DoxyParamCaption})}
+
+
+
+Get the time stored in the user db of a given filepath. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em folder\+Name} & \+: name of the server folder in which we store the user file \\
+\hline
+{\em path} & \+: path to retrieve the time \\
+\hline
+{\em serverP} & \+: program folder path \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+time store in the db of the filepath passed as argument 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_a3adcab3d4d3ff45a1d5ffee422c44985}\label{classDatabase_a3adcab3d4d3ff45a1d5ffee422c44985}} 
+\index{Database@{Database}!getUserPath@{getUserPath}}
+\index{getUserPath@{getUserPath}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{getUserPath()}{getUserPath()}}
+{\footnotesize\ttfamily std\+::string Database\+::get\+User\+Path (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{username,  }\item[{const std\+::filesystem\+::path \&}]{serverP }\end{DoxyParamCaption})}
+
+
+
+Return the folder name of the user. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em username} & \+: username of the user \\
+\hline
+{\em serverP} & \+: location of the server folder \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+folder of the user 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_a3f19ed8234adba5c4d25015030923986}\label{classDatabase_a3f19ed8234adba5c4d25015030923986}} 
+\index{Database@{Database}!insertFile@{insertFile}}
+\index{insertFile@{insertFile}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{insertFile()}{insertFile()}}
+{\footnotesize\ttfamily void Database\+::insert\+File (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{user\+Name,  }\item[{const std\+::string \&}]{path\+Name,  }\item[{const std\+::string \&}]{lmt,  }\item[{const std\+::filesystem\+::path \&}]{serverP }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Insert a file path and time into the user db. 
+
+If the file is already present, update only the time 
+\begin{DoxyParams}{Parameters}
+{\em user\+Name} & \+: user username \\
+\hline
+{\em path\+Name} & \+: path of the file to insert in the db \\
+\hline
+{\em lmt} & \+: last modified time of the file to insert in the db \\
+\hline
+{\em serverP} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/database/database.\+h\item 
+src/database/database.\+cpp\end{DoxyCompactItemize}

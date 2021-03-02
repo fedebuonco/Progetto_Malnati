@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['to_5fbe_5felim_5fvector_74',['to_be_elim_vector',['../classPatch.html#aee6cc0596676f575f6528c8723873cd6',1,'Patch']]],
-  ['to_5fbe_5fsent_5fvector_75',['to_be_sent_vector',['../classPatch.html#a30904b631e55ef4d26e1321b44efc790',1,'Patch']]],
-  ['type_5f_76',['type_',['../classControlMessage.html#a1e04929d89399d9b3e9a3b4a3c5e1a78',1,'ControlMessage']]]
+  ['same_5ffile_5fsame_5flmt_5fvector_143',['same_file_same_lmt_vector',['../classPatch.html#aa027d82ae722e67b213dde09bbb8bf43',1,'Patch']]],
+  ['sock_5f_144',['sock_',['../classSyncTCPSocket.html#aea45cde3fd7172a96dd4ed2c7cb97160',1,'SyncTCPSocket']]]
 ];

@@ -13,15 +13,15 @@ The \mbox{\hyperlink{classTreeT}{TreeT}} encapsulate a map containing for each e
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{classTreeT_ae19b016034d271f3f15c895a1c71c143}{TreeT}} (const std\+::filesystem\+::path \&path)
-\item 
+\begin{DoxyCompactList}\small\item\em Build and populate the \mbox{\hyperlink{classTreeT}{TreeT}} starting from a path. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classTreeT_a9e2d5f32b138ada497e0504c62fa586a}{TreeT}} (const std\+::string \&tree, const std\+::string \&time)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Starting from the ordered string sent by the server, it computes a mapping between the files present in the server and their hashes. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classTreeT_ac354fa2794d2d1e15ce3d103dc8c0090}\label{classTreeT_ac354fa2794d2d1e15ce3d103dc8c0090}} 
 std\+::map$<$ std\+::string, unsigned long $>$ \mbox{\hyperlink{classTreeT_ac354fa2794d2d1e15ce3d103dc8c0090}{map\+\_\+tree\+\_\+time\+\_\+}}
-\begin{DoxyCompactList}\small\item\em Map containing for each element its last modified time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Map containing for each file path its last modified time. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -32,9 +32,13 @@ The \mbox{\hyperlink{classTreeT}{TreeT}} encapsulate a map containing for each e
 \index{TreeT@{TreeT}!TreeT@{TreeT}}
 \index{TreeT@{TreeT}!TreeT@{TreeT}}
 \doxysubsubsection{\texorpdfstring{TreeT()}{TreeT()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
-{\footnotesize\ttfamily Tree\+T\+::\+TreeT (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{path }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Tree\+T\+::\+TreeT (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
 
 Build and populate the \mbox{\hyperlink{classTreeT}{TreeT}} starting from a path. 
+
+
 \begin{DoxyParams}{Parameters}
 {\em path} & Path of the directory that will be stored in the \mbox{\hyperlink{classTreeT}{TreeT}}. \\
 \hline
@@ -45,14 +49,18 @@ Build and populate the \mbox{\hyperlink{classTreeT}{TreeT}} starting from a path
 \doxysubsubsection{\texorpdfstring{TreeT()}{TreeT()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily Tree\+T\+::\+TreeT (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{tree,  }\item[{const std\+::string \&}]{time }\end{DoxyParamCaption})}
 
-Starting from the ordered string sent by the server, it computes A mapping between the files present in te server and their Hashes 
+
+
+Starting from the ordered string sent by the server, it computes a mapping between the files present in the server and their hashes. 
+
+
 \begin{DoxyParams}{Parameters}
-{\em tree} & Directory tree if the server \\
+{\em tree} & Directory tree if the server files (0) \+::\+::\+::\+::i \\
 \hline
-{\em time} & timw of the files present in the server following the same order of the tree \\
+{\em time} & Time of the files present in the server following the same order of the tree \\
 \hline
 \end{DoxyParams}
-
+std\+::stoul Exceptions\+: std\+::invalid\+\_\+argument if no conversion could be performed std\+::out\+\_\+of\+\_\+range if the converted value would fall out of the range of the result type or if the underlying function (std\+::strtoul or std\+::strtoull) sets errno to ERANGE.
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

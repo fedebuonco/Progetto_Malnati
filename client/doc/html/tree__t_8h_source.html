@@ -69,31 +69,25 @@ $(function() {
 <div class="title">tree_t.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// Created by fede on 10/26/20.</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifndef CLIENT_TREE_T_H</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#define CLIENT_TREE_T_H</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;filesystem&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;filesystem&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="classTreeT.html">   14</a></span>&#160;<span class="keyword">class </span><a class="code" href="classTreeT.html">TreeT</a> {</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classTreeT.html#ac354fa2794d2d1e15ce3d103dc8c0090">   17</a></span>&#160;    std::map&lt;std::string,unsigned long &gt; <a class="code" href="classTreeT.html#ac354fa2794d2d1e15ce3d103dc8c0090">map_tree_time_</a>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classTreeT.html#ae19b016034d271f3f15c895a1c71c143">TreeT</a>(<span class="keyword">const</span> std::filesystem::path&amp; path);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classTreeT.html#ae19b016034d271f3f15c895a1c71c143">TreeT</a>(<span class="keyword">const</span> std::string&amp; tree, <span class="keyword">const</span> std::string&amp; time);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;};</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//CLIENT_TREE_T_H</span></div>
-<div class="ttc" id="aclassTreeT_html"><div class="ttname"><a href="classTreeT.html">TreeT</a></div><div class="ttdoc">The TreeT encapsulate a map containing for each element path a pair &quot;element_path - last_modified_tim...</div><div class="ttdef"><b>Definition:</b> tree_t.h:14</div></div>
-<div class="ttc" id="aclassTreeT_html_ac354fa2794d2d1e15ce3d103dc8c0090"><div class="ttname"><a href="classTreeT.html#ac354fa2794d2d1e15ce3d103dc8c0090">TreeT::map_tree_time_</a></div><div class="ttdeci">std::map&lt; std::string, unsigned long &gt; map_tree_time_</div><div class="ttdoc">Map containing for each element its last modified time.</div><div class="ttdef"><b>Definition:</b> tree_t.h:17</div></div>
-<div class="ttc" id="aclassTreeT_html_ae19b016034d271f3f15c895a1c71c143"><div class="ttname"><a href="classTreeT.html#ae19b016034d271f3f15c895a1c71c143">TreeT::TreeT</a></div><div class="ttdeci">TreeT(const std::filesystem::path &amp;path)</div><div class="ttdef"><b>Definition:</b> tree_t.cpp:30</div></div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="classTreeT.html">    9</a></span>&#160;<span class="keyword">class </span><a class="code" href="classTreeT.html">TreeT</a> {</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classTreeT.html#ac354fa2794d2d1e15ce3d103dc8c0090">   13</a></span>&#160;    std::map&lt;std::string,unsigned long &gt; <a class="code" href="classTreeT.html#ac354fa2794d2d1e15ce3d103dc8c0090">map_tree_time_</a>;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classTreeT.html#ae19b016034d271f3f15c895a1c71c143">TreeT</a>(<span class="keyword">const</span> std::filesystem::path&amp; path);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classTreeT.html#ae19b016034d271f3f15c895a1c71c143">TreeT</a>(<span class="keyword">const</span> std::string&amp; tree, <span class="keyword">const</span> std::string&amp; time);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;};</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="ttc" id="aclassTreeT_html"><div class="ttname"><a href="classTreeT.html">TreeT</a></div><div class="ttdoc">The TreeT encapsulate a map containing for each element path a pair &quot;element_path - last_modified_tim...</div><div class="ttdef"><b>Definition:</b> tree_t.h:9</div></div>
+<div class="ttc" id="aclassTreeT_html_ac354fa2794d2d1e15ce3d103dc8c0090"><div class="ttname"><a href="classTreeT.html#ac354fa2794d2d1e15ce3d103dc8c0090">TreeT::map_tree_time_</a></div><div class="ttdeci">std::map&lt; std::string, unsigned long &gt; map_tree_time_</div><div class="ttdoc">Map containing for each file path its last modified time.</div><div class="ttdef"><b>Definition:</b> tree_t.h:13</div></div>
+<div class="ttc" id="aclassTreeT_html_ae19b016034d271f3f15c895a1c71c143"><div class="ttname"><a href="classTreeT.html#ae19b016034d271f3f15c895a1c71c143">TreeT::TreeT</a></div><div class="ttdeci">TreeT(const std::filesystem::path &amp;path)</div><div class="ttdoc">Build and populate the TreeT starting from a path.</div><div class="ttdef"><b>Definition:</b> tree_t.cpp:53</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

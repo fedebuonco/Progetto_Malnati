@@ -1,0 +1,55 @@
+\hypertarget{classAcceptClient}{}\doxysection{Accept\+Client Class Reference}
+\label{classAcceptClient}\index{AcceptClient@{AcceptClient}}
+
+
+Represents an high level acceptor.  
+
+
+
+
+{\ttfamily \#include $<$accept\+\_\+client.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classAcceptClient_a9332b3e28a5f0021ab6b5ed274ece6b1}\label{classAcceptClient_a9332b3e28a5f0021ab6b5ed274ece6b1}} 
+{\bfseries Accept\+Client} (boost\+::asio\+::io\+\_\+service \&ios, unsigned short port\+\_\+num, std\+::filesystem\+::path server\+Path)
+\item 
+void \mbox{\hyperlink{classAcceptClient_ab3634e71b9927f2ee565c39193d53da0}{Spawn\+Session}} (const std\+::atomic$<$ bool $>$ \&stop)
+\begin{DoxyCompactList}\small\item\em Creates an active socket and accepts an incoming connection by the client thus linking them and creating a \mbox{\hyperlink{classService}{Service}} class that will take care of the handling. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classAcceptClient_a36f1dafaf1ca58278543b373c601de65}\label{classAcceptClient_a36f1dafaf1ca58278543b373c601de65}} 
+boost\+::asio\+::io\+\_\+service \& {\bfseries ios\+\_\+}
+\item 
+\mbox{\Hypertarget{classAcceptClient_aafb29af6439575e3f95ba9330ab84641}\label{classAcceptClient_aafb29af6439575e3f95ba9330ab84641}} 
+boost\+::asio\+::ip\+::tcp\+::acceptor {\bfseries acceptor\+\_\+}
+\item 
+\mbox{\Hypertarget{classAcceptClient_aa27f0098e35105915401b0af1b95770a}\label{classAcceptClient_aa27f0098e35105915401b0af1b95770a}} 
+std\+::filesystem\+::path {\bfseries server\+Path}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents an high level acceptor. 
+
+Accepts and instantiate a \mbox{\hyperlink{classService}{Service}}. When constructed it instantiates an acceptor socket and starts listening on it. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classAcceptClient_ab3634e71b9927f2ee565c39193d53da0}\label{classAcceptClient_ab3634e71b9927f2ee565c39193d53da0}} 
+\index{AcceptClient@{AcceptClient}!SpawnSession@{SpawnSession}}
+\index{SpawnSession@{SpawnSession}!AcceptClient@{AcceptClient}}
+\doxysubsubsection{\texorpdfstring{SpawnSession()}{SpawnSession()}}
+{\footnotesize\ttfamily void Accept\+Client\+::\+Spawn\+Session (\begin{DoxyParamCaption}\item[{const std\+::atomic$<$ bool $>$ \&}]{stop }\end{DoxyParamCaption})}
+
+
+
+Creates an active socket and accepts an incoming connection by the client thus linking them and creating a \mbox{\hyperlink{classService}{Service}} class that will take care of the handling. 
+
+This service class will obtain the pointer to the socket here created. The accept is blocking and has a own list of incoming connections. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/accept\+\_\+client/accept\+\_\+client.\+h\item 
+src/accept\+\_\+client/accept\+\_\+client.\+cpp\end{DoxyCompactItemize}

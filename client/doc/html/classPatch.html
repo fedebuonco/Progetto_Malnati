@@ -70,48 +70,69 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Wraps in a compact way all the differences between the client and server.  
+ <a href="classPatch.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="patch_8h_source.html">patch.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:afd18d33f468590fe3cec1483a6f8e4c2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#afd18d33f468590fe3cec1483a6f8e4c2">Patch</a> (<a class="el" href="classTreeT.html">TreeT</a> client_treet, <a class="el" href="classTreeT.html">TreeT</a> server_treet)</td></tr>
+<tr class="memitem:afd18d33f468590fe3cec1483a6f8e4c2"><td class="memItemLeft" align="right" valign="top"><a id="afd18d33f468590fe3cec1483a6f8e4c2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Patch</b> (<a class="el" href="classTreeT.html">TreeT</a> client_treet, <a class="el" href="classTreeT.html">TreeT</a> server_treet)</td></tr>
 <tr class="separator:afd18d33f468590fe3cec1483a6f8e4c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a662ca51ef4c115013ed5a96702b30e5b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#a662ca51ef4c115013ed5a96702b30e5b">PrettyPrint</a> ()</td></tr>
-<tr class="separator:a662ca51ef4c115013ed5a96702b30e5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89a3b1626a3220d1bd7b17d8e797adcf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#a89a3b1626a3220d1bd7b17d8e797adcf">Dispatch</a> (const std::filesystem::path &amp;db_path, const std::filesystem::path &amp;folder_watched)</td></tr>
+<tr class="memdesc:a89a3b1626a3220d1bd7b17d8e797adcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes the db files where we store the status and uses it in order to identify the file that we must dispatch.  <a href="classPatch.html#a89a3b1626a3220d1bd7b17d8e797adcf">More...</a><br /></td></tr>
+<tr class="separator:a89a3b1626a3220d1bd7b17d8e797adcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac11e5faac2dadd96bea7159b00f99eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#aac11e5faac2dadd96bea7159b00f99eb">PrettyPrint</a> ()</td></tr>
+<tr class="memdesc:aac11e5faac2dadd96bea7159b00f99eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pretty Prints the changes contained in the patch.  <a href="classPatch.html#aac11e5faac2dadd96bea7159b00f99eb">More...</a><br /></td></tr>
+<tr class="separator:aac11e5faac2dadd96bea7159b00f99eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a93480d21f602be19569131e328d8d7bc"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#a93480d21f602be19569131e328d8d7bc">added_</a></td></tr>
+<tr class="memitem:a93480d21f602be19569131e328d8d7bc"><td class="memItemLeft" align="right" valign="top"><a id="a93480d21f602be19569131e328d8d7bc"></a>
+std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#a93480d21f602be19569131e328d8d7bc">added_</a></td></tr>
+<tr class="memdesc:a93480d21f602be19569131e328d8d7bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">This vector contains the path of all the elements (files or dirs) in the client with a position and name not present in the server. <br /></td></tr>
 <tr class="separator:a93480d21f602be19569131e328d8d7bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5693ee0c2f01343b6a0ef1f9e2817bf2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#a5693ee0c2f01343b6a0ef1f9e2817bf2">removed_</a></td></tr>
+<tr class="memitem:a5693ee0c2f01343b6a0ef1f9e2817bf2"><td class="memItemLeft" align="right" valign="top"><a id="a5693ee0c2f01343b6a0ef1f9e2817bf2"></a>
+std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#a5693ee0c2f01343b6a0ef1f9e2817bf2">removed_</a></td></tr>
+<tr class="memdesc:a5693ee0c2f01343b6a0ef1f9e2817bf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">This vector contains the path of all the elements (files or dirs) in the server with a position and name not present in the client. <br /></td></tr>
 <tr class="separator:a5693ee0c2f01343b6a0ef1f9e2817bf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfb7565def5d1cea231e8478ca3d243d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#acfb7565def5d1cea231e8478ca3d243d">common_</a></td></tr>
+<tr class="memdesc:acfb7565def5d1cea231e8478ca3d243d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This vector contains the path of all the elements (files or dirs) in the server with both position and name equal in the client.  <a href="classPatch.html#acfb7565def5d1cea231e8478ca3d243d">More...</a><br /></td></tr>
 <tr class="separator:acfb7565def5d1cea231e8478ca3d243d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30904b631e55ef4d26e1321b44efc790"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; std::string, unsigned long &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#a30904b631e55ef4d26e1321b44efc790">to_be_sent_vector</a></td></tr>
+<tr class="memitem:a30904b631e55ef4d26e1321b44efc790"><td class="memItemLeft" align="right" valign="top"><a id="a30904b631e55ef4d26e1321b44efc790"></a>
+std::vector&lt; std::pair&lt; std::string, unsigned long &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#a30904b631e55ef4d26e1321b44efc790">to_be_sent_vector</a></td></tr>
+<tr class="memdesc:a30904b631e55ef4d26e1321b44efc790"><td class="mdescLeft">&#160;</td><td class="mdescRight">This vector holds all the pairs element_path&amp;last-modified-time of every element that will be sent to the server ( could be a new file or a file newer that one in the server). <br /></td></tr>
 <tr class="separator:a30904b631e55ef4d26e1321b44efc790"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee6cc0596676f575f6528c8723873cd6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; std::string, unsigned long &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#aee6cc0596676f575f6528c8723873cd6">to_be_elim_vector</a></td></tr>
+<tr class="memitem:aa027d82ae722e67b213dde09bbb8bf43"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; std::string, unsigned long &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#aa027d82ae722e67b213dde09bbb8bf43">same_file_same_lmt_vector</a></td></tr>
+<tr class="memdesc:aa027d82ae722e67b213dde09bbb8bf43"><td class="mdescLeft">&#160;</td><td class="mdescRight">This vector holds all the pairs element_path&amp;last-modified-time of every element that is present both in the server and both in the clinet.  <a href="classPatch.html#aa027d82ae722e67b213dde09bbb8bf43">More...</a><br /></td></tr>
+<tr class="separator:aa027d82ae722e67b213dde09bbb8bf43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee6cc0596676f575f6528c8723873cd6"><td class="memItemLeft" align="right" valign="top"><a id="aee6cc0596676f575f6528c8723873cd6"></a>
+std::vector&lt; std::pair&lt; std::string, unsigned long &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatch.html#aee6cc0596676f575f6528c8723873cd6">to_be_elim_vector</a></td></tr>
+<tr class="memdesc:aee6cc0596676f575f6528c8723873cd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">This vector holds all the pairs element_path&amp;last-modified-time of every element that will be deleted (or replaced) in the server ( could be a deleted file or a file older that one in the client and that we are currently sending). <br /></td></tr>
 <tr class="separator:aee6cc0596676f575f6528c8723873cd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Wraps in a compact way all the differences between the client and server. This difference is computed starting from the <a class="el" href="classTreeT.html" title="The TreeT encapsulate a map containing for each element path a pair &quot;element_path - last_modified_tim...">TreeT</a> of the client and of the server. Will be "applied" to the server. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="afd18d33f468590fe3cec1483a6f8e4c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd18d33f468590fe3cec1483a6f8e4c2">&#9670;&nbsp;</a></span>Patch()</h2>
+<div class="textblock"><p>Wraps in a compact way all the differences between the client and server. </p>
+<p>This difference is computed starting from the <a class="el" href="classTreeT.html" title="The TreeT encapsulate a map containing for each element path a pair &quot;element_path - last_modified_tim...">TreeT</a> of the client and of the server. Will be "applied" to the server. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a89a3b1626a3220d1bd7b17d8e797adcf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89a3b1626a3220d1bd7b17d8e797adcf">&#9670;&nbsp;</a></span>Dispatch()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Patch::Patch </td>
+          <td class="memname">int Patch::Dispatch </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classTreeT.html">TreeT</a>&#160;</td>
-          <td class="paramname"><em>client_treet</em>, </td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
+          <td class="paramname"><em>db_path</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classTreeT.html">TreeT</a>&#160;</td>
-          <td class="paramname"><em>server_treet</em>&#160;</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
+          <td class="paramname"><em>folder_watched</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -120,51 +141,39 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>We populate the to_be_sent_vector an the to be elimnated </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Takes the db files where we store the status and uses it in order to identify the file that we must dispatch. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">client_treet</td><td></td></tr>
-    <tr><td class="paramname">server_treet</td><td></td></tr>
+    <tr><td class="paramname">db_path</td><td></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>int number of dispatched file. </dd></dl>
 
 </div>
 </div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a662ca51ef4c115013ed5a96702b30e5b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a662ca51ef4c115013ed5a96702b30e5b">&#9670;&nbsp;</a></span>PrettyPrint()</h2>
+<a id="aac11e5faac2dadd96bea7159b00f99eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac11e5faac2dadd96bea7159b00f99eb">&#9670;&nbsp;</a></span>PrettyPrint()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::string Patch::PrettyPrint </td>
+          <td class="memname">void Patch::PrettyPrint </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Pretty Prints the changes contained in the patch </p><dl class="section return"><dt>Returns</dt><dd>A string summing up the current client-server file situation. </dd></dl>
+
+<p>Pretty Prints the changes contained in the patch. </p>
+<dl class="section return"><dt>Returns</dt><dd>A string summing up the current client-server file situation. </dd></dl>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a93480d21f602be19569131e328d8d7bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93480d21f602be19569131e328d8d7bc">&#9670;&nbsp;</a></span>added_</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::string&gt; Patch::added_</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>This vector contains the path of all the elements(files or dirs) in the client with a position and name not present in the server. </p>
-
-</div>
-</div>
 <a id="acfb7565def5d1cea231e8478ca3d243d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acfb7565def5d1cea231e8478ca3d243d">&#9670;&nbsp;</a></span>common_</h2>
 
@@ -176,52 +185,26 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This vector contains the path of all the elements(files or dirs) in the server with both position and name equal in the client. Position and name are equal but last modified time could be different. </p>
+
+<p>This vector contains the path of all the elements (files or dirs) in the server with both position and name equal in the client. </p>
+<p>Position and name are equal but last modified time could be different. </p>
 
 </div>
 </div>
-<a id="a5693ee0c2f01343b6a0ef1f9e2817bf2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5693ee0c2f01343b6a0ef1f9e2817bf2">&#9670;&nbsp;</a></span>removed_</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::string&gt; Patch::removed_</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>This vector contains the path of all the elements(files or dirs) in the server with a position and name not present in the client. </p>
-
-</div>
-</div>
-<a id="aee6cc0596676f575f6528c8723873cd6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee6cc0596676f575f6528c8723873cd6">&#9670;&nbsp;</a></span>to_be_elim_vector</h2>
+<a id="aa027d82ae722e67b213dde09bbb8bf43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa027d82ae722e67b213dde09bbb8bf43">&#9670;&nbsp;</a></span>same_file_same_lmt_vector</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;std::pair&lt;std::string, unsigned long&gt; &gt; Patch::to_be_elim_vector</td>
+          <td class="memname">std::vector&lt;std::pair&lt;std::string, unsigned long&gt; &gt; Patch::same_file_same_lmt_vector</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This vector holds all the pairs element_path&amp;last-modified-time of every element that will be deleted (or replaced) in the server ( could be a deleted file or a file older that one in the client and that we are currently sending). </p>
 
-</div>
-</div>
-<a id="a30904b631e55ef4d26e1321b44efc790"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30904b631e55ef4d26e1321b44efc790">&#9670;&nbsp;</a></span>to_be_sent_vector</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::pair&lt;std::string, unsigned long&gt; &gt; Patch::to_be_sent_vector</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>This vector holds all the pairs element_path&amp;last-modified-time of every element that will be sent to the server ( could be a new file or a file newer that one in the server). </p>
+<p>This vector holds all the pairs element_path&amp;last-modified-time of every element that is present both in the server and both in the clinet. </p>
+<p>Is different than common_ that only base the difference on names </p>
 
 </div>
 </div>

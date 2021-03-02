@@ -1,0 +1,67 @@
+\hypertarget{classService}{}\doxysection{Service Class Reference}
+\label{classService}\index{Service@{Service}}
+
+
+Class responsible for handling a single client by reading it\textquotesingle{}s request message, processing it and then answering Represents thus, a single service provided by the server application.  
+
+
+
+
+{\ttfamily \#include $<$service.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classService_a2b26863e4bbc59f990e0743da12a7810}{Read\+Request}} (const std\+::shared\+\_\+ptr$<$ asio\+::ip\+::tcp\+::socket $>$ \&sock, const std\+::filesystem\+::path \&serverP)
+\begin{DoxyCompactList}\small\item\em Starts handling the particular client that requested a service. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classService_a49301ed7853348f76b5cb71d32d04a98}\label{classService_a49301ed7853348f76b5cb71d32d04a98}} 
+void \mbox{\hyperlink{classService_a49301ed7853348f76b5cb71d32d04a98}{Handle\+Client}} (const std\+::shared\+\_\+ptr$<$ asio\+::ip\+::tcp\+::socket $>$ \&sock)
+\begin{DoxyCompactList}\small\item\em Real handling starts here. Should distinguish auth requests and tree requests. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classService_a6e44f92783d01726ab10717bb2539b32}\label{classService_a6e44f92783d01726ab10717bb2539b32}} 
+\mbox{\hyperlink{classControlMessage}{Control\+Message}} {\bfseries Sync\+Read\+CM} (const std\+::shared\+\_\+ptr$<$ asio\+::ip\+::tcp\+::socket $>$ \&sock)
+\item 
+\mbox{\Hypertarget{classService_aeb8b10d999c08c9b08033e3c4627166e}\label{classService_aeb8b10d999c08c9b08033e3c4627166e}} 
+void {\bfseries Sync\+Write\+CM} (const std\+::shared\+\_\+ptr$<$ asio\+::ip\+::tcp\+::socket $>$ \&sock, \mbox{\hyperlink{classControlMessage}{Control\+Message}} \&cm)
+\item 
+\mbox{\Hypertarget{classService_a25f794ee2a3b91f6d482ea7acfee33cc}\label{classService_a25f794ee2a3b91f6d482ea7acfee33cc}} 
+bool {\bfseries Check\+Authenticity} (const \mbox{\hyperlink{classControlMessage}{Control\+Message}} \&cm)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classService_a583bf399a92ff50713cf043082077606}\label{classService_a583bf399a92ff50713cf043082077606}} 
+std\+::filesystem\+::path {\bfseries server\+Path}
+\item 
+\mbox{\Hypertarget{classService_a49813431b6d7a1e901b4472a045634e2}\label{classService_a49813431b6d7a1e901b4472a045634e2}} 
+std\+::filesystem\+::path {\bfseries associated\+\_\+user\+\_\+path\+\_\+}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class responsible for handling a single client by reading it\textquotesingle{}s request message, processing it and then answering Represents thus, a single service provided by the server application. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classService_a2b26863e4bbc59f990e0743da12a7810}\label{classService_a2b26863e4bbc59f990e0743da12a7810}} 
+\index{Service@{Service}!ReadRequest@{ReadRequest}}
+\index{ReadRequest@{ReadRequest}!Service@{Service}}
+\doxysubsubsection{\texorpdfstring{ReadRequest()}{ReadRequest()}}
+{\footnotesize\ttfamily void Service\+::\+Read\+Request (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ asio\+::ip\+::tcp\+::socket $>$ \&}]{sock,  }\item[{const std\+::filesystem\+::path \&}]{serverP }\end{DoxyParamCaption})}
+
+
+
+Starts handling the particular client that requested a service. 
+
+Spawns a thread that actually handle the request and detach it 
+\begin{DoxyParams}{Parameters}
+{\em sock} & TCP socket connected to the client \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/accept\+\_\+client/service.\+h\item 
+src/accept\+\_\+client/service.\+cpp\end{DoxyCompactItemize}

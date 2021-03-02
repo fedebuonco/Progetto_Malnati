@@ -14,6 +14,7 @@ class ControlMessage {
     rapidjson::Document document_;
 
 public:
+    // Type, identifies the message, get parsed first in order to correctly parse the rest of the message.
     int type_;
 
     explicit ControlMessage(int tp);

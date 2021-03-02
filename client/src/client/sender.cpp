@@ -26,7 +26,7 @@ void Sender::Sender_Action() const{
         boost::asio::post(pool,[chosen_fs](){
 
                 try {
-                    chosen_fs->Send([chosen_fs](){SharedQueue::get_Instance()->remove_element(chosen_fs);});
+                    chosen_fs->Send([&chosen_fs](){SharedQueue::get_Instance()->remove_element(chosen_fs);});
                     //SharedQueue::get_Instance()->remove_element(chosen_fs);
                 }
                 catch (std::exception &e){

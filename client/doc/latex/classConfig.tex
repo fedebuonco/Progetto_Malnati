@@ -1,5 +1,14 @@
 \hypertarget{classConfig}{}\doxysection{Config Class Reference}
 \label{classConfig}\index{Config@{Config}}
+
+
+Class that handle the configuration phase.  
+
+
+
+
+{\ttfamily \#include $<$config.\+h$>$}
+
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -10,21 +19,44 @@
 \mbox{\hyperlink{classConfig}{Config}} \& {\bfseries operator=} (const \mbox{\hyperlink{classConfig}{Config}} \&)=delete
 \item 
 void \mbox{\hyperlink{classConfig_a14478ea081a6927566463944fceb9274}{Write\+Property}} (const std\+::string \&key, const std\+::string \&value)
-\item 
+\begin{DoxyCompactList}\small\item\em This function write a couple (Key\+:\char`\"{}\+Value\char`\"{}) inside \char`\"{}config.\+json\char`\"{} file. \end{DoxyCompactList}\item 
 std\+::string \mbox{\hyperlink{classConfig_ab4718b5863cfe506b70692764338ea38}{Read\+Property}} (const std\+::string \&key)
-\item 
-int \mbox{\hyperlink{classConfig_aba8880baff15be62efdcb6c796d2fbc3}{Set\+Config}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
-\item 
+\begin{DoxyCompactList}\small\item\em Read inside config JSON file and return the value associated with the given key. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classConfig_aabc417126648e9182a46cfdd97e8cf60}{Is\+Config\+Structure\+Correct}} ()
+\begin{DoxyCompactList}\small\item\em It checks if the config structure (file and folder) have a folder \textquotesingle{}config\+\_\+file\textquotesingle{} with inside \textquotesingle{}config.\+json\textquotesingle{} file. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classConfig_a529d359d3bbbe4994b35b9c2ab055b81}{Set\+Default\+Config}} ()
+\begin{DoxyCompactList}\small\item\em It resets all the fields inside configuration file (config.\+json) with default value\+: ~\newline
+ \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classConfig_a88f0acc8e8c96ad1b93a2debd3552884}{Set\+Config}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em This function takes the command line parameters and set config file appropriately Throw an exception if the configuration syntax is wrongly formatted or the options are incorrect (e.\+x. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classConfig_ad55d6b44a32a8901f759538439198d05}{Set\+Path}} (const std\+::string \&your\+\_\+path)
+\begin{DoxyCompactList}\small\item\em This function will found the absolute path that points to client folder. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classConfig_a3f4f916ad790860ca689dc2c87f639af}\label{classConfig_a3f4f916ad790860ca689dc2c87f639af}} 
 void \mbox{\hyperlink{classConfig_a3f4f916ad790860ca689dc2c87f639af}{Print\+Configuration}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Print program configuration inside the console. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} \mbox{\hyperlink{classConfig_adcf9758b7008e59e4387d4c49e2573ad}{Read\+Raw\+Endpoint}} ()
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Reads the raw endpoint from the json file. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 static \mbox{\hyperlink{classConfig}{Config}} $\ast$ \mbox{\hyperlink{classConfig_a5434be705a93f9a083dd3937a11ff085}{get\+\_\+\+Instance}} ()
+\begin{DoxyCompactList}\small\item\em Assures that only one instance is present. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classConfig_af5b4bd9b3e849b6404a76fd11359e20c}\label{classConfig_af5b4bd9b3e849b6404a76fd11359e20c}} 
+std\+::filesystem\+::path {\bfseries exe\+\_\+path}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classConfig_a3ff22490a5ff9cf104c823ad0e284ebd}\label{classConfig_a3ff22490a5ff9cf104c823ad0e284ebd}} 
+static \mbox{\hyperlink{classConfig}{Config}} $\ast$ {\bfseries m\+\_\+\+Config\+Class} = nullptr
 \end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+Class that handle the configuration phase. 
 
 \doxysubsection{Member Function Documentation}
 \mbox{\Hypertarget{classConfig_a5434be705a93f9a083dd3937a11ff085}\label{classConfig_a5434be705a93f9a083dd3937a11ff085}} 
@@ -33,28 +65,43 @@ static \mbox{\hyperlink{classConfig}{Config}} $\ast$ \mbox{\hyperlink{classConfi
 \doxysubsubsection{\texorpdfstring{get\_Instance()}{get\_Instance()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{classConfig}{Config}} $\ast$ Config\+::get\+\_\+\+Instance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Assures that only one instance is present. \begin{DoxyReturn}{Returns}
+
+
+Assures that only one instance is present. 
+
+\begin{DoxyReturn}{Returns}
 the instance of config class 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classConfig_a3f4f916ad790860ca689dc2c87f639af}\label{classConfig_a3f4f916ad790860ca689dc2c87f639af}} 
-\index{Config@{Config}!PrintConfiguration@{PrintConfiguration}}
-\index{PrintConfiguration@{PrintConfiguration}!Config@{Config}}
-\doxysubsubsection{\texorpdfstring{PrintConfiguration()}{PrintConfiguration()}}
-{\footnotesize\ttfamily void Config\+::\+Print\+Configuration (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+\mbox{\Hypertarget{classConfig_aabc417126648e9182a46cfdd97e8cf60}\label{classConfig_aabc417126648e9182a46cfdd97e8cf60}} 
+\index{Config@{Config}!IsConfigStructureCorrect@{IsConfigStructureCorrect}}
+\index{IsConfigStructureCorrect@{IsConfigStructureCorrect}!Config@{Config}}
+\doxysubsubsection{\texorpdfstring{IsConfigStructureCorrect()}{IsConfigStructureCorrect()}}
+{\footnotesize\ttfamily bool Config\+::\+Is\+Config\+Structure\+Correct (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-Print program configuration inside the console \mbox{\Hypertarget{classConfig_ab4718b5863cfe506b70692764338ea38}\label{classConfig_ab4718b5863cfe506b70692764338ea38}} 
+
+
+It checks if the config structure (file and folder) have a folder \textquotesingle{}config\+\_\+file\textquotesingle{} with inside \textquotesingle{}config.\+json\textquotesingle{} file. 
+
+\begin{DoxyReturn}{Returns}
+\textquotesingle{}true\textquotesingle{} if structure is correct, otherwise \textquotesingle{}false\textquotesingle{}. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classConfig_ab4718b5863cfe506b70692764338ea38}\label{classConfig_ab4718b5863cfe506b70692764338ea38}} 
 \index{Config@{Config}!ReadProperty@{ReadProperty}}
 \index{ReadProperty@{ReadProperty}!Config@{Config}}
 \doxysubsubsection{\texorpdfstring{ReadProperty()}{ReadProperty()}}
 {\footnotesize\ttfamily std\+::string Config\+::\+Read\+Property (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key }\end{DoxyParamCaption})}
 
-Read inside config JSON file and return the value associated with the given key 
+
+
+Read inside config JSON file and return the value associated with the given key. 
+
+
 \begin{DoxyParams}{Parameters}
 {\em key} & JSON key \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-the value associated with the given key 
+the value associated with the given key or \textquotesingle{}NULL\textquotesingle{} if we don\textquotesingle{}t have any value. 
 \end{DoxyReturn}
 \mbox{\Hypertarget{classConfig_adcf9758b7008e59e4387d4c49e2573ad}\label{classConfig_adcf9758b7008e59e4387d4c49e2573ad}} 
 \index{Config@{Config}!ReadRawEndpoint@{ReadRawEndpoint}}
@@ -62,32 +109,79 @@ the value associated with the given key
 \doxysubsubsection{\texorpdfstring{ReadRawEndpoint()}{ReadRawEndpoint()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} Config\+::\+Read\+Raw\+Endpoint (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-Reads the raw endpoint from the json file. \begin{DoxyReturn}{Returns}
+
+
+Reads the raw endpoint from the json file. 
+
+\begin{DoxyReturn}{Returns}
 A \mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} used later to set up all the sockets. 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classConfig_aba8880baff15be62efdcb6c796d2fbc3}\label{classConfig_aba8880baff15be62efdcb6c796d2fbc3}} 
+\mbox{\Hypertarget{classConfig_a88f0acc8e8c96ad1b93a2debd3552884}\label{classConfig_a88f0acc8e8c96ad1b93a2debd3552884}} 
 \index{Config@{Config}!SetConfig@{SetConfig}}
 \index{SetConfig@{SetConfig}!Config@{Config}}
 \doxysubsubsection{\texorpdfstring{SetConfig()}{SetConfig()}}
-{\footnotesize\ttfamily int Config\+::\+Set\+Config (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Config\+::\+Set\+Config (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
 
-This function takes the command line parameters and set config file appropriately 
+
+
+This function takes the command line parameters and set config file appropriately Throw an exception if the configuration syntax is wrongly formatted or the options are incorrect (e.\+x. 
+
+wrong IPv4 structure). 
 \begin{DoxyParams}{Parameters}
 {\em argc} & number of arguments \\
 \hline
 {\em argv} & list of arguments \\
 \hline
 \end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-0 (no problem) or 1 (problems) 
-\end{DoxyReturn}
+The two following expression are regex for ipv4 address and port The IPv4 regex say that the structure must be\+: number1.\+number2.\+number3.\+number4 and each number go from 0 to 255. The port address must be a number with max 5 digits\mbox{\Hypertarget{classConfig_a529d359d3bbbe4994b35b9c2ab055b81}\label{classConfig_a529d359d3bbbe4994b35b9c2ab055b81}} 
+\index{Config@{Config}!SetDefaultConfig@{SetDefaultConfig}}
+\index{SetDefaultConfig@{SetDefaultConfig}!Config@{Config}}
+\doxysubsubsection{\texorpdfstring{SetDefaultConfig()}{SetDefaultConfig()}}
+{\footnotesize\ttfamily void Config\+::\+Set\+Default\+Config (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+It resets all the fields inside configuration file (config.\+json) with default value\+: ~\newline
+ 
+
+
+\begin{DoxyItemize}
+\item Default Endpoint\+: 127.\+0.\+0.\+1 3333 ~\newline
+
+\item Username and password\+: empty ~\newline
+
+\item Folder\+: empty ~\newline
+ ~\newline
+ It also reset the configuration structure (create the correct folder and file) if it is broken for some reason (i.\+e. file or folder doesn\textquotesingle{}t exist). ~\newline
+
+\end{DoxyItemize}
+
+This function must be used when the program detect problem during configuration phase. In this way we restore all with the default files. \mbox{\Hypertarget{classConfig_ad55d6b44a32a8901f759538439198d05}\label{classConfig_ad55d6b44a32a8901f759538439198d05}} 
+\index{Config@{Config}!SetPath@{SetPath}}
+\index{SetPath@{SetPath}!Config@{Config}}
+\doxysubsubsection{\texorpdfstring{SetPath()}{SetPath()}}
+{\footnotesize\ttfamily void Config\+::\+Set\+Path (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{your\+\_\+path }\end{DoxyParamCaption})}
+
+
+
+This function will found the absolute path that points to client folder. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em your\+\_\+path} & \+: This the path with which the executable is launched \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classConfig_a14478ea081a6927566463944fceb9274}\label{classConfig_a14478ea081a6927566463944fceb9274}} 
 \index{Config@{Config}!WriteProperty@{WriteProperty}}
 \index{WriteProperty@{WriteProperty}!Config@{Config}}
 \doxysubsubsection{\texorpdfstring{WriteProperty()}{WriteProperty()}}
 {\footnotesize\ttfamily void Config\+::\+Write\+Property (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key,  }\item[{const std\+::string \&}]{value }\end{DoxyParamCaption})}
 
-This function write Key, Value inside config JSON file 
+
+
+This function write a couple (Key\+:\char`\"{}\+Value\char`\"{}) inside \char`\"{}config.\+json\char`\"{} file. 
+
+
 \begin{DoxyParams}{Parameters}
 {\em key} & JSON key \\
 \hline

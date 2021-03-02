@@ -69,49 +69,47 @@ $(function() {
 <div class="title">patch.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// Created by fede on 10/26/20.</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifndef CLIENT_PATCH_H</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#define CLIENT_PATCH_H</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;chrono&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;tree_t.h&quot;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classPatch.html">   18</a></span>&#160;<span class="keyword">class </span><a class="code" href="classPatch.html">Patch</a> {</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classPatch.html#a93480d21f602be19569131e328d8d7bc">   23</a></span>&#160;    std::vector&lt;std::string&gt; <a class="code" href="classPatch.html#a93480d21f602be19569131e328d8d7bc">added_</a>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classPatch.html#a5693ee0c2f01343b6a0ef1f9e2817bf2">   27</a></span>&#160;    std::vector&lt;std::string&gt; <a class="code" href="classPatch.html#a5693ee0c2f01343b6a0ef1f9e2817bf2">removed_</a>;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classPatch.html#acfb7565def5d1cea231e8478ca3d243d">   31</a></span>&#160;    std::vector&lt;std::string&gt; <a class="code" href="classPatch.html#acfb7565def5d1cea231e8478ca3d243d">common_</a>;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classPatch.html#a30904b631e55ef4d26e1321b44efc790">   35</a></span>&#160;    std::vector&lt;std::pair&lt;std::string, unsigned  long&gt;&gt; <a class="code" href="classPatch.html#a30904b631e55ef4d26e1321b44efc790">to_be_sent_vector</a>;</div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;chrono&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;tree_t.h&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classPatch.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classPatch.html">Patch</a> {</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classPatch.html#a93480d21f602be19569131e328d8d7bc">   18</a></span>&#160;    std::vector&lt;std::string&gt; <a class="code" href="classPatch.html#a93480d21f602be19569131e328d8d7bc">added_</a>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classPatch.html#a5693ee0c2f01343b6a0ef1f9e2817bf2">   22</a></span>&#160;    std::vector&lt;std::string&gt; <a class="code" href="classPatch.html#a5693ee0c2f01343b6a0ef1f9e2817bf2">removed_</a>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classPatch.html#acfb7565def5d1cea231e8478ca3d243d">   26</a></span>&#160;    std::vector&lt;std::string&gt; <a class="code" href="classPatch.html#acfb7565def5d1cea231e8478ca3d243d">common_</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classPatch.html#a30904b631e55ef4d26e1321b44efc790">   30</a></span>&#160;    std::vector&lt;std::pair&lt;std::string, unsigned  long&gt;&gt; <a class="code" href="classPatch.html#a30904b631e55ef4d26e1321b44efc790">to_be_sent_vector</a>;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classPatch.html#aa027d82ae722e67b213dde09bbb8bf43">   35</a></span>&#160;    std::vector&lt;std::pair&lt;std::string, unsigned  long&gt;&gt; <a class="code" href="classPatch.html#aa027d82ae722e67b213dde09bbb8bf43">same_file_same_lmt_vector</a>;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
 <div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classPatch.html#aee6cc0596676f575f6528c8723873cd6">   40</a></span>&#160;    std::vector&lt;std::pair&lt;std::string, unsigned  long&gt;&gt; <a class="code" href="classPatch.html#aee6cc0596676f575f6528c8723873cd6">to_be_elim_vector</a>;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="classPatch.html#afd18d33f468590fe3cec1483a6f8e4c2">Patch</a>(<a class="code" href="classTreeT.html">TreeT</a> client_treet, <a class="code" href="classTreeT.html">TreeT</a> server_treet);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    std::string <a class="code" href="classPatch.html#a662ca51ef4c115013ed5a96702b30e5b">PrettyPrint</a>();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;};</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="classPatch.html">Patch</a>(<a class="code" href="classTreeT.html">TreeT</a> client_treet, <a class="code" href="classTreeT.html">TreeT</a> server_treet);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classPatch.html#a89a3b1626a3220d1bd7b17d8e797adcf">Dispatch</a>(<span class="keyword">const</span> std::filesystem::path&amp; db_path, <span class="keyword">const</span> std::filesystem::path&amp; folder_watched);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPatch.html#aac11e5faac2dadd96bea7159b00f99eb">PrettyPrint</a>();</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//CLIENT_PATCH_H</span></div>
-<div class="ttc" id="aclassPatch_html"><div class="ttname"><a href="classPatch.html">Patch</a></div><div class="ttdef"><b>Definition:</b> patch.h:18</div></div>
-<div class="ttc" id="aclassPatch_html_a30904b631e55ef4d26e1321b44efc790"><div class="ttname"><a href="classPatch.html#a30904b631e55ef4d26e1321b44efc790">Patch::to_be_sent_vector</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; std::string, unsigned long &gt; &gt; to_be_sent_vector</div><div class="ttdef"><b>Definition:</b> patch.h:35</div></div>
-<div class="ttc" id="aclassPatch_html_a5693ee0c2f01343b6a0ef1f9e2817bf2"><div class="ttname"><a href="classPatch.html#a5693ee0c2f01343b6a0ef1f9e2817bf2">Patch::removed_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; removed_</div><div class="ttdef"><b>Definition:</b> patch.h:27</div></div>
-<div class="ttc" id="aclassPatch_html_a662ca51ef4c115013ed5a96702b30e5b"><div class="ttname"><a href="classPatch.html#a662ca51ef4c115013ed5a96702b30e5b">Patch::PrettyPrint</a></div><div class="ttdeci">std::string PrettyPrint()</div><div class="ttdef"><b>Definition:</b> patch.cpp:46</div></div>
-<div class="ttc" id="aclassPatch_html_a93480d21f602be19569131e328d8d7bc"><div class="ttname"><a href="classPatch.html#a93480d21f602be19569131e328d8d7bc">Patch::added_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; added_</div><div class="ttdef"><b>Definition:</b> patch.h:23</div></div>
-<div class="ttc" id="aclassPatch_html_acfb7565def5d1cea231e8478ca3d243d"><div class="ttname"><a href="classPatch.html#acfb7565def5d1cea231e8478ca3d243d">Patch::common_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; common_</div><div class="ttdef"><b>Definition:</b> patch.h:31</div></div>
-<div class="ttc" id="aclassPatch_html_aee6cc0596676f575f6528c8723873cd6"><div class="ttname"><a href="classPatch.html#aee6cc0596676f575f6528c8723873cd6">Patch::to_be_elim_vector</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; std::string, unsigned long &gt; &gt; to_be_elim_vector</div><div class="ttdef"><b>Definition:</b> patch.h:40</div></div>
-<div class="ttc" id="aclassPatch_html_afd18d33f468590fe3cec1483a6f8e4c2"><div class="ttname"><a href="classPatch.html#afd18d33f468590fe3cec1483a6f8e4c2">Patch::Patch</a></div><div class="ttdeci">Patch(TreeT client_treet, TreeT server_treet)</div><div class="ttdef"><b>Definition:</b> patch.cpp:11</div></div>
-<div class="ttc" id="aclassTreeT_html"><div class="ttname"><a href="classTreeT.html">TreeT</a></div><div class="ttdoc">The TreeT encapsulate a map containing for each element path a pair &quot;element_path - last_modified_tim...</div><div class="ttdef"><b>Definition:</b> tree_t.h:14</div></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;};</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="ttc" id="aclassPatch_html"><div class="ttname"><a href="classPatch.html">Patch</a></div><div class="ttdoc">Wraps in a compact way all the differences between the client and server.</div><div class="ttdef"><b>Definition:</b> patch.h:13</div></div>
+<div class="ttc" id="aclassPatch_html_a30904b631e55ef4d26e1321b44efc790"><div class="ttname"><a href="classPatch.html#a30904b631e55ef4d26e1321b44efc790">Patch::to_be_sent_vector</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; std::string, unsigned long &gt; &gt; to_be_sent_vector</div><div class="ttdoc">This vector holds all the pairs element_path&amp;last-modified-time of every element that will be sent to...</div><div class="ttdef"><b>Definition:</b> patch.h:30</div></div>
+<div class="ttc" id="aclassPatch_html_a5693ee0c2f01343b6a0ef1f9e2817bf2"><div class="ttname"><a href="classPatch.html#a5693ee0c2f01343b6a0ef1f9e2817bf2">Patch::removed_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; removed_</div><div class="ttdoc">This vector contains the path of all the elements (files or dirs) in the server with a position and n...</div><div class="ttdef"><b>Definition:</b> patch.h:22</div></div>
+<div class="ttc" id="aclassPatch_html_a89a3b1626a3220d1bd7b17d8e797adcf"><div class="ttname"><a href="classPatch.html#a89a3b1626a3220d1bd7b17d8e797adcf">Patch::Dispatch</a></div><div class="ttdeci">int Dispatch(const std::filesystem::path &amp;db_path, const std::filesystem::path &amp;folder_watched)</div><div class="ttdoc">Takes the db files where we store the status and uses it in order to identify the file that we must d...</div><div class="ttdef"><b>Definition:</b> patch.cpp:89</div></div>
+<div class="ttc" id="aclassPatch_html_a93480d21f602be19569131e328d8d7bc"><div class="ttname"><a href="classPatch.html#a93480d21f602be19569131e328d8d7bc">Patch::added_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; added_</div><div class="ttdoc">This vector contains the path of all the elements (files or dirs) in the client with a position and n...</div><div class="ttdef"><b>Definition:</b> patch.h:18</div></div>
+<div class="ttc" id="aclassPatch_html_aa027d82ae722e67b213dde09bbb8bf43"><div class="ttname"><a href="classPatch.html#aa027d82ae722e67b213dde09bbb8bf43">Patch::same_file_same_lmt_vector</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; std::string, unsigned long &gt; &gt; same_file_same_lmt_vector</div><div class="ttdoc">This vector holds all the pairs element_path&amp;last-modified-time of every element that is present both...</div><div class="ttdef"><b>Definition:</b> patch.h:35</div></div>
+<div class="ttc" id="aclassPatch_html_aac11e5faac2dadd96bea7159b00f99eb"><div class="ttname"><a href="classPatch.html#aac11e5faac2dadd96bea7159b00f99eb">Patch::PrettyPrint</a></div><div class="ttdeci">void PrettyPrint()</div><div class="ttdoc">Pretty Prints the changes contained in the patch.</div><div class="ttdef"><b>Definition:</b> patch.cpp:133</div></div>
+<div class="ttc" id="aclassPatch_html_acfb7565def5d1cea231e8478ca3d243d"><div class="ttname"><a href="classPatch.html#acfb7565def5d1cea231e8478ca3d243d">Patch::common_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; common_</div><div class="ttdoc">This vector contains the path of all the elements (files or dirs) in the server with both position an...</div><div class="ttdef"><b>Definition:</b> patch.h:26</div></div>
+<div class="ttc" id="aclassPatch_html_aee6cc0596676f575f6528c8723873cd6"><div class="ttname"><a href="classPatch.html#aee6cc0596676f575f6528c8723873cd6">Patch::to_be_elim_vector</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; std::string, unsigned long &gt; &gt; to_be_elim_vector</div><div class="ttdoc">This vector holds all the pairs element_path&amp;last-modified-time of every element that will be deleted...</div><div class="ttdef"><b>Definition:</b> patch.h:40</div></div>
+<div class="ttc" id="aclassTreeT_html"><div class="ttname"><a href="classTreeT.html">TreeT</a></div><div class="ttdoc">The TreeT encapsulate a map containing for each element path a pair &quot;element_path - last_modified_tim...</div><div class="ttdef"><b>Definition:</b> tree_t.h:9</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

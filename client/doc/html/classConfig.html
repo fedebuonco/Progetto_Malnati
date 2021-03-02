@@ -64,11 +64,18 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="classConfig-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Config Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class that handle the configuration phase.  
+ <a href="classConfig.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="config_8h_source.html">config.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -79,22 +86,53 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="classConfig.html">Config</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classConfig.html">Config</a> &amp;)=delete</td></tr>
 <tr class="separator:a433310db217f53c7079b338eb79ff466"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14478ea081a6927566463944fceb9274"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#a14478ea081a6927566463944fceb9274">WriteProperty</a> (const std::string &amp;key, const std::string &amp;value)</td></tr>
+<tr class="memdesc:a14478ea081a6927566463944fceb9274"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function write a couple (Key:"Value") inside "config.json" file.  <a href="classConfig.html#a14478ea081a6927566463944fceb9274">More...</a><br /></td></tr>
 <tr class="separator:a14478ea081a6927566463944fceb9274"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4718b5863cfe506b70692764338ea38"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#ab4718b5863cfe506b70692764338ea38">ReadProperty</a> (const std::string &amp;key)</td></tr>
+<tr class="memdesc:ab4718b5863cfe506b70692764338ea38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read inside config JSON file and return the value associated with the given key.  <a href="classConfig.html#ab4718b5863cfe506b70692764338ea38">More...</a><br /></td></tr>
 <tr class="separator:ab4718b5863cfe506b70692764338ea38"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba8880baff15be62efdcb6c796d2fbc3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#aba8880baff15be62efdcb6c796d2fbc3">SetConfig</a> (int argc, char *argv[])</td></tr>
-<tr class="separator:aba8880baff15be62efdcb6c796d2fbc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f4f916ad790860ca689dc2c87f639af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#a3f4f916ad790860ca689dc2c87f639af">PrintConfiguration</a> ()</td></tr>
+<tr class="memitem:aabc417126648e9182a46cfdd97e8cf60"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#aabc417126648e9182a46cfdd97e8cf60">IsConfigStructureCorrect</a> ()</td></tr>
+<tr class="memdesc:aabc417126648e9182a46cfdd97e8cf60"><td class="mdescLeft">&#160;</td><td class="mdescRight">It checks if the config structure (file and folder) have a folder 'config_file' with inside 'config.json' file.  <a href="classConfig.html#aabc417126648e9182a46cfdd97e8cf60">More...</a><br /></td></tr>
+<tr class="separator:aabc417126648e9182a46cfdd97e8cf60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a529d359d3bbbe4994b35b9c2ab055b81"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#a529d359d3bbbe4994b35b9c2ab055b81">SetDefaultConfig</a> ()</td></tr>
+<tr class="memdesc:a529d359d3bbbe4994b35b9c2ab055b81"><td class="mdescLeft">&#160;</td><td class="mdescRight">It resets all the fields inside configuration file (config.json) with default value: <br  />
+  <a href="classConfig.html#a529d359d3bbbe4994b35b9c2ab055b81">More...</a><br /></td></tr>
+<tr class="separator:a529d359d3bbbe4994b35b9c2ab055b81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88f0acc8e8c96ad1b93a2debd3552884"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#a88f0acc8e8c96ad1b93a2debd3552884">SetConfig</a> (int argc, char *argv[])</td></tr>
+<tr class="memdesc:a88f0acc8e8c96ad1b93a2debd3552884"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function takes the command line parameters and set config file appropriately Throw an exception if the configuration syntax is wrongly formatted or the options are incorrect (e.x.  <a href="classConfig.html#a88f0acc8e8c96ad1b93a2debd3552884">More...</a><br /></td></tr>
+<tr class="separator:a88f0acc8e8c96ad1b93a2debd3552884"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad55d6b44a32a8901f759538439198d05"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#ad55d6b44a32a8901f759538439198d05">SetPath</a> (const std::string &amp;your_path)</td></tr>
+<tr class="memdesc:ad55d6b44a32a8901f759538439198d05"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will found the absolute path that points to client folder.  <a href="classConfig.html#ad55d6b44a32a8901f759538439198d05">More...</a><br /></td></tr>
+<tr class="separator:ad55d6b44a32a8901f759538439198d05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f4f916ad790860ca689dc2c87f639af"><td class="memItemLeft" align="right" valign="top"><a id="a3f4f916ad790860ca689dc2c87f639af"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#a3f4f916ad790860ca689dc2c87f639af">PrintConfiguration</a> ()</td></tr>
+<tr class="memdesc:a3f4f916ad790860ca689dc2c87f639af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print program configuration inside the console. <br /></td></tr>
 <tr class="separator:a3f4f916ad790860ca689dc2c87f639af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcf9758b7008e59e4387d4c49e2573ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structRawEndpoint.html">RawEndpoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#adcf9758b7008e59e4387d4c49e2573ad">ReadRawEndpoint</a> ()</td></tr>
+<tr class="memdesc:adcf9758b7008e59e4387d4c49e2573ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the raw endpoint from the json file.  <a href="classConfig.html#adcf9758b7008e59e4387d4c49e2573ad">More...</a><br /></td></tr>
 <tr class="separator:adcf9758b7008e59e4387d4c49e2573ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a5434be705a93f9a083dd3937a11ff085"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classConfig.html">Config</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#a5434be705a93f9a083dd3937a11ff085">get_Instance</a> ()</td></tr>
+<tr class="memdesc:a5434be705a93f9a083dd3937a11ff085"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assures that only one instance is present.  <a href="classConfig.html#a5434be705a93f9a083dd3937a11ff085">More...</a><br /></td></tr>
 <tr class="separator:a5434be705a93f9a083dd3937a11ff085"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:af5b4bd9b3e849b6404a76fd11359e20c"><td class="memItemLeft" align="right" valign="top"><a id="af5b4bd9b3e849b6404a76fd11359e20c"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>exe_path</b></td></tr>
+<tr class="separator:af5b4bd9b3e849b6404a76fd11359e20c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:a3ff22490a5ff9cf104c823ad0e284ebd"><td class="memItemLeft" align="right" valign="top"><a id="a3ff22490a5ff9cf104c823ad0e284ebd"></a>
+static <a class="el" href="classConfig.html">Config</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>m_ConfigClass</b> = nullptr</td></tr>
+<tr class="separator:a3ff22490a5ff9cf104c823ad0e284ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Class that handle the configuration phase. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a5434be705a93f9a083dd3937a11ff085"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5434be705a93f9a083dd3937a11ff085">&#9670;&nbsp;</a></span>get_Instance()</h2>
 
@@ -117,25 +155,29 @@ Static Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Assures that only one instance is present. </p><dl class="section return"><dt>Returns</dt><dd>the instance of config class </dd></dl>
+
+<p>Assures that only one instance is present. </p>
+<dl class="section return"><dt>Returns</dt><dd>the instance of config class </dd></dl>
 
 </div>
 </div>
-<a id="a3f4f916ad790860ca689dc2c87f639af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f4f916ad790860ca689dc2c87f639af">&#9670;&nbsp;</a></span>PrintConfiguration()</h2>
+<a id="aabc417126648e9182a46cfdd97e8cf60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabc417126648e9182a46cfdd97e8cf60">&#9670;&nbsp;</a></span>IsConfigStructureCorrect()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void Config::PrintConfiguration </td>
+          <td class="memname">bool Config::IsConfigStructureCorrect </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Print program configuration inside the console </p>
+
+<p>It checks if the config structure (file and folder) have a folder 'config_file' with inside 'config.json' file. </p>
+<dl class="section return"><dt>Returns</dt><dd>'true' if structure is correct, otherwise 'false'. </dd></dl>
 
 </div>
 </div>
@@ -154,13 +196,15 @@ Static Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Read inside config JSON file and return the value associated with the given key </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Read inside config JSON file and return the value associated with the given key. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">key</td><td>JSON key </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the value associated with the given key </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the value associated with the given key or 'NULL' if we don't have any value. </dd></dl>
 
 </div>
 </div>
@@ -178,18 +222,20 @@ Static Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Reads the raw endpoint from the json file. </p><dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structRawEndpoint.html" title="Encapsulates a raw ip and a port.">RawEndpoint</a> used later to set up all the sockets. </dd></dl>
+
+<p>Reads the raw endpoint from the json file. </p>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structRawEndpoint.html" title="Encapsulates a raw ip and a port.">RawEndpoint</a> used later to set up all the sockets. </dd></dl>
 
 </div>
 </div>
-<a id="aba8880baff15be62efdcb6c796d2fbc3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba8880baff15be62efdcb6c796d2fbc3">&#9670;&nbsp;</a></span>SetConfig()</h2>
+<a id="a88f0acc8e8c96ad1b93a2debd3552884"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88f0acc8e8c96ad1b93a2debd3552884">&#9670;&nbsp;</a></span>SetConfig()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int Config::SetConfig </td>
+          <td class="memname">void Config::SetConfig </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>argc</em>, </td>
@@ -207,14 +253,73 @@ Static Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This function takes the command line parameters and set config file appropriately </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>This function takes the command line parameters and set config file appropriately Throw an exception if the configuration syntax is wrongly formatted or the options are incorrect (e.x. </p>
+<p>wrong IPv4 structure). </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">argc</td><td>number of arguments </td></tr>
     <tr><td class="paramname">argv</td><td>list of arguments </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>0 (no problem) or 1 (problems) </dd></dl>
+<p>The two following expression are regex for ipv4 address and port The IPv4 regex say that the structure must be: number1.number2.number3.number4 and each number go from 0 to 255. The port address must be a number with max 5 digits</p>
+
+</div>
+</div>
+<a id="a529d359d3bbbe4994b35b9c2ab055b81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a529d359d3bbbe4994b35b9c2ab055b81">&#9670;&nbsp;</a></span>SetDefaultConfig()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Config::SetDefaultConfig </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>It resets all the fields inside configuration file (config.json) with default value: <br  />
+ </p>
+<ul>
+<li>Default Endpoint: 127.0.0.1 3333 <br  />
+</li>
+<li>Username and password: empty <br  />
+</li>
+<li>Folder: empty <br  />
+ <br  />
+ It also reset the configuration structure (create the correct folder and file) if it is broken for some reason (i.e. file or folder doesn't exist). <br  />
+</li>
+</ul>
+<p>This function must be used when the program detect problem during configuration phase. In this way we restore all with the default files. </p>
+
+</div>
+</div>
+<a id="ad55d6b44a32a8901f759538439198d05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad55d6b44a32a8901f759538439198d05">&#9670;&nbsp;</a></span>SetPath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Config::SetPath </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>your_path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function will found the absolute path that points to client folder. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">your_path</td><td>: This the path with which the executable is launched </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -243,7 +348,9 @@ Static Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This function write Key, Value inside config JSON file </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>This function write a couple (Key:"Value") inside "config.json" file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">key</td><td>JSON key </td></tr>
     <tr><td class="paramname">value</td><td>JSON value </td></tr>

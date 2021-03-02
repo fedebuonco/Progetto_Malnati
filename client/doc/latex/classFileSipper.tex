@@ -1,0 +1,142 @@
+\hypertarget{classFileSipper}{}\doxysection{File\+Sipper Class Reference}
+\label{classFileSipper}\index{FileSipper@{FileSipper}}
+
+
+Encapsulates a file+hash that need to be sent to a server.  
+
+
+
+
+{\ttfamily \#include $<$file\+\_\+sipper.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classFileSipper_a7c66518df0e577efbcc5dba61055d7bd}\label{classFileSipper_a7c66518df0e577efbcc5dba61055d7bd}} 
+{\bfseries File\+Sipper} (const \mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} \&re, std\+::filesystem\+::path folder\+\_\+watched, std\+::filesystem\+::path db\+\_\+path, std\+::string username, const std\+::string \&hashed\+\_\+pass, std\+::filesystem\+::path file\+\_\+path, std\+::string file\+\_\+string, std\+::string hash, std\+::string lmt)
+\item 
+\mbox{\Hypertarget{classFileSipper_a4406545c288c0d10ba6d97a3bcdc44d5}\label{classFileSipper_a4406545c288c0d10ba6d97a3bcdc44d5}} 
+void \mbox{\hyperlink{classFileSipper_a4406545c288c0d10ba6d97a3bcdc44d5}{Send}} (std\+::function$<$ void()$>$ rem\+\_\+call)
+\begin{DoxyCompactList}\small\item\em Methods that starts the sending of the File. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classFileSipper_ab75dfa62205f5c8d2c68507fc8ccfcbc}\label{classFileSipper_ab75dfa62205f5c8d2c68507fc8ccfcbc}} 
+std\+::string {\bfseries file\+\_\+string\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_a00fb8ac8397f9519c7433af222aa1142}\label{classFileSipper_a00fb8ac8397f9519c7433af222aa1142}} 
+std\+::function$<$ void()$>$ {\bfseries remove\+\_\+callback\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_a38e8fbd881e285c3e75ba1e3656505e4}\label{classFileSipper_a38e8fbd881e285c3e75ba1e3656505e4}} 
+std\+::atomic$<$ bool $>$ {\bfseries status} = false
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classFileSipper_aa8d1335bde73b5f7cdfb59694dabe107}\label{classFileSipper_aa8d1335bde73b5f7cdfb59694dabe107}} 
+enum \{ {\bfseries Message\+Size} = 1024
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classFileSipper_a02976ce9ad39bfa99ebd2b71b2ed00d0}\label{classFileSipper_a02976ce9ad39bfa99ebd2b71b2ed00d0}} 
+void \mbox{\hyperlink{classFileSipper_a02976ce9ad39bfa99ebd2b71b2ed00d0}{Open\+File}} ()
+\begin{DoxyCompactList}\small\item\em Opens a file and prepare things for the First\+Sip. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classFileSipper_a010cea9e2d74caeb7d71d3ee4c30b6fc}\label{classFileSipper_a010cea9e2d74caeb7d71d3ee4c30b6fc}} 
+void \mbox{\hyperlink{classFileSipper_a010cea9e2d74caeb7d71d3ee4c30b6fc}{Connect}} ()
+\begin{DoxyCompactList}\small\item\em We async connect to the specified server. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classFileSipper_a962d5fab2cbdbd9324f4175366b37f35}\label{classFileSipper_a962d5fab2cbdbd9324f4175366b37f35}} 
+void \mbox{\hyperlink{classFileSipper_a962d5fab2cbdbd9324f4175366b37f35}{Sip}} (const boost\+::system\+::error\+\_\+code \&t\+\_\+ec)
+\begin{DoxyCompactList}\small\item\em Takes a sip of a file and sends it. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classFileSipper_a79f62afbe1c31645a18fe080c52d3660}{First\+Sip}} (const boost\+::system\+::error\+\_\+code \&t\+\_\+ec)
+\begin{DoxyCompactList}\small\item\em Takes the file and send its metadata to the server. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classFileSipper_afb4a4fc980e94db04e04838c84da6f1a}\label{classFileSipper_afb4a4fc980e94db04e04838c84da6f1a}} 
+void {\bfseries Wait\+Ok} ()
+\item 
+\mbox{\Hypertarget{classFileSipper_a98e80afc92dc4ce7a85e018c70459e06}\label{classFileSipper_a98e80afc92dc4ce7a85e018c70459e06}} 
+{\footnotesize template$<$class Buffer $>$ }\\void {\bfseries write\+Buffer} (Buffer \&t\+\_\+buffer)
+\item 
+\mbox{\Hypertarget{classFileSipper_a0587b91374d97afdd6e643a8586f0a9b}\label{classFileSipper_a0587b91374d97afdd6e643a8586f0a9b}} 
+void {\bfseries Update\+File\+Status} (const std\+::filesystem\+::path \&db\+\_\+path, const std\+::filesystem\+::path \&folder\+\_\+watched, const std\+::string \&file\+\_\+string, int check)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classFileSipper_aec53ad1c49eee60160c45ef31416208c}\label{classFileSipper_aec53ad1c49eee60160c45ef31416208c}} 
+std\+::filesystem\+::path {\bfseries path\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_ab3af7abcbead7c6b604c34344d36f9aa}\label{classFileSipper_ab3af7abcbead7c6b604c34344d36f9aa}} 
+std\+::filesystem\+::path {\bfseries folder\+\_\+watched\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_a46b094e96be8b37a7429faa3b89607a8}\label{classFileSipper_a46b094e96be8b37a7429faa3b89607a8}} 
+std\+::filesystem\+::path {\bfseries db\+\_\+path\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_a73b23d3eae0949e9bf899b7ddcd973b7}\label{classFileSipper_a73b23d3eae0949e9bf899b7ddcd973b7}} 
+std\+::string {\bfseries hash\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_a1b73142aaf98d533676adbb6d2406b4e}\label{classFileSipper_a1b73142aaf98d533676adbb6d2406b4e}} 
+std\+::string {\bfseries lmt\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_ad4007c33b925490bbb8ba46cff45887e}\label{classFileSipper_ad4007c33b925490bbb8ba46cff45887e}} 
+std\+::string {\bfseries metadata\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_a051094c4bf1b6bc98bd967558697c8ca}\label{classFileSipper_a051094c4bf1b6bc98bd967558697c8ca}} 
+std\+::string {\bfseries username\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_a952e1567ab061f694720a31d79ee0ada}\label{classFileSipper_a952e1567ab061f694720a31d79ee0ada}} 
+boost\+::asio\+::io\+\_\+service {\bfseries ios\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_a9236cbb1204d870695b1f38151bf570c}\label{classFileSipper_a9236cbb1204d870695b1f38151bf570c}} 
+boost\+::asio\+::ip\+::tcp\+::endpoint {\bfseries ep\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_aa2a0d0402f4ac9dc59e0b2565f20ecea}\label{classFileSipper_aa2a0d0402f4ac9dc59e0b2565f20ecea}} 
+boost\+::asio\+::ip\+::tcp\+::socket {\bfseries sock\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_ae2051b0de1703131f5a55ce9138a70b9}\label{classFileSipper_ae2051b0de1703131f5a55ce9138a70b9}} 
+boost\+::system\+::error\+\_\+code {\bfseries ec\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_ac425e286b545cca6894a69a05d54b990}\label{classFileSipper_ac425e286b545cca6894a69a05d54b990}} 
+std\+::ifstream {\bfseries files\+\_\+stream\+\_\+}
+\item 
+\mbox{\Hypertarget{classFileSipper_a6f3aa68733bdee2f54414500649103ef}\label{classFileSipper_a6f3aa68733bdee2f54414500649103ef}} 
+std\+::array$<$ char, Message\+Size $>$ {\bfseries buf\+\_\+array\+\_\+} \{\}
+\item 
+\mbox{\Hypertarget{classFileSipper_a35065ad3d32b9c94a3883b229e6c259e}\label{classFileSipper_a35065ad3d32b9c94a3883b229e6c259e}} 
+std\+::array$<$ char, Message\+Size $>$ {\bfseries buf\+\_\+metadata} \{\}
+\item 
+\mbox{\Hypertarget{classFileSipper_a467596e8275190ad58a757743f996032}\label{classFileSipper_a467596e8275190ad58a757743f996032}} 
+int {\bfseries sip\+\_\+counter}
+\item 
+\mbox{\Hypertarget{classFileSipper_ab52d1a9151fe568bcf216a12e7ab7df3}\label{classFileSipper_ab52d1a9151fe568bcf216a12e7ab7df3}} 
+bool {\bfseries ready} \{\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Encapsulates a file+hash that need to be sent to a server. 
+
+The file is sent in small \char`\"{}sips\char`\"{} and after each sending we call a callback. Offers a callback that, after performing some checks, calls for another sip, thus creating a chain of sent sips. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classFileSipper_a79f62afbe1c31645a18fe080c52d3660}\label{classFileSipper_a79f62afbe1c31645a18fe080c52d3660}} 
+\index{FileSipper@{FileSipper}!FirstSip@{FirstSip}}
+\index{FirstSip@{FirstSip}!FileSipper@{FileSipper}}
+\doxysubsubsection{\texorpdfstring{FirstSip()}{FirstSip()}}
+{\footnotesize\ttfamily void File\+Sipper\+::\+First\+Sip (\begin{DoxyParamCaption}\item[{const boost\+::system\+::error\+\_\+code \&}]{t\+\_\+ec }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Takes the file and send its metadata to the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+\_\+ec} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+includes/client/file\+\_\+sipper.\+h\item 
+src/client/file\+\_\+sipper.\+cpp\end{DoxyCompactItemize}

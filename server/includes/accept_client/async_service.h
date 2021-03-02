@@ -7,17 +7,7 @@
 #include <filesystem>
 
 class AsyncService {
-public:
-    AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock, std::filesystem::path server_path);
-    void StartHandling(const boost::system::error_code& ec);
 
-private:
-    void onRequestReceived(const boost::system::error_code& ec, std::size_t bytes_transferred);
-    void onFinish();
-    void createFile();
-    void ParseMetadata(const std ::string& metadata);
-
-private:
     std::filesystem::path server_path_;
     std::shared_ptr<boost::asio::ip::tcp::socket> m_sock;
     std::string m_response;
@@ -40,6 +30,20 @@ private:
 
     std::filesystem::path created_file_path_;
 
+    bool continue_writing = true;
+
+    void onRequestReceived(const boost::system::error_code& ec, std::size_t bytes_transferred);
+    void onFinish();
+    void createFile();
+    void ParseMetadata(const std ::string& metadata);
+    void onAbort();
+
+public:
+    AsyncService(std::shared_ptr<boost::asio::ip::tcp::socket> sock, std::filesystem::path server_path);
+    void StartHandling(const boost::system::error_code& ec);
+
+
+    bool filename_too_long  = false;
 };
 
 

@@ -2,33 +2,151 @@
 \label{classClient}\index{Client@{Client}}
 
 
+The main class of the client.  
+
+
+
+
 {\ttfamily \#include $<$client.\+h$>$}
 
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classClient_a7ff17edb7bc64aa18ae701bc1ded3079}{Client}} (\mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} re, std\+::filesystem\+::path folder\+\_\+watched)
+\mbox{\hyperlink{classClient_aa792d298cd82815d2948720b2040a09c}{Client}} (\mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} re, const std\+::filesystem\+::path \&folder\+\_\+watched)
+\begin{DoxyCompactList}\small\item\em Construct a \mbox{\hyperlink{classClient}{Client}}, execute the first hashing of each file and puts it in a state ready to track any changes in the folder. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{classClient_aacf5a8b812843bf6bb8a5ab633bbdc36}{Auth}} ()
+\begin{DoxyCompactList}\small\item\em Will send username and password. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classClient_a3dfef137cb0546024619921d6dabdf3b}{Start\+Watching}} ()
+\begin{DoxyCompactList}\small\item\em We set the callback and ask to the watcher to start tracking any changes on the watched folder. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classClient_a5997dbbeee7953b784ac0537def159a9}\label{classClient_a5997dbbeee7953b784ac0537def159a9}} 
+void \mbox{\hyperlink{classClient_a5997dbbeee7953b784ac0537def159a9}{Syncro}} ()
+\begin{DoxyCompactList}\small\item\em This is the main function, create a Tree and asks for the server Tree, with those it creates a patch and process it The processed patch is then used to fuel the Send\+Patch() \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classClient_a96f9d57927506de3f90c28b7ebf70109}{Recover\+Sending}} ()
+\begin{DoxyCompactList}\small\item\em Scans the db and put the failed \char`\"{}\+SENDING\char`\"{} to \char`\"{}\+NEW\char`\"{} again, they will be re-\/sync as soon as possible. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classClient_ad90c29a5ac034afb4d04aae5d58dd60c}{Send\+Removal}} (\mbox{\hyperlink{classPatch}{Patch}} \&update)
+\begin{DoxyCompactList}\small\item\em Here we firstly send a \mbox{\hyperlink{classControlMessage}{Control\+Message}} that will tell what to delete in the server. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classTreeT}{TreeT}} \mbox{\hyperlink{classClient_ad7f38334b1a236b748a06e306936838b}{Request\+Tree}} ()
+\begin{DoxyCompactList}\small\item\em Request current tree and times of the cloud dir stored in the server. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classClient_a33c8b03d66e4b4a461cbaa9ed18a2c8c}\label{classClient_a33c8b03d66e4b4a461cbaa9ed18a2c8c}} 
+void {\bfseries Sync\+Write\+CM} (\mbox{\hyperlink{classSyncTCPSocket}{Sync\+TCPSocket}} \&stcp, \mbox{\hyperlink{classControlMessage}{Control\+Message}} \&cm)
+\item 
+\mbox{\Hypertarget{classClient_aa7c88ef1283a8b6dd0d1fe9cc81f8e29}\label{classClient_aa7c88ef1283a8b6dd0d1fe9cc81f8e29}} 
+\mbox{\hyperlink{classControlMessage}{Control\+Message}} \mbox{\hyperlink{classClient_aa7c88ef1283a8b6dd0d1fe9cc81f8e29}{Sync\+Read\+CM}} (\mbox{\hyperlink{classSyncTCPSocket}{Sync\+TCPSocket}} \&stcp)
+\begin{DoxyCompactList}\small\item\em We read until the eof, then we return a \mbox{\hyperlink{classControlMessage}{Control\+Message}} using the buffer we read. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classClient_a0a3d64b24a3386ebceb76825953b4bdb}\label{classClient_a0a3d64b24a3386ebceb76825953b4bdb}} 
+void \mbox{\hyperlink{classClient_a0a3d64b24a3386ebceb76825953b4bdb}{Init\+Hash}} ()
+\begin{DoxyCompactList}\small\item\em Test each file to see if already present in the hash db, and acts accordingly in order to keep a database of each hash performed. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classClient_a535e378b54dfcdf796ea385ee3006374}\label{classClient_a535e378b54dfcdf796ea385ee3006374}} 
+std\+::string {\bfseries Hash\+File} (const std\+::filesystem\+::path \&path)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classClient_a62057fdee3003fb49da48c46b50015be}\label{classClient_a62057fdee3003fb49da48c46b50015be}} 
+\mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} {\bfseries server\+\_\+re\+\_\+}
+\item 
+\mbox{\Hypertarget{classClient_a082f49dec300d7b4f332a5292dc603b7}\label{classClient_a082f49dec300d7b4f332a5292dc603b7}} 
+std\+::filesystem\+::path {\bfseries folder\+\_\+watched\+\_\+}
+\item 
+\mbox{\Hypertarget{classClient_a61bb6f6dda38b1907422bad27c1b10c7}\label{classClient_a61bb6f6dda38b1907422bad27c1b10c7}} 
+std\+::filesystem\+::path {\bfseries db\+\_\+file\+\_\+}
+\item 
+\mbox{\Hypertarget{classClient_a6ad1cb6ffa3fe3e25a4966be282d8df4}\label{classClient_a6ad1cb6ffa3fe3e25a4966be282d8df4}} 
+\mbox{\hyperlink{classWatcher}{Watcher}} {\bfseries watcher\+\_\+}
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
-The main class of the client. It represent an object that will connect to the server specified in the constructor and will ask to a watcher to whatch a specified folder. 
+The main class of the client. 
+
+It represent an object that will connect to the server specified in the constructor and will ask to a watcher to watch a specified folder. 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classClient_a7ff17edb7bc64aa18ae701bc1ded3079}\label{classClient_a7ff17edb7bc64aa18ae701bc1ded3079}} 
+\mbox{\Hypertarget{classClient_aa792d298cd82815d2948720b2040a09c}\label{classClient_aa792d298cd82815d2948720b2040a09c}} 
 \index{Client@{Client}!Client@{Client}}
 \index{Client@{Client}!Client@{Client}}
 \doxysubsubsection{\texorpdfstring{Client()}{Client()}}
-{\footnotesize\ttfamily Client\+::\+Client (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}}}]{re,  }\item[{std\+::filesystem\+::path}]{folder\+\_\+watched }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Client\+::\+Client (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}}}]{re,  }\item[{const std\+::filesystem\+::path \&}]{folder\+\_\+watched }\end{DoxyParamCaption})}
 
-Construct a \mbox{\hyperlink{classClient}{Client}} and puts it in a state ready to track any changes in the folder. 
+
+
+Construct a \mbox{\hyperlink{classClient}{Client}}, execute the first hashing of each file and puts it in a state ready to track any changes in the folder. 
+
+
 \begin{DoxyParams}{Parameters}
-{\em re} & Endpoint to connect to. \\
+{\em re} & \+: Endpoint to connect to. \\
 \hline
-{\em folder\+\_\+watched} & folder path that we want to keep monitored. \\
+{\em folder\+\_\+watched} & \+: folder path that we want to keep monitored. \\
 \hline
 \end{DoxyParams}
 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classClient_aacf5a8b812843bf6bb8a5ab633bbdc36}\label{classClient_aacf5a8b812843bf6bb8a5ab633bbdc36}} 
+\index{Client@{Client}!Auth@{Auth}}
+\index{Auth@{Auth}!Client@{Client}}
+\doxysubsubsection{\texorpdfstring{Auth()}{Auth()}}
+{\footnotesize\ttfamily bool Client\+::\+Auth (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Will send username and password. 
+
+After that it will shutdown the send part of the socket thus providing the server a way to tell that the connection is over. After the authentication the socket is basically useless and needs to be shutdown completely. \begin{DoxyReturn}{Returns}
+\textquotesingle{}True\textquotesingle{} if Auth went ok and user has successfully logged in, \textquotesingle{}False\textquotesingle{} if not. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classClient_a96f9d57927506de3f90c28b7ebf70109}\label{classClient_a96f9d57927506de3f90c28b7ebf70109}} 
+\index{Client@{Client}!RecoverSending@{RecoverSending}}
+\index{RecoverSending@{RecoverSending}!Client@{Client}}
+\doxysubsubsection{\texorpdfstring{RecoverSending()}{RecoverSending()}}
+{\footnotesize\ttfamily int Client\+::\+Recover\+Sending (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Scans the db and put the failed \char`\"{}\+SENDING\char`\"{} to \char`\"{}\+NEW\char`\"{} again, they will be re-\/sync as soon as possible. 
+
+\begin{DoxyReturn}{Returns}
+Returns the recovered files. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classClient_ad7f38334b1a236b748a06e306936838b}\label{classClient_ad7f38334b1a236b748a06e306936838b}} 
+\index{Client@{Client}!RequestTree@{RequestTree}}
+\index{RequestTree@{RequestTree}!Client@{Client}}
+\doxysubsubsection{\texorpdfstring{RequestTree()}{RequestTree()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classTreeT}{TreeT}} Client\+::\+Request\+Tree (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Request current tree and times of the cloud dir stored in the server. 
+
+Handles the result by starting the diff computation. \mbox{\Hypertarget{classClient_ad90c29a5ac034afb4d04aae5d58dd60c}\label{classClient_ad90c29a5ac034afb4d04aae5d58dd60c}} 
+\index{Client@{Client}!SendRemoval@{SendRemoval}}
+\index{SendRemoval@{SendRemoval}!Client@{Client}}
+\doxysubsubsection{\texorpdfstring{SendRemoval()}{SendRemoval()}}
+{\footnotesize\ttfamily void Client\+::\+Send\+Removal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPatch}{Patch}} \&}]{update }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Here we firstly send a \mbox{\hyperlink{classControlMessage}{Control\+Message}} that will tell what to delete in the server. 
+
+After that we will start sending the newer files. 
+\begin{DoxyParams}{Parameters}
+{\em update} & processed patch \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classClient_a3dfef137cb0546024619921d6dabdf3b}\label{classClient_a3dfef137cb0546024619921d6dabdf3b}} 
+\index{Client@{Client}!StartWatching@{StartWatching}}
+\index{StartWatching@{StartWatching}!Client@{Client}}
+\doxysubsubsection{\texorpdfstring{StartWatching()}{StartWatching()}}
+{\footnotesize\ttfamily void Client\+::\+Start\+Watching (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+We set the callback and ask to the watcher to start tracking any changes on the watched folder. 
+
+We bind to the callback this, to that when called from the watcher, \char`\"{}this\char`\"{} is defined. \href{https://stackoverflow.com/questions/14189440/c-callback-using-class-member/14189561}{\texttt{ https\+://stackoverflow.\+com/questions/14189440/c-\/callback-\/using-\/class-\/member/14189561}} 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
