@@ -1,10 +1,9 @@
 #include <shared_queue.h>
 
 SharedQueue *SharedQueue::m_SharedQueue = nullptr;
-/***
- * Get method for singletone instance.
- * @return ptr to SharedQueue
- */
+
+ /// Get method for singletone instance.
+ /// \return tr to SharedQueue
 SharedQueue *SharedQueue::get_Instance() {
     if(!m_SharedQueue){
         m_SharedQueue = new SharedQueue();
@@ -12,11 +11,10 @@ SharedQueue *SharedQueue::get_Instance() {
     return m_SharedQueue;
 }
 
-/***
- * Choose a FileSipper from the queue that is ready to send a file.
- * If queue is empty or all FileSipper are already started, Sender will be waiting.
- * @return std::shared_ptr<FileSipper>
- */
+
+ /// Choose a FileSipper from the queue that is ready to send a file.
+ /// If queue is empty or all FileSipper are already started, Sender will be waiting.
+ /// \return shared ptr to selected fileSipper, or nullptr if error occured
 std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
     std::unique_lock<std::mutex> l(m);
 
@@ -52,10 +50,9 @@ std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
     return nullptr;
 }
 
-/***
- * Remove the selected fileSipper from the shared queue.
- * @param fileSipper: ptr to the fileSipper to be removed
- */
+
+ /// Remove the selected fileSipper from the shared queue.
+ /// \param file_sipper : ptr to the fileSipper to be removed
 void SharedQueue::remove_element(const std::shared_ptr<FileSipper>& file_sipper){
     std::lock_guard<std::mutex> l(m);
 
@@ -72,10 +69,9 @@ void SharedQueue::remove_element(const std::shared_ptr<FileSipper>& file_sipper)
     if(!fs_list.empty() && active_fs.load() < fs_list.size()) cv.notify_all();
 }
 
-/***
- * Add a new ptrFileSipper in the SharedQueue
- * @param file_sipper: ptr to the fileSipper to be added
- */
+
+ /// Add a new ptrFileSipper in the SharedQueue
+ /// \param file_sipper : ptr to the fileSipper to be added
 void SharedQueue::insert(std::shared_ptr<FileSipper> file_sipper){ // This one MUST like this, not const reference.
 
     //Take the lock and insider the file_sipper inside the list
@@ -86,10 +82,9 @@ void SharedQueue::insert(std::shared_ptr<FileSipper> file_sipper){ // This one M
     cv.notify_all();
 }
 
-/***
- * Change Shared_Queue status. If false the program will shutdown gracefully
- * @param flag_value: new flag value
- */
+
+ /// Change Shared_Queue status. If false the program will shutdown gracefully
+ /// \param flag_value: new flag value
 void SharedQueue::setFlag(bool flag_value) {
     flag.store(flag_value);
 
