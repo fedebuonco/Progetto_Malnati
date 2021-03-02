@@ -15,6 +15,7 @@ using namespace boost;
 /// Represents thus, a single service provided by the server application
 class Service {
 
+    /// Path of the server.exe
     std::filesystem::path serverPath;
 
     std::filesystem::path associated_user_path_;

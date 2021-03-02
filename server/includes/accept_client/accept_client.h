@@ -14,6 +14,7 @@ class AcceptClient{
 private:
     boost::asio::io_service& ios_;
     boost::asio::ip::tcp::acceptor acceptor_;
+    /// Path of the server.exe
     std::filesystem::path serverPath;
 public:
     AcceptClient(boost::asio::io_service& ios, unsigned short port_num, std::filesystem::path serverPath);

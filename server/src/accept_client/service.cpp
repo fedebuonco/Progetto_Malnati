@@ -27,7 +27,7 @@ void Service::ReadRequest(const std::shared_ptr<asio::ip::tcp::socket>& sock, co
 /***
  * This function handle the client request. First check if the message is authenticated and then
  * handle the request according to the message type
- * @param sock
+ * @param sock: active socket created by SpawnSession method of AcceptClient class.
  */
 void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
     //Now we parsed the request and we use the ptree object in order to create the corresponding ControlMessage
@@ -187,11 +187,17 @@ void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
     delete this;
 }
 
+/// We check that the message is authenticated
+/// \param cm: Control Message read
+/// \return true if authenticated, false otherwise
 bool Service::CheckAuthenticity(const ControlMessage& cm){
     Database authentication;
     return authentication.auth(cm.username_, cm.hashkey_, this->serverPath);
 }
 
+/// Used to write the Control Message in a syncronous way.
+/// \param sock The socket I'm writing the Control Message to.
+/// \param cm The control message to be written.
 void Service::SyncWriteCM(const std::shared_ptr<asio::ip::tcp::socket>& sock, ControlMessage& cm){
 
     boost::system::error_code ec;
@@ -212,6 +218,9 @@ void Service::SyncWriteCM(const std::shared_ptr<asio::ip::tcp::socket>& sock, Co
     }
 }
 
+/// Used for reading until the EOF on a given socket, then we return a ControlMessage using the buffer we read
+/// \param sock The socket we are reading on.
+/// \return The Control Message that we read.
 ControlMessage Service::SyncReadCM(const std::shared_ptr<asio::ip::tcp::socket>& sock){
     // We read until the eof, then we return a ControlMessage using the buffer we read.
     boost::asio::streambuf request_buf;
