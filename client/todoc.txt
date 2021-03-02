@@ -1,12 +1,16 @@
-/home/fede/Documents/Progetto_Malnati/client/includes/database/database.h:11: warning: Compound DatabaseConnection is not documented.
-/home/fede/Documents/Progetto_Malnati/client/includes/config/authentication.h:21: warning: Member m_AuthenticationClass (variable) of class Authentication is not documented.
+
+
 /home/fede/Documents/Progetto_Malnati/client/includes/client/client.h:18: warning: Member server_re_ (variable) of class Client is not documented.
 /home/fede/Documents/Progetto_Malnati/client/includes/client/client.h:20: warning: Member folder_watched_ (variable) of class Client is not documented.
 /home/fede/Documents/Progetto_Malnati/client/includes/client/client.h:22: warning: Member db_file_ (variable) of class Client is not documented.
 /home/fede/Documents/Progetto_Malnati/client/includes/client/client.h:24: warning: Member watcher_ (variable) of class Client is not documented.
 /home/fede/Documents/Progetto_Malnati/client/includes/client/client.h:31: warning: return type of member Client::RequestTree is not documented
+
+
 /home/fede/Documents/Progetto_Malnati/client/includes/config/config.h:30: warning: Member exe_path (variable) of class Config is not documented.
 /home/fede/Documents/Progetto_Malnati/client/includes/config/config.h:27: warning: Member m_ConfigClass (variable) of class Config is not documented.
+
+
 /home/fede/Documents/Progetto_Malnati/client/includes/transfer/control_message.h:18: warning: Member type_ (variable) of class ControlMessage is not documented.
 /home/fede/Documents/Progetto_Malnati/client/includes/config/authentication.h:10: warning: Member username_ (variable) of struct Credential is not documented.
 /home/fede/Documents/Progetto_Malnati/client/includes/config/authentication.h:12: warning: Member hash_password_ (variable) of struct Credential is not documented.

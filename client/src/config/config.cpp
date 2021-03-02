@@ -25,11 +25,14 @@ bool DEBUG=false;
  */
 class SyntaxError : public std::exception {
 private:
-    //Error message
+    ///Error message
     std::string m_message;
 
 public:
     explicit SyntaxError(std::string msg) : m_message(std::move(msg)) { }
+
+    ///Override method 'what' for exception error
+    //Nodiscard allows compilers to issue a warning if a return value (presumably an error code) is discarded by the caller
     [[nodiscard]] const char * what () const noexcept override {
         return m_message.c_str();
     }
