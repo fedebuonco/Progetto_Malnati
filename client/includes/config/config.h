@@ -22,7 +22,11 @@ struct RawEndpoint{
 ///Class that handle the configuration phase
 class Config {
     Config()= default;
+
+    //Class pointer used for implementing singleton pattern
     static Config* m_ConfigClass;
+
+    //Path of the user's client exe
     std::filesystem::path exe_path;
 
 public:
