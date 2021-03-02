@@ -1,7 +1,10 @@
 #include <shared_queue.h>
 
 SharedQueue *SharedQueue::m_SharedQueue = nullptr;
-
+/***
+ * Get method for singletone instance.
+ * @return ptr to SharedQueue
+ */
 SharedQueue *SharedQueue::get_Instance() {
     if(!m_SharedQueue){
         m_SharedQueue = new SharedQueue();
@@ -9,7 +12,7 @@ SharedQueue *SharedQueue::get_Instance() {
     return m_SharedQueue;
 }
 
-/**
+/***
  * Choose a FileSipper from the queue that is ready to send a file.
  * If queue is empty or all FileSipper are already started, Sender will be waiting.
  * @return std::shared_ptr<FileSipper>
@@ -22,7 +25,7 @@ std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
     //Check also the Shared Queue status flag; if true we need to wakeup to close the program
     //std::cerr << "get ready active_fs-> " << active_fs.load() << "get ready fslist size-> " << fs_list.size()<< std::endl;
 
-    cv.wait(l, [this]() { return !( (fs_list.empty() || (fs_list.size() <= active_fs.load()) || (5 <= active_fs.load())) && flag.load() ); });
+    cv.wait(l, [this]() { return !( (fs_list.empty() || (fs_list.size() <= active_fs.load()) || (MAX_CONCURRENT_ACTIVE_FS <= active_fs.load())) && flag.load() ); });
     //std::cerr << "get ready active_fs-> " << active_fs.load() << "get ready fslist size-> " << fs_list.size()<<"inside "<< std::endl;
     if( !flag.load() ){
        //We request to terminate the program
@@ -51,7 +54,7 @@ std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
 
 /***
  * Remove the selected fileSipper from the shared queue.
- * @param fileSipper to be removed
+ * @param fileSipper: ptr to the fileSipper to be removed
  */
 void SharedQueue::remove_element(const std::shared_ptr<FileSipper>& file_sipper){
     std::lock_guard<std::mutex> l(m);
@@ -71,7 +74,7 @@ void SharedQueue::remove_element(const std::shared_ptr<FileSipper>& file_sipper)
 
 /***
  * Add a new ptrFileSipper in the SharedQueue
- * @param file_sipper to be added
+ * @param file_sipper: ptr to the fileSipper to be added
  */
 void SharedQueue::insert(std::shared_ptr<FileSipper> file_sipper){ // This one MUST like this, not const reference.
 
@@ -85,7 +88,7 @@ void SharedQueue::insert(std::shared_ptr<FileSipper> file_sipper){ // This one M
 
 /***
  * Change Shared_Queue status. If false the program will shutdown gracefully
- * @param flag_value
+ * @param flag_value: new flag value
  */
 void SharedQueue::setFlag(bool flag_value) {
     flag.store(flag_value);

@@ -2,10 +2,15 @@
 
 const unsigned int DEFAULT_THREAD_POOL_SIZE = 1;
 
+/***
+ * Thread Pool creation, fileSipper selection to be sent.
+ * After the choice of the fileSipper to be sent, it is assigned to a thread of the pool. It is removed from the
+ * shared queue.
+ */
 void Sender::Sender_Action() const{
 
     //Calculate the size of the pool based on the hardware
-    unsigned int thread_pool_size = std::thread::hardware_concurrency() * 2;
+    unsigned int thread_pool_size = std::thread::hardware_concurrency();// * 2;
     if (thread_pool_size == 0) thread_pool_size = DEFAULT_THREAD_POOL_SIZE;
 
     // Launch the pool with size threads.
@@ -48,7 +53,7 @@ void Sender::Sender_Action() const{
 
 /***
  * Change Sender flag status. If false the program will shutdown gracefully
- * @param flag_value
+ * @param flag_value: new flag value
  */
 void Sender::setFlag(bool flag_value) {
    flag = flag_value;
