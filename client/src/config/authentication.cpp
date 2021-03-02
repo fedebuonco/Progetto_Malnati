@@ -4,6 +4,10 @@
 
 Authentication *Authentication::m_AuthenticationClass = nullptr;
 
+/**
+ * Method used for implementing singleton.
+ * @return the pointer to the class
+ */
 Authentication *Authentication::get_Instance() {
 
     if(!m_AuthenticationClass){

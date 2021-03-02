@@ -2,9 +2,13 @@
 
 #include <string>
 
-
+/**
+ * Struct used for authentication. Made of username and hash_pass
+ */
 struct Credential{
+    //Username used for authentication
     std::string username_;
+    //Password provided by the user. We stored the hash.
     std::string hash_password_;
 };
 

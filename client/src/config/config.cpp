@@ -19,8 +19,13 @@
 //True means we are in debug, so we print more information in the console
 bool DEBUG=false;
 
+
+/**
+ * Custom class exception used for handling console args syntax error
+ */
 class SyntaxError : public std::exception {
 private:
+    //Error message
     std::string m_message;
 
 public:

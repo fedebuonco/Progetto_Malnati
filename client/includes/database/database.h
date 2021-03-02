@@ -9,9 +9,14 @@
 #include <vector>
 
 class DatabaseConnection{
+
+    //The user's folder to be monitored
     std::filesystem::path folder_watched_;
+
+    //Database object used for connection
     SQLite::Database hash_db_;
 
+    //Mutex that protected the access to DB in order to handle mutual exclusion
     static std::shared_mutex db_mutex_;
 
 
