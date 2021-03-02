@@ -12,22 +12,48 @@ Takes files from the queue and gives them to File\+Sippers, in order to be sent.
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classSender_a366a0b41ff02f44a5b1173a285b3ef1a}\label{classSender_a366a0b41ff02f44a5b1173a285b3ef1a}} 
-void {\bfseries Sender\+\_\+\+Action} () const
-\item 
-\mbox{\Hypertarget{classSender_a0f231d57731e1a530ed3c80b9b83143a}\label{classSender_a0f231d57731e1a530ed3c80b9b83143a}} 
-void {\bfseries set\+Flag} (bool flag)
-\end{DoxyCompactItemize}
+void \mbox{\hyperlink{classSender_a366a0b41ff02f44a5b1173a285b3ef1a}{Sender\+\_\+\+Action}} () const
+\begin{DoxyCompactList}\small\item\em Thread Pool creation, file\+Sipper selection to be sent. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classSender_a0f231d57731e1a530ed3c80b9b83143a}{set\+Flag}} (bool \mbox{\hyperlink{classSender_a6836ff3156553be4118911c7f1b67873}{flag}})
+\begin{DoxyCompactList}\small\item\em Change \mbox{\hyperlink{classSender}{Sender}} flag status. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classSender_a6836ff3156553be4118911c7f1b67873}\label{classSender_a6836ff3156553be4118911c7f1b67873}} 
-bool {\bfseries flag} = true
-\end{DoxyCompactItemize}
+bool \mbox{\hyperlink{classSender_a6836ff3156553be4118911c7f1b67873}{flag}} = true
+\begin{DoxyCompactList}\small\item\em Shutdown flag. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 Takes files from the queue and gives them to File\+Sippers, in order to be sent. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classSender_a366a0b41ff02f44a5b1173a285b3ef1a}\label{classSender_a366a0b41ff02f44a5b1173a285b3ef1a}} 
+\index{Sender@{Sender}!Sender\_Action@{Sender\_Action}}
+\index{Sender\_Action@{Sender\_Action}!Sender@{Sender}}
+\doxysubsubsection{\texorpdfstring{Sender\_Action()}{Sender\_Action()}}
+{\footnotesize\ttfamily void Sender\+::\+Sender\+\_\+\+Action (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Thread Pool creation, file\+Sipper selection to be sent. 
+
+After the choice of the file\+Sipper to be sent, it is assigned to a thread of the pool. It is removed from the shared queue. \mbox{\Hypertarget{classSender_a0f231d57731e1a530ed3c80b9b83143a}\label{classSender_a0f231d57731e1a530ed3c80b9b83143a}} 
+\index{Sender@{Sender}!setFlag@{setFlag}}
+\index{setFlag@{setFlag}!Sender@{Sender}}
+\doxysubsubsection{\texorpdfstring{setFlag()}{setFlag()}}
+{\footnotesize\ttfamily void Sender\+::set\+Flag (\begin{DoxyParamCaption}\item[{bool}]{flag\+\_\+value }\end{DoxyParamCaption})}
+
+
+
+Change \mbox{\hyperlink{classSender}{Sender}} flag status. 
+
+If false the program will shutdown gracefully 
+\begin{DoxyParams}{Parameters}
+{\em flag\+\_\+value} & new flag value \\
+\hline
+\end{DoxyParams}
+
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

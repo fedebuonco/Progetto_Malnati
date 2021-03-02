@@ -43,17 +43,17 @@ std\+::string \mbox{\hyperlink{classClient_a535e378b54dfcdf796ea385ee3006374}{Ha
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classClient_a62057fdee3003fb49da48c46b50015be}\label{classClient_a62057fdee3003fb49da48c46b50015be}} 
-\mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} {\bfseries server\+\_\+re\+\_\+}
-\item 
+\mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} \mbox{\hyperlink{classClient_a62057fdee3003fb49da48c46b50015be}{server\+\_\+re\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Raw endpoint containing the server ip and port. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classClient_a082f49dec300d7b4f332a5292dc603b7}\label{classClient_a082f49dec300d7b4f332a5292dc603b7}} 
-std\+::filesystem\+::path {\bfseries folder\+\_\+watched\+\_\+}
-\item 
+std\+::filesystem\+::path \mbox{\hyperlink{classClient_a082f49dec300d7b4f332a5292dc603b7}{folder\+\_\+watched\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Folder that we are monitoring. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classClient_a61bb6f6dda38b1907422bad27c1b10c7}\label{classClient_a61bb6f6dda38b1907422bad27c1b10c7}} 
-std\+::filesystem\+::path {\bfseries db\+\_\+file\+\_\+}
-\item 
+std\+::filesystem\+::path \mbox{\hyperlink{classClient_a61bb6f6dda38b1907422bad27c1b10c7}{db\+\_\+file\+\_\+}}
+\begin{DoxyCompactList}\small\item\em File path of the DB file. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classClient_a6ad1cb6ffa3fe3e25a4966be282d8df4}\label{classClient_a6ad1cb6ffa3fe3e25a4966be282d8df4}} 
-\mbox{\hyperlink{classWatcher}{Watcher}} {\bfseries watcher\+\_\+}
-\end{DoxyCompactItemize}
+\mbox{\hyperlink{classWatcher}{Watcher}} \mbox{\hyperlink{classClient_a6ad1cb6ffa3fe3e25a4966be282d8df4}{watcher\+\_\+}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classWatcher}{Watcher}} that will take care of monitoring the folder. Wrapper of the Panoptes watcher. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -136,7 +136,10 @@ Returns the recovered files.
 
 Request current tree and times of the cloud dir stored in the server. 
 
-Handles the result by starting the diff computation. \mbox{\Hypertarget{classClient_ad90c29a5ac034afb4d04aae5d58dd60c}\label{classClient_ad90c29a5ac034afb4d04aae5d58dd60c}} 
+Handles the result by starting the diff computation. \begin{DoxyReturn}{Returns}
+The \mbox{\hyperlink{classTreeT}{TreeT}} coming from the server. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classClient_ad90c29a5ac034afb4d04aae5d58dd60c}\label{classClient_ad90c29a5ac034afb4d04aae5d58dd60c}} 
 \index{Client@{Client}!SendRemoval@{SendRemoval}}
 \index{SendRemoval@{SendRemoval}!Client@{Client}}
 \doxysubsubsection{\texorpdfstring{SendRemoval()}{SendRemoval()}}

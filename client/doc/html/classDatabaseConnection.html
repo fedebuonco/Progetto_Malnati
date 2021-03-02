@@ -70,6 +70,11 @@ $(function() {
 <div class="title">DatabaseConnection Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class that manage the connection and operation with the DB.  
+ <a href="classDatabaseConnection.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="database_8h_source.html">database.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -114,19 +119,24 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:aac1aad2c39d9daa489b99d2aa6ed28cf"><td class="memItemLeft" align="right" valign="top"><a id="aac1aad2c39d9daa489b99d2aa6ed28cf"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>folder_watched_</b></td></tr>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDatabaseConnection.html#aac1aad2c39d9daa489b99d2aa6ed28cf">folder_watched_</a></td></tr>
+<tr class="memdesc:aac1aad2c39d9daa489b99d2aa6ed28cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">The user's folder to be monitored. <br /></td></tr>
 <tr class="separator:aac1aad2c39d9daa489b99d2aa6ed28cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2432390c967c4ea94d51901721d6140"><td class="memItemLeft" align="right" valign="top"><a id="ab2432390c967c4ea94d51901721d6140"></a>
-SQLite::Database&#160;</td><td class="memItemRight" valign="bottom"><b>hash_db_</b></td></tr>
+SQLite::Database&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDatabaseConnection.html#ab2432390c967c4ea94d51901721d6140">hash_db_</a></td></tr>
+<tr class="memdesc:ab2432390c967c4ea94d51901721d6140"><td class="mdescLeft">&#160;</td><td class="mdescRight">Database object used for connection. <br /></td></tr>
 <tr class="separator:ab2432390c967c4ea94d51901721d6140"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
 <tr class="memitem:ae23a1b73d5bebd3d6c209c4b6c53a53a"><td class="memItemLeft" align="right" valign="top"><a id="ae23a1b73d5bebd3d6c209c4b6c53a53a"></a>
-static std::shared_mutex&#160;</td><td class="memItemRight" valign="bottom"><b>db_mutex_</b></td></tr>
+static std::shared_mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDatabaseConnection.html#ae23a1b73d5bebd3d6c209c4b6c53a53a">db_mutex_</a></td></tr>
+<tr class="memdesc:ae23a1b73d5bebd3d6c209c4b6c53a53a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mutex that protected the access to DB in order to handle mutual exclusion. <br /></td></tr>
 <tr class="separator:ae23a1b73d5bebd3d6c209c4b6c53a53a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Class that manage the connection and operation with the DB. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a05a846cb8c9f96b481d90debe72c6536"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a05a846cb8c9f96b481d90debe72c6536">&#9670;&nbsp;</a></span>DatabaseConnection()</h2>
 

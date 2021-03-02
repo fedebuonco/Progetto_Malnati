@@ -6,9 +6,8 @@
 //For linux
 #include <sys/stat.h>
 
-
 /// Starting from the ordered string sent by the server, it computes a mapping between the files present in the server and their hashes
-/// \param tree: Directory tree if the server files (0)   ::::::::i
+/// \param tree: Directory tree if the server files (0)
 /// \param time: Time of the files present in the server following the same order of the tree
 TreeT::TreeT(const std::string& tree, const std::string& time) {
     //Now we fill the map using the two string we got
@@ -19,7 +18,7 @@ TreeT::TreeT(const std::string& tree, const std::string& time) {
 
 
     try {
-        /**std::stoul Exceptions:
+        /* std::stoul Exceptions:
          * std::invalid_argument if no conversion could be performed
          * std::out_of_range if the converted value would fall out of
          *                      the range of the result type or if the

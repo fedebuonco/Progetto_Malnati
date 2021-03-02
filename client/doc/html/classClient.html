@@ -120,16 +120,20 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a62057fdee3003fb49da48c46b50015be"><td class="memItemLeft" align="right" valign="top"><a id="a62057fdee3003fb49da48c46b50015be"></a>
-<a class="el" href="structRawEndpoint.html">RawEndpoint</a>&#160;</td><td class="memItemRight" valign="bottom"><b>server_re_</b></td></tr>
+<a class="el" href="structRawEndpoint.html">RawEndpoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#a62057fdee3003fb49da48c46b50015be">server_re_</a></td></tr>
+<tr class="memdesc:a62057fdee3003fb49da48c46b50015be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raw endpoint containing the server ip and port. <br /></td></tr>
 <tr class="separator:a62057fdee3003fb49da48c46b50015be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a082f49dec300d7b4f332a5292dc603b7"><td class="memItemLeft" align="right" valign="top"><a id="a082f49dec300d7b4f332a5292dc603b7"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>folder_watched_</b></td></tr>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#a082f49dec300d7b4f332a5292dc603b7">folder_watched_</a></td></tr>
+<tr class="memdesc:a082f49dec300d7b4f332a5292dc603b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Folder that we are monitoring. <br /></td></tr>
 <tr class="separator:a082f49dec300d7b4f332a5292dc603b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61bb6f6dda38b1907422bad27c1b10c7"><td class="memItemLeft" align="right" valign="top"><a id="a61bb6f6dda38b1907422bad27c1b10c7"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>db_file_</b></td></tr>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#a61bb6f6dda38b1907422bad27c1b10c7">db_file_</a></td></tr>
+<tr class="memdesc:a61bb6f6dda38b1907422bad27c1b10c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">File path of the DB file. <br /></td></tr>
 <tr class="separator:a61bb6f6dda38b1907422bad27c1b10c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ad1cb6ffa3fe3e25a4966be282d8df4"><td class="memItemLeft" align="right" valign="top"><a id="a6ad1cb6ffa3fe3e25a4966be282d8df4"></a>
-<a class="el" href="classWatcher.html">Watcher</a>&#160;</td><td class="memItemRight" valign="bottom"><b>watcher_</b></td></tr>
+<a class="el" href="classWatcher.html">Watcher</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#a6ad1cb6ffa3fe3e25a4966be282d8df4">watcher_</a></td></tr>
+<tr class="memdesc:a6ad1cb6ffa3fe3e25a4966be282d8df4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classWatcher.html" title="The watcher is a wrapper for panoptes watcher library, will take a folder and will check for changes ...">Watcher</a> that will take care of monitoring the folder. Wrapper of the Panoptes watcher. <br /></td></tr>
 <tr class="separator:a6ad1cb6ffa3fe3e25a4966be282d8df4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -289,7 +293,7 @@ std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>db_f
 </div><div class="memdoc">
 
 <p>Request current tree and times of the cloud dir stored in the server. </p>
-<p>Handles the result by starting the diff computation. </p>
+<p>Handles the result by starting the diff computation. </p><dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="classTreeT.html" title="The TreeT encapsulate a map containing for each element path a pair &quot;element_path - last_modified_tim...">TreeT</a> coming from the server. </dd></dl>
 
 </div>
 </div>

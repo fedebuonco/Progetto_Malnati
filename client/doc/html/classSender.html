@@ -77,22 +77,70 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a366a0b41ff02f44a5b1173a285b3ef1a"><td class="memItemLeft" align="right" valign="top"><a id="a366a0b41ff02f44a5b1173a285b3ef1a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Sender_Action</b> () const</td></tr>
+<tr class="memitem:a366a0b41ff02f44a5b1173a285b3ef1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSender.html#a366a0b41ff02f44a5b1173a285b3ef1a">Sender_Action</a> () const</td></tr>
+<tr class="memdesc:a366a0b41ff02f44a5b1173a285b3ef1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thread Pool creation, fileSipper selection to be sent.  <a href="classSender.html#a366a0b41ff02f44a5b1173a285b3ef1a">More...</a><br /></td></tr>
 <tr class="separator:a366a0b41ff02f44a5b1173a285b3ef1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f231d57731e1a530ed3c80b9b83143a"><td class="memItemLeft" align="right" valign="top"><a id="a0f231d57731e1a530ed3c80b9b83143a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setFlag</b> (bool flag)</td></tr>
+<tr class="memitem:a0f231d57731e1a530ed3c80b9b83143a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSender.html#a0f231d57731e1a530ed3c80b9b83143a">setFlag</a> (bool <a class="el" href="classSender.html#a6836ff3156553be4118911c7f1b67873">flag</a>)</td></tr>
+<tr class="memdesc:a0f231d57731e1a530ed3c80b9b83143a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change <a class="el" href="classSender.html" title="Takes files from the queue and gives them to FileSippers, in order to be sent.">Sender</a> flag status.  <a href="classSender.html#a0f231d57731e1a530ed3c80b9b83143a">More...</a><br /></td></tr>
 <tr class="separator:a0f231d57731e1a530ed3c80b9b83143a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a6836ff3156553be4118911c7f1b67873"><td class="memItemLeft" align="right" valign="top"><a id="a6836ff3156553be4118911c7f1b67873"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>flag</b> = true</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSender.html#a6836ff3156553be4118911c7f1b67873">flag</a> = true</td></tr>
+<tr class="memdesc:a6836ff3156553be4118911c7f1b67873"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shutdown flag. <br /></td></tr>
 <tr class="separator:a6836ff3156553be4118911c7f1b67873"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Takes files from the queue and gives them to FileSippers, in order to be sent. </p>
-</div><hr/>The documentation for this class was generated from the following files:<ul>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a366a0b41ff02f44a5b1173a285b3ef1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a366a0b41ff02f44a5b1173a285b3ef1a">&#9670;&nbsp;</a></span>Sender_Action()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Sender::Sender_Action </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Thread Pool creation, fileSipper selection to be sent. </p>
+<p>After the choice of the fileSipper to be sent, it is assigned to a thread of the pool. It is removed from the shared queue. </p>
+
+</div>
+</div>
+<a id="a0f231d57731e1a530ed3c80b9b83143a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f231d57731e1a530ed3c80b9b83143a">&#9670;&nbsp;</a></span>setFlag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Sender::setFlag </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>flag_value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Change <a class="el" href="classSender.html" title="Takes files from the queue and gives them to FileSippers, in order to be sent.">Sender</a> flag status. </p>
+<p>If false the program will shutdown gracefully </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">flag_value</td><td>new flag value </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>includes/client/<a class="el" href="sender_8h_source.html">sender.h</a></li>
 <li>src/client/sender.cpp</li>
 </ul>

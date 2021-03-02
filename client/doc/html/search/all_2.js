@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['databaseconnection_19',['DatabaseConnection',['../classDatabaseConnection.html',1,'DatabaseConnection'],['../classDatabaseConnection.html#a05a846cb8c9f96b481d90debe72c6536',1,'DatabaseConnection::DatabaseConnection()']]],
-  ['dispatch_20',['Dispatch',['../classPatch.html#a89a3b1626a3220d1bd7b17d8e797adcf',1,'Patch']]],
-  ['document_5f_21',['document_',['../classControlMessage.html#a837ac39ba7962a6e0b38c4c1648e4f02',1,'ControlMessage']]]
+  ['buf_5farray_5f_9',['buf_array_',['../classFileSipper.html#a6f3aa68733bdee2f54414500649103ef',1,'FileSipper']]],
+  ['buf_5fmetadata_10',['buf_metadata',['../classFileSipper.html#a35065ad3d32b9c94a3883b229e6c259e',1,'FileSipper']]]
 ];

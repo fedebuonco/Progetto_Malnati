@@ -4,6 +4,9 @@
 #include <utility>
 
 
+/// Create the wrapper around the Panoptes Watcher
+/// \param db_file Path of the db file.
+/// \param folder_watched Path of the monitored folder.
 Watcher::Watcher(std::filesystem::path  db_file, std::filesystem::path folder_watched) :
     db_file_(std::move(db_file)),
     folder_watched_(std::move(folder_watched))

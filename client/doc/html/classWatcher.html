@@ -86,28 +86,70 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2146a455e2d9542430e3f983484a5ace"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWatcher.html#a2146a455e2d9542430e3f983484a5ace">Start</a> (const std::filesystem::path &amp;path)</td></tr>
 <tr class="memdesc:a2146a455e2d9542430e3f983484a5ace"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start the watcher.  <a href="classWatcher.html#a2146a455e2d9542430e3f983484a5ace">More...</a><br /></td></tr>
 <tr class="separator:a2146a455e2d9542430e3f983484a5ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a346ecde216bc7549ced7163b19be7f50"><td class="memItemLeft" align="right" valign="top"><a id="a346ecde216bc7549ced7163b19be7f50"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Watcher</b> (std::filesystem::path db_file, std::filesystem::path folder_watched)</td></tr>
+<tr class="memitem:a346ecde216bc7549ced7163b19be7f50"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWatcher.html#a346ecde216bc7549ced7163b19be7f50">Watcher</a> (std::filesystem::path db_file, std::filesystem::path folder_watched)</td></tr>
+<tr class="memdesc:a346ecde216bc7549ced7163b19be7f50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the wrapper around the Panoptes <a class="el" href="classWatcher.html" title="The watcher is a wrapper for panoptes watcher library, will take a folder and will check for changes ...">Watcher</a>.  <a href="classWatcher.html#a346ecde216bc7549ced7163b19be7f50">More...</a><br /></td></tr>
 <tr class="separator:a346ecde216bc7549ced7163b19be7f50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a781e765743a94da6554c384566a702bc"><td class="memItemLeft" align="right" valign="top"><a id="a781e765743a94da6554c384566a702bc"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>db_file_</b></td></tr>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWatcher.html#a781e765743a94da6554c384566a702bc">db_file_</a></td></tr>
+<tr class="memdesc:a781e765743a94da6554c384566a702bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">DB file. <br /></td></tr>
 <tr class="separator:a781e765743a94da6554c384566a702bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0acb4f01c9a3f0b43e5cbe604f11e804"><td class="memItemLeft" align="right" valign="top"><a id="a0acb4f01c9a3f0b43e5cbe604f11e804"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>folder_watched_</b></td></tr>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWatcher.html#a0acb4f01c9a3f0b43e5cbe604f11e804">folder_watched_</a></td></tr>
+<tr class="memdesc:a0acb4f01c9a3f0b43e5cbe604f11e804"><td class="mdescLeft">&#160;</td><td class="mdescRight">Folder monitored. <br /></td></tr>
 <tr class="separator:a0acb4f01c9a3f0b43e5cbe604f11e804"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf0e486059213e94611f9bfcce24df36"><td class="memItemLeft" align="right" valign="top"><a id="acf0e486059213e94611f9bfcce24df36"></a>
-std::unique_ptr&lt; pfw::FileSystemWatcher &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_watcher</b></td></tr>
+std::unique_ptr&lt; pfw::FileSystemWatcher &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWatcher.html#acf0e486059213e94611f9bfcce24df36">_watcher</a></td></tr>
+<tr class="memdesc:acf0e486059213e94611f9bfcce24df36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Panoptes <a class="el" href="classWatcher.html" title="The watcher is a wrapper for panoptes watcher library, will take a folder and will check for changes ...">Watcher</a>. <br /></td></tr>
 <tr class="separator:acf0e486059213e94611f9bfcce24df36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c74f3b25f2635dafba13eb064f78d16"><td class="memItemLeft" align="right" valign="top"><a id="a8c74f3b25f2635dafba13eb064f78d16"></a>
-std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>update_callback</b></td></tr>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWatcher.html#a8c74f3b25f2635dafba13eb064f78d16">update_callback</a></td></tr>
+<tr class="memdesc:a8c74f3b25f2635dafba13eb064f78d16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback called when change is detected. <br /></td></tr>
 <tr class="separator:a8c74f3b25f2635dafba13eb064f78d16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The watcher is a wrapper for panoptes watcher library, will take a folder and will check for changes in the file structure. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a346ecde216bc7549ced7163b19be7f50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a346ecde216bc7549ced7163b19be7f50">&#9670;&nbsp;</a></span>Watcher()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Watcher::Watcher </td>
+          <td>(</td>
+          <td class="paramtype">std::filesystem::path&#160;</td>
+          <td class="paramname"><em>db_file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::filesystem::path&#160;</td>
+          <td class="paramname"><em>folder_watched</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create the wrapper around the Panoptes <a class="el" href="classWatcher.html" title="The watcher is a wrapper for panoptes watcher library, will take a folder and will check for changes ...">Watcher</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">db_file</td><td>Path of the db file. </td></tr>
+    <tr><td class="paramname">folder_watched</td><td>Path of the monitored folder. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a49ed7c77d110e960312d94e5a273de4f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a49ed7c77d110e960312d94e5a273de4f">&#9670;&nbsp;</a></span>listenerFunction()</h2>
 

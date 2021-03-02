@@ -24,13 +24,13 @@ Class that handle the user authentication.
 \begin{DoxyCompactItemize}
 \item 
 static \mbox{\hyperlink{classAuthentication}{Authentication}} $\ast$ \mbox{\hyperlink{classAuthentication_a3c5a0c8df7ea1638e1721477dbf914ec}{get\+\_\+\+Instance}} ()
-\begin{DoxyCompactList}\small\item\em Method used for implementing singleton. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Used for getting the static instance of the \mbox{\hyperlink{classAuthentication}{Authentication}} class, part of the singleton pattern. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Static Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classAuthentication_a5d666e96f059a994afc523a2dd1e7d4d}\label{classAuthentication_a5d666e96f059a994afc523a2dd1e7d4d}} 
-static \mbox{\hyperlink{classAuthentication}{Authentication}} $\ast$ {\bfseries m\+\_\+\+Authentication\+Class} = nullptr
-\end{DoxyCompactItemize}
+static \mbox{\hyperlink{classAuthentication}{Authentication}} $\ast$ \mbox{\hyperlink{classAuthentication_a5d666e96f059a994afc523a2dd1e7d4d}{m\+\_\+\+Authentication\+Class}} = nullptr
+\begin{DoxyCompactList}\small\item\em Class pointer used for singleton pattern. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -45,7 +45,9 @@ Class that handle the user authentication.
 
 
 
-Method used for implementing singleton. 
+Used for getting the static instance of the \mbox{\hyperlink{classAuthentication}{Authentication}} class, part of the singleton pattern. 
+
+Method used for implementing singleton.
 
 \begin{DoxyReturn}{Returns}
 the pointer to the class 

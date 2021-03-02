@@ -5,6 +5,16 @@
 #include <database.h>
 #include <client.h>
 
+/// Used for "sipping" the file in order to send it to the server. It splits the file in 1024 byte and asynchronously writes it in the stream.
+/// \param re Raw Endpoint containing the server address
+/// \param folder_watched Folder watched by the monitor.
+/// \param db_path Path of the database file
+/// \param username Username, used for metadata retrieval.
+/// \param hashed_pass Hashed SHA-256 Password.
+/// \param file_path Full path of the file.
+/// \param file_string String of the path relative to the folder being watched.
+/// \param hash Digest of the file (SHA-256).
+/// \param lmt Last modified time of the file.
 FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path,
                        std::string username, const std::string& hashed_pass,   std::filesystem::path file_path,
                        std::string file_string, std::string hash, std::string lmt)  :
@@ -27,7 +37,10 @@ FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watch
 }
 
 
-/// Methods that starts the sending of the File.
+
+
+/// Methods that starts the async_send of the file. When finished the callback passed will be called.
+/// \param rem_call The callback that will be executed when the async_send will complete.
 void FileSipper::Send(std::function<void()> rem_call){
     //We change the fileSipper status to true, to indicate that we handle the fileSipper
     remove_callback_ = std::move(rem_call);
@@ -104,7 +117,10 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
     }
 }
 
-/// Takes a sip of a file and sends it.
+
+
+/// Takes a sip of a file and ask to write it invoking the WrtieBuffer.
+/// \param t_ec Error code passed from the prevoius WriteBuffer Invocation.
 void FileSipper::Sip(const boost::system::error_code& t_ec){
     if (!t_ec) {
         // These checks for fail bit or bad bit (hardware & software fail)
@@ -154,6 +170,8 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
     }
 }
 
+/// Waits for the response of the server, that after having computed the hash of the file, sends to the client the result of the comparison.
+/// Using that we update the status of the file on the db.
 void FileSipper::WaitOk() {
     buf_metadata.fill('\000');
     //sock_.read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()));
@@ -179,6 +197,11 @@ void FileSipper::WaitOk() {
                });
 }
 
+/// Updates the status of the filesipper on the db. Depending on the integer passed we decide the status.
+/// \param db_path Path of the db file.
+/// \param folder_watched Folder monitored by the watcher.
+/// \param file_string File path in string format relative to the folder watched.
+/// \param check The integer we pass in order to decide the status.
 void FileSipper::UpdateFileStatus(const std::filesystem::path& db_path , const std::filesystem::path& folder_watched, const std::string& file_string, int check) {
     DatabaseConnection db(db_path, folder_watched);
     if (check==1)//1

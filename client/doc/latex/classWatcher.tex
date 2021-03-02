@@ -18,28 +18,47 @@ void \mbox{\hyperlink{classWatcher_a49ed7c77d110e960312d94e5a273de4f}{listener\+
 \begin{DoxyCompactList}\small\item\em This is the function that will be called when a change is recorded. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classWatcher_a2146a455e2d9542430e3f983484a5ace}{Start}} (const std\+::filesystem\+::path \&path)
 \begin{DoxyCompactList}\small\item\em Start the watcher. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classWatcher_a346ecde216bc7549ced7163b19be7f50}\label{classWatcher_a346ecde216bc7549ced7163b19be7f50}} 
-{\bfseries Watcher} (std\+::filesystem\+::path db\+\_\+file, std\+::filesystem\+::path folder\+\_\+watched)
-\end{DoxyCompactItemize}
+\mbox{\hyperlink{classWatcher_a346ecde216bc7549ced7163b19be7f50}{Watcher}} (std\+::filesystem\+::path db\+\_\+file, std\+::filesystem\+::path folder\+\_\+watched)
+\begin{DoxyCompactList}\small\item\em Create the wrapper around the Panoptes \mbox{\hyperlink{classWatcher}{Watcher}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classWatcher_a781e765743a94da6554c384566a702bc}\label{classWatcher_a781e765743a94da6554c384566a702bc}} 
-std\+::filesystem\+::path {\bfseries db\+\_\+file\+\_\+}
-\item 
+std\+::filesystem\+::path \mbox{\hyperlink{classWatcher_a781e765743a94da6554c384566a702bc}{db\+\_\+file\+\_\+}}
+\begin{DoxyCompactList}\small\item\em DB file. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classWatcher_a0acb4f01c9a3f0b43e5cbe604f11e804}\label{classWatcher_a0acb4f01c9a3f0b43e5cbe604f11e804}} 
-std\+::filesystem\+::path {\bfseries folder\+\_\+watched\+\_\+}
-\item 
+std\+::filesystem\+::path \mbox{\hyperlink{classWatcher_a0acb4f01c9a3f0b43e5cbe604f11e804}{folder\+\_\+watched\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Folder monitored. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classWatcher_acf0e486059213e94611f9bfcce24df36}\label{classWatcher_acf0e486059213e94611f9bfcce24df36}} 
-std\+::unique\+\_\+ptr$<$ pfw\+::\+File\+System\+Watcher $>$ {\bfseries \+\_\+watcher}
-\item 
+std\+::unique\+\_\+ptr$<$ pfw\+::\+File\+System\+Watcher $>$ \mbox{\hyperlink{classWatcher_acf0e486059213e94611f9bfcce24df36}{\+\_\+watcher}}
+\begin{DoxyCompactList}\small\item\em Panoptes \mbox{\hyperlink{classWatcher}{Watcher}}. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classWatcher_a8c74f3b25f2635dafba13eb064f78d16}\label{classWatcher_a8c74f3b25f2635dafba13eb064f78d16}} 
-std\+::function$<$ void()$>$ {\bfseries update\+\_\+callback}
-\end{DoxyCompactItemize}
+std\+::function$<$ void()$>$ \mbox{\hyperlink{classWatcher_a8c74f3b25f2635dafba13eb064f78d16}{update\+\_\+callback}}
+\begin{DoxyCompactList}\small\item\em Callback called when change is detected. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 The watcher is a wrapper for panoptes watcher library, will take a folder and will check for changes in the file structure. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classWatcher_a346ecde216bc7549ced7163b19be7f50}\label{classWatcher_a346ecde216bc7549ced7163b19be7f50}} 
+\index{Watcher@{Watcher}!Watcher@{Watcher}}
+\index{Watcher@{Watcher}!Watcher@{Watcher}}
+\doxysubsubsection{\texorpdfstring{Watcher()}{Watcher()}}
+{\footnotesize\ttfamily Watcher\+::\+Watcher (\begin{DoxyParamCaption}\item[{std\+::filesystem\+::path}]{db\+\_\+file,  }\item[{std\+::filesystem\+::path}]{folder\+\_\+watched }\end{DoxyParamCaption})}
+
+
+
+Create the wrapper around the Panoptes \mbox{\hyperlink{classWatcher}{Watcher}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em db\+\_\+file} & Path of the db file. \\
+\hline
+{\em folder\+\_\+watched} & Path of the monitored folder. \\
+\hline
+\end{DoxyParams}
+
 
 \doxysubsection{Member Function Documentation}
 \mbox{\Hypertarget{classWatcher_a49ed7c77d110e960312d94e5a273de4f}\label{classWatcher_a49ed7c77d110e960312d94e5a273de4f}} 

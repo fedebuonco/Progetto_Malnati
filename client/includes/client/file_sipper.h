@@ -15,30 +15,38 @@
 /// Offers a callback that, after performing some checks, calls for another sip, thus creating a chain of sent sips.
 class FileSipper {
     //FileSipper is made of path_ and hash_
+
+    /// Path of the file that will be sent.
     std::filesystem::path path_;
+    /// Path of the folder monitored.
     std::filesystem::path folder_watched_;
+    /// Path of the DB file.
     std::filesystem::path db_path_;
+    /// hash Digest of the file (SHA-256).
     std::string hash_;
+    /// Last modified time of the file.
     std::string lmt_;
+    /// String containg the first sip.
     std::string metadata_;
+    /// Username of the user requesting the backup of the file.
     std::string username_;
 
     boost::asio::io_service ios_;
     boost::asio::ip::tcp::endpoint ep_;
     boost::asio::ip::tcp::socket sock_;
     boost::system::error_code ec_;
+    /// Stream used for opening the file, we will take sips from it and async send them to the server.
     std::ifstream files_stream_;
 
     //The file will be sent in small portions of this size
     enum { MessageSize = 1024 };
 
+    /// Buffer used for the incoming sips (contains data)
     std::array<char, MessageSize> buf_array_{};
+    /// Buffer used for the first sip and the result of the hashing
     std::array<char, MessageSize> buf_metadata{};
-
-    //Number of sip (i.e. block) in which the file is split
+    /// Number of sip (i.e. block) in which the file is split
     int sip_counter;
-
-    bool ready{};
 
 public:
     FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, const std::string& hashed_pass,  std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
@@ -46,8 +54,12 @@ public:
 
     virtual ~FileSipper();
 
+
+    /// Name of the file
     std::string file_string_;
+    /// Callback that will be called once the filesipper recieve the OK from the server.
     std::function<void()> remove_callback_;
+    /// Flag used for knowing if the FileSipper has been activated.
     std::atomic<bool> status = false;
 private:
     void OpenFile();

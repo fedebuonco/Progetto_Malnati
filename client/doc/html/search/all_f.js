@@ -1,4 +1,27 @@
 var searchData=
 [
-  ['_7esynctcpsocket_71',['~SyncTCPSocket',['../classSyncTCPSocket.html#a9e14fa078f01ea83d69b0d4a0b263e11',1,'SyncTCPSocket']]]
+  ['same_5ffile_5fsame_5flmt_5fvector_75',['same_file_same_lmt_vector',['../classPatch.html#aa027d82ae722e67b213dde09bbb8bf43',1,'Patch']]],
+  ['send_76',['Send',['../classFileSipper.html#a4406545c288c0d10ba6d97a3bcdc44d5',1,'FileSipper']]],
+  ['sender_77',['Sender',['../classSender.html',1,'']]],
+  ['sender_5faction_78',['Sender_Action',['../classSender.html#a366a0b41ff02f44a5b1173a285b3ef1a',1,'Sender']]],
+  ['sendremoval_79',['SendRemoval',['../classClient.html#ad90c29a5ac034afb4d04aae5d58dd60c',1,'Client']]],
+  ['server_5fre_5f_80',['server_re_',['../classClient.html#a62057fdee3003fb49da48c46b50015be',1,'Client']]],
+  ['setbacktonew_81',['SetBackToNew',['../classDatabaseConnection.html#a429c3b3f01ffe23e0344905e1a7c0b5f',1,'DatabaseConnection']]],
+  ['setconfig_82',['SetConfig',['../classConfig.html#a88f0acc8e8c96ad1b93a2debd3552884',1,'Config']]],
+  ['setdefaultconfig_83',['SetDefaultConfig',['../classConfig.html#a529d359d3bbbe4994b35b9c2ab055b81',1,'Config']]],
+  ['setflag_84',['setFlag',['../classSender.html#a0f231d57731e1a530ed3c80b9b83143a',1,'Sender::setFlag()'],['../classSharedQueue.html#a00f207e695c81cc031d0b1b2d551b5c6',1,'SharedQueue::setFlag()']]],
+  ['setpath_85',['SetPath',['../classConfig.html#ad55d6b44a32a8901f759538439198d05',1,'Config']]],
+  ['setupdatecallback_86',['SetUpdateCallback',['../classWatcher.html#a72ba0076d0a2e31127790fec0917c36f',1,'Watcher']]],
+  ['sharedqueue_87',['SharedQueue',['../classSharedQueue.html',1,'']]],
+  ['sip_88',['Sip',['../classFileSipper.html#a962d5fab2cbdbd9324f4175366b37f35',1,'FileSipper']]],
+  ['sip_5fcounter_89',['sip_counter',['../classFileSipper.html#a467596e8275190ad58a757743f996032',1,'FileSipper']]],
+  ['sock_5f_90',['sock_',['../classSyncTCPSocket.html#aea45cde3fd7172a96dd4ed2c7cb97160',1,'SyncTCPSocket']]],
+  ['start_91',['Start',['../classWatcher.html#a2146a455e2d9542430e3f983484a5ace',1,'Watcher']]],
+  ['startwatching_92',['StartWatching',['../classClient.html#a3dfef137cb0546024619921d6dabdf3b',1,'Client']]],
+  ['status_93',['status',['../classFileSipper.html#a38e8fbd881e285c3e75ba1e3656505e4',1,'FileSipper']]],
+  ['syncreadcm_94',['SyncReadCM',['../classClient.html#aa7c88ef1283a8b6dd0d1fe9cc81f8e29',1,'Client']]],
+  ['syncro_95',['Syncro',['../classClient.html#a5997dbbeee7953b784ac0537def159a9',1,'Client']]],
+  ['synctcpsocket_96',['SyncTCPSocket',['../classSyncTCPSocket.html',1,'SyncTCPSocket'],['../classSyncTCPSocket.html#ac5bfe87712bf4a1d9d80d1173b3155a2',1,'SyncTCPSocket::SyncTCPSocket()']]],
+  ['syncwritecm_97',['SyncWriteCM',['../classClient.html#a33c8b03d66e4b4a461cbaa9ed18a2c8c',1,'Client']]],
+  ['syntaxerror_98',['SyntaxError',['../classSyntaxError.html',1,'']]]
 ];

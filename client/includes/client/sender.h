@@ -14,7 +14,7 @@
 
 /// Takes files from the queue and gives them to FileSippers, in order to be sent
 class Sender {
-    //Shutdown flag
+    /// Shutdown flag
     bool flag = true;
 
 public:

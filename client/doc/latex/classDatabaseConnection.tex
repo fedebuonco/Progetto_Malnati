@@ -1,5 +1,14 @@
 \hypertarget{classDatabaseConnection}{}\doxysection{Database\+Connection Class Reference}
 \label{classDatabaseConnection}\index{DatabaseConnection@{DatabaseConnection}}
+
+
+Class that manage the connection and operation with the DB.  
+
+
+
+
+{\ttfamily \#include $<$database.\+h$>$}
+
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -32,18 +41,21 @@ bool \mbox{\hyperlink{classDatabaseConnection_a3740213380441dbb5ca718c068085032}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classDatabaseConnection_aac1aad2c39d9daa489b99d2aa6ed28cf}\label{classDatabaseConnection_aac1aad2c39d9daa489b99d2aa6ed28cf}} 
-std\+::filesystem\+::path {\bfseries folder\+\_\+watched\+\_\+}
-\item 
+std\+::filesystem\+::path \mbox{\hyperlink{classDatabaseConnection_aac1aad2c39d9daa489b99d2aa6ed28cf}{folder\+\_\+watched\+\_\+}}
+\begin{DoxyCompactList}\small\item\em The user\textquotesingle{}s folder to be monitored. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classDatabaseConnection_ab2432390c967c4ea94d51901721d6140}\label{classDatabaseConnection_ab2432390c967c4ea94d51901721d6140}} 
-SQLite\+::\+Database {\bfseries hash\+\_\+db\+\_\+}
-\end{DoxyCompactItemize}
+SQLite\+::\+Database \mbox{\hyperlink{classDatabaseConnection_ab2432390c967c4ea94d51901721d6140}{hash\+\_\+db\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Database object used for connection. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Static Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classDatabaseConnection_ae23a1b73d5bebd3d6c209c4b6c53a53a}\label{classDatabaseConnection_ae23a1b73d5bebd3d6c209c4b6c53a53a}} 
-static std\+::shared\+\_\+mutex {\bfseries db\+\_\+mutex\+\_\+}
-\end{DoxyCompactItemize}
+static std\+::shared\+\_\+mutex \mbox{\hyperlink{classDatabaseConnection_ae23a1b73d5bebd3d6c209c4b6c53a53a}{db\+\_\+mutex\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Mutex that protected the access to DB in order to handle mutual exclusion. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+Class that manage the connection and operation with the DB. 
 
 \doxysubsection{Constructor \& Destructor Documentation}
 \mbox{\Hypertarget{classDatabaseConnection_a05a846cb8c9f96b481d90debe72c6536}\label{classDatabaseConnection_a05a846cb8c9f96b481d90debe72c6536}} 

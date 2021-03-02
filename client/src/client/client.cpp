@@ -147,8 +147,10 @@ int Client::RecoverSending() {
 }
 
 
+
 /// Request current tree and times of the cloud dir stored in the server.
 /// Handles the result by starting the diff computation.
+/// \return The TreeT coming from the server.
 TreeT Client::RequestTree() {
     //SyncTCPSocket for request
     Credential credential = Authentication::get_Instance()->ReadCredential();

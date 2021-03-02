@@ -85,52 +85,185 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a76c38a2b23a56d2340d910bcc1ea1cd7"><td class="memItemLeft" align="right" valign="top"><a id="a76c38a2b23a56d2340d910bcc1ea1cd7"></a>
 <a class="el" href="classSharedQueue.html">SharedQueue</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classSharedQueue.html">SharedQueue</a> &amp;)=delete</td></tr>
 <tr class="separator:a76c38a2b23a56d2340d910bcc1ea1cd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00f207e695c81cc031d0b1b2d551b5c6"><td class="memItemLeft" align="right" valign="top"><a id="a00f207e695c81cc031d0b1b2d551b5c6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setFlag</b> (bool flag_value)</td></tr>
+<tr class="memitem:a00f207e695c81cc031d0b1b2d551b5c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSharedQueue.html#a00f207e695c81cc031d0b1b2d551b5c6">setFlag</a> (bool flag_value)</td></tr>
+<tr class="memdesc:a00f207e695c81cc031d0b1b2d551b5c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change Shared_Queue status.  <a href="classSharedQueue.html#a00f207e695c81cc031d0b1b2d551b5c6">More...</a><br /></td></tr>
 <tr class="separator:a00f207e695c81cc031d0b1b2d551b5c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad45eb5d6394b2aaad80b7c85b7f56404"><td class="memItemLeft" align="right" valign="top"><a id="ad45eb5d6394b2aaad80b7c85b7f56404"></a>
-std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_ready_FileSipper</b> ()</td></tr>
+<tr class="memitem:ad45eb5d6394b2aaad80b7c85b7f56404"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSharedQueue.html#ad45eb5d6394b2aaad80b7c85b7f56404">get_ready_FileSipper</a> ()</td></tr>
+<tr class="memdesc:ad45eb5d6394b2aaad80b7c85b7f56404"><td class="mdescLeft">&#160;</td><td class="mdescRight">Choose a <a class="el" href="classFileSipper.html" title="Encapsulates a file+hash that need to be sent to a server.">FileSipper</a> from the queue that is ready to send a file.  <a href="classSharedQueue.html#ad45eb5d6394b2aaad80b7c85b7f56404">More...</a><br /></td></tr>
 <tr class="separator:ad45eb5d6394b2aaad80b7c85b7f56404"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0844701624f2f3efc31a94c3f256dcfe"><td class="memItemLeft" align="right" valign="top"><a id="a0844701624f2f3efc31a94c3f256dcfe"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>remove_element</b> (const std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt; &amp;file_sipper)</td></tr>
+<tr class="memitem:a0844701624f2f3efc31a94c3f256dcfe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSharedQueue.html#a0844701624f2f3efc31a94c3f256dcfe">remove_element</a> (const std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt; &amp;file_sipper)</td></tr>
+<tr class="memdesc:a0844701624f2f3efc31a94c3f256dcfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the selected fileSipper from the shared queue.  <a href="classSharedQueue.html#a0844701624f2f3efc31a94c3f256dcfe">More...</a><br /></td></tr>
 <tr class="separator:a0844701624f2f3efc31a94c3f256dcfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f73bdb6748280fb66f0ec17127b7b6d"><td class="memItemLeft" align="right" valign="top"><a id="a6f73bdb6748280fb66f0ec17127b7b6d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>insert</b> (std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt; file_sipper)</td></tr>
+<tr class="memitem:a6f73bdb6748280fb66f0ec17127b7b6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSharedQueue.html#a6f73bdb6748280fb66f0ec17127b7b6d">insert</a> (std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt; file_sipper)</td></tr>
+<tr class="memdesc:a6f73bdb6748280fb66f0ec17127b7b6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a new ptrFileSipper in the <a class="el" href="classSharedQueue.html" title="This is the shared queue. Each FileSipper is demanded to send a file. The Sender decides who starts s...">SharedQueue</a>.  <a href="classSharedQueue.html#a6f73bdb6748280fb66f0ec17127b7b6d">More...</a><br /></td></tr>
 <tr class="separator:a6f73bdb6748280fb66f0ec17127b7b6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:acd3b0485590cdcd76b1e79fb0079e426"><td class="memItemLeft" align="right" valign="top"><a id="acd3b0485590cdcd76b1e79fb0079e426"></a>
-static <a class="el" href="classSharedQueue.html">SharedQueue</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_Instance</b> ()</td></tr>
+<tr class="memitem:acd3b0485590cdcd76b1e79fb0079e426"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classSharedQueue.html">SharedQueue</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSharedQueue.html#acd3b0485590cdcd76b1e79fb0079e426">get_Instance</a> ()</td></tr>
+<tr class="memdesc:acd3b0485590cdcd76b1e79fb0079e426"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get method for singletone instance.  <a href="classSharedQueue.html#acd3b0485590cdcd76b1e79fb0079e426">More...</a><br /></td></tr>
 <tr class="separator:acd3b0485590cdcd76b1e79fb0079e426"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:ada82bb150ec958df0b78b85da2947200"><td class="memItemLeft" align="right" valign="top"><a id="ada82bb150ec958df0b78b85da2947200"></a>
-std::list&lt; std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>fs_list</b></td></tr>
+std::list&lt; std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSharedQueue.html#ada82bb150ec958df0b78b85da2947200">fs_list</a></td></tr>
+<tr class="memdesc:ada82bb150ec958df0b78b85da2947200"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of all shared_ptr to FileSippers. <br /></td></tr>
 <tr class="separator:ada82bb150ec958df0b78b85da2947200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a906257eb3c2a9be5f86823468f6af7ea"><td class="memItemLeft" align="right" valign="top"><a id="a906257eb3c2a9be5f86823468f6af7ea"></a>
-std::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>m</b></td></tr>
+std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSharedQueue.html#a906257eb3c2a9be5f86823468f6af7ea">m</a></td></tr>
+<tr class="memdesc:a906257eb3c2a9be5f86823468f6af7ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protect shared list (fs_list) from being simultaneously accessed by multiple threads. <br /></td></tr>
 <tr class="separator:a906257eb3c2a9be5f86823468f6af7ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30b2e6b8ffc83627f8f8296748de520f"><td class="memItemLeft" align="right" valign="top"><a id="a30b2e6b8ffc83627f8f8296748de520f"></a>
-std::condition_variable&#160;</td><td class="memItemRight" valign="bottom"><b>cv</b></td></tr>
+std::condition_variable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSharedQueue.html#a30b2e6b8ffc83627f8f8296748de520f">cv</a></td></tr>
+<tr class="memdesc:a30b2e6b8ffc83627f8f8296748de520f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Condition Variable in order to block other threads. <br /></td></tr>
 <tr class="separator:a30b2e6b8ffc83627f8f8296748de520f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00fed154691598d2dea8c4f6e7e0e5cf"><td class="memItemLeft" align="right" valign="top"><a id="a00fed154691598d2dea8c4f6e7e0e5cf"></a>
-std::atomic&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>active_fs</b> = 0</td></tr>
+std::atomic&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSharedQueue.html#a00fed154691598d2dea8c4f6e7e0e5cf">active_fs</a> = 0</td></tr>
+<tr class="memdesc:a00fed154691598d2dea8c4f6e7e0e5cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Active fileSipper counter (fileSipper assigned to a thread of the pool) <br /></td></tr>
 <tr class="separator:a00fed154691598d2dea8c4f6e7e0e5cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae697c571d6de8b0989c1091e561a74d0"><td class="memItemLeft" align="right" valign="top"><a id="ae697c571d6de8b0989c1091e561a74d0"></a>
-std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>flag</b> = true</td></tr>
+std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSharedQueue.html#ae697c571d6de8b0989c1091e561a74d0">flag</a> = true</td></tr>
+<tr class="memdesc:ae697c571d6de8b0989c1091e561a74d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shutdown flag. <br /></td></tr>
 <tr class="separator:ae697c571d6de8b0989c1091e561a74d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
 <tr class="memitem:ac88fc77603cef320269404282bb95a95"><td class="memItemLeft" align="right" valign="top"><a id="ac88fc77603cef320269404282bb95a95"></a>
-static <a class="el" href="classSharedQueue.html">SharedQueue</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>m_SharedQueue</b> = nullptr</td></tr>
+static <a class="el" href="classSharedQueue.html">SharedQueue</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSharedQueue.html#ac88fc77603cef320269404282bb95a95">m_SharedQueue</a> = nullptr</td></tr>
+<tr class="memdesc:ac88fc77603cef320269404282bb95a95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Singletone pointer. <br /></td></tr>
 <tr class="separator:ac88fc77603cef320269404282bb95a95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This is the shared queue. Each <a class="el" href="classFileSipper.html" title="Encapsulates a file+hash that need to be sent to a server.">FileSipper</a> is demanded to send a file. The <a class="el" href="classSender.html" title="Takes files from the queue and gives them to FileSippers, in order to be sent.">Sender</a> decides who starts sending. </p>
-</div><hr/>The documentation for this class was generated from the following files:<ul>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="acd3b0485590cdcd76b1e79fb0079e426"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd3b0485590cdcd76b1e79fb0079e426">&#9670;&nbsp;</a></span>get_Instance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSharedQueue.html">SharedQueue</a> * SharedQueue::get_Instance </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get method for singletone instance. </p>
+<dl class="section return"><dt>Returns</dt><dd>tr to <a class="el" href="classSharedQueue.html" title="This is the shared queue. Each FileSipper is demanded to send a file. The Sender decides who starts s...">SharedQueue</a> </dd></dl>
+
+</div>
+</div>
+<a id="ad45eb5d6394b2aaad80b7c85b7f56404"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad45eb5d6394b2aaad80b7c85b7f56404">&#9670;&nbsp;</a></span>get_ready_FileSipper()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt; SharedQueue::get_ready_FileSipper </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Choose a <a class="el" href="classFileSipper.html" title="Encapsulates a file+hash that need to be sent to a server.">FileSipper</a> from the queue that is ready to send a file. </p>
+<p>If queue is empty or all <a class="el" href="classFileSipper.html" title="Encapsulates a file+hash that need to be sent to a server.">FileSipper</a> are already started, <a class="el" href="classSender.html" title="Takes files from the queue and gives them to FileSippers, in order to be sent.">Sender</a> will be waiting. </p><dl class="section return"><dt>Returns</dt><dd>shared ptr to selected fileSipper, or nullptr if error occured </dd></dl>
+
+</div>
+</div>
+<a id="a6f73bdb6748280fb66f0ec17127b7b6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f73bdb6748280fb66f0ec17127b7b6d">&#9670;&nbsp;</a></span>insert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SharedQueue::insert </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt;&#160;</td>
+          <td class="paramname"><em>file_sipper</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add a new ptrFileSipper in the <a class="el" href="classSharedQueue.html" title="This is the shared queue. Each FileSipper is demanded to send a file. The Sender decides who starts s...">SharedQueue</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file_sipper</td><td>: ptr to the fileSipper to be added </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0844701624f2f3efc31a94c3f256dcfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0844701624f2f3efc31a94c3f256dcfe">&#9670;&nbsp;</a></span>remove_element()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SharedQueue::remove_element </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>file_sipper</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove the selected fileSipper from the shared queue. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file_sipper</td><td>: ptr to the fileSipper to be removed </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a00f207e695c81cc031d0b1b2d551b5c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00f207e695c81cc031d0b1b2d551b5c6">&#9670;&nbsp;</a></span>setFlag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SharedQueue::setFlag </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>flag_value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Change Shared_Queue status. </p>
+<p>If false the program will shutdown gracefully </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">flag_value</td><td>new flag value </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>includes/client/<a class="el" href="shared__queue_8h_source.html">shared_queue.h</a></li>
 <li>src/client/shared_queue.cpp</li>
 </ul>

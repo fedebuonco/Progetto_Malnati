@@ -12,24 +12,22 @@ Encapsulates a file+hash that need to be sent to a server.
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classFileSipper_a7c66518df0e577efbcc5dba61055d7bd}\label{classFileSipper_a7c66518df0e577efbcc5dba61055d7bd}} 
-{\bfseries File\+Sipper} (const \mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} \&re, std\+::filesystem\+::path folder\+\_\+watched, std\+::filesystem\+::path db\+\_\+path, std\+::string username, const std\+::string \&hashed\+\_\+pass, std\+::filesystem\+::path file\+\_\+path, std\+::string file\+\_\+string, std\+::string hash, std\+::string lmt)
-\item 
-\mbox{\Hypertarget{classFileSipper_a4406545c288c0d10ba6d97a3bcdc44d5}\label{classFileSipper_a4406545c288c0d10ba6d97a3bcdc44d5}} 
+\mbox{\hyperlink{classFileSipper_a7c66518df0e577efbcc5dba61055d7bd}{File\+Sipper}} (const \mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} \&re, std\+::filesystem\+::path folder\+\_\+watched, std\+::filesystem\+::path db\+\_\+path, std\+::string username, const std\+::string \&hashed\+\_\+pass, std\+::filesystem\+::path file\+\_\+path, std\+::string file\+\_\+string, std\+::string hash, std\+::string lmt)
+\begin{DoxyCompactList}\small\item\em Used for \char`\"{}sipping\char`\"{} the file in order to send it to the server. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classFileSipper_a4406545c288c0d10ba6d97a3bcdc44d5}{Send}} (std\+::function$<$ void()$>$ rem\+\_\+call)
-\begin{DoxyCompactList}\small\item\em Methods that starts the sending of the File. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Methods that starts the async\+\_\+send of the file. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classFileSipper_ab75dfa62205f5c8d2c68507fc8ccfcbc}\label{classFileSipper_ab75dfa62205f5c8d2c68507fc8ccfcbc}} 
-std\+::string {\bfseries file\+\_\+string\+\_\+}
-\item 
+std\+::string \mbox{\hyperlink{classFileSipper_ab75dfa62205f5c8d2c68507fc8ccfcbc}{file\+\_\+string\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Name of the file. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classFileSipper_a00fb8ac8397f9519c7433af222aa1142}\label{classFileSipper_a00fb8ac8397f9519c7433af222aa1142}} 
-std\+::function$<$ void()$>$ {\bfseries remove\+\_\+callback\+\_\+}
-\item 
+std\+::function$<$ void()$>$ \mbox{\hyperlink{classFileSipper_a00fb8ac8397f9519c7433af222aa1142}{remove\+\_\+callback\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Callback that will be called once the filesipper recieve the OK from the server. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classFileSipper_a38e8fbd881e285c3e75ba1e3656505e4}\label{classFileSipper_a38e8fbd881e285c3e75ba1e3656505e4}} 
-std\+::atomic$<$ bool $>$ {\bfseries status} = false
-\end{DoxyCompactItemize}
+std\+::atomic$<$ bool $>$ \mbox{\hyperlink{classFileSipper_a38e8fbd881e285c3e75ba1e3656505e4}{status}} = false
+\begin{DoxyCompactList}\small\item\em Flag used for knowing if the \mbox{\hyperlink{classFileSipper}{File\+Sipper}} has been activated. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Types}
 \begin{DoxyCompactItemize}
 \item 
@@ -46,44 +44,41 @@ void \mbox{\hyperlink{classFileSipper_a02976ce9ad39bfa99ebd2b71b2ed00d0}{Open\+F
 \mbox{\Hypertarget{classFileSipper_a010cea9e2d74caeb7d71d3ee4c30b6fc}\label{classFileSipper_a010cea9e2d74caeb7d71d3ee4c30b6fc}} 
 void \mbox{\hyperlink{classFileSipper_a010cea9e2d74caeb7d71d3ee4c30b6fc}{Connect}} ()
 \begin{DoxyCompactList}\small\item\em We async connect to the specified server. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classFileSipper_a962d5fab2cbdbd9324f4175366b37f35}\label{classFileSipper_a962d5fab2cbdbd9324f4175366b37f35}} 
 void \mbox{\hyperlink{classFileSipper_a962d5fab2cbdbd9324f4175366b37f35}{Sip}} (const boost\+::system\+::error\+\_\+code \&t\+\_\+ec)
-\begin{DoxyCompactList}\small\item\em Takes a sip of a file and sends it. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Takes a sip of a file and ask to write it invoking the Wrtie\+Buffer. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classFileSipper_a79f62afbe1c31645a18fe080c52d3660}{First\+Sip}} (const boost\+::system\+::error\+\_\+code \&t\+\_\+ec)
 \begin{DoxyCompactList}\small\item\em Takes the file and send its metadata to the server. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classFileSipper_afb4a4fc980e94db04e04838c84da6f1a}\label{classFileSipper_afb4a4fc980e94db04e04838c84da6f1a}} 
-void {\bfseries Wait\+Ok} ()
-\item 
+void \mbox{\hyperlink{classFileSipper_afb4a4fc980e94db04e04838c84da6f1a}{Wait\+Ok}} ()
+\begin{DoxyCompactList}\small\item\em Waits for the response of the server, that after having computed the hash of the file, sends to the client the result of the comparison. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classFileSipper_a98e80afc92dc4ce7a85e018c70459e06}\label{classFileSipper_a98e80afc92dc4ce7a85e018c70459e06}} 
 {\footnotesize template$<$class Buffer $>$ }\\void {\bfseries write\+Buffer} (Buffer \&t\+\_\+buffer)
 \item 
-\mbox{\Hypertarget{classFileSipper_a0587b91374d97afdd6e643a8586f0a9b}\label{classFileSipper_a0587b91374d97afdd6e643a8586f0a9b}} 
-void {\bfseries Update\+File\+Status} (const std\+::filesystem\+::path \&db\+\_\+path, const std\+::filesystem\+::path \&folder\+\_\+watched, const std\+::string \&file\+\_\+string, int check)
-\end{DoxyCompactItemize}
+void \mbox{\hyperlink{classFileSipper_a0587b91374d97afdd6e643a8586f0a9b}{Update\+File\+Status}} (const std\+::filesystem\+::path \&db\+\_\+path, const std\+::filesystem\+::path \&folder\+\_\+watched, const std\+::string \&file\+\_\+string, int check)
+\begin{DoxyCompactList}\small\item\em Updates the status of the filesipper on the db. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classFileSipper_aec53ad1c49eee60160c45ef31416208c}\label{classFileSipper_aec53ad1c49eee60160c45ef31416208c}} 
-std\+::filesystem\+::path {\bfseries path\+\_\+}
-\item 
+std\+::filesystem\+::path \mbox{\hyperlink{classFileSipper_aec53ad1c49eee60160c45ef31416208c}{path\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Path of the file that will be sent. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classFileSipper_ab3af7abcbead7c6b604c34344d36f9aa}\label{classFileSipper_ab3af7abcbead7c6b604c34344d36f9aa}} 
-std\+::filesystem\+::path {\bfseries folder\+\_\+watched\+\_\+}
-\item 
+std\+::filesystem\+::path \mbox{\hyperlink{classFileSipper_ab3af7abcbead7c6b604c34344d36f9aa}{folder\+\_\+watched\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Path of the folder monitored. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classFileSipper_a46b094e96be8b37a7429faa3b89607a8}\label{classFileSipper_a46b094e96be8b37a7429faa3b89607a8}} 
-std\+::filesystem\+::path {\bfseries db\+\_\+path\+\_\+}
-\item 
+std\+::filesystem\+::path \mbox{\hyperlink{classFileSipper_a46b094e96be8b37a7429faa3b89607a8}{db\+\_\+path\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Path of the DB file. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classFileSipper_a73b23d3eae0949e9bf899b7ddcd973b7}\label{classFileSipper_a73b23d3eae0949e9bf899b7ddcd973b7}} 
-std\+::string {\bfseries hash\+\_\+}
-\item 
+std\+::string \mbox{\hyperlink{classFileSipper_a73b23d3eae0949e9bf899b7ddcd973b7}{hash\+\_\+}}
+\begin{DoxyCompactList}\small\item\em hash Digest of the file (SHA-\/256). \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classFileSipper_a1b73142aaf98d533676adbb6d2406b4e}\label{classFileSipper_a1b73142aaf98d533676adbb6d2406b4e}} 
-std\+::string {\bfseries lmt\+\_\+}
-\item 
+std\+::string \mbox{\hyperlink{classFileSipper_a1b73142aaf98d533676adbb6d2406b4e}{lmt\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Last modified time of the file. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classFileSipper_ad4007c33b925490bbb8ba46cff45887e}\label{classFileSipper_ad4007c33b925490bbb8ba46cff45887e}} 
-std\+::string {\bfseries metadata\+\_\+}
-\item 
+std\+::string \mbox{\hyperlink{classFileSipper_ad4007c33b925490bbb8ba46cff45887e}{metadata\+\_\+}}
+\begin{DoxyCompactList}\small\item\em String containg the first sip. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classFileSipper_a051094c4bf1b6bc98bd967558697c8ca}\label{classFileSipper_a051094c4bf1b6bc98bd967558697c8ca}} 
-std\+::string {\bfseries username\+\_\+}
-\item 
+std\+::string \mbox{\hyperlink{classFileSipper_a051094c4bf1b6bc98bd967558697c8ca}{username\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Username of the user requesting the backup of the file. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classFileSipper_a952e1567ab061f694720a31d79ee0ada}\label{classFileSipper_a952e1567ab061f694720a31d79ee0ada}} 
 boost\+::asio\+::io\+\_\+service {\bfseries ios\+\_\+}
 \item 
@@ -97,26 +92,57 @@ boost\+::asio\+::ip\+::tcp\+::socket {\bfseries sock\+\_\+}
 boost\+::system\+::error\+\_\+code {\bfseries ec\+\_\+}
 \item 
 \mbox{\Hypertarget{classFileSipper_ac425e286b545cca6894a69a05d54b990}\label{classFileSipper_ac425e286b545cca6894a69a05d54b990}} 
-std\+::ifstream {\bfseries files\+\_\+stream\+\_\+}
-\item 
+std\+::ifstream \mbox{\hyperlink{classFileSipper_ac425e286b545cca6894a69a05d54b990}{files\+\_\+stream\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Stream used for opening the file, we will take sips from it and async send them to the server. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classFileSipper_a6f3aa68733bdee2f54414500649103ef}\label{classFileSipper_a6f3aa68733bdee2f54414500649103ef}} 
-std\+::array$<$ char, Message\+Size $>$ {\bfseries buf\+\_\+array\+\_\+} \{\}
-\item 
+std\+::array$<$ char, Message\+Size $>$ \mbox{\hyperlink{classFileSipper_a6f3aa68733bdee2f54414500649103ef}{buf\+\_\+array\+\_\+}} \{\}
+\begin{DoxyCompactList}\small\item\em Buffer used for the incoming sips (contains data) \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classFileSipper_a35065ad3d32b9c94a3883b229e6c259e}\label{classFileSipper_a35065ad3d32b9c94a3883b229e6c259e}} 
-std\+::array$<$ char, Message\+Size $>$ {\bfseries buf\+\_\+metadata} \{\}
-\item 
+std\+::array$<$ char, Message\+Size $>$ \mbox{\hyperlink{classFileSipper_a35065ad3d32b9c94a3883b229e6c259e}{buf\+\_\+metadata}} \{\}
+\begin{DoxyCompactList}\small\item\em Buffer used for the first sip and the result of the hashing. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classFileSipper_a467596e8275190ad58a757743f996032}\label{classFileSipper_a467596e8275190ad58a757743f996032}} 
-int {\bfseries sip\+\_\+counter}
-\item 
-\mbox{\Hypertarget{classFileSipper_ab52d1a9151fe568bcf216a12e7ab7df3}\label{classFileSipper_ab52d1a9151fe568bcf216a12e7ab7df3}} 
-bool {\bfseries ready} \{\}
-\end{DoxyCompactItemize}
+int \mbox{\hyperlink{classFileSipper_a467596e8275190ad58a757743f996032}{sip\+\_\+counter}}
+\begin{DoxyCompactList}\small\item\em Number of sip (i.\+e. block) in which the file is split. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 Encapsulates a file+hash that need to be sent to a server. 
 
 The file is sent in small \char`\"{}sips\char`\"{} and after each sending we call a callback. Offers a callback that, after performing some checks, calls for another sip, thus creating a chain of sent sips. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classFileSipper_a7c66518df0e577efbcc5dba61055d7bd}\label{classFileSipper_a7c66518df0e577efbcc5dba61055d7bd}} 
+\index{FileSipper@{FileSipper}!FileSipper@{FileSipper}}
+\index{FileSipper@{FileSipper}!FileSipper@{FileSipper}}
+\doxysubsubsection{\texorpdfstring{FileSipper()}{FileSipper()}}
+{\footnotesize\ttfamily File\+Sipper\+::\+File\+Sipper (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structRawEndpoint}{Raw\+Endpoint}} \&}]{re,  }\item[{std\+::filesystem\+::path}]{folder\+\_\+watched,  }\item[{std\+::filesystem\+::path}]{db\+\_\+path,  }\item[{std\+::string}]{username,  }\item[{const std\+::string \&}]{hashed\+\_\+pass,  }\item[{std\+::filesystem\+::path}]{file\+\_\+path,  }\item[{std\+::string}]{file\+\_\+string,  }\item[{std\+::string}]{hash,  }\item[{std\+::string}]{lmt }\end{DoxyParamCaption})}
+
+
+
+Used for \char`\"{}sipping\char`\"{} the file in order to send it to the server. 
+
+It splits the file in 1024 byte and asynchronously writes it in the stream. 
+\begin{DoxyParams}{Parameters}
+{\em re} & Raw Endpoint containing the server address \\
+\hline
+{\em folder\+\_\+watched} & Folder watched by the monitor. \\
+\hline
+{\em db\+\_\+path} & Path of the database file \\
+\hline
+{\em username} & Username, used for metadata retrieval. \\
+\hline
+{\em hashed\+\_\+pass} & Hashed SHA-\/256 Password. \\
+\hline
+{\em file\+\_\+path} & Full path of the file. \\
+\hline
+{\em file\+\_\+string} & String of the path relative to the folder being watched. \\
+\hline
+{\em hash} & Digest of the file (SHA-\/256). \\
+\hline
+{\em lmt} & Last modified time of the file. \\
+\hline
+\end{DoxyParams}
+
 
 \doxysubsection{Member Function Documentation}
 \mbox{\Hypertarget{classFileSipper_a79f62afbe1c31645a18fe080c52d3660}\label{classFileSipper_a79f62afbe1c31645a18fe080c52d3660}} 
@@ -134,7 +160,68 @@ Takes the file and send its metadata to the server.
 {\em t\+\_\+ec} & \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{classFileSipper_a4406545c288c0d10ba6d97a3bcdc44d5}\label{classFileSipper_a4406545c288c0d10ba6d97a3bcdc44d5}} 
+\index{FileSipper@{FileSipper}!Send@{Send}}
+\index{Send@{Send}!FileSipper@{FileSipper}}
+\doxysubsubsection{\texorpdfstring{Send()}{Send()}}
+{\footnotesize\ttfamily void File\+Sipper\+::\+Send (\begin{DoxyParamCaption}\item[{std\+::function$<$ void()$>$}]{rem\+\_\+call }\end{DoxyParamCaption})}
 
+
+
+Methods that starts the async\+\_\+send of the file. 
+
+When finished the callback passed will be called. 
+\begin{DoxyParams}{Parameters}
+{\em rem\+\_\+call} & The callback that will be executed when the async\+\_\+send will complete. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classFileSipper_a962d5fab2cbdbd9324f4175366b37f35}\label{classFileSipper_a962d5fab2cbdbd9324f4175366b37f35}} 
+\index{FileSipper@{FileSipper}!Sip@{Sip}}
+\index{Sip@{Sip}!FileSipper@{FileSipper}}
+\doxysubsubsection{\texorpdfstring{Sip()}{Sip()}}
+{\footnotesize\ttfamily void File\+Sipper\+::\+Sip (\begin{DoxyParamCaption}\item[{const boost\+::system\+::error\+\_\+code \&}]{t\+\_\+ec }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Takes a sip of a file and ask to write it invoking the Wrtie\+Buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+\_\+ec} & Error code passed from the prevoius Write\+Buffer Invocation. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classFileSipper_a0587b91374d97afdd6e643a8586f0a9b}\label{classFileSipper_a0587b91374d97afdd6e643a8586f0a9b}} 
+\index{FileSipper@{FileSipper}!UpdateFileStatus@{UpdateFileStatus}}
+\index{UpdateFileStatus@{UpdateFileStatus}!FileSipper@{FileSipper}}
+\doxysubsubsection{\texorpdfstring{UpdateFileStatus()}{UpdateFileStatus()}}
+{\footnotesize\ttfamily void File\+Sipper\+::\+Update\+File\+Status (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{db\+\_\+path,  }\item[{const std\+::filesystem\+::path \&}]{folder\+\_\+watched,  }\item[{const std\+::string \&}]{file\+\_\+string,  }\item[{int}]{check }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Updates the status of the filesipper on the db. 
+
+Depending on the integer passed we decide the status. 
+\begin{DoxyParams}{Parameters}
+{\em db\+\_\+path} & Path of the db file. \\
+\hline
+{\em folder\+\_\+watched} & Folder monitored by the watcher. \\
+\hline
+{\em file\+\_\+string} & File path in string format relative to the folder watched. \\
+\hline
+{\em check} & The integer we pass in order to decide the status. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classFileSipper_afb4a4fc980e94db04e04838c84da6f1a}\label{classFileSipper_afb4a4fc980e94db04e04838c84da6f1a}} 
+\index{FileSipper@{FileSipper}!WaitOk@{WaitOk}}
+\index{WaitOk@{WaitOk}!FileSipper@{FileSipper}}
+\doxysubsubsection{\texorpdfstring{WaitOk()}{WaitOk()}}
+{\footnotesize\ttfamily void File\+Sipper\+::\+Wait\+Ok (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Waits for the response of the server, that after having computed the hash of the file, sends to the client the result of the comparison. 
+
+Using that we update the status of the file on the db. 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
