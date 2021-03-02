@@ -13,7 +13,7 @@ Represents an high level acceptor.
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classAcceptClient_a9332b3e28a5f0021ab6b5ed274ece6b1}\label{classAcceptClient_a9332b3e28a5f0021ab6b5ed274ece6b1}} 
-{\bfseries Accept\+Client} (boost\+::asio\+::io\+\_\+service \&ios, unsigned short port\+\_\+num, std\+::filesystem\+::path server\+Path)
+{\bfseries Accept\+Client} (boost\+::asio\+::io\+\_\+service \&ios, unsigned short port\+\_\+num, std\+::filesystem\+::path \mbox{\hyperlink{classAcceptClient_aa27f0098e35105915401b0af1b95770a}{server\+Path}})
 \item 
 void \mbox{\hyperlink{classAcceptClient_ab3634e71b9927f2ee565c39193d53da0}{Spawn\+Session}} (const std\+::atomic$<$ bool $>$ \&stop)
 \begin{DoxyCompactList}\small\item\em Creates an active socket and accepts an incoming connection by the client thus linking them and creating a \mbox{\hyperlink{classService}{Service}} class that will take care of the handling. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -27,8 +27,8 @@ boost\+::asio\+::io\+\_\+service \& {\bfseries ios\+\_\+}
 boost\+::asio\+::ip\+::tcp\+::acceptor {\bfseries acceptor\+\_\+}
 \item 
 \mbox{\Hypertarget{classAcceptClient_aa27f0098e35105915401b0af1b95770a}\label{classAcceptClient_aa27f0098e35105915401b0af1b95770a}} 
-std\+::filesystem\+::path {\bfseries server\+Path}
-\end{DoxyCompactItemize}
+std\+::filesystem\+::path \mbox{\hyperlink{classAcceptClient_aa27f0098e35105915401b0af1b95770a}{server\+Path}}
+\begin{DoxyCompactList}\small\item\em Path of the server.\+exe. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}

@@ -80,26 +80,28 @@ $(function() {
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classServer.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classServer.html">Server</a> {</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    std::unique_ptr&lt;std::thread&gt; thread_;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    boost::asio::io_service ios_;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    std::atomic&lt;bool&gt; stop_;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    std::filesystem::path serverPath;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classServer.html#a88e7836543bd7a88a9e32fc2bba9c5d4">Run</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> port_num);</div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="classServer.html#a5ce04dd1f52f711a3b2e449979e4cc15">   14</a></span>&#160;    std::unique_ptr&lt;std::thread&gt; <a class="code" href="classServer.html#a5ce04dd1f52f711a3b2e449979e4cc15">thread_</a>;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    boost::asio::io_service ios_;</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classServer.html#a9d267e6fb226d7395cf2c2908a7260c7">   17</a></span>&#160;    std::atomic&lt;bool&gt; <a class="code" href="classServer.html#a9d267e6fb226d7395cf2c2908a7260c7">stop_</a>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classServer.html#ab5ec6c2a5e8f3aa83028553146e8ce41">   19</a></span>&#160;    std::filesystem::path <a class="code" href="classServer.html#ab5ec6c2a5e8f3aa83028553146e8ce41">serverPath</a>;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classServer.html#a88e7836543bd7a88a9e32fc2bba9c5d4">Run</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> port_num);</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classServer.html#ab2fa1bed5e422e9a823617cac64078db">Server</a>(std::filesystem::path serverPath);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classServer.html#a177bcf8516d1332f38acd249192a04a8">Start</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> port_num);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classServer.html#ae8e1a31c647c9bfc9e1e6fd794b820fc">Stop</a>();</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;};</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classServer.html#ab2fa1bed5e422e9a823617cac64078db">Server</a>(std::filesystem::path <a class="code" href="classServer.html#ab5ec6c2a5e8f3aa83028553146e8ce41">serverPath</a>);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classServer.html#a177bcf8516d1332f38acd249192a04a8">Start</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> port_num);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classServer.html#ae8e1a31c647c9bfc9e1e6fd794b820fc">Stop</a>();</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;};</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 <div class="ttc" id="aclassServer_html"><div class="ttname"><a href="classServer.html">Server</a></div><div class="ttdoc">Creates a server that listen on a specific port.</div><div class="ttdef"><b>Definition:</b> server.h:11</div></div>
 <div class="ttc" id="aclassServer_html_a177bcf8516d1332f38acd249192a04a8"><div class="ttname"><a href="classServer.html#a177bcf8516d1332f38acd249192a04a8">Server::Start</a></div><div class="ttdeci">void Start(unsigned short port_num)</div><div class="ttdoc">Starts the server by taking control of the thread_ smart pointer.</div><div class="ttdef"><b>Definition:</b> server.cpp:20</div></div>
+<div class="ttc" id="aclassServer_html_a5ce04dd1f52f711a3b2e449979e4cc15"><div class="ttname"><a href="classServer.html#a5ce04dd1f52f711a3b2e449979e4cc15">Server::thread_</a></div><div class="ttdeci">std::unique_ptr&lt; std::thread &gt; thread_</div><div class="ttdoc">Server thread.</div><div class="ttdef"><b>Definition:</b> server.h:14</div></div>
 <div class="ttc" id="aclassServer_html_a88e7836543bd7a88a9e32fc2bba9c5d4"><div class="ttname"><a href="classServer.html#a88e7836543bd7a88a9e32fc2bba9c5d4">Server::Run</a></div><div class="ttdeci">void Run(unsigned short port_num)</div><div class="ttdoc">Creates the AcceptClient and enters a loop, in the loop we call the AcceptClient SpawnSession until t...</div><div class="ttdef"><b>Definition:</b> server.cpp:34</div></div>
+<div class="ttc" id="aclassServer_html_a9d267e6fb226d7395cf2c2908a7260c7"><div class="ttname"><a href="classServer.html#a9d267e6fb226d7395cf2c2908a7260c7">Server::stop_</a></div><div class="ttdeci">std::atomic&lt; bool &gt; stop_</div><div class="ttdoc">Shutdown flag.</div><div class="ttdef"><b>Definition:</b> server.h:17</div></div>
 <div class="ttc" id="aclassServer_html_ab2fa1bed5e422e9a823617cac64078db"><div class="ttname"><a href="classServer.html#ab2fa1bed5e422e9a823617cac64078db">Server::Server</a></div><div class="ttdeci">Server(std::filesystem::path serverPath)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> server.cpp:14</div></div>
+<div class="ttc" id="aclassServer_html_ab5ec6c2a5e8f3aa83028553146e8ce41"><div class="ttname"><a href="classServer.html#ab5ec6c2a5e8f3aa83028553146e8ce41">Server::serverPath</a></div><div class="ttdeci">std::filesystem::path serverPath</div><div class="ttdoc">Path of the server.exe.</div><div class="ttdef"><b>Definition:</b> server.h:19</div></div>
 <div class="ttc" id="aclassServer_html_ae8e1a31c647c9bfc9e1e6fd794b820fc"><div class="ttname"><a href="classServer.html#ae8e1a31c647c9bfc9e1e6fd794b820fc">Server::Stop</a></div><div class="ttdeci">void Stop()</div><div class="ttdoc">Stops the server by waiting for the join of the thread spawned on the Start.</div><div class="ttdef"><b>Definition:</b> server.cpp:47</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

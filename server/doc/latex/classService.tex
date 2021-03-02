@@ -20,21 +20,18 @@ void \mbox{\hyperlink{classService_a2b26863e4bbc59f990e0743da12a7810}{Read\+Requ
 \mbox{\Hypertarget{classService_a49301ed7853348f76b5cb71d32d04a98}\label{classService_a49301ed7853348f76b5cb71d32d04a98}} 
 void \mbox{\hyperlink{classService_a49301ed7853348f76b5cb71d32d04a98}{Handle\+Client}} (const std\+::shared\+\_\+ptr$<$ asio\+::ip\+::tcp\+::socket $>$ \&sock)
 \begin{DoxyCompactList}\small\item\em Real handling starts here. Should distinguish auth requests and tree requests. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classService_a6e44f92783d01726ab10717bb2539b32}\label{classService_a6e44f92783d01726ab10717bb2539b32}} 
-\mbox{\hyperlink{classControlMessage}{Control\+Message}} {\bfseries Sync\+Read\+CM} (const std\+::shared\+\_\+ptr$<$ asio\+::ip\+::tcp\+::socket $>$ \&sock)
-\item 
-\mbox{\Hypertarget{classService_aeb8b10d999c08c9b08033e3c4627166e}\label{classService_aeb8b10d999c08c9b08033e3c4627166e}} 
-void {\bfseries Sync\+Write\+CM} (const std\+::shared\+\_\+ptr$<$ asio\+::ip\+::tcp\+::socket $>$ \&sock, \mbox{\hyperlink{classControlMessage}{Control\+Message}} \&cm)
-\item 
-\mbox{\Hypertarget{classService_a25f794ee2a3b91f6d482ea7acfee33cc}\label{classService_a25f794ee2a3b91f6d482ea7acfee33cc}} 
-bool {\bfseries Check\+Authenticity} (const \mbox{\hyperlink{classControlMessage}{Control\+Message}} \&cm)
-\end{DoxyCompactItemize}
+\mbox{\hyperlink{classControlMessage}{Control\+Message}} \mbox{\hyperlink{classService_a6e44f92783d01726ab10717bb2539b32}{Sync\+Read\+CM}} (const std\+::shared\+\_\+ptr$<$ asio\+::ip\+::tcp\+::socket $>$ \&sock)
+\begin{DoxyCompactList}\small\item\em Used for reading until the EOF on a given socket, then we return a \mbox{\hyperlink{classControlMessage}{Control\+Message}} using the buffer we read. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classService_aeb8b10d999c08c9b08033e3c4627166e}{Sync\+Write\+CM}} (const std\+::shared\+\_\+ptr$<$ asio\+::ip\+::tcp\+::socket $>$ \&sock, \mbox{\hyperlink{classControlMessage}{Control\+Message}} \&cm)
+\begin{DoxyCompactList}\small\item\em Used to write the Control Message in a syncronous way. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classService_a25f794ee2a3b91f6d482ea7acfee33cc}{Check\+Authenticity}} (const \mbox{\hyperlink{classControlMessage}{Control\+Message}} \&cm)
+\begin{DoxyCompactList}\small\item\em We check that the message is authenticated. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classService_a583bf399a92ff50713cf043082077606}\label{classService_a583bf399a92ff50713cf043082077606}} 
-std\+::filesystem\+::path {\bfseries server\+Path}
-\item 
+std\+::filesystem\+::path \mbox{\hyperlink{classService_a583bf399a92ff50713cf043082077606}{server\+Path}}
+\begin{DoxyCompactList}\small\item\em Path of the server.\+exe. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classService_a49813431b6d7a1e901b4472a045634e2}\label{classService_a49813431b6d7a1e901b4472a045634e2}} 
 std\+::filesystem\+::path {\bfseries associated\+\_\+user\+\_\+path\+\_\+}
 \end{DoxyCompactItemize}
@@ -44,6 +41,24 @@ std\+::filesystem\+::path {\bfseries associated\+\_\+user\+\_\+path\+\_\+}
 Class responsible for handling a single client by reading it\textquotesingle{}s request message, processing it and then answering Represents thus, a single service provided by the server application. 
 
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classService_a25f794ee2a3b91f6d482ea7acfee33cc}\label{classService_a25f794ee2a3b91f6d482ea7acfee33cc}} 
+\index{Service@{Service}!CheckAuthenticity@{CheckAuthenticity}}
+\index{CheckAuthenticity@{CheckAuthenticity}!Service@{Service}}
+\doxysubsubsection{\texorpdfstring{CheckAuthenticity()}{CheckAuthenticity()}}
+{\footnotesize\ttfamily bool Service\+::\+Check\+Authenticity (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classControlMessage}{Control\+Message}} \&}]{cm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+We check that the message is authenticated. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em cm} & Control Message read \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if authenticated, false otherwise 
+\end{DoxyReturn}
 \mbox{\Hypertarget{classService_a2b26863e4bbc59f990e0743da12a7810}\label{classService_a2b26863e4bbc59f990e0743da12a7810}} 
 \index{Service@{Service}!ReadRequest@{ReadRequest}}
 \index{ReadRequest@{ReadRequest}!Service@{Service}}
@@ -57,6 +72,41 @@ Starts handling the particular client that requested a service.
 Spawns a thread that actually handle the request and detach it 
 \begin{DoxyParams}{Parameters}
 {\em sock} & TCP socket connected to the client \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classService_a6e44f92783d01726ab10717bb2539b32}\label{classService_a6e44f92783d01726ab10717bb2539b32}} 
+\index{Service@{Service}!SyncReadCM@{SyncReadCM}}
+\index{SyncReadCM@{SyncReadCM}!Service@{Service}}
+\doxysubsubsection{\texorpdfstring{SyncReadCM()}{SyncReadCM()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classControlMessage}{Control\+Message}} Service\+::\+Sync\+Read\+CM (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ asio\+::ip\+::tcp\+::socket $>$ \&}]{sock }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Used for reading until the EOF on a given socket, then we return a \mbox{\hyperlink{classControlMessage}{Control\+Message}} using the buffer we read. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sock} & The socket we are reading on. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The Control Message that we read. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classService_aeb8b10d999c08c9b08033e3c4627166e}\label{classService_aeb8b10d999c08c9b08033e3c4627166e}} 
+\index{Service@{Service}!SyncWriteCM@{SyncWriteCM}}
+\index{SyncWriteCM@{SyncWriteCM}!Service@{Service}}
+\doxysubsubsection{\texorpdfstring{SyncWriteCM()}{SyncWriteCM()}}
+{\footnotesize\ttfamily void Service\+::\+Sync\+Write\+CM (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ asio\+::ip\+::tcp\+::socket $>$ \&}]{sock,  }\item[{\mbox{\hyperlink{classControlMessage}{Control\+Message}} \&}]{cm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Used to write the Control Message in a syncronous way. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sock} & The socket I\textquotesingle{}m writing the Control Message to. \\
+\hline
+{\em cm} & The control message to be written. \\
 \hline
 \end{DoxyParams}
 

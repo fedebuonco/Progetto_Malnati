@@ -12,7 +12,7 @@ Creates a server that listen on a specific port.
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classServer_ab2fa1bed5e422e9a823617cac64078db}{Server}} (std\+::filesystem\+::path server\+Path)
+\mbox{\hyperlink{classServer_ab2fa1bed5e422e9a823617cac64078db}{Server}} (std\+::filesystem\+::path \mbox{\hyperlink{classServer_ab5ec6c2a5e8f3aa83028553146e8ce41}{server\+Path}})
 \begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classServer_a177bcf8516d1332f38acd249192a04a8}{Start}} (unsigned short port\+\_\+num)
 \begin{DoxyCompactList}\small\item\em Starts the server by taking control of the thread\+\_\+ smart pointer. \end{DoxyCompactList}\item 
@@ -28,17 +28,17 @@ void \mbox{\hyperlink{classServer_a88e7836543bd7a88a9e32fc2bba9c5d4}{Run}} (unsi
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classServer_a5ce04dd1f52f711a3b2e449979e4cc15}\label{classServer_a5ce04dd1f52f711a3b2e449979e4cc15}} 
-std\+::unique\+\_\+ptr$<$ std\+::thread $>$ {\bfseries thread\+\_\+}
-\item 
+std\+::unique\+\_\+ptr$<$ std\+::thread $>$ \mbox{\hyperlink{classServer_a5ce04dd1f52f711a3b2e449979e4cc15}{thread\+\_\+}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classServer}{Server}} thread. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classServer_a6c52bdeb9a9278640587efad4699e9d1}\label{classServer_a6c52bdeb9a9278640587efad4699e9d1}} 
 boost\+::asio\+::io\+\_\+service {\bfseries ios\+\_\+}
 \item 
 \mbox{\Hypertarget{classServer_a9d267e6fb226d7395cf2c2908a7260c7}\label{classServer_a9d267e6fb226d7395cf2c2908a7260c7}} 
-std\+::atomic$<$ bool $>$ {\bfseries stop\+\_\+}
-\item 
+std\+::atomic$<$ bool $>$ \mbox{\hyperlink{classServer_a9d267e6fb226d7395cf2c2908a7260c7}{stop\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Shutdown flag. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classServer_ab5ec6c2a5e8f3aa83028553146e8ce41}\label{classServer_ab5ec6c2a5e8f3aa83028553146e8ce41}} 
-std\+::filesystem\+::path {\bfseries server\+Path}
-\end{DoxyCompactItemize}
+std\+::filesystem\+::path \mbox{\hyperlink{classServer_ab5ec6c2a5e8f3aa83028553146e8ce41}{server\+Path}}
+\begin{DoxyCompactList}\small\item\em Path of the server.\+exe. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}

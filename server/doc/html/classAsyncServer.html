@@ -69,6 +69,11 @@ $(function() {
 <div class="title">AsyncServer Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Asynchronous server for handling file management.  
+ <a href="classAsyncServer.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="async__server_8h_source.html">async_server.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -85,19 +90,25 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Stop</b> ()</td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a60b78c10d0d196af97e986e25dde5ec5"><td class="memItemLeft" align="right" valign="top"><a id="a60b78c10d0d196af97e986e25dde5ec5"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>server_path_</b></td></tr>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAsyncServer.html#a60b78c10d0d196af97e986e25dde5ec5">server_path_</a></td></tr>
+<tr class="memdesc:a60b78c10d0d196af97e986e25dde5ec5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path of the user's server exe. <br /></td></tr>
 <tr class="separator:a60b78c10d0d196af97e986e25dde5ec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae60a282d686246c55d92c42eda12a32c"><td class="memItemLeft" align="right" valign="top"><a id="ae60a282d686246c55d92c42eda12a32c"></a>
-boost::asio::io_service&#160;</td><td class="memItemRight" valign="bottom"><b>m_ios</b></td></tr>
+boost::asio::io_service&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAsyncServer.html#ae60a282d686246c55d92c42eda12a32c">m_ios</a></td></tr>
+<tr class="memdesc:ae60a282d686246c55d92c42eda12a32c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for setting up the asynchronous callbacks. <br /></td></tr>
 <tr class="separator:ae60a282d686246c55d92c42eda12a32c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a106ac930e393d5f7c128d4c143917252"><td class="memItemLeft" align="right" valign="top"><a id="a106ac930e393d5f7c128d4c143917252"></a>
-std::unique_ptr&lt; <a class="el" href="classAsyncAcceptClient.html">AsyncAcceptClient</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>acc</b></td></tr>
+std::unique_ptr&lt; <a class="el" href="classAsyncAcceptClient.html">AsyncAcceptClient</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAsyncServer.html#a106ac930e393d5f7c128d4c143917252">acc</a></td></tr>
+<tr class="memdesc:a106ac930e393d5f7c128d4c143917252"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait the request from client and will provide to the server an active socket for the communication. <br /></td></tr>
 <tr class="separator:a106ac930e393d5f7c128d4c143917252"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee2c08c495d24bf4e92ffb9647ca0b3b"><td class="memItemLeft" align="right" valign="top"><a id="aee2c08c495d24bf4e92ffb9647ca0b3b"></a>
-std::vector&lt; std::unique_ptr&lt; std::thread &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_thread_pool</b></td></tr>
+std::vector&lt; std::unique_ptr&lt; std::thread &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAsyncServer.html#aee2c08c495d24bf4e92ffb9647ca0b3b">m_thread_pool</a></td></tr>
+<tr class="memdesc:aee2c08c495d24bf4e92ffb9647ca0b3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thread pool for receiving and storing the files. <br /></td></tr>
 <tr class="separator:aee2c08c495d24bf4e92ffb9647ca0b3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Asynchronous server for handling file management. </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>includes/accept_client/<a class="el" href="async__server_8h_source.html">async_server.h</a></li>
 <li>src/accept_client/async_server.cpp</li>
 </ul>

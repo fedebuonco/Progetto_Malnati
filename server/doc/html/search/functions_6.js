@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['readrequest_47',['ReadRequest',['../classService.html#a2b26863e4bbc59f990e0743da12a7810',1,'Service']]],
-  ['run_48',['Run',['../classServer.html#a88e7836543bd7a88a9e32fc2bba9c5d4',1,'Server']]]
+  ['onaccept_68',['onAccept',['../classAsyncAcceptClient.html#a4ec3c9b24a1d57a480c0d2bc483bb192',1,'AsyncAcceptClient']]]
 ];

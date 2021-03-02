@@ -1,41 +1,93 @@
 \hypertarget{classAsyncAcceptClient}{}\doxysection{Async\+Accept\+Client Class Reference}
 \label{classAsyncAcceptClient}\index{AsyncAcceptClient@{AsyncAcceptClient}}
+
+
+Class that handle request that arrive in the asynchronous client.  
+
+
+
+
+{\ttfamily \#include $<$async\+\_\+accept\+\_\+client.\+h$>$}
+
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classAsyncAcceptClient_a10628b1f64a11d93d1e3e5a55ec899e9}\label{classAsyncAcceptClient_a10628b1f64a11d93d1e3e5a55ec899e9}} 
-{\bfseries Async\+Accept\+Client} (boost\+::asio\+::io\+\_\+service \&ios, unsigned short port\+\_\+num, std\+::filesystem\+::path server\+\_\+path)
-\item 
+\mbox{\hyperlink{classAsyncAcceptClient_a10628b1f64a11d93d1e3e5a55ec899e9}{Async\+Accept\+Client}} (boost\+::asio\+::io\+\_\+service \&ios, unsigned short port\+\_\+num, std\+::filesystem\+::path server\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Async accept client constructor. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classAsyncAcceptClient_ac0fda8556588cc2d5edd32cdcbb7743d}\label{classAsyncAcceptClient_ac0fda8556588cc2d5edd32cdcbb7743d}} 
-void {\bfseries Start} ()
-\item 
+void \mbox{\hyperlink{classAsyncAcceptClient_ac0fda8556588cc2d5edd32cdcbb7743d}{Start}} ()
+\begin{DoxyCompactList}\small\item\em Starts the asynchronous server. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classAsyncAcceptClient_acc119d3f6ff0ff63d2517d93d0a58f36}\label{classAsyncAcceptClient_acc119d3f6ff0ff63d2517d93d0a58f36}} 
-void {\bfseries Stop} ()
-\end{DoxyCompactItemize}
+void \mbox{\hyperlink{classAsyncAcceptClient_acc119d3f6ff0ff63d2517d93d0a58f36}{Stop}} ()
+\begin{DoxyCompactList}\small\item\em Stop accepting incoming connection requests. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classAsyncAcceptClient_a6cd9ff6c06be88e93073f594c9362b25}\label{classAsyncAcceptClient_a6cd9ff6c06be88e93073f594c9362b25}} 
-void {\bfseries Init\+Accept} ()
-\item 
-\mbox{\Hypertarget{classAsyncAcceptClient_a4ec3c9b24a1d57a480c0d2bc483bb192}\label{classAsyncAcceptClient_a4ec3c9b24a1d57a480c0d2bc483bb192}} 
-void {\bfseries on\+Accept} (const boost\+::system\+::error\+\_\+code \&ec, const std\+::shared\+\_\+ptr$<$ boost\+::asio\+::ip\+::tcp\+::socket $>$ \&sock)
-\end{DoxyCompactItemize}
+void \mbox{\hyperlink{classAsyncAcceptClient_a6cd9ff6c06be88e93073f594c9362b25}{Init\+Accept}} ()
+\begin{DoxyCompactList}\small\item\em Setup for incoming request using the callback when the request arrived. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classAsyncAcceptClient_a4ec3c9b24a1d57a480c0d2bc483bb192}{on\+Accept}} (const boost\+::system\+::error\+\_\+code \&ec, const std\+::shared\+\_\+ptr$<$ boost\+::asio\+::ip\+::tcp\+::socket $>$ \&sock)
+\begin{DoxyCompactList}\small\item\em Takes the request and spawn an \mbox{\hyperlink{classAsyncService}{Async\+Service}} that will start handling it. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classAsyncAcceptClient_ab4273bed843168b3b7a2fc5eb3cf9bbd}\label{classAsyncAcceptClient_ab4273bed843168b3b7a2fc5eb3cf9bbd}} 
-std\+::filesystem\+::path {\bfseries server\+\_\+path\+\_\+}
-\item 
+std\+::filesystem\+::path \mbox{\hyperlink{classAsyncAcceptClient_ab4273bed843168b3b7a2fc5eb3cf9bbd}{server\+\_\+path\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Path of the user\textquotesingle{}s server exe. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classAsyncAcceptClient_a91c79e6ba280076aa121b460126a9c6f}\label{classAsyncAcceptClient_a91c79e6ba280076aa121b460126a9c6f}} 
-boost\+::asio\+::io\+\_\+service \& {\bfseries m\+\_\+ios}
-\item 
+boost\+::asio\+::io\+\_\+service \& \mbox{\hyperlink{classAsyncAcceptClient_a91c79e6ba280076aa121b460126a9c6f}{m\+\_\+ios}}
+\begin{DoxyCompactList}\small\item\em Used for setting up the asynchronous callbacks. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classAsyncAcceptClient_afc99cd4453bb63aa8cfa4391d8edf0a2}\label{classAsyncAcceptClient_afc99cd4453bb63aa8cfa4391d8edf0a2}} 
-boost\+::asio\+::ip\+::tcp\+::acceptor {\bfseries m\+\_\+acceptor}
-\item 
+boost\+::asio\+::ip\+::tcp\+::acceptor \mbox{\hyperlink{classAsyncAcceptClient_afc99cd4453bb63aa8cfa4391d8edf0a2}{m\+\_\+acceptor}}
+\begin{DoxyCompactList}\small\item\em Wait the request from client and will provide to the server an active socket for the communication. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classAsyncAcceptClient_aecf055d7d35253977902c1d58b560951}\label{classAsyncAcceptClient_aecf055d7d35253977902c1d58b560951}} 
-std\+::atomic$<$ bool $>$ {\bfseries m\+\_\+is\+Stopped}
-\end{DoxyCompactItemize}
+std\+::atomic$<$ bool $>$ \mbox{\hyperlink{classAsyncAcceptClient_aecf055d7d35253977902c1d58b560951}{m\+\_\+is\+Stopped}}
+\begin{DoxyCompactList}\small\item\em Atomic variable used to stop the async server. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class that handle request that arrive in the asynchronous client. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classAsyncAcceptClient_a10628b1f64a11d93d1e3e5a55ec899e9}\label{classAsyncAcceptClient_a10628b1f64a11d93d1e3e5a55ec899e9}} 
+\index{AsyncAcceptClient@{AsyncAcceptClient}!AsyncAcceptClient@{AsyncAcceptClient}}
+\index{AsyncAcceptClient@{AsyncAcceptClient}!AsyncAcceptClient@{AsyncAcceptClient}}
+\doxysubsubsection{\texorpdfstring{AsyncAcceptClient()}{AsyncAcceptClient()}}
+{\footnotesize\ttfamily Async\+Accept\+Client\+::\+Async\+Accept\+Client (\begin{DoxyParamCaption}\item[{boost\+::asio\+::io\+\_\+service \&}]{ios,  }\item[{unsigned short}]{port\+\_\+num,  }\item[{std\+::filesystem\+::path}]{server\+\_\+path }\end{DoxyParamCaption})}
+
+
+
+Async accept client constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ios} & \+: Used for setting up the asynchronous callbacks \\
+\hline
+{\em port\+\_\+num} & \+: Port number \\
+\hline
+{\em server\+\_\+path} & \+: Path of the user\textquotesingle{}s server exe \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classAsyncAcceptClient_a4ec3c9b24a1d57a480c0d2bc483bb192}\label{classAsyncAcceptClient_a4ec3c9b24a1d57a480c0d2bc483bb192}} 
+\index{AsyncAcceptClient@{AsyncAcceptClient}!onAccept@{onAccept}}
+\index{onAccept@{onAccept}!AsyncAcceptClient@{AsyncAcceptClient}}
+\doxysubsubsection{\texorpdfstring{onAccept()}{onAccept()}}
+{\footnotesize\ttfamily void Async\+Accept\+Client\+::on\+Accept (\begin{DoxyParamCaption}\item[{const boost\+::system\+::error\+\_\+code \&}]{ec,  }\item[{const std\+::shared\+\_\+ptr$<$ boost\+::asio\+::ip\+::tcp\+::socket $>$ \&}]{sock }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Takes the request and spawn an \mbox{\hyperlink{classAsyncService}{Async\+Service}} that will start handling it. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ec} & \+: error code provided by Init\+Accept \\
+\hline
+{\em sock} & \+: active socket for handling client messages \\
+\hline
+\end{DoxyParams}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}

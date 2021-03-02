@@ -88,20 +88,21 @@ Private Member Functions</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classService.html#a49301ed7853348f76b5cb71d32d04a98">HandleClient</a> (const std::shared_ptr&lt; asio::ip::tcp::socket &gt; &amp;sock)</td></tr>
 <tr class="memdesc:a49301ed7853348f76b5cb71d32d04a98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Real handling starts here. Should distinguish auth requests and tree requests. <br /></td></tr>
 <tr class="separator:a49301ed7853348f76b5cb71d32d04a98"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e44f92783d01726ab10717bb2539b32"><td class="memItemLeft" align="right" valign="top"><a id="a6e44f92783d01726ab10717bb2539b32"></a>
-<a class="el" href="classControlMessage.html">ControlMessage</a>&#160;</td><td class="memItemRight" valign="bottom"><b>SyncReadCM</b> (const std::shared_ptr&lt; asio::ip::tcp::socket &gt; &amp;sock)</td></tr>
+<tr class="memitem:a6e44f92783d01726ab10717bb2539b32"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classControlMessage.html">ControlMessage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classService.html#a6e44f92783d01726ab10717bb2539b32">SyncReadCM</a> (const std::shared_ptr&lt; asio::ip::tcp::socket &gt; &amp;sock)</td></tr>
+<tr class="memdesc:a6e44f92783d01726ab10717bb2539b32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for reading until the EOF on a given socket, then we return a <a class="el" href="classControlMessage.html" title="Encapsulates a control message.">ControlMessage</a> using the buffer we read.  <a href="classService.html#a6e44f92783d01726ab10717bb2539b32">More...</a><br /></td></tr>
 <tr class="separator:a6e44f92783d01726ab10717bb2539b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb8b10d999c08c9b08033e3c4627166e"><td class="memItemLeft" align="right" valign="top"><a id="aeb8b10d999c08c9b08033e3c4627166e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SyncWriteCM</b> (const std::shared_ptr&lt; asio::ip::tcp::socket &gt; &amp;sock, <a class="el" href="classControlMessage.html">ControlMessage</a> &amp;cm)</td></tr>
+<tr class="memitem:aeb8b10d999c08c9b08033e3c4627166e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classService.html#aeb8b10d999c08c9b08033e3c4627166e">SyncWriteCM</a> (const std::shared_ptr&lt; asio::ip::tcp::socket &gt; &amp;sock, <a class="el" href="classControlMessage.html">ControlMessage</a> &amp;cm)</td></tr>
+<tr class="memdesc:aeb8b10d999c08c9b08033e3c4627166e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to write the Control Message in a syncronous way.  <a href="classService.html#aeb8b10d999c08c9b08033e3c4627166e">More...</a><br /></td></tr>
 <tr class="separator:aeb8b10d999c08c9b08033e3c4627166e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25f794ee2a3b91f6d482ea7acfee33cc"><td class="memItemLeft" align="right" valign="top"><a id="a25f794ee2a3b91f6d482ea7acfee33cc"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>CheckAuthenticity</b> (const <a class="el" href="classControlMessage.html">ControlMessage</a> &amp;cm)</td></tr>
+<tr class="memitem:a25f794ee2a3b91f6d482ea7acfee33cc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classService.html#a25f794ee2a3b91f6d482ea7acfee33cc">CheckAuthenticity</a> (const <a class="el" href="classControlMessage.html">ControlMessage</a> &amp;cm)</td></tr>
+<tr class="memdesc:a25f794ee2a3b91f6d482ea7acfee33cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">We check that the message is authenticated.  <a href="classService.html#a25f794ee2a3b91f6d482ea7acfee33cc">More...</a><br /></td></tr>
 <tr class="separator:a25f794ee2a3b91f6d482ea7acfee33cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a583bf399a92ff50713cf043082077606"><td class="memItemLeft" align="right" valign="top"><a id="a583bf399a92ff50713cf043082077606"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>serverPath</b></td></tr>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classService.html#a583bf399a92ff50713cf043082077606">serverPath</a></td></tr>
+<tr class="memdesc:a583bf399a92ff50713cf043082077606"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path of the server.exe. <br /></td></tr>
 <tr class="separator:a583bf399a92ff50713cf043082077606"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49813431b6d7a1e901b4472a045634e2"><td class="memItemLeft" align="right" valign="top"><a id="a49813431b6d7a1e901b4472a045634e2"></a>
 std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>associated_user_path_</b></td></tr>
@@ -110,6 +111,41 @@ std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>asso
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class responsible for handling a single client by reading it's request message, processing it and then answering Represents thus, a single service provided by the server application. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a25f794ee2a3b91f6d482ea7acfee33cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25f794ee2a3b91f6d482ea7acfee33cc">&#9670;&nbsp;</a></span>CheckAuthenticity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Service::CheckAuthenticity </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classControlMessage.html">ControlMessage</a> &amp;&#160;</td>
+          <td class="paramname"><em>cm</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>We check that the message is authenticated. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cm</td><td>Control Message read </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if authenticated, false otherwise </dd></dl>
+
+</div>
+</div>
 <a id="a2b26863e4bbc59f990e0743da12a7810"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b26863e4bbc59f990e0743da12a7810">&#9670;&nbsp;</a></span>ReadRequest()</h2>
 
@@ -140,6 +176,86 @@ std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>asso
 <p>Spawns a thread that actually handle the request and detach it </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sock</td><td>TCP socket connected to the client </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6e44f92783d01726ab10717bb2539b32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e44f92783d01726ab10717bb2539b32">&#9670;&nbsp;</a></span>SyncReadCM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classControlMessage.html">ControlMessage</a> Service::SyncReadCM </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; asio::ip::tcp::socket &gt; &amp;&#160;</td>
+          <td class="paramname"><em>sock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used for reading until the EOF on a given socket, then we return a <a class="el" href="classControlMessage.html" title="Encapsulates a control message.">ControlMessage</a> using the buffer we read. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sock</td><td>The socket we are reading on. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The Control Message that we read. </dd></dl>
+
+</div>
+</div>
+<a id="aeb8b10d999c08c9b08033e3c4627166e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb8b10d999c08c9b08033e3c4627166e">&#9670;&nbsp;</a></span>SyncWriteCM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Service::SyncWriteCM </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; asio::ip::tcp::socket &gt; &amp;&#160;</td>
+          <td class="paramname"><em>sock</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classControlMessage.html">ControlMessage</a> &amp;&#160;</td>
+          <td class="paramname"><em>cm</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used to write the Control Message in a syncronous way. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sock</td><td>The socket I'm writing the Control Message to. </td></tr>
+    <tr><td class="paramname">cm</td><td>The control message to be written. </td></tr>
   </table>
   </dd>
 </dl>

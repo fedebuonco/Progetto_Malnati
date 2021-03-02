@@ -83,12 +83,13 @@ $(function() {
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    boost::asio::io_service&amp; ios_;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    boost::asio::ip::tcp::acceptor acceptor_;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    std::filesystem::path serverPath;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classAcceptClient.html">AcceptClient</a>(boost::asio::io_service&amp; ios, <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> port_num, std::filesystem::path serverPath);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAcceptClient.html#ab3634e71b9927f2ee565c39193d53da0">SpawnSession</a>(<span class="keyword">const</span> std::atomic&lt;bool&gt;&amp; stop);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;};</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classAcceptClient.html#aa27f0098e35105915401b0af1b95770a">   18</a></span>&#160;    std::filesystem::path <a class="code" href="classAcceptClient.html#aa27f0098e35105915401b0af1b95770a">serverPath</a>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="classAcceptClient.html">AcceptClient</a>(boost::asio::io_service&amp; ios, <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> port_num, std::filesystem::path <a class="code" href="classAcceptClient.html#aa27f0098e35105915401b0af1b95770a">serverPath</a>);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAcceptClient.html#ab3634e71b9927f2ee565c39193d53da0">SpawnSession</a>(<span class="keyword">const</span> std::atomic&lt;bool&gt;&amp; stop);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;};</div>
 <div class="ttc" id="aclassAcceptClient_html"><div class="ttname"><a href="classAcceptClient.html">AcceptClient</a></div><div class="ttdoc">Represents an high level acceptor.</div><div class="ttdef"><b>Definition:</b> accept_client.h:13</div></div>
+<div class="ttc" id="aclassAcceptClient_html_aa27f0098e35105915401b0af1b95770a"><div class="ttname"><a href="classAcceptClient.html#aa27f0098e35105915401b0af1b95770a">AcceptClient::serverPath</a></div><div class="ttdeci">std::filesystem::path serverPath</div><div class="ttdoc">Path of the server.exe.</div><div class="ttdef"><b>Definition:</b> accept_client.h:18</div></div>
 <div class="ttc" id="aclassAcceptClient_html_ab3634e71b9927f2ee565c39193d53da0"><div class="ttname"><a href="classAcceptClient.html#ab3634e71b9927f2ee565c39193d53da0">AcceptClient::SpawnSession</a></div><div class="ttdeci">void SpawnSession(const std::atomic&lt; bool &gt; &amp;stop)</div><div class="ttdoc">Creates an active socket and accepts an incoming connection by the client thus linking them and creat...</div><div class="ttdef"><b>Definition:</b> accept_client.cpp:19</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

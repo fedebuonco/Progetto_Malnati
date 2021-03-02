@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['insertfile_16',['insertFile',['../classDatabase.html#a3f19ed8234adba5c4d25015030923986',1,'Database']]]
+  ['handleclient_19',['HandleClient',['../classService.html#a49301ed7853348f76b5cb71d32d04a98',1,'Service']]]
 ];

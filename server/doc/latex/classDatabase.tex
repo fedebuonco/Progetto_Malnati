@@ -1,5 +1,14 @@
 \hypertarget{classDatabase}{}\doxysection{Database Class Reference}
 \label{classDatabase}\index{Database@{Database}}
+
+
+Class that manage the connection and operation with the DBs.  
+
+
+
+
+{\ttfamily \#include $<$database.\+h$>$}
+
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -22,9 +31,12 @@ static void \mbox{\hyperlink{classDatabase_a3f19ed8234adba5c4d25015030923986}{in
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classDatabase_a71ab46860b4836ba8e1094e215a5b830}\label{classDatabase_a71ab46860b4836ba8e1094e215a5b830}} 
-static std\+::shared\+\_\+mutex {\bfseries db\+\_\+mutex\+\_\+}
-\end{DoxyCompactItemize}
+static std\+::shared\+\_\+mutex \mbox{\hyperlink{classDatabase_a71ab46860b4836ba8e1094e215a5b830}{db\+\_\+mutex\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Mutex that protected the access to DBs in order to handle mutual exclusion. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+Class that manage the connection and operation with the DBs. 
 
 \doxysubsection{Member Function Documentation}
 \mbox{\Hypertarget{classDatabase_acc9498df8dca32bf7042c909ed4cbf38}\label{classDatabase_acc9498df8dca32bf7042c909ed4cbf38}} 

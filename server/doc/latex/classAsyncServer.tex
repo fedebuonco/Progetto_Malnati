@@ -1,5 +1,14 @@
 \hypertarget{classAsyncServer}{}\doxysection{Async\+Server Class Reference}
 \label{classAsyncServer}\index{AsyncServer@{AsyncServer}}
+
+
+Asynchronous server for handling file management.  
+
+
+
+
+{\ttfamily \#include $<$async\+\_\+server.\+h$>$}
+
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -16,18 +25,21 @@ void {\bfseries Stop} ()
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classAsyncServer_a60b78c10d0d196af97e986e25dde5ec5}\label{classAsyncServer_a60b78c10d0d196af97e986e25dde5ec5}} 
-std\+::filesystem\+::path {\bfseries server\+\_\+path\+\_\+}
-\item 
+std\+::filesystem\+::path \mbox{\hyperlink{classAsyncServer_a60b78c10d0d196af97e986e25dde5ec5}{server\+\_\+path\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Path of the user\textquotesingle{}s server exe. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classAsyncServer_ae60a282d686246c55d92c42eda12a32c}\label{classAsyncServer_ae60a282d686246c55d92c42eda12a32c}} 
-boost\+::asio\+::io\+\_\+service {\bfseries m\+\_\+ios}
-\item 
+boost\+::asio\+::io\+\_\+service \mbox{\hyperlink{classAsyncServer_ae60a282d686246c55d92c42eda12a32c}{m\+\_\+ios}}
+\begin{DoxyCompactList}\small\item\em Used for setting up the asynchronous callbacks. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classAsyncServer_a106ac930e393d5f7c128d4c143917252}\label{classAsyncServer_a106ac930e393d5f7c128d4c143917252}} 
-std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classAsyncAcceptClient}{Async\+Accept\+Client}} $>$ {\bfseries acc}
-\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classAsyncAcceptClient}{Async\+Accept\+Client}} $>$ \mbox{\hyperlink{classAsyncServer_a106ac930e393d5f7c128d4c143917252}{acc}}
+\begin{DoxyCompactList}\small\item\em Wait the request from client and will provide to the server an active socket for the communication. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classAsyncServer_aee2c08c495d24bf4e92ffb9647ca0b3b}\label{classAsyncServer_aee2c08c495d24bf4e92ffb9647ca0b3b}} 
-std\+::vector$<$ std\+::unique\+\_\+ptr$<$ std\+::thread $>$ $>$ {\bfseries m\+\_\+thread\+\_\+pool}
-\end{DoxyCompactItemize}
+std\+::vector$<$ std\+::unique\+\_\+ptr$<$ std\+::thread $>$ $>$ \mbox{\hyperlink{classAsyncServer_aee2c08c495d24bf4e92ffb9647ca0b3b}{m\+\_\+thread\+\_\+pool}}
+\begin{DoxyCompactList}\small\item\em Thread pool for receiving and storing the files. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+Asynchronous server for handling file management. 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

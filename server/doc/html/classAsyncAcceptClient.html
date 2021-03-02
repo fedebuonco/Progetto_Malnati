@@ -70,43 +70,148 @@ $(function() {
 <div class="title">AsyncAcceptClient Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class that handle request that arrive in the asynchronous client.  
+ <a href="classAsyncAcceptClient.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="async__accept__client_8h_source.html">async_accept_client.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a10628b1f64a11d93d1e3e5a55ec899e9"><td class="memItemLeft" align="right" valign="top"><a id="a10628b1f64a11d93d1e3e5a55ec899e9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AsyncAcceptClient</b> (boost::asio::io_service &amp;ios, unsigned short port_num, std::filesystem::path server_path)</td></tr>
+<tr class="memitem:a10628b1f64a11d93d1e3e5a55ec899e9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAsyncAcceptClient.html#a10628b1f64a11d93d1e3e5a55ec899e9">AsyncAcceptClient</a> (boost::asio::io_service &amp;ios, unsigned short port_num, std::filesystem::path server_path)</td></tr>
+<tr class="memdesc:a10628b1f64a11d93d1e3e5a55ec899e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Async accept client constructor.  <a href="classAsyncAcceptClient.html#a10628b1f64a11d93d1e3e5a55ec899e9">More...</a><br /></td></tr>
 <tr class="separator:a10628b1f64a11d93d1e3e5a55ec899e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0fda8556588cc2d5edd32cdcbb7743d"><td class="memItemLeft" align="right" valign="top"><a id="ac0fda8556588cc2d5edd32cdcbb7743d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Start</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAsyncAcceptClient.html#ac0fda8556588cc2d5edd32cdcbb7743d">Start</a> ()</td></tr>
+<tr class="memdesc:ac0fda8556588cc2d5edd32cdcbb7743d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the asynchronous server. <br /></td></tr>
 <tr class="separator:ac0fda8556588cc2d5edd32cdcbb7743d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc119d3f6ff0ff63d2517d93d0a58f36"><td class="memItemLeft" align="right" valign="top"><a id="acc119d3f6ff0ff63d2517d93d0a58f36"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Stop</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAsyncAcceptClient.html#acc119d3f6ff0ff63d2517d93d0a58f36">Stop</a> ()</td></tr>
+<tr class="memdesc:acc119d3f6ff0ff63d2517d93d0a58f36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop accepting incoming connection requests. <br /></td></tr>
 <tr class="separator:acc119d3f6ff0ff63d2517d93d0a58f36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:a6cd9ff6c06be88e93073f594c9362b25"><td class="memItemLeft" align="right" valign="top"><a id="a6cd9ff6c06be88e93073f594c9362b25"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>InitAccept</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAsyncAcceptClient.html#a6cd9ff6c06be88e93073f594c9362b25">InitAccept</a> ()</td></tr>
+<tr class="memdesc:a6cd9ff6c06be88e93073f594c9362b25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup for incoming request using the callback when the request arrived. <br /></td></tr>
 <tr class="separator:a6cd9ff6c06be88e93073f594c9362b25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ec3c9b24a1d57a480c0d2bc483bb192"><td class="memItemLeft" align="right" valign="top"><a id="a4ec3c9b24a1d57a480c0d2bc483bb192"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>onAccept</b> (const boost::system::error_code &amp;ec, const std::shared_ptr&lt; boost::asio::ip::tcp::socket &gt; &amp;sock)</td></tr>
+<tr class="memitem:a4ec3c9b24a1d57a480c0d2bc483bb192"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAsyncAcceptClient.html#a4ec3c9b24a1d57a480c0d2bc483bb192">onAccept</a> (const boost::system::error_code &amp;ec, const std::shared_ptr&lt; boost::asio::ip::tcp::socket &gt; &amp;sock)</td></tr>
+<tr class="memdesc:a4ec3c9b24a1d57a480c0d2bc483bb192"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes the request and spawn an <a class="el" href="classAsyncService.html">AsyncService</a> that will start handling it.  <a href="classAsyncAcceptClient.html#a4ec3c9b24a1d57a480c0d2bc483bb192">More...</a><br /></td></tr>
 <tr class="separator:a4ec3c9b24a1d57a480c0d2bc483bb192"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:ab4273bed843168b3b7a2fc5eb3cf9bbd"><td class="memItemLeft" align="right" valign="top"><a id="ab4273bed843168b3b7a2fc5eb3cf9bbd"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>server_path_</b></td></tr>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAsyncAcceptClient.html#ab4273bed843168b3b7a2fc5eb3cf9bbd">server_path_</a></td></tr>
+<tr class="memdesc:ab4273bed843168b3b7a2fc5eb3cf9bbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path of the user's server exe. <br /></td></tr>
 <tr class="separator:ab4273bed843168b3b7a2fc5eb3cf9bbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91c79e6ba280076aa121b460126a9c6f"><td class="memItemLeft" align="right" valign="top"><a id="a91c79e6ba280076aa121b460126a9c6f"></a>
-boost::asio::io_service &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>m_ios</b></td></tr>
+boost::asio::io_service &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAsyncAcceptClient.html#a91c79e6ba280076aa121b460126a9c6f">m_ios</a></td></tr>
+<tr class="memdesc:a91c79e6ba280076aa121b460126a9c6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for setting up the asynchronous callbacks. <br /></td></tr>
 <tr class="separator:a91c79e6ba280076aa121b460126a9c6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc99cd4453bb63aa8cfa4391d8edf0a2"><td class="memItemLeft" align="right" valign="top"><a id="afc99cd4453bb63aa8cfa4391d8edf0a2"></a>
-boost::asio::ip::tcp::acceptor&#160;</td><td class="memItemRight" valign="bottom"><b>m_acceptor</b></td></tr>
+boost::asio::ip::tcp::acceptor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAsyncAcceptClient.html#afc99cd4453bb63aa8cfa4391d8edf0a2">m_acceptor</a></td></tr>
+<tr class="memdesc:afc99cd4453bb63aa8cfa4391d8edf0a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait the request from client and will provide to the server an active socket for the communication. <br /></td></tr>
 <tr class="separator:afc99cd4453bb63aa8cfa4391d8edf0a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecf055d7d35253977902c1d58b560951"><td class="memItemLeft" align="right" valign="top"><a id="aecf055d7d35253977902c1d58b560951"></a>
-std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_isStopped</b></td></tr>
+std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAsyncAcceptClient.html#aecf055d7d35253977902c1d58b560951">m_isStopped</a></td></tr>
+<tr class="memdesc:aecf055d7d35253977902c1d58b560951"><td class="mdescLeft">&#160;</td><td class="mdescRight">Atomic variable used to stop the async server. <br /></td></tr>
 <tr class="separator:aecf055d7d35253977902c1d58b560951"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Class that handle request that arrive in the asynchronous client. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a10628b1f64a11d93d1e3e5a55ec899e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10628b1f64a11d93d1e3e5a55ec899e9">&#9670;&nbsp;</a></span>AsyncAcceptClient()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AsyncAcceptClient::AsyncAcceptClient </td>
+          <td>(</td>
+          <td class="paramtype">boost::asio::io_service &amp;&#160;</td>
+          <td class="paramname"><em>ios</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned short&#160;</td>
+          <td class="paramname"><em>port_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::filesystem::path&#160;</td>
+          <td class="paramname"><em>server_path</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Async accept client constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ios</td><td>: Used for setting up the asynchronous callbacks </td></tr>
+    <tr><td class="paramname">port_num</td><td>: Port number </td></tr>
+    <tr><td class="paramname">server_path</td><td>: Path of the user's server exe </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a4ec3c9b24a1d57a480c0d2bc483bb192"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ec3c9b24a1d57a480c0d2bc483bb192">&#9670;&nbsp;</a></span>onAccept()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AsyncAcceptClient::onAccept </td>
+          <td>(</td>
+          <td class="paramtype">const boost::system::error_code &amp;&#160;</td>
+          <td class="paramname"><em>ec</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::shared_ptr&lt; boost::asio::ip::tcp::socket &gt; &amp;&#160;</td>
+          <td class="paramname"><em>sock</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Takes the request and spawn an <a class="el" href="classAsyncService.html">AsyncService</a> that will start handling it. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ec</td><td>: error code provided by InitAccept </td></tr>
+    <tr><td class="paramname">sock</td><td>: active socket for handling client messages </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>includes/accept_client/<a class="el" href="async__accept__client_8h_source.html">async_accept_client.h</a></li>
 <li>src/accept_client/async_accept_client.cpp</li>
