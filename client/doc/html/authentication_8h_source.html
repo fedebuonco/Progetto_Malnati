@@ -73,32 +73,34 @@ $(function() {
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="structCredential.html">    6</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structCredential.html">Credential</a>{</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    std::string username_;</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    std::string hash_password_;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;};</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classAuthentication.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAuthentication.html">Authentication</a> {</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">static</span> <a class="code" href="classAuthentication.html">Authentication</a>* m_AuthenticationClass;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classAuthentication.html">Authentication</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="classAuthentication.html">Authentication</a>(<span class="keyword">const</span> <a class="code" href="classAuthentication.html">Authentication</a>&amp;)= <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="classAuthentication.html">Authentication</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classAuthentication.html">Authentication</a>&amp;)=<span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="structCredential.html">    8</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structCredential.html">Credential</a>{</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="comment">//Username used for authentication</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    std::string username_;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="comment">//Password provided by the user. We stored the hash.</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    std::string hash_password_;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;};</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classAuthentication.html">   19</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAuthentication.html">Authentication</a> {</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">static</span> <a class="code" href="classAuthentication.html">Authentication</a>* m_AuthenticationClass;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="classAuthentication.html">Authentication</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="comment">// Used for getting the static instance of the Authentication class, part of the singleton pattern.</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">static</span> <a class="code" href="classAuthentication.html">Authentication</a>* get_Instance();</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="structCredential.html">Credential</a> <a class="code" href="classAuthentication.html#a0dda96b95aca0c4034bd5f5e1a1eb437">ReadCredential</a>();</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;};</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="classAuthentication.html">Authentication</a>(<span class="keyword">const</span> <a class="code" href="classAuthentication.html">Authentication</a>&amp;)= <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <a class="code" href="classAuthentication.html">Authentication</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classAuthentication.html">Authentication</a>&amp;)=<span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="comment">// Used for getting the static instance of the Authentication class, part of the singleton pattern.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">static</span> <a class="code" href="classAuthentication.html">Authentication</a>* <a class="code" href="classAuthentication.html#a3c5a0c8df7ea1638e1721477dbf914ec">get_Instance</a>();</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="ttc" id="aclassAuthentication_html"><div class="ttname"><a href="classAuthentication.html">Authentication</a></div><div class="ttdoc">Class that handle the user authentication.</div><div class="ttdef"><b>Definition:</b> authentication.h:15</div></div>
-<div class="ttc" id="aclassAuthentication_html_a0dda96b95aca0c4034bd5f5e1a1eb437"><div class="ttname"><a href="classAuthentication.html#a0dda96b95aca0c4034bd5f5e1a1eb437">Authentication::ReadCredential</a></div><div class="ttdeci">Credential ReadCredential()</div><div class="ttdoc">This function read the username and hash_password stored inside config.json.</div><div class="ttdef"><b>Definition:</b> authentication.cpp:20</div></div>
-<div class="ttc" id="astructCredential_html"><div class="ttname"><a href="structCredential.html">Credential</a></div><div class="ttdef"><b>Definition:</b> authentication.h:6</div></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="structCredential.html">Credential</a> <a class="code" href="classAuthentication.html#a0dda96b95aca0c4034bd5f5e1a1eb437">ReadCredential</a>();</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;};</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="ttc" id="aclassAuthentication_html"><div class="ttname"><a href="classAuthentication.html">Authentication</a></div><div class="ttdoc">Class that handle the user authentication.</div><div class="ttdef"><b>Definition:</b> authentication.h:19</div></div>
+<div class="ttc" id="aclassAuthentication_html_a0dda96b95aca0c4034bd5f5e1a1eb437"><div class="ttname"><a href="classAuthentication.html#a0dda96b95aca0c4034bd5f5e1a1eb437">Authentication::ReadCredential</a></div><div class="ttdeci">Credential ReadCredential()</div><div class="ttdoc">This function read the username and hash_password stored inside config.json.</div><div class="ttdef"><b>Definition:</b> authentication.cpp:24</div></div>
+<div class="ttc" id="aclassAuthentication_html_a3c5a0c8df7ea1638e1721477dbf914ec"><div class="ttname"><a href="classAuthentication.html#a3c5a0c8df7ea1638e1721477dbf914ec">Authentication::get_Instance</a></div><div class="ttdeci">static Authentication * get_Instance()</div><div class="ttdoc">Method used for implementing singleton.</div><div class="ttdef"><b>Definition:</b> authentication.cpp:11</div></div>
+<div class="ttc" id="astructCredential_html"><div class="ttname"><a href="structCredential.html">Credential</a></div><div class="ttdoc">Struct used for authentication.</div><div class="ttdef"><b>Definition:</b> authentication.h:8</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

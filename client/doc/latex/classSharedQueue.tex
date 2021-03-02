@@ -21,8 +21,9 @@ This is the shared queue. Each \mbox{\hyperlink{classFileSipper}{File\+Sipper}} 
 \mbox{\Hypertarget{classSharedQueue_a00f207e695c81cc031d0b1b2d551b5c6}\label{classSharedQueue_a00f207e695c81cc031d0b1b2d551b5c6}} 
 void {\bfseries set\+Flag} (bool flag\+\_\+value)
 \item 
-std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classFileSipper}{File\+Sipper}} $>$ \mbox{\hyperlink{classSharedQueue_ad45eb5d6394b2aaad80b7c85b7f56404}{get\+\_\+ready\+\_\+\+File\+Sipper}} ()
-\begin{DoxyCompactList}\small\item\em Choose a \mbox{\hyperlink{classFileSipper}{File\+Sipper}} from the queue that is ready to send a file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classSharedQueue_ad45eb5d6394b2aaad80b7c85b7f56404}\label{classSharedQueue_ad45eb5d6394b2aaad80b7c85b7f56404}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classFileSipper}{File\+Sipper}} $>$ {\bfseries get\+\_\+ready\+\_\+\+File\+Sipper} ()
+\item 
 \mbox{\Hypertarget{classSharedQueue_a0844701624f2f3efc31a94c3f256dcfe}\label{classSharedQueue_a0844701624f2f3efc31a94c3f256dcfe}} 
 void {\bfseries remove\+\_\+element} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classFileSipper}{File\+Sipper}} $>$ \&file\+\_\+sipper)
 \item 
@@ -63,22 +64,6 @@ static \mbox{\hyperlink{classSharedQueue}{Shared\+Queue}} $\ast$ {\bfseries m\+\
 
 \doxysubsection{Detailed Description}
 This is the shared queue. Each \mbox{\hyperlink{classFileSipper}{File\+Sipper}} is demanded to send a file. The \mbox{\hyperlink{classSender}{Sender}} decides who starts sending. 
-
-\doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{classSharedQueue_ad45eb5d6394b2aaad80b7c85b7f56404}\label{classSharedQueue_ad45eb5d6394b2aaad80b7c85b7f56404}} 
-\index{SharedQueue@{SharedQueue}!get\_ready\_FileSipper@{get\_ready\_FileSipper}}
-\index{get\_ready\_FileSipper@{get\_ready\_FileSipper}!SharedQueue@{SharedQueue}}
-\doxysubsubsection{\texorpdfstring{get\_ready\_FileSipper()}{get\_ready\_FileSipper()}}
-{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classFileSipper}{File\+Sipper}} $>$ Shared\+Queue\+::get\+\_\+ready\+\_\+\+File\+Sipper (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
-
-
-
-Choose a \mbox{\hyperlink{classFileSipper}{File\+Sipper}} from the queue that is ready to send a file. 
-
-If queue is empty or all \mbox{\hyperlink{classFileSipper}{File\+Sipper}} are already started, \mbox{\hyperlink{classSender}{Sender}} will be waiting. \begin{DoxyReturn}{Returns}
-std\+::shared\+\_\+ptr$<$\+File\+Sipper$>$ 
-\end{DoxyReturn}
-
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

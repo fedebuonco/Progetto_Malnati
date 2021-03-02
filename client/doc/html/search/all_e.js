@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['_7esynctcpsocket_71',['~SyncTCPSocket',['../classSyncTCPSocket.html#a9e14fa078f01ea83d69b0d4a0b263e11',1,'SyncTCPSocket']]]
+  ['watcher_69',['Watcher',['../classWatcher.html',1,'']]],
+  ['writeproperty_70',['WriteProperty',['../classConfig.html#a14478ea081a6927566463944fceb9274',1,'Config']]]
 ];

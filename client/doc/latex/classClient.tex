@@ -37,9 +37,8 @@ void \mbox{\hyperlink{classClient_a33c8b03d66e4b4a461cbaa9ed18a2c8c}{Sync\+Write
 \mbox{\Hypertarget{classClient_a0a3d64b24a3386ebceb76825953b4bdb}\label{classClient_a0a3d64b24a3386ebceb76825953b4bdb}} 
 void \mbox{\hyperlink{classClient_a0a3d64b24a3386ebceb76825953b4bdb}{Init\+Hash}} ()
 \begin{DoxyCompactList}\small\item\em Test each file to see if already present in the hash db, and acts accordingly in order to keep a database of each hash performed. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classClient_a535e378b54dfcdf796ea385ee3006374}\label{classClient_a535e378b54dfcdf796ea385ee3006374}} 
-std\+::string {\bfseries Hash\+File} (const std\+::filesystem\+::path \&path)
-\end{DoxyCompactItemize}
+std\+::string \mbox{\hyperlink{classClient_a535e378b54dfcdf796ea385ee3006374}{Hash\+File}} (const std\+::filesystem\+::path \&path)
+\begin{DoxyCompactList}\small\item\em Hash the file using SHA-\/256, if it can\textquotesingle{}t hash it then the next watcher trigger will take care of it. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -95,6 +94,24 @@ Will send username and password.
 
 After that it will shutdown the send part of the socket thus providing the server a way to tell that the connection is over. After the authentication the socket is basically useless and needs to be shutdown completely. \begin{DoxyReturn}{Returns}
 \textquotesingle{}True\textquotesingle{} if Auth went ok and user has successfully logged in, \textquotesingle{}False\textquotesingle{} if not. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classClient_a535e378b54dfcdf796ea385ee3006374}\label{classClient_a535e378b54dfcdf796ea385ee3006374}} 
+\index{Client@{Client}!HashFile@{HashFile}}
+\index{HashFile@{HashFile}!Client@{Client}}
+\doxysubsubsection{\texorpdfstring{HashFile()}{HashFile()}}
+{\footnotesize\ttfamily std\+::string Client\+::\+Hash\+File (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{element\+\_\+path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Hash the file using SHA-\/256, if it can\textquotesingle{}t hash it then the next watcher trigger will take care of it. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em element\+\_\+path} & Path of the element that will be hashed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The digest of the hashed file or a blank string if it can\textquotesingle{}t be hashed. 
 \end{DoxyReturn}
 \mbox{\Hypertarget{classClient_a96f9d57927506de3f90c28b7ebf70109}\label{classClient_a96f9d57927506de3f90c28b7ebf70109}} 
 \index{Client@{Client}!RecoverSending@{RecoverSending}}

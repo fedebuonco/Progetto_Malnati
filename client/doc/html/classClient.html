@@ -113,8 +113,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#a0a3d64b24a3386ebceb76825953b4bdb">InitHash</a> ()</td></tr>
 <tr class="memdesc:a0a3d64b24a3386ebceb76825953b4bdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test each file to see if already present in the hash db, and acts accordingly in order to keep a database of each hash performed. <br /></td></tr>
 <tr class="separator:a0a3d64b24a3386ebceb76825953b4bdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a535e378b54dfcdf796ea385ee3006374"><td class="memItemLeft" align="right" valign="top"><a id="a535e378b54dfcdf796ea385ee3006374"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>HashFile</b> (const std::filesystem::path &amp;path)</td></tr>
+<tr class="memitem:a535e378b54dfcdf796ea385ee3006374"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClient.html#a535e378b54dfcdf796ea385ee3006374">HashFile</a> (const std::filesystem::path &amp;path)</td></tr>
+<tr class="memdesc:a535e378b54dfcdf796ea385ee3006374"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hash the file using SHA-256, if it can't hash it then the next watcher trigger will take care of it.  <a href="classClient.html#a535e378b54dfcdf796ea385ee3006374">More...</a><br /></td></tr>
 <tr class="separator:a535e378b54dfcdf796ea385ee3006374"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -199,6 +199,41 @@ std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>db_f
 
 <p>Will send username and password. </p>
 <p>After that it will shutdown the send part of the socket thus providing the server a way to tell that the connection is over. After the authentication the socket is basically useless and needs to be shutdown completely. </p><dl class="section return"><dt>Returns</dt><dd>'True' if Auth went ok and user has successfully logged in, 'False' if not. </dd></dl>
+
+</div>
+</div>
+<a id="a535e378b54dfcdf796ea385ee3006374"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a535e378b54dfcdf796ea385ee3006374">&#9670;&nbsp;</a></span>HashFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Client::HashFile </td>
+          <td>(</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
+          <td class="paramname"><em>element_path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Hash the file using SHA-256, if it can't hash it then the next watcher trigger will take care of it. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">element_path</td><td>Path of the element that will be hashed. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The digest of the hashed file or a blank string if it can't be hashed. </dd></dl>
 
 </div>
 </div>

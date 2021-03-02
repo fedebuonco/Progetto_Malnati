@@ -1,0 +1,69 @@
+/home/fede/Documents/Progetto_Malnati/client/includes/database/database.h:11: warning: Compound DatabaseConnection is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/config/authentication.h:21: warning: Member m_AuthenticationClass (variable) of class Authentication is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/client.h:18: warning: Member server_re_ (variable) of class Client is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/client.h:20: warning: Member folder_watched_ (variable) of class Client is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/client.h:22: warning: Member db_file_ (variable) of class Client is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/client.h:24: warning: Member watcher_ (variable) of class Client is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/client.h:31: warning: return type of member Client::RequestTree is not documented
+/home/fede/Documents/Progetto_Malnati/client/includes/config/config.h:30: warning: Member exe_path (variable) of class Config is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/config/config.h:27: warning: Member m_ConfigClass (variable) of class Config is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/transfer/control_message.h:18: warning: Member type_ (variable) of class ControlMessage is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/config/authentication.h:10: warning: Member username_ (variable) of struct Credential is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/config/authentication.h:12: warning: Member hash_password_ (variable) of struct Credential is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/database/database.h:14: warning: Member folder_watched_ (variable) of class DatabaseConnection is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/database/database.h:17: warning: Member hash_db_ (variable) of class DatabaseConnection is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/database/database.h:20: warning: Member db_mutex_ (variable) of class DatabaseConnection is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:44: warning: Member FileSipper(const RawEndpoint &re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, const std::string &hashed_pass, std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt) (function) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:45: warning: parameters of member FileSipper::Send are not (all) documented
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:49: warning: Member file_string_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:50: warning: Member remove_callback_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:51: warning: Member status (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:55: warning: parameters of member FileSipper::Sip are not (all) documented
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:57: warning: Member WaitOk() (function) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:62: warning: Member writeBuffer(Buffer &t_buffer) (function) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:84: warning: Member UpdateFileStatus(const std::filesystem::path &db_path, const std::filesystem::path &folder_watched, const std::string &file_string, int check) (function) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:18: warning: Member path_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:19: warning: Member folder_watched_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:20: warning: Member db_path_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:21: warning: Member hash_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:22: warning: Member lmt_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:23: warning: Member metadata_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:24: warning: Member username_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:26: warning: Member ios_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:27: warning: Member ep_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:28: warning: Member sock_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:29: warning: Member ec_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:30: warning: Member files_stream_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:35: warning: Member buf_array_ (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:36: warning: Member buf_metadata (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:39: warning: Member sip_counter (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/file_sipper.h:41: warning: Member ready (variable) of class FileSipper is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/transfer/patch.h:42: warning: Member Patch(TreeT client_treet, TreeT server_treet) (function) of class Patch is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/transfer/patch.h:43: warning: The following parameter of Patch::Dispatch(const std::filesystem::path &db_path, const std::filesystem::path &folder_watched) is not documented:
+  parameter 'folder_watched'
+/home/fede/Documents/Progetto_Malnati/client/includes/transfer/patch.h:44: warning: documented empty return type of Patch::PrettyPrint
+/home/fede/Documents/Progetto_Malnati/client/includes/client/sender.h:21: warning: Member Sender_Action() const (function) of class Sender is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/sender.h:22: warning: Member setFlag(bool flag) (function) of class Sender is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/sender.h:18: warning: Member flag (variable) of class Sender is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/shared_queue.h:27: warning: Member setFlag(bool flag_value) (function) of class SharedQueue is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/shared_queue.h:28: warning: Member get_ready_FileSipper() (function) of class SharedQueue is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/shared_queue.h:29: warning: Member remove_element(const std::shared_ptr< FileSipper > &file_sipper) (function) of class SharedQueue is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/shared_queue.h:30: warning: Member insert(std::shared_ptr< FileSipper > file_sipper) (function) of class SharedQueue is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/shared_queue.h:26: warning: Member get_Instance() (function) of class SharedQueue is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/shared_queue.h:10: warning: Member fs_list (variable) of class SharedQueue is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/shared_queue.h:12: warning: Member m (variable) of class SharedQueue is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/shared_queue.h:14: warning: Member cv (variable) of class SharedQueue is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/shared_queue.h:16: warning: Member active_fs (variable) of class SharedQueue is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/shared_queue.h:18: warning: Member flag (variable) of class SharedQueue is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/client/shared_queue.h:20: warning: Member m_SharedQueue (variable) of class SharedQueue is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/sync_tcp_socket/sync_tcp_socket.h:13: warning: Member ios_ (variable) of class SyncTCPSocket is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/sync_tcp_socket/sync_tcp_socket.h:14: warning: Member ep_ (variable) of class SyncTCPSocket is not documented.
+/home/fede/Documents/Progetto_Malnati/client/src/config/config.cpp:32: warning: Member SyntaxError(std::string msg) (function) of class SyntaxError is not documented.
+/home/fede/Documents/Progetto_Malnati/client/src/config/config.cpp:33: warning: Member what() const noexcept override (function) of class SyntaxError is not documented.
+/home/fede/Documents/Progetto_Malnati/client/src/config/config.cpp:29: warning: Member m_message (variable) of class SyntaxError is not documented.
+/home/fede/Documents/Progetto_Malnati/client/src/transfer/tree_t.cpp:22: warning: explicit link request to 'i' could not be resolved
+/home/fede/Documents/Progetto_Malnati/client/includes/watcher/watcher.h:23: warning: Member Watcher(std::filesystem::path db_file, std::filesystem::path folder_watched) (function) of class Watcher is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/watcher/watcher.h:12: warning: Member db_file_ (variable) of class Watcher is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/watcher/watcher.h:13: warning: Member folder_watched_ (variable) of class Watcher is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/watcher/watcher.h:15: warning: Member _watcher (variable) of class Watcher is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/watcher/watcher.h:16: warning: Member update_callback (variable) of class Watcher is not documented.

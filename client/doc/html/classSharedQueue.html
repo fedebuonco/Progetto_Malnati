@@ -88,8 +88,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a00f207e695c81cc031d0b1b2d551b5c6"><td class="memItemLeft" align="right" valign="top"><a id="a00f207e695c81cc031d0b1b2d551b5c6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setFlag</b> (bool flag_value)</td></tr>
 <tr class="separator:a00f207e695c81cc031d0b1b2d551b5c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad45eb5d6394b2aaad80b7c85b7f56404"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSharedQueue.html#ad45eb5d6394b2aaad80b7c85b7f56404">get_ready_FileSipper</a> ()</td></tr>
-<tr class="memdesc:ad45eb5d6394b2aaad80b7c85b7f56404"><td class="mdescLeft">&#160;</td><td class="mdescRight">Choose a <a class="el" href="classFileSipper.html" title="Encapsulates a file+hash that need to be sent to a server.">FileSipper</a> from the queue that is ready to send a file.  <a href="classSharedQueue.html#ad45eb5d6394b2aaad80b7c85b7f56404">More...</a><br /></td></tr>
+<tr class="memitem:ad45eb5d6394b2aaad80b7c85b7f56404"><td class="memItemLeft" align="right" valign="top"><a id="ad45eb5d6394b2aaad80b7c85b7f56404"></a>
+std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_ready_FileSipper</b> ()</td></tr>
 <tr class="separator:ad45eb5d6394b2aaad80b7c85b7f56404"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0844701624f2f3efc31a94c3f256dcfe"><td class="memItemLeft" align="right" valign="top"><a id="a0844701624f2f3efc31a94c3f256dcfe"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>remove_element</b> (const std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt; &amp;file_sipper)</td></tr>
@@ -130,28 +130,7 @@ static <a class="el" href="classSharedQueue.html">SharedQueue</a> *&#160;</td><t
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This is the shared queue. Each <a class="el" href="classFileSipper.html" title="Encapsulates a file+hash that need to be sent to a server.">FileSipper</a> is demanded to send a file. The <a class="el" href="classSender.html" title="Takes files from the queue and gives them to FileSippers, in order to be sent.">Sender</a> decides who starts sending. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad45eb5d6394b2aaad80b7c85b7f56404"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad45eb5d6394b2aaad80b7c85b7f56404">&#9670;&nbsp;</a></span>get_ready_FileSipper()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt; <a class="el" href="classFileSipper.html">FileSipper</a> &gt; SharedQueue::get_ready_FileSipper </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Choose a <a class="el" href="classFileSipper.html" title="Encapsulates a file+hash that need to be sent to a server.">FileSipper</a> from the queue that is ready to send a file. </p>
-<p>If queue is empty or all <a class="el" href="classFileSipper.html" title="Encapsulates a file+hash that need to be sent to a server.">FileSipper</a> are already started, <a class="el" href="classSender.html" title="Takes files from the queue and gives them to FileSippers, in order to be sent.">Sender</a> will be waiting. </p><dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;FileSipper&gt; </dd></dl>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>includes/client/<a class="el" href="shared__queue_8h_source.html">shared_queue.h</a></li>
 <li>src/client/shared_queue.cpp</li>
 </ul>
