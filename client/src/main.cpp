@@ -19,7 +19,6 @@ int main(int argc, char *argv[]) {
 
     //Before starting the configuration, we check if the config structure (file and folder) are correct
     if(!Config::get_Instance()->IsConfigStructureCorrect()){
-
          //Structure is not correct, so we restore with the default config structure
          Config::get_Instance()->SetDefaultConfig();
     }

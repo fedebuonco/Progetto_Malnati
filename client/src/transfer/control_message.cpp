@@ -8,7 +8,8 @@
  */
 ControlMessage::ControlMessage(int tp) : type_(tp) {
 
-    //Define the document as an object rather than an array
+    // Define the document as an object rather than an array
+    // The structure of the JSON will be as KEY - VALUE and not KEY AND MANY VALUES
     document_.SetObject();
 
     try{
@@ -91,9 +92,12 @@ std::string ControlMessage::ToJSON() {
     std::string string_to_json;
     try{
 
+        // We create a buffer and assign it to a writer. Then we call the accept that will take the writer and fill the buffer with the JSON
         rapidjson::StringBuffer buffer;
         rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
         this->document_.Accept(writer);
+
+        //then we get the string and return it.
         string_to_json = buffer.GetString();
         return  string_to_json;
     }

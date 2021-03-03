@@ -7,7 +7,7 @@
 /home/fede/Documents/Progetto_Malnati/client/includes/client/client.h:31: warning: return type of member Client::RequestTree is not documented
 
 
-/home/fede/Documents/Progetto_Malnati/client/includes/config/config.h:30: warning: Member exe_path (variable) of class Config is not documented.
+/home/fede/Documents/Progetto_Malnati/client/includes/config/config.h:30: warning: Member client_path (variable) of class Config is not documented.
 /home/fede/Documents/Progetto_Malnati/client/includes/config/config.h:27: warning: Member m_ConfigClass (variable) of class Config is not documented.
 
 

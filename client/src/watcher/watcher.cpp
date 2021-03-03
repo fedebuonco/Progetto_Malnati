@@ -25,10 +25,7 @@ void Watcher::SetUpdateCallback(const std::function<void()> &updateCallback) {
 /// \param events The series of events (file deleted, added, etc.) that triggered the function.
 void Watcher::listenerFunction(const std::vector<pfw::EventPtr>& events)
 {
-    //We open a db connection for all the events
-    DatabaseConnection db(db_file_,folder_watched_);
-
-    //For each event
+    //For each file that triggers the event we check that it is not hash.db
     for (const auto &event : events) {
         //std::cout << event->relativePath << " with the type: " << typeBits << std::endl;
 

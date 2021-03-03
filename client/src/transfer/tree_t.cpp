@@ -69,7 +69,8 @@ TreeT::TreeT(const std::filesystem::path& path){
             std::string cross_platform_rep = relative_element_path.generic_string();
 
             //We don't insert folder, so we go to the next for iteration
-            if (std::filesystem::is_directory(element_path)) continue;
+            if (std::filesystem::is_directory(element_path))
+                continue;
 
             // We don't insert the hash.db
             if (cross_platform_rep == ".hash.db")
@@ -79,6 +80,8 @@ TreeT::TreeT(const std::filesystem::path& path){
             struct stat temp_stat;
             stat(element_path.generic_string().c_str(), &temp_stat);
             unsigned long mod_time = temp_stat.st_mtime;
+
+            // Now we gathered everything and then we insert it in the map.
             map_tree_time_.insert({cross_platform_rep, mod_time});
         }
 

@@ -48,7 +48,7 @@ void SyncTCPSocket::ConnectServer(int n_tries) {
             n_tries--;
             if (DEBUG)  std::cout << "\nEstablishing connection to server " << ep_.address() <<":"<<ep_.port() <<std::endl ;
 
-            //We wait before try again
+            //We wait before try again (we don't care if we wait for exactly 1 second, when the CPU will put the thread as running we will try again)
             std::this_thread::sleep_for (std::chrono::seconds (1));
 
             if(n_tries == 0){

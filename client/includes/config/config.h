@@ -27,7 +27,7 @@ class Config {
     static Config* m_ConfigClass;
 
     ///Path of the user's client exe
-    std::filesystem::path exe_path;
+    std::filesystem::path client_path;
 
 public:
     //Singleton, eliminate copy and assignment

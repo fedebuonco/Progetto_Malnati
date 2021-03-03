@@ -35,9 +35,9 @@ Client::Client(RawEndpoint re, const std::filesystem::path& folder_watched) :
         std::exit(EXIT_FAILURE);
     }
 
-    // We recover the sending files
+    // We recover the sending file
     int recovered = RecoverSending();
-    std::cout << "\nRecovered " << recovered << " files from previous failed sending" << std::endl;
+    if (recovered > 0) std::cout << "\nRecovered " << recovered << " files from previous failed sending" << std::endl;
 
 
     // We start watching for further changes
@@ -107,9 +107,8 @@ bool Client::Auth() {
     //And sending it formatted in JSON language
     SyncWriteCM(tcpSocket, auth_message);
 
-    //Now we have sent the ControlMessage, so from now on we will wait for the response.
-
-    //Now we use a message control for the response
+    // We are working in a synchronous way
+    // Now we have sent the ControlMessage, so from now on we will wait for the response by using the SyncReadCM that is blocking.
     ControlMessage response_message = SyncReadCM(tcpSocket);
 
     //We are expecting a message with an auth response (type:51)
@@ -181,7 +180,7 @@ TreeT Client::RequestTree() {
     return result;
 }
 
-/// Used to write the Control Message in a syncronous way.
+/// Used to write the Control Message in a synchronous way.
 /// \param stcp The socket I'm writing the Control Message to.
 /// \param cm The control message to be written.
 void Client::SyncWriteCM(SyncTCPSocket& stcp, ControlMessage& cm){
@@ -225,20 +224,18 @@ ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
 
     ControlMessage cm{response_json};
 
-    //We are expecting a message with an auth response (type:51)
+    // We need to check if the authentication (done in every message) has failed after the initial authentication done by the first auth message.
+    // If an auth has failed on the server then we will recive a 51-False message. So after each read we need to check that we dont have a 51-False.
     if(cm.type_ == 51) {
-        //The answer is inherent with the request, so we read the reply message.
-
         //We retrieve the auth information inside the response message.
         std::string auth_response = cm.GetElement("auth");
-
         if (auth_response == "false") {
-            //The user is authenticated so we return true
-            if (DEBUG)
-                std::cout << "\nUser \"" << Config::get_Instance()->ReadProperty("username")
-                          << "\" successfully authenticated." << std::endl;
+            //The user got de-authenticated mid-communication.
+            std::cerr<<"The server replyed that the user is not authenticated anymore. Try Again." << std::endl;
+            std::exit(EXIT_FAILURE);
         }
     }
+
 
     return cm;
 }
@@ -356,7 +353,7 @@ void Client::InitHash(){
     }
 }
 
-/// Hash the file using SHA-256, if it can't hash it then the next watcher trigger will take care of it.
+/// Hash the file using SHA-256, if it is not possible to hash the file now then the next trigger of the watcher will take care of it.
 /// \param element_path Path of the element that will be hashed.
 /// \return The digest of the hashed file or a blank string if it can't be hashed.
 std::string Client::HashFile(const std::filesystem::path& element_path) {
@@ -374,6 +371,7 @@ std::string Client::HashFile(const std::filesystem::path& element_path) {
         //Here because CryptoPP can't open the file because we are copying the file into the folder
         //Another possibility is that the file doesn't exist anymore.
         //In both ways we recover from this exception.
+        digest="";
     }
     catch (CryptoPP::Exception &e) {
         std::cout << "Error CryptoPP (HashFile) " << e.what() << std::endl;

@@ -19,7 +19,7 @@ class DatabaseConnection{
     ///Database object used for connection
     SQLite::Database hash_db_;
 
-    ///Mutex that protected the access to DB in order to handle mutual exclusion
+    ///Mutex that protected the access to DB in order to handle it in mutual exclusion
     static std::shared_mutex db_mutex_;
 
 
