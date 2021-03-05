@@ -308,10 +308,9 @@ void DatabaseConnection::GetMetadata(const std::string& filename, std::string& h
     }
 }
 
-///  TODO che faceva??
-/// \param sfileslmt
-/// \return
-bool DatabaseConnection::AlignStatus(const std::vector<std::pair<std::string, unsigned  long>>& sfileslmt){
+/// Done in order to update missing "SENT" status on the client.
+/// \param sfileslmt vector containing files and lmts that are both in client and server.
+void DatabaseConnection::AlignStatus(const std::vector<std::pair<std::string, unsigned  long>>& sfileslmt){
     std::unique_lock lg(db_mutex_);
     for (const auto& element : sfileslmt){
         try{
@@ -330,18 +329,14 @@ bool DatabaseConnection::AlignStatus(const std::vector<std::pair<std::string, un
     }
 
 }
-/// TODO COMMENTARE MARCO
-/// \return
+/// Checks that every files in the db has the sent status.
+/// \return how many files has been changed
 bool DatabaseConnection::AllSent() {
-
     std::unique_lock lg(db_mutex_);
 
     int c=0;
     try{
-
-
         SQLite::Statement query(hash_db_, "SELECT * FROM files WHERE status='SENDING' OR status='NEW'");
-
         while (query.executeStep())
         {
             // Retrieve filename fn, hash hs, and last modified time lt.
@@ -354,9 +349,7 @@ bool DatabaseConnection::AllSent() {
         std::exit(EXIT_FAILURE);
     }
 
-
     if(c==0) return true;
-
     return false;
 }
 

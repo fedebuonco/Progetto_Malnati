@@ -26,26 +26,25 @@ bool EndsWith (std::string const &fullString, std::string const &ending) {
 /// \param server_treet Treet generated in the server
 Patch::Patch(TreeT client_treet, TreeT server_treet){
 
+    // We also remove all the folders, we only compute diff on files name
+    // we can easily remove all directories if we just delete all the element with "/" and the .hash.db
+
     std::set<std::string> set_client;
     for(const auto& item : client_treet.map_tree_time_) {
         if (!EndsWith(item.first, "/"))
             set_client.insert(item.first);
     }
-
     // We remove the hash.db from the set, it will not be considered in the dispatch
     set_client.erase(".hash.db");
-    // We also remove all the folders, we only compute diff on files
-    // we can easily remove all directories if we just delete all the element with "/"
 
+    // Same for the server tree
     std::set<std::string> set_server;
     for(const auto& item : server_treet.map_tree_time_) {
         if (!EndsWith(item.first, "/"))
         set_server.insert(item.first);
     }
 
-
-
-
+    // This firsts set_differences are done between sets containing only file names
     try {
         // Now I have the two sets I can compute set_difference(set_client,set_server)  client - server
         set_difference(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(added_, added_.end()));
@@ -53,11 +52,12 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
         set_difference(set_server.begin(), set_server.end(), set_client.begin(), set_client.end(), inserter(removed_, removed_.end()));
         // Now we can find the common files
         set_intersection(set_client.begin(), set_client.end(), set_server.begin(), set_server.end(), inserter(common_, common_.end()));
-
     }catch(std::bad_alloc& badAlloc){
         std::cerr << "Patch Allocation error: " << badAlloc.what() <<std::endl;
         std::exit(EXIT_FAILURE);
-
+    }catch (std::exception& e){
+        std::cerr << "Generic Error during set difference: " << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 
     for (const auto& item : server_treet.map_tree_time_){
@@ -65,6 +65,7 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
             server_treet.map_tree_time_.erase(item.first);
     }
 
+    // This set_differences are performed between 2 sets of files and LMTs
     try{
         std::set_difference(begin(client_treet.map_tree_time_), end(client_treet.map_tree_time_),
                             begin(server_treet.map_tree_time_), end(server_treet.map_tree_time_),
@@ -81,6 +82,9 @@ Patch::Patch(TreeT client_treet, TreeT server_treet){
 
     }catch(std::bad_alloc& badAlloc){
         std::cerr << "Patch Allocation error: " << badAlloc.what() <<std::endl;
+        std::exit(EXIT_FAILURE);
+    }catch (std::exception& e){
+        std::cerr << "Generic Error during set difference: " << e.what() << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
@@ -118,7 +122,6 @@ int Patch::Dispatch(const std::filesystem::path& db_path, const std::filesystem:
                 //We create a fileSipper for this file and we insert it inside the SharedQueue
                 auto fs =  std::make_shared<FileSipper>(raw_endpoint, folder_watched , db_path ,credential.username_, credential.hash_password_, f, element.first, file_hash, file_lmt);
                 SharedQueue::get_Instance()->insert(fs);
-
                 counter++;  //Increment the number of dispatched file.
 
             } catch(std::exception& e)
@@ -145,7 +148,7 @@ void Patch::PrettyPrint(){
         cnt++;
         if (cnt == max_files_displayed) {
             std::string other = std::to_string(added_.size() - 3);
-            std::cout << "+ " + other + " Other files... \n" << std::endl;
+            std::cout << "+  Other files... \n" << std::endl;
             cnt = 0;
             break;
         }
@@ -156,7 +159,7 @@ void Patch::PrettyPrint(){
         cnt++;
         if (cnt == max_files_displayed) {
             std::string other = std::to_string(removed_.size() - 3);
-            std::cout << "- " + other + " Other files... \n" << std::endl;
+            std::cout << "-  Other files... \n" << std::endl;
             cnt = 0;
             break;
         }
@@ -179,7 +182,7 @@ void Patch::PrettyPrint(){
         cnt++;
         if (cnt == max_files_displayed) {
             std::string other = std::to_string(to_be_elim_vector.size() - 3);
-            std::cout << "+ " + other + " Other files... \n" << std::endl;
+            std::cout << "+ Other files... \n" << std::endl;
             cnt = 0;
             break;
         }
@@ -191,17 +194,15 @@ void Patch::PrettyPrint(){
         cnt++;
         if (cnt == max_files_displayed) {
             std::string other = std::to_string(to_be_sent_vector.size() - 3);
-            std::cout << "+ " + other + " Other files... \n" << std::endl;
+            std::cout << "+ Other files... \n" << std::endl;
             break;
         }
     }
-
 
     std::cout << "\n\n:::::::: Recap : new     files (" << added_.size() << ")   ::::::::" << std::endl;
     std::cout <<     ":::::::: Recap : removed files (" << removed_.size() << ")   ::::::::" << std::endl;
     std::cout <<     ":::::::: Recap : common  files (" << common_.size() << ")   ::::::::" << std::endl;
     std::cout <<     ":::::::::::::::::::::::::::::::::::::::::::::" << std::endl;
-
     //std::cout << ":::::::: Recap : Files that will be sent or are in sending (" << to_be_sent_vector.size() << ")   ::::::::" << std::endl;
 
 }

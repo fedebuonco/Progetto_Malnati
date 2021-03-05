@@ -165,9 +165,9 @@ TreeT Client::RequestTree() {
     //And sending it formatted in JSON language
     SyncWriteCM(tcpSocket, message_obj);
 
-    //Now we have sent the ControlMessage, so from now on we will wait for the response.
+    //Now we have sent the ControlMessage, so from now on we will wait for the response on the SyncRead that is blocking.
+    //As soon as it arrives we can extract what we need
 
-    //Now we use a message control for the response
     ControlMessage response_message = SyncReadCM(tcpSocket);
 
     //We get the tree & time list
@@ -225,17 +225,16 @@ ControlMessage Client::SyncReadCM(SyncTCPSocket& stcp){
     ControlMessage cm{response_json};
 
     // We need to check if the authentication (done in every message) has failed after the initial authentication done by the first auth message.
-    // If an auth has failed on the server then we will recive a 51-False message. So after each read we need to check that we dont have a 51-False.
+    // If an auth has failed on the server then we will receive a 51-False message. So after each read we need to check that we dont have a 51-False.
     if(cm.type_ == 51) {
         //We retrieve the auth information inside the response message.
         std::string auth_response = cm.GetElement("auth");
         if (auth_response == "false") {
             //The user got de-authenticated mid-communication.
-            std::cerr<<"The server replyed that the user is not authenticated anymore. Try Again." << std::endl;
+            std::cerr<<"The server replayed that the user is not authenticated anymore. Try Again." << std::endl;
             std::exit(EXIT_FAILURE);
         }
     }
-
 
     return cm;
 }
