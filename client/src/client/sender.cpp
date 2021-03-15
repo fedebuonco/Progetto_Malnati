@@ -20,7 +20,7 @@ void Sender::Sender_Action() const{
         // Choose a ready fileSipper to be sent. If no one is available it waits on a condition variable.
         std::shared_ptr<FileSipper> chosen_fs = SharedQueue::get_Instance()->get_ready_FileSipper();
 
-        // If we have a nullptr, we are shutting down the sender or we don't have any filesipper to work on.
+        // If we have a nullptr, we are shutting down the sender or we don't have any fileSipper to work on.
         // Either cases we woke up the thread waiting on cv.
         // If we are terminating the program, the next while cycle will not be done.
         if(chosen_fs!=nullptr){
@@ -33,7 +33,7 @@ void Sender::Sender_Action() const{
                 catch (std::exception &e){
                     //Here we have the exception that have been throw while creating and sending files
                     SharedQueue::get_Instance()->remove_element(chosen_fs);
-                    if(DEBUG) std::cerr << "Error Unable to send a file; maybe was deleted thread " << e.what() << std::endl;
+                    if(DEBUG) std::cerr << "Error unable to send a file; It is possible that the file has been removed or a generic error occurred. \n" << e.what() << std::endl;
                     return;
                 }
             });

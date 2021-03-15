@@ -34,7 +34,6 @@ class FileSipper {
     boost::asio::io_service ios_;
     boost::asio::ip::tcp::endpoint ep_;
     boost::asio::ip::tcp::socket sock_;
-    boost::system::error_code ec_;
     /// Stream used for opening the file, we will take sips from it and async send them to the server.
     std::ifstream files_stream_;
 
@@ -57,7 +56,7 @@ public:
 
     /// Name of the file
     std::string file_string_;
-    /// Callback that will be called once the filesipper recieve the OK from the server.
+    /// Callback that will be called once the fileSipper receive the OK from the server.
     std::function<void()> remove_callback_;
     /// Flag used for knowing if the FileSipper has been activated.
     std::atomic<bool> status = false;
@@ -65,11 +64,11 @@ private:
     void OpenFile();
     void Connect();
     void Sip(const boost::system::error_code& t_ec);
-    void FirstSip(const boost::system::error_code& t_ec);
+    void FirstSip();
     void WaitOk();
 
 
-
+    //TODO rendere non generica.
     template<class Buffer>
     void writeBuffer(Buffer& t_buffer)
     {
@@ -77,17 +76,14 @@ private:
                                  t_buffer,
                                  [this](boost::system::error_code ec, std::size_t size)
                                  {
-                                     if (ec) {
-                                         // We can call WaitOk where we wait for the ok from the server;
+                                     if (ec) { // If we have any error on writing the sip we just exit, setting the status to NEW again
                                          files_stream_.close();
                                          sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
                                          UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
                                          throw std::runtime_error("Sip interrupted. The file is set back to NEW.");
                                      }
-
-                                     //Let's see the status of the sip, in order to see if this is the last one.
+                                     // We go to the next sip.
                                      Sip(ec);
-
                                  });
 
     }

@@ -42,9 +42,9 @@ FileSipper::FileSipper(const RawEndpoint& re, std::filesystem::path folder_watch
 /// Methods that starts the async_send of the file. When finished the callback passed will be called.
 /// \param rem_call The callback that will be executed when the async_send will complete.
 void FileSipper::Send(std::function<void()> rem_call){
-    //We change the fileSipper status to true, to indicate that we handle the fileSipper
-    remove_callback_ = std::move(rem_call);
+    // We change the fileSipper status to true, to indicate that we handle the fileSipper
     status.store(true);
+    remove_callback_ = std::move(rem_call);
     Connect();
     ios_.run();
 }
@@ -52,7 +52,6 @@ void FileSipper::Send(std::function<void()> rem_call){
 /// We async connect to the specified server.
 void FileSipper::Connect() {
     //if(DEBUG) std::cout << "Connecting to "<<  ep_.address() <<" for file " <<  path_.string() << std::endl;
-
     sock_.async_connect(ep_, [this](boost::system::error_code ec) {
         //Here if we can't connect we simply exit, but we make sure to change the status of the file back to new in the DB
         if (ec) { // we simulate a bad sent file, (checksum result == 0 )
@@ -61,7 +60,7 @@ void FileSipper::Connect() {
         }
         // Here if the connection was successful
         OpenFile();
-        FirstSip(ec_);
+        FirstSip();
 
     });
 }
@@ -87,8 +86,7 @@ void FileSipper::OpenFile() {
 
 /// Takes the file and send its metadata to the server.
 /// \param t_ec
-void FileSipper::FirstSip(const boost::system::error_code& t_ec){
-
+void FileSipper::FirstSip(){
     if (files_stream_) {
         // We create the first sip by sending file metadata
         int i =0;
@@ -119,8 +117,8 @@ void FileSipper::FirstSip(const boost::system::error_code& t_ec){
 
 
 
-/// Takes a sip of a file and ask to write it invoking the WrtieBuffer.
-/// \param t_ec Error code passed from the prevoius WriteBuffer Invocation.
+/// Takes a sip of a file and ask to write it invoking the WriteBuffer.
+/// \param t_ec Error code passed from the previous WriteBuffer invocation.
 void FileSipper::Sip(const boost::system::error_code& t_ec){
     if (!t_ec) {
         // These checks for fail bit or bad bit (hardware & software fail)
@@ -132,9 +130,10 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
             // Also the oef will be triggered, So here we check for another error
             // That could have triggered the fail bit apart from the eof.
             if (files_stream_.fail() && !files_stream_.eof()) {
-                auto msg = "Failed while reading file";
-                std::cerr << msg << std::endl;
-                throw std::fstream::failure(msg);
+                files_stream_.close();
+                sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+                UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
+                throw std::runtime_error("Sip read failed. The file is set back to NEW.");
             }
             // Here we have the sip and can write it.
             //std::cout << "WriteBuffer called for sip N :" << sip_counter << std::endl;
@@ -153,16 +152,16 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
                 //std::cout << "Send  :" << this->file_string_ << std::endl;
                 WaitOk();
             } else { // Here if we had a different problem that made us fail, we throw exception
-                auto msg = "Failed while reading file";
-                std::cerr << msg << std::endl;
-                throw std::fstream::failure(msg);
+                files_stream_.close();
+                sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+                UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
+                throw std::runtime_error("Sip read failed. The file is set back to NEW.");
             }
-            //ios_.stop();
 
             return;
         }
-    } else {
-        if(DEBUG) std::cerr <<"Error "<< t_ec.value() << " -- "<< t_ec.message() <<std::endl;
+    }
+    else { // If we have any error on writing the sip we just exit, setting the status to NEW again
         files_stream_.close();
         sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
         UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
