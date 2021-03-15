@@ -11,34 +11,35 @@ SharedQueue *SharedQueue::get_Instance() {
     return m_SharedQueue;
 }
 
-
- /// Choose a FileSipper from the queue that is ready to send a file.
- /// If queue is empty or all FileSipper are already started, Sender will be waiting.
- /// \return shared ptr to selected fileSipper, or nullptr if error occured
+ /// Choose a FileSipper from the list that is ready to send a file.
+ /// If the list is empty or all FileSipper are already started,the Sender will wait.
+ /// \return shared ptr to the selected fileSipper, or nullptr if error occurred.
 std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
     std::unique_lock<std::mutex> l(m);
+    // The overload of the cv.wait is necessary to prevent spurious wakeup.
+    // The thread waits on the cv when
+    // the queue is empty
+    // OR all files in fileSippers are in sending
+    // OR We reached the max concurrent active filesipper
+    // We also check that the shutdown has been requested (not set).
 
-    //While is necessary to prevent spurious wakeup.
-    //Thread waits on cv when queue is empty OR all files in fileSippers are in sending.
-    //Check also the Shared Queue status flag; if true we need to wakeup to close the program
-    //std::cerr << "get ready active_fs-> " << active_fs.load() << "get ready fslist size-> " << fs_list.size()<< std::endl;
+    // NB
+    // let A be = (fs_list.empty() || (fs_list.size() <= active_fs.load()) || (active_fs.load() >= MAX_CONCURRENT_ACTIVE_FS))
+    // let B be = flag.load()
+    // IF ANY OF THOSE ARE FALSE WE SKIP THE WAIT.
+    cv.wait(l, [this]() { return !( (fs_list.empty() || (fs_list.size() <= active_fs.load()) || (active_fs.load() >= MAX_CONCURRENT_ACTIVE_FS)) && flag.load() ); });
 
-    cv.wait(l, [this]() { return !( (fs_list.empty() || (fs_list.size() <= active_fs.load()) || (MAX_CONCURRENT_ACTIVE_FS <= active_fs.load())) && flag.load() ); });
-    //std::cerr << "get ready active_fs-> " << active_fs.load() << "get ready fslist size-> " << fs_list.size()<<"inside "<< std::endl;
+    // We check if we received a wake up in order to terminate the program.
     if( !flag.load() ){
-       //We request to terminate the program
        return nullptr;
     }
 
-    //If we are here, it means that we have a fileSipper ready and a thread can handle it
-
-    //Search for next ready FileSipper.
+    // If we are here, it means that we have a fileSipper ready and a thread can handle it
+    // Search for next ready FileSipper.
     std::list<std::shared_ptr<FileSipper>>::iterator it;
     for (it = fs_list.begin(); it != fs_list.end(); ++it){
-
         //We search only the fileSipper with status 'false'; they are not handled yet
         if(!it->get()->status.load()) {
-
             //We found one that will be handle; so we change his status and increment the active counter
             it->get()->status.store(true);
             active_fs.fetch_add(1);
@@ -73,11 +74,9 @@ void SharedQueue::remove_element(const std::shared_ptr<FileSipper>& file_sipper)
  /// Add a new ptrFileSipper in the SharedQueue
  /// \param file_sipper : ptr to the fileSipper to be added
 void SharedQueue::insert(std::shared_ptr<FileSipper> file_sipper){ // This one MUST like this, not const reference.
-
     //Take the lock and insider the file_sipper inside the list
     std::lock_guard<std::mutex> l(m);
     fs_list.push_front(file_sipper);
-
     //We do notify all to wakeup all thread waiting on a cv because there is a file_sipper to handle.
     cv.notify_all();
 }

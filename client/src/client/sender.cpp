@@ -17,18 +17,15 @@ void Sender::Sender_Action() const{
 
     while(flag){
 
-        //Choose a ready fileSipper to be sent. If no one is available it waits on a condition variable.
+        // Choose a ready fileSipper to be sent. If no one is available it waits on a condition variable.
         std::shared_ptr<FileSipper> chosen_fs = SharedQueue::get_Instance()->get_ready_FileSipper();
 
-        if(chosen_fs==nullptr){
-            //If we are here, it means that we woke up the thread waiting on cv in order to terminate the program.
-            //Continue because in the next iteration we exit from the while (condition will be false) and join the threads.
-            continue;
-        }
-
-        //We take a thread from the pool and assign it the previously chosen fileSipper
-        boost::asio::post(pool,[chosen_fs](){
-
+        // If we have a nullptr, we are shutting down the sender or we don't have any filesipper to work on.
+        // Either cases we woke up the thread waiting on cv.
+        // If we are terminating the program, the next while cycle will not be done.
+        if(chosen_fs!=nullptr){
+            //We take a thread from the pool and assign it the previously chosen fileSipper
+            boost::asio::post(pool,[chosen_fs](){
                 try {
                     chosen_fs->Send([&chosen_fs](){SharedQueue::get_Instance()->remove_element(chosen_fs);});
                     //SharedQueue::get_Instance()->remove_element(chosen_fs);
@@ -39,8 +36,8 @@ void Sender::Sender_Action() const{
                     if(DEBUG) std::cerr << "Error Unable to send a file; maybe was deleted thread " << e.what() << std::endl;
                     return;
                 }
-        });
-
+            });
+        }
     }
 
     //If we are here it means that we request to shutdown the program

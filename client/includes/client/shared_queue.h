@@ -1,10 +1,9 @@
 #pragma once
-
 #include <list>
 #include "file_sipper.h"
 #include <sender.h>
 #define MAX_CONCURRENT_ACTIVE_FS 5
-/// This is the shared queue. Each FileSipper is demanded to send a file. The Sender decides who starts sending
+/// This is the shared queue. Each FileSipper is asked to send a file. The Sender decides who starts sending
 class SharedQueue{
     ///List of all shared_ptr to FileSippers
     std::list<std::shared_ptr<FileSipper>> fs_list;
@@ -16,7 +15,7 @@ class SharedQueue{
     std::atomic<int> active_fs = 0;
     ///Shutdown flag
     std::atomic<bool> flag = true;
-    ///Singletone pointer
+    ///Singleton pointer
     static SharedQueue* m_SharedQueue;
     SharedQueue()= default;
 
