@@ -57,17 +57,16 @@ std::shared_ptr<FileSipper> SharedQueue::get_ready_FileSipper(){
 void SharedQueue::remove_element(const std::shared_ptr<FileSipper>& file_sipper){
     std::lock_guard<std::mutex> l(m);
 
-    //We remove the file_sipper from the list because it finished correctly his work and decrement the active_fs counter.
-    //In order for this to work we should have ref count == 2 before the remove from the list
-    std::cerr << "Pre remove from the list == " << file_sipper.use_count() << std::endl;
+    // We remove the file_sipper from the list because it finished correctly his work and decrement the active_fs counter.
     fs_list.remove(file_sipper);
-    //And then we should have ref count == 1 that will be deleted when exiting the scope of the caller function of this remove.
-    std::cerr << "After remove from the list == " << file_sipper.use_count() << std::endl;
-    //std::cerr << "Current active fileSipper -> " << active_fs.load() << std::endl;
     active_fs.fetch_sub(1);
 
-    //After we remove the element, we check if the list is NOT empty and if we are some to handle (i.e. the size is less that active)
-    if(!fs_list.empty() && active_fs.load() < fs_list.size()) cv.notify_all();
+    // After we remove the element, we check if the list is NOT empty and if we are some to handle (i.e. the size is less that active).
+    // This notify_all will wake up the get_ready_FileSipper() cv .
+    if(!fs_list.empty() && active_fs.load() < fs_list.size())
+        cv.notify_all();
+
+     // In order for the fileSipper to be destroyed we need to delete all of its references (shared_ptr).
 }
 
 

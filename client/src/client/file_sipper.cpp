@@ -135,9 +135,9 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
                 UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
                 throw std::runtime_error("Sip read failed. The file is set back to NEW.");
             }
-            // Here we have the sip and can write it.
-            //std::cout << "WriteBuffer called for sip N :" << sip_counter << std::endl;
+            // Here we have the sip and can write it, we also increment the sip_counter for debug purposes.
             sip_counter++;
+            // We write the buffer using what we read. The amount of data we read is retrieved using the gcount.
             auto buf = boost::asio::buffer(buf_array_.data(), static_cast<size_t>(files_stream_.gcount()));
             writeBuffer(buf);
         }
@@ -145,12 +145,12 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
             // Here we are if fail bit or bad bit are set to 1.
             // The fail bit could have been set by the eof, so we check it
             if (files_stream_.eof()){
-                //std::cout << "EOF Reached!" << std::endl;
-                // We can call WaitOk where we wait for the ok from the server;
+
+                // We can call WaitOk where we wait for the ok from the server
                 files_stream_.close();
                 sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
-                //std::cout << "Send  :" << this->file_string_ << std::endl;
                 WaitOk();
+
             } else { // Here if we had a different problem that made us fail, we throw exception
                 files_stream_.close();
                 sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
@@ -169,11 +169,10 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
     }
 }
 
-/// Waits for the response of the server, that after having computed the hash of the file, sends to the client the result of the comparison.
+/// Waits for the checksum response of the server, that after having computed the hash of the file, sends to the client the result of the comparison.
 /// Using that we update the status of the file on the db.
 void FileSipper::WaitOk() {
     buf_metadata.fill('\000');
-    //sock_.read_some(boost::asio::buffer(buf_metadata.data(), buf_metadata.size()));
 
     async_read(sock_, boost::asio::buffer(buf_metadata.data(), buf_metadata.size()),
                [this](boost::system::error_code ec, size_t bytes) {
@@ -185,8 +184,8 @@ void FileSipper::WaitOk() {
                    } else { //Here if we got no error while reading
 
                        int checksum_ok = buf_metadata[0] - '0';
-
                        UpdateFileStatus(db_path_, folder_watched_, file_string_, checksum_ok);
+
                    }
 
                    ios_.stop();  // THIS STOPS further async calls for this socket.
@@ -221,11 +220,6 @@ void FileSipper::UpdateFileStatus(const std::filesystem::path& db_path , const s
         std::filesystem::remove(folder_path);
 
     }
-
-}
-
-FileSipper::~FileSipper() {
-    std::cout << "Fs DEstoryed" << std::endl;
 
 }
 
