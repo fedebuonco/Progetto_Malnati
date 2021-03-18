@@ -42,7 +42,7 @@ TreeT::TreeT(const std::filesystem::path& path, const std::filesystem::path& ser
     // gen the treet, and that could cause an exception. If that is the case, we simply retry it.
     while (gen_attempts > 0) {
         try {
-            // we flush the current map, it could contain pieces of old faulty generations
+            // We flush the current map, it could contain pieces of old faulty generations.
             map_tree_time_.clear();
             // Then we start the generation
             for (auto itEntry = std::filesystem::recursive_directory_iterator(path);

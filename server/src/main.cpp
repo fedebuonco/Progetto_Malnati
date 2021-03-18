@@ -8,7 +8,6 @@
 #include <accept_client.h>
 
 std::atomic<bool> is_terminated = false;
-
 const unsigned int DEFAULT_THREAD_POOL_SIZE = 1;
 
 int main(int argc, char *argv[]){
@@ -35,14 +34,14 @@ int main(int argc, char *argv[]){
         asrv.Start(async_port_num, thread_pool_size);
         srv.Start(port_num);
 
-        //The server is running and we wait the termination signal
 
         // Register termination signals
         signal(SIGINT, [](int sig){ is_terminated.store(true);});
         signal(SIGTERM, [](int sig){ is_terminated.store(true);});
+
+        //The servers are running and we wait the termination signal
         while(true) {
             if(is_terminated) {
-
                 asrv.Stop();
                 srv.Stop();
                 std::cout<<"Program successfully closed"<<std::endl;

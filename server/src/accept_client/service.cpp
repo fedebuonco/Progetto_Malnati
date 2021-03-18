@@ -8,7 +8,8 @@
 #include <service.h>
 
 
-/// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and detach it
+/// Starts handling the particular client that requested a service. Spawns a thread that actually handle the request and
+/// detach it in order to let the iterative server handle the next request.
 /// \param sock TCP socket connected to the client
 void Service::ReadRequest(const std::shared_ptr<asio::ip::tcp::socket>& sock, const std::filesystem::path& serverP) {
     this->serverPath=serverP;
@@ -22,72 +23,66 @@ void Service::ReadRequest(const std::shared_ptr<asio::ip::tcp::socket>& sock, co
     th.detach();
 }
 
-/// Real handling starts here. Should distinguish auth requests and tree requests
-
 /***
  * This function handle the client request. First check if the message is authenticated and then
  * handle the request according to the message type
  * @param sock: active socket created by SpawnSession method of AcceptClient class.
  */
 void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
-    //Now we parsed the request and we use the ptree object in order to create the corresponding ControlMessage
-
+    // Now we parsed the request and we use the json object in order to create the corresponding ControlMessage
     try{
-        //We parse the incoming request into a request message
+        // We parse the incoming request into a request message
         ControlMessage request_message = SyncReadCM(sock);
 
-        //A message with type 5 means that we don't want to handle the message (like we are shutting down the server)
+        // A message with type 5 means that we don't want to handle the message (like we are shutting down the server)
         if(request_message.type_==5){
-            //The detach thread will be kill when read this message
+            //The detach thread will be killed when read this message, so we delete the Service and then kill this thread by returning
+            delete this;
             return;
         }
 
-        //We check that the message is authenticated
+        // We check that the message contains valid username and hash password
         if (!CheckAuthenticity(request_message)){
-
-            //The request is not accepted because the message is not authenticated
-            //Return to the client a control message with 'type:51' and 'auth:false'
+            // The request is not accepted because the message is not authenticated
+            // Return to the client a control message with 'type:51' and 'auth:false'
             ControlMessage check_result{51};
             check_result.AddElement("auth", "false");
 
             SyncWriteCM(sock, check_result);
         }
 
-        //Here the message is authenticated. We handle the request according to the message type.
+        // Here the message is authenticated. We handle the request according to the message type.
         switch (request_message.type_) {
-            case 1:{
-                //Type:1    --> client requests to authenticate the user
-
-                //We return to the client the information that the user is authenticated because we check it earlier.
+            case 1:  {
+                // Type:1    --> client requests to authenticate the user
+                // We return to the client the information that the user is authenticated because we check it earlier.
                 ControlMessage check_result{51};
                 check_result.AddElement("auth", "true");
 
                 SyncWriteCM(sock, check_result);
                 break;
-            }    
-        
-            case 2: {
-                //Type:2    --> client requests the TREE & TIME of the server
+            }
+            case 2:  {
+                // Type:2    --> client requests the TREE & TIME of the server
 
-                //Let's start building the Response Control Message
+                // Let's start building the Response Control Message
                 ControlMessage treet_result{52};
 
-                //Take the username of the person who made the request from the request message.
+                // Take the username of the person who made the request from the request message.
                 std::string username = request_message.GetElement("Username");
 
                 Database db;
-                //Find inside the DB the name of the server's folder in which we have stored the users file.
+                // Find inside the DB the name of the server's folder in which we have stored the users file.
                 std::string user_folder_name = db.getUserPath(username, this->serverPath);
 
-
-                //First we check if the program has the usersTREE folder.
-                //In this folder we create a DB for each user containing the user file's information.
+                // First we check if the program has the usersTREE folder.
+                // In this folder we create a DB for each user containing the user file's information.
                 std::filesystem::directory_entry users_tree{this->serverPath / "backupFiles" / "usersTREE"};
-                //If the folder doesn't exist, we create the directory (i.e. only when we start the server for the first time).
+                // If the folder doesn't exist, we create the directory (i.e. only when we start the server for the first time).
                 if (!users_tree.exists()) std::filesystem::create_directories(this->serverPath / "backupFiles" / "usersTREE");
 
-               //Now we check if we have the user folder inside backupROOT.
-               //In this folder we will store all the user's file
+               // Now we check if we have the user folder inside backupROOT.
+               // In this folder we will store all the user's file
 
                std::filesystem::directory_entry user_directory_path{this->serverPath / "backupFiles" / "backupROOT" / user_folder_name};
 
@@ -109,7 +104,7 @@ void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
                 SyncWriteCM(sock, treet_result);
                 break;
             }
-            case 3: {
+            case 3:  {
                 //Type:3    --> client requests to delete a file
 
                 //Let's start building the Response Control Message
@@ -140,8 +135,8 @@ void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
                     if(results) std::cout << "\n[DELETE]["<< username <<"] "<<  file << " successfully deleted" << std::endl;
 
 
-                    // Then we check if it is the last file in the folder, if it is we delete it
-                    // we perform this operation recursively in order to delete all empty folders.
+                    // Then we check if it is the last file in the folder, if it is we delete it.
+                    // We perform this operation recursively in order to delete all empty folders.
                     std::filesystem::path path_iterator = file_path.parent_path();
                     while (std::filesystem::exists(path_iterator) && std::filesystem::is_empty(path_iterator)){
 
@@ -156,14 +151,12 @@ void Service::HandleClient(const std::shared_ptr<asio::ip::tcp::socket>& sock) {
                     //We don't care if the file exists or not; we try anyway to delete the row inside DB
                     db.deleteFile(user_folder_name, file, this->serverPath);
                 }
-
                 break;
             }
             default: {
-                if(DEBUG) std::cout << "Service.cpp SWITCH; Default case" << std::endl;
+                if(DEBUG) std::cerr << "Message Type is undefined." << std::endl;
                 break;
             }
-
         }
 
     }
@@ -231,7 +224,7 @@ ControlMessage Service::SyncReadCM(const std::shared_ptr<asio::ip::tcp::socket>&
     // This checks if the client has finished writing
     if (ec != boost::asio::error::eof){
        if(DEBUG) std::cerr<<"Unable to read the control message arrived from client." << ec.message() << std::endl;
-       //5 means that the server doesn't handle the message
+       // We had a problem regarding the read, we return a fake cm with type 5, meaning that the server will not handle the message.
        ControlMessage cm{5};
        return cm;
     }

@@ -33,7 +33,7 @@ void Server::Start(unsigned short port_num) {
  */
 void Server::Run(unsigned short port_num) {
 
-    //Create an AcceptClient to handle client request
+    //Create an AcceptClient to handle client request and put it on listen.
     AcceptClient acc{ios_, port_num,this->serverPath};
 
     //We continue to accept requests from clients until flag is false (i.e. until we close the server)
