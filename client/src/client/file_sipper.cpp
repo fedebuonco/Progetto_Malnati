@@ -84,6 +84,22 @@ void FileSipper::OpenFile() {
 
 }
 
+void FileSipper::WriteSip(boost::asio::mutable_buffers_1 buffer_sip) {
+    boost::asio::async_write(sock_,
+                             buffer_sip,
+                             [this](boost::system::error_code ec, std::size_t size)
+                             {
+                                 if (ec) { // If we have any error on writing the sip we just exit, setting the status to NEW again
+                                     files_stream_.close();
+                                     sock_.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+                                     UpdateFileStatus(db_path_, folder_watched_, file_string_, 0);
+                                     throw std::runtime_error("Sip interrupted. The file is set back to NEW.");
+                                 }
+                                 // We go to the next sip.
+                                 Sip(ec);
+                             });
+}
+
 /// Takes the file and send its metadata to the server.
 /// \param t_ec
 void FileSipper::FirstSip(){
@@ -99,9 +115,10 @@ void FileSipper::FirstSip(){
         //then we delimit the end using the terminator char
         buf_metadata[i] = '\000';
         // And send it
-        auto buf = boost::asio::buffer(buf_metadata.data(),1024);
 
-        writeBuffer(buf);
+        WriteSip(boost::asio::buffer(buf_metadata.data(),1024));
+
+        //writeBuffer(buf);
     }
     else{
         if(std::filesystem::exists(path_)){ //we had some problem opening the file, but it still exists.
@@ -114,8 +131,6 @@ void FileSipper::FirstSip(){
         }
     }
 }
-
-
 
 /// Takes a sip of a file and ask to write it invoking the WriteBuffer.
 /// \param t_ec Error code passed from the previous WriteBuffer invocation.
@@ -138,8 +153,9 @@ void FileSipper::Sip(const boost::system::error_code& t_ec){
             // Here we have the sip and can write it, we also increment the sip_counter for debug purposes.
             sip_counter++;
             // We write the buffer using what we read. The amount of data we read is retrieved using the gcount.
-            auto buf = boost::asio::buffer(buf_array_.data(), static_cast<size_t>(files_stream_.gcount()));
-            writeBuffer(buf);
+
+            WriteSip(boost::asio::buffer(buf_array_.data(), static_cast<size_t>(files_stream_.gcount())));
+
         }
         else{
             // Here we are if fail bit or bad bit are set to 1.
@@ -222,5 +238,3 @@ void FileSipper::UpdateFileStatus(const std::filesystem::path& db_path , const s
     }
 
 }
-
-

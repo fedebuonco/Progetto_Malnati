@@ -51,9 +51,6 @@ public:
     FileSipper(const RawEndpoint& re, std::filesystem::path folder_watched, std::filesystem::path db_path, std::string username, const std::string& hashed_pass,  std::filesystem::path file_path, std::string file_string, std::string hash, std::string lmt);
     void Send(std::function<void()> rem_call);
 
-    virtual ~FileSipper();
-
-
     /// Name of the file
     std::string file_string_;
     /// Callback that will be called once the fileSipper receive the OK from the server.
@@ -93,4 +90,5 @@ private:
                           int check);
 
 
+    void WriteSip(boost::asio::mutable_buffers_1 buffer_sip);
 };
