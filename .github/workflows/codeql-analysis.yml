@@ -65,10 +65,11 @@ jobs:
       id: install-boost
       with:
           boost_version: 1.74.0
-          
+
     - run:
-       echo "Run, Build for client Application using script"
-       cd client && mkdir build && cd build && cmake .. && make
+      working-directory: ./client
+      echo "Run, Build for client Application using script"
+      mkdir build && cd build && cmake .. && make
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
