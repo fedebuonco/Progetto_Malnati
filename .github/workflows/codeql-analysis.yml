@@ -60,6 +60,9 @@ jobs:
     #   If the Autobuild fails above, remove it and uncomment the following three lines. 
     #   modify them (or add more) to build your code if your project, please refer to the EXAMPLE below for guidance.
 
+    - name: Download and install Boost
+      uses: MarkusJx/install-boost@v2.4.0
+    
     - run: |
        echo "Run, Build for client Application using script"
        cd client && mkdir build && cd build && cmake .. && make
